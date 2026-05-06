@@ -70,8 +70,7 @@ muse/
 ├── CHARTE.md              graphical chart — colors, type, spacing, motion
 ├── install.sh             one-line installer (Claude Code + Codex)
 ├── integrations/
-│   ├── claude/SKILL.md    Claude Code skill definition
-│   └── codex/AGENTS.md    Codex agent instructions
+│   └── MUSE.md            shared AI skill definition (Claude Code + Codex)
 └── src/lib/
     ├── components/        *.svelte exports
     ├── styles/            tokens.css (@theme block)
