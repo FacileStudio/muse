@@ -43,7 +43,34 @@ muse/
 
 ---
 
-## Install
+## Installation
+
+### For an AI agent (Claude Code, etc.) — fast path
+
+If you are an LLM agent reading this, run the block below verbatim. It clones the repo, registers the `muse` skill in the user's Claude config, and symlinks the lib so the skill can read components, tokens, and the graphical chart at `~/.claude/skills/muse/lib`.
+
+```bash
+# 1. Pick a clone path (default: ~/DEV/FACILE/muse). Adjust if the user has a different layout.
+MUSE_PATH="${MUSE_PATH:-$HOME/DEV/FACILE/muse}"
+
+# 2. Clone if missing.
+[ -d "$MUSE_PATH/.git" ] || git clone git@github.com:FacileStudio/muse.git "$MUSE_PATH"
+
+# 3. Install the skill (idempotent).
+mkdir -p "$HOME/.claude/skills/muse"
+cp "$MUSE_PATH/claude/SKILL.md" "$HOME/.claude/skills/muse/SKILL.md"
+ln -sfn "$MUSE_PATH" "$HOME/.claude/skills/muse/lib"
+
+echo "muse skill installed → $HOME/.claude/skills/muse (lib → $MUSE_PATH)"
+```
+
+After this:
+- The skill auto-triggers on Facile UI work and on `/muse`.
+- `~/.claude/skills/muse/lib/CHARTE.md` → graphical chart.
+- `~/.claude/skills/muse/lib/src/lib/index.ts` → component exports.
+- Update later with `git -C "$MUSE_PATH" pull && cp "$MUSE_PATH/claude/SKILL.md" "$HOME/.claude/skills/muse/SKILL.md"`.
+
+### For a human — use it as a dependency
 
 Clone next to your consumer project, then add as a local dependency:
 
@@ -107,4 +134,4 @@ If this is your first time:
 
 ### Claude Code users
 
-A `muse` skill can wire this lib into your Claude Code workflow automatically. Drop it into `~/.claude/skills/muse/` (with a `lib` symlink pointing at your local clone) and Claude will pull components, tokens, and the graphical chart from this repo when generating UI for any Facile tool.
+A `muse` skill ships in this repo at `claude/SKILL.md`. See **Installation → For an AI agent** above for the one-block install. Once installed, Claude pulls components, tokens, and the graphical chart from this repo whenever you request UI for a Facile tool.
