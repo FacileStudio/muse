@@ -22,9 +22,8 @@ clone_or_update() {
 
 install_claude() {
   local skill_dir="$HOME/.claude/skills/muse"
-  local lib_dir="$skill_dir/lib"
-  clone_or_update "$lib_dir"
-  cp "$lib_dir/integrations/claude/SKILL.md" "$skill_dir/SKILL.md"
+  clone_or_update "$skill_dir/lib"
+  cp "$skill_dir/lib/integrations/MUSE.md" "$skill_dir/SKILL.md"
   echo "  ✓ Claude Code → $skill_dir"
   INSTALLED=1
 }
@@ -33,9 +32,8 @@ install_claude() {
 
 install_codex() {
   local codex_dir="$HOME/.codex/muse"
-  local lib_dir="$codex_dir/lib"
-  clone_or_update "$lib_dir"
-  cp "$lib_dir/integrations/codex/AGENTS.md" "$codex_dir/AGENTS.md"
+  clone_or_update "$codex_dir/lib"
+  cp "$codex_dir/lib/integrations/MUSE.md" "$codex_dir/AGENTS.md"
   echo "  ✓ Codex → $codex_dir"
   INSTALLED=1
 }
