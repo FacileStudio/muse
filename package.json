@@ -1,0 +1,28 @@
+{
+  "name": "@facile/lib",
+  "version": "0.0.1",
+  "description": "Svelte/SvelteKit component library for Facile tools",
+  "type": "module",
+  "svelte": "./src/lib/index.ts",
+  "main": "./src/lib/index.ts",
+  "exports": {
+    ".": {
+      "svelte": "./src/lib/index.ts",
+      "types": "./src/lib/index.ts"
+    },
+    "./styles": "./src/lib/styles/tokens.css"
+  },
+  "files": [
+    "src/lib",
+    "CHARTE.md",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "svelte": "^5.0.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "dependencies": {
+    "gsap": "^3.12.0"
+  },
+  "keywords": ["svelte", "sveltekit", "facile", "ui", "components", "tailwindcss"]
+}

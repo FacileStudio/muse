@@ -1,0 +1,52 @@
+/* Facile UI — Tailwind v4 theme. Values mirror CHARTE.md. */
+/* Consumers import this file once in their root layout. */
+
+@import 'tailwindcss';
+
+@theme {
+  /* colors → bg-fc-*, text-fc-*, border-fc-* */
+  --color-fc-bg: #ffffff;
+  --color-fc-surface: #f7f7f8;
+  --color-fc-fg: #0b0b0c;
+  --color-fc-fg-muted: #5b5b63;
+  --color-fc-accent: #2563eb;
+  --color-fc-accent-fg: #ffffff;
+  --color-fc-border: #e5e5ea;
+  --color-fc-danger: #dc2626;
+  --color-fc-success: #16a34a;
+
+  /* radii → rounded-fc-* */
+  --radius-fc-sm: 6px;
+  --radius-fc-md: 12px;
+  --radius-fc-lg: 20px;
+  --radius-fc-pill: 999px;
+
+  /* type scale → text-fc-* (font-size) */
+  --text-fc-xs: 0.75rem;
+  --text-fc-sm: 0.875rem;
+  --text-fc-md: 1rem;
+  --text-fc-lg: 1.125rem;
+  --text-fc-xl: 1.375rem;
+  --text-fc-2xl: 1.75rem;
+  --text-fc-3xl: 2.125rem;
+
+  /* motion → ease-fc */
+  --ease-fc: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* containers → container-fc-* via max-w-fc-* */
+  --container-fc-sm: 600px;
+  --container-fc-md: 720px;
+  --container-fc-lg: 960px;
+  --container-fc-xl: 1200px;
+}
+
+/* Dark mode — variables swap, utilities pick up new values automatically. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-fc-bg: #0b0b0c;
+    --color-fc-surface: #141417;
+    --color-fc-fg: #f4f4f5;
+    --color-fc-fg-muted: #a1a1aa;
+    --color-fc-border: #27272a;
+  }
+}
