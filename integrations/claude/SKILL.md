@@ -11,8 +11,8 @@ description: >
 
 # muse skill
 
-Library lives at `~/.claude/skills/muse/lib` (symlink to your local `muse` clone).
-Package name when consumed: `@facile/lib`. Repo: `git@github.com:FacileStudio/muse.git`.
+Library lives at `~/.claude/skills/muse/lib` (cloned by the installer).
+Package name when consumed: `@facile/lib`. Repo: `https://github.com/FacileStudio/muse`.
 
 ## When this skill applies
 
