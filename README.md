@@ -107,4 +107,4 @@ If this is your first time:
 
 ### Claude Code users
 
-A `facile-ui` skill can wire this lib into your Claude Code workflow automatically. Drop it into `~/.claude/skills/facile-ui/` and Claude will pull components, tokens, and the graphical chart from a local clone of this repo when generating UI for any Facile tool.
+A `muse` skill can wire this lib into your Claude Code workflow automatically. Drop it into `~/.claude/skills/muse/` (with a `lib` symlink pointing at your local clone) and Claude will pull components, tokens, and the graphical chart from this repo when generating UI for any Facile tool.
