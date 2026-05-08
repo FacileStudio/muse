@@ -1,8 +1,8 @@
 # Charte graphique — Facile UI
 
-Visual contract for every Facile tool. Filled by `gian`. Agents read this **before** generating any UI.
+Visual contract for every Facile tool. Agents read this **before** generating any UI.
 
-> Status: **draft skeleton — awaiting specs from gian**.
+> Status: **draft skeleton — awaiting fuller Facile specs**.
 > Until tokens below are filled with real values, agents must ask before picking colors, fonts, or radii.
 
 ---
@@ -37,8 +37,8 @@ CSS custom properties. Source of truth: `src/lib/styles/tokens.css`.
 
 ## 3. Typography
 
-- **Sans**: <!-- e.g. Inter — TODO -->
-- **Display**: <!-- TODO -->
+- **Sans**: Helvetica (`Helvetica Neue`, `Helvetica`, `Arial`, `sans-serif`)
+- **Display**: Goga
 - **Mono**: <!-- e.g. JetBrains Mono — TODO -->
 
 Scale (mobile → desktop, fluid):
@@ -54,6 +54,10 @@ Scale (mobile → desktop, fluid):
 | `--fc-text-3xl` | 34px    | 48px    | h1            |
 
 Line-height: `1.2` headings, `1.5` body.
+
+Usage:
+- Titles and headings use **Goga**
+- Body copy, labels, and UI chrome use **Helvetica**
 
 ---
 
@@ -73,7 +77,7 @@ Container max-widths:
 ## 5. Radius & elevation
 
 - `--fc-radius-sm` 6px, `--fc-radius-md` 12px, `--fc-radius-lg` 20px, `--fc-radius-pill` 999px
-- Shadows: TODO — gian to provide
+- Shadows: TODO
 
 ---
 

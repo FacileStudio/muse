@@ -3,6 +3,134 @@
 
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('../fonts/HelveticaNeue-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('../fonts/HelveticaNeue-UltraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('../fonts/HelveticaNeue-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('../fonts/HelveticaNeue-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('../fonts/HelveticaNeue-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('../fonts/HelveticaNeue-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Hairline-BF6646d5d845dae.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Thin-BF6646d5d8040a9.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Extralight-BF6646d5d82fb83.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Light-BF6646d5d84c8a2.otf') format('opentype');
+  font-weight: 350;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Regular-BF6646d5d84f69b.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Medium-BF6646d5d84754e.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Semibold-BF6646d5d8544cf.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Bold-BF6646d5d83c978.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Extrabold-BF6646d5d7d0a2b.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goga';
+  src: url('../fonts/GogaTest-Black-BF6646d5d78e551.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   /* colors → bg-fc-*, text-fc-*, border-fc-* */
   --color-fc-bg: #ffffff;
@@ -30,6 +158,11 @@
   --text-fc-2xl: 1.75rem;
   --text-fc-3xl: 2.125rem;
 
+  /* fonts → font-fc-* / font-sans */
+  --font-fc-body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-fc-title: 'Goga', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
   /* motion → ease-fc */
   --ease-fc: cubic-bezier(0.65, 0, 0.35, 1);
 
@@ -38,6 +171,23 @@
   --container-fc-md: 720px;
   --container-fc-lg: 960px;
   --container-fc-xl: 1200px;
+}
+
+:root {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Goga', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* Dark mode — variables swap, utilities pick up new values automatically. */
