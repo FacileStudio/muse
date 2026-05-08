@@ -73,6 +73,7 @@ muse/
 │   └── MUSE.md            shared AI skill definition (Claude Code + Codex)
 └── src/lib/
     ├── components/        *.svelte exports
+    ├── fonts/             bundled Goga + Helvetica Neue font files
     ├── styles/            tokens.css (@theme block)
     ├── utils/             shared helpers
     └── index.ts           public re-exports
