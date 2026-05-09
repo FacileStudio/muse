@@ -1,7 +1,7 @@
 <script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from 'tailwind-merge';
-    import NavButton from './NavButton.svelte';
+    import NavButton from '../molecules/NavButton.svelte';
     import { icons } from '../../icons.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
 
@@ -32,7 +32,6 @@
     $effect(() => {
         if (!navEl) return;
         const w = collapsed ? 100 : 220;
-        const px = 24;
         if (!ready) {
             gsap.set(navEl, { width: w });
             ready = true;
@@ -60,7 +59,7 @@
 
 <div
     bind:this={navEl}
-    class={twMerge('relative bg-fc-component rounded-fc-md flex flex-col justify-betweenh-dvh min-h-0 py-8 px-6 gap-12 overflow-hidden', className)}
+    class={twMerge('relative bg-fc-component rounded-fc-md flex flex-col justify-between h-dvh min-h-0 py-8 px-6 gap-12 overflow-hidden', className)}
 >
     <div class="flex flex-col gap-1">
         <div class="flex items-center justify-between h-10 px-2 mb-1">
