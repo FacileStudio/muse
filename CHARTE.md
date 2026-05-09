@@ -99,7 +99,23 @@ Container max-widths:
 
 ---
 
-## 8. Accessibility
+## 8. Icons
+
+- **Pack**: [Solar](https://icon-sets.iconify.design/solar/) via Iconify (`<iconify-icon>`)
+- **Style**: `bold-duotone` — always use the `solar:*-bold-duotone` variant unless explicitly overridden
+- **Color**: `text-fc-fg/66` (`rgba(36,36,36,0.66)`) on all UI chrome icons
+- **Size**: `width="16"` for inline / nav icons, `width="20"` for standalone actions
+
+Example:
+```svelte
+<iconify-icon icon="solar:settings-bold-duotone" width="16" class="text-fc-fg/66"></iconify-icon>
+```
+
+Never default to Lucide or other packs without an explicit request.
+
+---
+
+## 9. Accessibility
 
 - Color contrast ≥ WCAG AA (4.5:1 body, 3:1 large text).
 - Focus ring visible — `:focus-visible` outline using `--fc-accent`.
