@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
+  import { twMerge } from 'tailwind-merge';
 
   /** Native radio. Bind `group` to share state between radios in the same set. */
   let {
@@ -13,14 +14,16 @@
     group?: string;
     class?: string;
   } = $props();
+
+  const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-md text-fc-fg', className));
 </script>
 
-<label class="inline-flex items-center gap-2 cursor-pointer text-fc-md text-fc-fg {className}">
+<label class={classes}>
   <input
     type="radio"
     bind:group
     {value}
-    class="h-4 w-4 border border-fc-border accent-fc-accent disabled:opacity-50"
+    class="h-4 w-4   accent-fc-accent disabled:opacity-50"
     {...rest}
   />
   {#if label}<span>{label}</span>{/if}

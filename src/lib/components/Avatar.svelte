@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { twMerge } from 'tailwind-merge';
+
   /** Round avatar. Falls back to first initial of `name` if no `src`. */
   type Size = 'sm' | 'md' | 'lg';
 
@@ -23,13 +25,10 @@
   };
 
   const initial = name ? name.trim().charAt(0).toUpperCase() : '?';
+  const classes = $derived(twMerge('inline-flex items-center justify-center rounded-fc-pill bg-fc-surface text-fc-fg-muted overflow-hidden  ', sizes[size], className));
 </script>
 
-<span
-  class="inline-flex items-center justify-center rounded-fc-pill bg-fc-surface text-fc-fg-muted overflow-hidden border border-fc-border {sizes[
-    size
-  ]} {className}"
->
+<span class={classes}>
   {#if src}
     <img {src} {alt} class="h-full w-full object-cover" />
   {:else}

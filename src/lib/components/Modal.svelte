@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { twMerge } from 'tailwind-merge';
 
   /**
    * Native `<dialog>` modal. Bind `open` to control visibility.
@@ -28,13 +29,11 @@
   function onClose() {
     open = false;
   }
+
+  const classes = $derived(twMerge('rounded-fc-lg   bg-fc-bg text-fc-fg p-0 max-w-md w-[calc(100%-2rem)] backdrop:bg-black/40', className));
 </script>
 
-<dialog
-  bind:this={dialog}
-  onclose={onClose}
-  class="rounded-fc-lg border border-fc-border bg-fc-bg text-fc-fg p-0 max-w-md w-[calc(100%-2rem)] backdrop:bg-black/40 {className}"
->
+<dialog bind:this={dialog} onclose={onClose} class={classes}>
   <div class="flex flex-col gap-3 p-5">
     {#if title}<h2 class="text-fc-lg font-semibold">{title}</h2>{/if}
     {@render children()}
