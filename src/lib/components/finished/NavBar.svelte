@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { gsap } from 'gsap';
   import { twMerge } from 'tailwind-merge';
-  import Component from './Component.svelte';
   import NavButton from './NavButton.svelte';
   import { icons } from '../../icons.js';
+  import { prefersReducedMotion } from '../../utils/motion.js';
 
   type Page = { label: string; href: string; icon?: string; active?: boolean };
   type User = { name: string; avatar?: string };
@@ -24,9 +25,43 @@
     showSearch?: boolean;
     class?: string;
   } = $props();
+
+  let navEl: HTMLElement | null = $state(null);
+  let ready = false;
+
+  $effect(() => {
+    if (!navEl) return;
+    const w = collapsed ? 64 : 240;
+    const px = collapsed ? 8 : 12;
+    if (!ready) {
+      gsap.set(navEl, { width: w, paddingLeft: px, paddingRight: px });
+      ready = true;
+      return;
+    }
+    if (prefersReducedMotion()) {
+      gsap.set(navEl, { width: w, paddingLeft: px, paddingRight: px });
+      return;
+    }
+    gsap.to(navEl, { width: w, paddingLeft: px, paddingRight: px, duration: 0.5, ease: 'power3.inOut' });
+  });
+
+  function press(e: PointerEvent) {
+    if (prefersReducedMotion()) return;
+    const el = e.currentTarget as HTMLElement;
+    gsap.killTweensOf(el, 'scale');
+    gsap.to(el, {
+      scale: 0.9,
+      duration: 0.08,
+      ease: 'power2.in',
+      onComplete: () => gsap.to(el, { scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
+    });
+  }
 </script>
 
-<Component class={twMerge('flex flex-col justify-between h-dvh min-h-0 p-3 gap-4', collapsed ? 'w-16 px-2' : 'w-60', className)}>
+<div
+  bind:this={navEl}
+  class={twMerge('relative bg-fc-component rounded-fc-md flex flex-col justify-between h-dvh min-h-0 py-3 gap-4 overflow-hidden', className)}
+>
   <div class="flex flex-col gap-1">
     <div class="flex items-center justify-between h-10 px-2 mb-1">
       {#if !collapsed}
@@ -37,10 +72,11 @@
       {/if}
       <button
         onclick={() => (collapsed = !collapsed)}
+        onpointerdown={press}
         class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-fc-sm text-fc-fg-muted transition-colors border border-fc-fg/7 hover:bg-fc-fg/7"
         aria-label={collapsed ? 'Expand' : 'Collapse'}
       >
-        <iconify-icon icon={icons.collapse} width="14" class="text-fc-fg/66 transition-transform {collapsed ? '' : '-scale-x-100'}"></iconify-icon>
+        <iconify-icon icon={icons.collapse} width="14" class="text-fc-fg/66 transition-transform duration-500 {collapsed ? '' : '-scale-x-100'}"></iconify-icon>
       </button>
     </div>
 
@@ -57,7 +93,7 @@
         <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} {collapsed}>
           {#snippet right()}
             {#if page.active}
-              <iconify-icon icon="solar:alt-arrow-right-bold-duotone" width="12" class="text-fc-fg/66"></iconify-icon>
+              <iconify-icon icon={icons.arrow} width="12" class="text-fc-fg/66"></iconify-icon>
             {/if}
           {/snippet}
         </NavButton>
@@ -68,6 +104,7 @@
   {#if user}
     <button
       type="button"
+      onpointerdown={press}
       class="h-10 w-full flex items-center justify-between px-3 rounded-fc-md text-fc-sm transition-colors border border-fc-fg/7 hover:bg-fc-fg/7 text-fc-fg"
     >
       <span class="flex items-center gap-2 min-w-0">
@@ -85,4 +122,4 @@
       {/if}
     </button>
   {/if}
-</Component>
+</div>
