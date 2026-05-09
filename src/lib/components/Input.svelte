@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
+  import { twMerge } from 'tailwind-merge';
 
   /** Text-style input. Pass any native input type via `type` prop. */
   let {
@@ -7,10 +8,8 @@
     class: className = '',
     ...rest
   }: HTMLInputAttributes & { class?: string; value?: string | number } = $props();
+
+  const classes = $derived(twMerge('h-11 w-full rounded-fc-md   bg-fc-bg px-3 text-fc-md text-fc-fg placeholder:text-fc-fg-muted focus:outline-2 focus:outline-fc-accent disabled:opacity-50', className));
 </script>
 
-<input
-  bind:value
-  class="h-11 w-full rounded-fc-md border border-fc-border bg-fc-bg px-3 text-fc-md text-fc-fg placeholder:text-fc-fg-muted focus:outline-2 focus:outline-fc-accent disabled:opacity-50 {className}"
-  {...rest}
-/>
+<input bind:value class={classes} {...rest} />

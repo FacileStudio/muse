@@ -1,13 +1,16 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { twMerge } from 'tailwind-merge';
 
-  /** Plain bordered surface. Use as a container for grouped content. */
+  /** Plain ed surface. Use as a container for grouped content. */
   let {
     class: className = '',
     children
   }: { class?: string; children: Snippet } = $props();
+
+  const classes = $derived(twMerge('rounded-fc-md   bg-fc-surface p-4', className));
 </script>
 
-<div class="rounded-fc-md border border-fc-border bg-fc-surface p-4 {className}">
+<div class={classes}>
   {@render children()}
 </div>
