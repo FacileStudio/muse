@@ -20,8 +20,7 @@ export { default as NavButton } from './components/molecules/NavButton.svelte';
 export { default as StatCard } from './components/molecules/StatCard.svelte';
 
 export { default as Modal } from './components/organisms/Modal.svelte';
-export { default as NavBar } from './components/organisms/NavBar.svelte';
-export { default as Sidebar } from './components/organisms/Sidebar.svelte';
+export { default as SideBar } from './components/organisms/SideBar.svelte';
 export { default as Table } from './components/organisms/Table.svelte';
 export { default as Topbar } from './components/organisms/Topbar.svelte';
 
