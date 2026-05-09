@@ -170,11 +170,13 @@ Collapsible vertical nav sidebar. Built on `Component` (inherits `bg-fc-componen
 | `title` | `string` | `''` | App / section name |
 | `pages` | `Page[]` | `[]` | Nav links. Each: `{ label, href, icon?, active? }` |
 | `user` | `User` | — | `{ name, avatar? }` — shown in the footer button |
-| `collapsed` | `boolean` | `false` | Bindable. Collapses to `w-16`, labels hidden |
+| `collapsed` | `boolean` | `false` | Bindable. Collapses to `77px` (`--width-fc-nav-collapsed`), labels hidden |
 | `showSearch` | `boolean` | `false` | Renders a search NavButton with ⌘K hint |
 | `class` | `string` | — | Passed through `twMerge` |
 
 ---
+
+**Width tokens**: `--width-fc-nav-collapsed: 77px` / `--width-fc-nav-expanded: 220px`. GSAP animates between these numeric equivalents on collapse toggle (`duration: 0.5, delay: 0.1, ease: power2.inOut`).
 
 ### NavButton
 
@@ -207,7 +209,9 @@ The atomic button unit used inside NavBar. Also standalone for custom nav UIs.
 | `children` | `Snippet` | — | Overrides the entire left side |
 | `right` | `Snippet` | — | Right-side content (hidden when collapsed) |
 
-**Style invariants**: `h-10 w-full`, `border: 1px solid rgba(36,36,36,0.07)`, `hover:bg-[rgba(36,36,36,0.07)]`.
+**Style invariants**: `px-3 py-3 w-full`, `gap-2`, `rounded-fc-md`, `overflow-hidden`, icon `width="20"`, label via `TextElevate` at `text-fc-sm`, `border border-fc-fg/7`, `hover:bg-fc-fg/7`, active `bg-fc-fg/7`.
+
+**Press animation**: scale `0.94` in `0.08s power2.in`, then `elastic.out(1, 0.4)` back to `1` in `0.5s`. Implemented as a `use:springPress` Svelte action.
 
 ---
 
