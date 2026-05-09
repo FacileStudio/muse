@@ -20,19 +20,17 @@
 }
 
 @theme {
-  /* colors → bg-fc-*, text-fc-*, border-fc-* */
-  --color-fc-bg: #fafafa;
-  --color-fc-surface: #fdfdfd;
-  --color-fc-fg: #242424;
+  /* colors → bg-fc-*, text-fc-*, -fc-* */
+  --color-fc-page: #fcfcfc;
+  --color-fc-component: rgba(255, 255, 255, 0.67);
+  --color-fc-fg: rgba(36, 36, 36, 1);
   --color-fc-fg-muted: rgba(36, 36, 36, 0.5);
-  --color-fc-accent: #2563eb;
-  --color-fc-accent-fg: #ffffff;
-  --color-fc-border: #e5e5ea;
   --color-fc-danger: #dc2626;
   --color-fc-success: #16a34a;
 
   /* radii → rounded-fc-* */
   --radius-fc-xs: 4px;
+  --radius-fc-sm: 8px;
   --radius-fc-md: 24px;
   --radius-fc-full: 999px;
 
@@ -84,6 +82,6 @@ h6 {
     --color-fc-surface: rgba(17, 17, 17, 0.67);
     --color-fc-fg: #f4f4f5;
     --color-fc-fg-muted: #a1a1aa;
-    --color-fc-border: #fff;
+    --color-fc-: #fff;
   }
 }

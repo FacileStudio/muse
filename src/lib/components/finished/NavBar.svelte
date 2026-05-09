@@ -36,7 +36,7 @@
       {/if}
       <button
         onclick={() => (collapsed = !collapsed)}
-        class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-fc-sm text-fc-fg-muted transition-colors border border-[rgba(36,36,36,0.07)] hover:bg-[rgba(36,36,36,0.07)]"
+        class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-fc-sm text-fc-fg-muted transition-colors border border-fc-fg/7 hover:bg-fc-fg/7"
         aria-label={collapsed ? 'Expand' : 'Collapse'}
       >
         <iconify-icon icon={collapsed ? 'lucide:panel-left-open' : 'lucide:panel-left-close'} width="14"></iconify-icon>
@@ -67,7 +67,7 @@
   {#if user}
     <button
       type="button"
-      class="h-10 w-full flex items-center justify-between px-3 rounded-fc-md text-fc-sm transition-colors border border-[rgba(36,36,36,0.07)] hover:bg-[rgba(36,36,36,0.07)] text-fc-fg"
+      class="h-10 w-full flex items-center justify-between px-3 rounded-fc-md text-fc-sm transition-colors border border-fc-fg/7 hover:bg-fc-fg/7 text-fc-fg"
     >
       <span class="flex items-center gap-2 min-w-0">
         {#if user.avatar}
