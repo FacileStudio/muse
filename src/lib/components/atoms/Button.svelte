@@ -27,12 +27,12 @@
     };
 
     const sizes: Record<Size, string> = {
-        sm: 'h-8 px-3 text-fc-sm rounded-fc-sm',
-        md: 'h-11 px-4 text-fc-md rounded-fc-md',
-        lg: 'h-12 px-5 text-fc-lg rounded-fc-md'
+        sm: 'py-2 px-4',
+        md: 'py-2 px-4',
+        lg: 'py-2 px-4'
     };
 
-    const classes = $derived(twMerge('inline-flex items-center justify-center gap-2 font-medium transition-opacity disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-fc-accent', variants[variant], sizes[size], className));
+    const classes = $derived(twMerge('inline-flex text-fc-xs items-center rounded-fc-md justify-center gap-2 font-medium transition-opacity disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-fc-accent', variants[variant], sizes[size], className));
 </script>
 
 <button class={classes} {...rest}>
