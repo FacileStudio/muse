@@ -113,6 +113,26 @@ Example:
 
 Never default to Lucide or other packs without an explicit request.
 
+### Icon library — `src/lib/icons.ts`
+
+Import via `import { icons } from '@facile/lib'`.
+
+| Key | Icon |
+|-----|------|
+| `icons.home` | `solar:home-2-bold-duotone` |
+| `icons.dashboard` | `solar:qr-code-bold-duotone` |
+| `icons.folder` | `solar:folder-open-bold-duotone` |
+| `icons.search` | `solar:magnifer-bold-duotone` |
+| `icons.collapse` | `solar:layers-bold-duotone` |
+| `icons.settings` | `solar:settings-bold-duotone` |
+| `icons.edit` | `solar:pen-new-square-bold-duotone` |
+| `icons.remove` | `solar:trash-bin-2-bold-duotone` |
+| `icons.calendar` | `solar:calendar-add-line-bold-duotone` |
+| `icons.notification` | `solar:bell-bold-duotone` |
+| `icons.plus` | `solar:add-circle-bold-duotone` |
+| `icons.close` | `solar:close-circle-bold-duotone` |
+| `icons.arrow` | `solar:alt-arrow-right-bold-duotone` |
+
 ---
 
 ## 9. Accessibility
