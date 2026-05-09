@@ -1,39 +1,35 @@
-// motion / hero pieces
-export { default as Rideau } from './components/Rideau.svelte';
-export { default as TextElevate } from './components/TextElevate.svelte';
-export { default as WordReveal } from './components/WordReveal.svelte';
-export { default as Mosaique } from './components/Mosaique.svelte';
-export { default as Carousel } from './components/Carousel.svelte';
+export { default as Alert } from './components/atoms/Alert.svelte';
+export { default as Avatar } from './components/atoms/Avatar.svelte';
+export { default as Badge } from './components/atoms/Badge.svelte';
+export { default as Button } from './components/atoms/Button.svelte';
+export { default as Card } from './components/atoms/Card.svelte';
+export { default as Checkbox } from './components/atoms/Checkbox.svelte';
+export { default as Component } from './components/atoms/Component.svelte';
+export { default as Divider } from './components/atoms/Divider.svelte';
+export { default as IconButton } from './components/atoms/IconButton.svelte';
+export { default as Input } from './components/atoms/Input.svelte';
+export { default as Radio } from './components/atoms/Radio.svelte';
+export { default as Select } from './components/atoms/Select.svelte';
+export { default as Skeleton } from './components/atoms/Skeleton.svelte';
+export { default as Spinner } from './components/atoms/Spinner.svelte';
+export { default as Switch } from './components/atoms/Switch.svelte';
+export { default as Textarea } from './components/atoms/Textarea.svelte';
 
-// inputs / forms
-export { default as Button } from './components/Button.svelte';
-export { default as Input } from './components/Input.svelte';
-export { default as Textarea } from './components/Textarea.svelte';
-export { default as Select } from './components/Select.svelte';
-export { default as Checkbox } from './components/Checkbox.svelte';
-export { default as Radio } from './components/Radio.svelte';
-export { default as Switch } from './components/Switch.svelte';
-export { default as Field } from './components/Field.svelte';
+export { default as Field } from './components/molecules/Field.svelte';
+export { default as NavButton } from './components/molecules/NavButton.svelte';
+export { default as StatCard } from './components/molecules/StatCard.svelte';
 
-// surfaces / layout
-export { default as Card } from './components/Card.svelte';
-export { default as Component } from './components/finished/Component.svelte';
-export { default as Divider } from './components/Divider.svelte';
-export { default as IconButton } from './components/finished/IconButton.svelte';
-export { default as NavBar } from './components/finished/NavBar.svelte';
-export { default as NavButton } from './components/finished/NavButton.svelte';
-export { default as Sidebar } from './components/Sidebar.svelte';
-export { default as Topbar } from './components/Topbar.svelte';
-export { default as Modal } from './components/Modal.svelte';
-export { default as Table } from './components/Table.svelte';
+export { default as Modal } from './components/organisms/Modal.svelte';
+export { default as NavBar } from './components/organisms/NavBar.svelte';
+export { default as Sidebar } from './components/organisms/Sidebar.svelte';
+export { default as Table } from './components/organisms/Table.svelte';
+export { default as Topbar } from './components/organisms/Topbar.svelte';
 
-// feedback / data display
-export { default as Badge } from './components/Badge.svelte';
-export { default as Alert } from './components/Alert.svelte';
-export { default as Spinner } from './components/Spinner.svelte';
-export { default as Skeleton } from './components/Skeleton.svelte';
-export { default as Avatar } from './components/Avatar.svelte';
-export { default as StatCard } from './components/StatCard.svelte';
+export { default as Carousel } from './components/motion/Carousel.svelte';
+export { default as Mosaique } from './components/motion/Mosaique.svelte';
+export { default as Rideau } from './components/motion/Rideau.svelte';
+export { default as TextElevate } from './components/motion/TextElevate.svelte';
+export { default as WordReveal } from './components/motion/WordReveal.svelte';
 
 export { prefersReducedMotion, isMobile } from './utils/motion.js';
 export { icons } from './icons.js';
