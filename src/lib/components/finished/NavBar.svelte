@@ -39,12 +39,12 @@
         class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-fc-sm text-fc-fg-muted transition-colors border border-fc-fg/7 hover:bg-fc-fg/7"
         aria-label={collapsed ? 'Expand' : 'Collapse'}
       >
-        <iconify-icon icon={collapsed ? 'lucide:panel-left-open' : 'lucide:panel-left-close'} width="14"></iconify-icon>
+        <iconify-icon icon="solar:sidebar-minimalistic-linear" width="14" class="text-fc-fg/66 transition-transform {collapsed ? '' : '-scale-x-100'}"></iconify-icon>
       </button>
     </div>
 
     {#if showSearch}
-      <NavButton icon="lucide:search" label="Search…" {collapsed} class="text-fc-fg-muted mb-1">
+      <NavButton icon="solar:magnifer-linear" label="Search…" {collapsed} class="mb-1">
         {#snippet right()}
           <span class="text-fc-xs opacity-50">⌘K</span>
         {/snippet}
@@ -56,7 +56,7 @@
         <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} {collapsed}>
           {#snippet right()}
             {#if page.active}
-              <iconify-icon icon="lucide:chevron-right" width="12" class="opacity-50"></iconify-icon>
+              <iconify-icon icon="solar:alt-arrow-right-linear" width="12" class="text-fc-fg/66"></iconify-icon>
             {/if}
           {/snippet}
         </NavButton>
@@ -80,7 +80,7 @@
         {#if !collapsed}<span class="truncate">{user.name}</span>{/if}
       </span>
       {#if !collapsed}
-        <iconify-icon icon="lucide:settings" width="14" class="shrink-0 text-fc-fg-muted"></iconify-icon>
+        <iconify-icon icon="solar:settings-linear" width="14" class="shrink-0 text-fc-fg/66"></iconify-icon>
       {/if}
     </button>
   {/if}
