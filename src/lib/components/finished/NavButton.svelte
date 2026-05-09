@@ -24,7 +24,7 @@
 
   const classes = $derived(twMerge(
     'h-10 w-full flex items-center justify-between px-3 rounded-fc-md text-fc-sm transition-colors border border-fc-fg/7 hover:bg-fc-fg/7',
-    active ? 'bg-fc-accent/10 text-fc-accent' : 'text-fc-fg',
+    active ? 'bg-fc-fg/10 text-fc-fg' : 'text-fc-fg',
     className
   ));
 </script>
