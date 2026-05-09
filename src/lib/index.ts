@@ -17,10 +17,11 @@ export { default as Field } from './components/Field.svelte';
 
 // surfaces / layout
 export { default as Card } from './components/Card.svelte';
-export { default as Component } from './components/Component.svelte';
+export { default as Component } from './components/finished/Component.svelte';
 export { default as Divider } from './components/Divider.svelte';
-export { default as NavBar } from './components/NavBar.svelte';
-export { default as NavButton } from './components/NavButton.svelte';
+export { default as IconButton } from './components/finished/IconButton.svelte';
+export { default as NavBar } from './components/finished/NavBar.svelte';
+export { default as NavButton } from './components/finished/NavButton.svelte';
 export { default as Sidebar } from './components/Sidebar.svelte';
 export { default as Topbar } from './components/Topbar.svelte';
 export { default as Modal } from './components/Modal.svelte';
