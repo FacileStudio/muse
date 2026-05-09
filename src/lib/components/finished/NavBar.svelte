@@ -39,7 +39,7 @@
         class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-fc-sm text-fc-fg-muted transition-colors border border-fc-fg/7 hover:bg-fc-fg/7"
         aria-label={collapsed ? 'Expand' : 'Collapse'}
       >
-        <iconify-icon icon="solar:sidebar-minimalistic-bold-duotone" width="14" class="text-fc-fg/66 transition-transform {collapsed ? '' : '-scale-x-100'}"></iconify-icon>
+        <iconify-icon icon="solar:layers-bold-duotone" width="14" class="text-fc-fg/66 transition-transform {collapsed ? '' : '-scale-x-100'}"></iconify-icon>
       </button>
     </div>
 
