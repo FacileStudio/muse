@@ -65,8 +65,11 @@
   </div>
 
   {#if user}
-    <NavButton {collapsed}>
-      {#snippet children()}
+    <button
+      type="button"
+      class="h-10 w-full flex items-center justify-between px-3 rounded-fc-md text-fc-sm transition-colors border border-[rgba(36,36,36,0.07)] hover:bg-[rgba(36,36,36,0.07)] text-fc-fg"
+    >
+      <span class="flex items-center gap-2 min-w-0">
         {#if user.avatar}
           <img src={user.avatar} alt={user.name} class="h-6 w-6 rounded-full object-cover shrink-0" />
         {:else}
@@ -74,11 +77,11 @@
             {user.name.charAt(0).toUpperCase()}
           </span>
         {/if}
-        {#if !collapsed}<span class="truncate text-fc-sm">{user.name}</span>{/if}
-      {/snippet}
-      {#snippet right()}
-        <iconify-icon icon="lucide:settings" width="14" class="text-fc-fg-muted"></iconify-icon>
-      {/snippet}
-    </NavButton>
+        {#if !collapsed}<span class="truncate">{user.name}</span>{/if}
+      </span>
+      {#if !collapsed}
+        <iconify-icon icon="lucide:settings" width="14" class="shrink-0 text-fc-fg-muted"></iconify-icon>
+      {/if}
+    </button>
   {/if}
 </Component>
