@@ -2,6 +2,7 @@
   import { twMerge } from 'tailwind-merge';
   import Component from './Component.svelte';
   import NavButton from './NavButton.svelte';
+  import { icons } from '../../icons.js';
 
   type Page = { label: string; href: string; icon?: string; active?: boolean };
   type User = { name: string; avatar?: string };
@@ -39,12 +40,12 @@
         class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-fc-sm text-fc-fg-muted transition-colors border border-fc-fg/7 hover:bg-fc-fg/7"
         aria-label={collapsed ? 'Expand' : 'Collapse'}
       >
-        <iconify-icon icon="solar:layers-bold-duotone" width="14" class="text-fc-fg/66 transition-transform {collapsed ? '' : '-scale-x-100'}"></iconify-icon>
+        <iconify-icon icon={icons.collapse} width="14" class="text-fc-fg/66 transition-transform {collapsed ? '' : '-scale-x-100'}"></iconify-icon>
       </button>
     </div>
 
     {#if showSearch}
-      <NavButton icon="solar:magnifer-bold-duotone" label="Search…" {collapsed} class="mb-1">
+      <NavButton icon={icons.search} label="Search…" {collapsed} class="mb-1">
         {#snippet right()}
           <span class="text-fc-xs opacity-50">⌘K</span>
         {/snippet}
@@ -80,7 +81,7 @@
         {#if !collapsed}<span class="truncate">{user.name}</span>{/if}
       </span>
       {#if !collapsed}
-        <iconify-icon icon="solar:settings-bold-duotone" width="14" class="shrink-0 text-fc-fg/66"></iconify-icon>
+        <iconify-icon icon={icons.settings} width="14" class="shrink-0 text-fc-fg/66"></iconify-icon>
       {/if}
     </button>
   {/if}

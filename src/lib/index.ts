@@ -36,3 +36,5 @@ export { default as Avatar } from './components/Avatar.svelte';
 export { default as StatCard } from './components/StatCard.svelte';
 
 export { prefersReducedMotion, isMobile } from './utils/motion.js';
+export { icons } from './icons.js';
+export type { IconKey } from './icons.js';
