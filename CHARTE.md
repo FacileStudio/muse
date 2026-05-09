@@ -108,7 +108,74 @@ Container max-widths:
 
 ---
 
-## 9. Component checklist
+## 9. Navigation components
+
+### NavBar
+
+Collapsible vertical nav sidebar. Built on `Component` (inherits `bg-fc-component rounded-fc-md`). Manages its own collapsed state via `$bindable`.
+
+```svelte
+<NavBar
+  icon="lucide:layout-dashboard"
+  title="Facile"
+  bind:collapsed
+  showSearch
+  pages={[
+    { label: 'Home',     href: '/',        icon: 'lucide:home',     active: true },
+    { label: 'Settings', href: '/settings', icon: 'lucide:settings' }
+  ]}
+  user={{ name: 'Gian', avatar: '/pfp.jpg' }}
+/>
+```
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `icon` | `string` | — | Iconify icon for the header |
+| `title` | `string` | `''` | App / section name |
+| `pages` | `Page[]` | `[]` | Nav links. Each: `{ label, href, icon?, active? }` |
+| `user` | `User` | — | `{ name, avatar? }` — shown in the footer button |
+| `collapsed` | `boolean` | `false` | Bindable. Collapses to `w-16`, labels hidden |
+| `showSearch` | `boolean` | `false` | Renders a search NavButton with ⌘K hint |
+| `class` | `string` | — | Passed through `twMerge` |
+
+---
+
+### NavButton
+
+The atomic button unit used inside NavBar. Also standalone for custom nav UIs.
+
+```svelte
+<!-- As a link -->
+<NavButton href="/dashboard" icon="lucide:home" label="Home" active />
+
+<!-- As a button with custom snippets -->
+<NavButton>
+  {#snippet children()}
+    <Avatar name="Gian" size="sm" />
+    <span>Gian</span>
+  {/snippet}
+  {#snippet right()}
+    <iconify-icon icon="lucide:settings" width="14" />
+  {/snippet}
+</NavButton>
+```
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `href` | `string` | — | Renders as `<a>` when provided |
+| `icon` | `string` | — | Iconify icon (left) |
+| `label` | `string` | — | Text label (hidden when `collapsed`) |
+| `active` | `boolean` | `false` | Accent highlight |
+| `collapsed` | `boolean` | `false` | Hides label and right snippet |
+| `class` | `string` | — | Passed through `twMerge` |
+| `children` | `Snippet` | — | Overrides the entire left side |
+| `right` | `Snippet` | — | Right-side content (hidden when collapsed) |
+
+**Style invariants**: `h-10 w-full`, `border: 1px solid rgba(36,36,36,0.07)`, `hover:bg-[rgba(36,36,36,0.07)]`.
+
+---
+
+## 10. Component checklist
 
 Before exporting a component:
 - [ ] Uses tokens, no raw hex / px outside tokens
