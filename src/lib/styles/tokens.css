@@ -22,9 +22,13 @@
 @theme {
   /* colors → bg-fc-*, text-fc-*, -fc-* */
   --color-fc-page: #fcfcfc;
+  --color-fc-bg: #fcfcfc;
+  --color-fc-surface: rgba(0, 0, 0, 0.04);
   --color-fc-component: rgba(255, 255, 255, 0.67);
   --color-fc-fg: rgba(36, 36, 36, 1);
   --color-fc-fg-muted: rgba(36, 36, 36, 0.5);
+  --color-fc-accent: #6366f1;
+  --color-fc-accent-fg: #ffffff;
   --color-fc-danger: #dc2626;
   --color-fc-success: #16a34a;
 
@@ -32,16 +36,17 @@
   --radius-fc-xs: 4px;
   --radius-fc-sm: 8px;
   --radius-fc-md: 24px;
+  --radius-fc-pill: 999px;
   --radius-fc-full: 999px;
 
   /* type scale → text-fc-* (font-size) */
-  --text-fc-xs: 0.75rem;
-  --text-fc-sm: 0.875rem;
-  --text-fc-md: 1rem;
-  --text-fc-lg: 1.125rem;
-  --text-fc-xl: 1.375rem;
-  --text-fc-2xl: 1.75rem;
-  --text-fc-3xl: 2.125rem;
+  --text-fc-xs: 8px;
+  --text-fc-sm: 10px;
+  --text-fc-md: 12px;
+  --text-fc-lg: 14px;
+  --text-fc-xl: 20px;
+  --text-fc-2xl: 24px;
+  --text-fc-3xl: 32px;
 
   /* fonts → font-fc-* / font-sans */
   --font-fc-body: 'Goga', Helvetica, Arial, sans-serif;
@@ -56,32 +61,25 @@
   --container-fc-md: 720px;
   --container-fc-lg: 960px;
   --container-fc-xl: 1200px;
+
+  /* nav sidebar widths — mirrored in SideBar.svelte GSAP targets */
+  --width-fc-nav-collapsed: 77px;
+  --width-fc-nav-expanded: 220px;
 }
 
-:root {
+:root, body {
   font-family: 'Goga', Helvetica, Arial, sans-serif;
-}
-
-body {
-  font-family: 'Goga', Helvetica, Arial, sans-serif;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Goga', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  letter-spacing: -0.02%;
 }
 
 /* Dark mode — variables swap, utilities pick up new values automatically. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-fc-bg: #111111;
-    --color-fc-surface: rgba(17, 17, 17, 0.67);
+    --color-fc-page: #1e1e1e;
+    --color-fc-bg: #242424;
+    --color-fc-surface: rgba(255, 255, 255, 0.06);
+    --color-fc-component: rgba(255, 255, 255, 0.05);
     --color-fc-fg: #f4f4f5;
-    --color-fc-fg-muted: #a1a1aa;
-    --color-fc-: #fff;
+    --color-fc-fg-muted: rgba(244, 244, 245, 0.5);
   }
 }
