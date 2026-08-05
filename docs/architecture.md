@@ -1,0 +1,132 @@
+# muse — Architecture
+
+How a source-only Svelte library reaches a consumer app, what the Tailwind v4 theme actually
+publishes, and how the same repo doubles as an AI skill for Claude Code and Codex.
+
+## Runtime topology
+
+There is no muse process. The library is compiled inside the consumer's Vite build, and its
+CSS variables are turned into utility classes by the consumer's Tailwind pass.
+
+```
+FacileStudio/muse (git)
+        │
+        │  bun add github:FacileStudio/muse
+        ▼
+consumer/node_modules/@facile/lib/src/lib/
+        │
+        ├── index.ts ──▶ components/{atoms,molecules,organisms,motion}/*.svelte
+        │                                 │  compiled by
+        │                                 ▼
+        │                          @sveltejs/vite-plugin-svelte ──▶ app bundle
+        │                                                              ▲
+        ├── icons.ts ──▶ solar:*-bold-duotone names ──▶ <iconify-icon>  │
+        │                                                              │
+        └── styles/tokens.css ──▶ @tailwindcss/vite ───────────────────┘
+                    │                     ▲
+                    │  @theme { --color-fc-* … }
+                    │                     │
+                    └── fonts/Goga*.otf   │
+                                          │
+                        @source '…/@facile/lib/src'  ← consumer must declare this
+                                                       or no fc-* utility is emitted
+```
+
+```
+FacileStudio/muse (git)
+        │  curl install.sh | bash
+        ├──▶ ~/.claude/skills/muse/lib   + SKILL.md  (copied from integrations/MUSE.md)
+        └──▶ ~/.codex/muse/lib           + a marked block injected into ~/.codex/AGENTS.md
+```
+
+## Components
+
+| Piece | File | Role |
+|---|---|---|
+| Public surface | `src/lib/index.ts` | Re-exports 28 components, 2 helpers, `icons` and `IconKey`. Nothing else is importable. |
+| Atoms | `src/lib/components/atoms/` | 16 single-element primitives — buttons, inputs, badges, surfaces |
+| Molecules | `src/lib/components/molecules/` | 3 compositions of atoms — `Field`, `NavButton`, `StatCard` |
+| Organisms | `src/lib/components/organisms/` | 4 page-level structures — `Modal`, `SideBar`, `Table`, `Topbar` |
+| Motion | `src/lib/components/motion/` | 5 GSAP-driven pieces |
+| Icons | `src/lib/icons.ts` | 13 Solar `bold-duotone` names behind stable keys |
+| Theme | `src/lib/styles/tokens.css` | `@import 'tailwindcss'`, `@font-face` rules, one `@theme` block, a `prefers-color-scheme: dark` override |
+| Fonts | `src/lib/fonts/` | Goga Medium (500) and Goga Semibold (600) |
+| Helpers | `src/lib/utils/motion.ts` | `prefersReducedMotion()`, `isMobile()` — both SSR-safe |
+| Skill | `integrations/MUSE.md` | One markdown file consumed by both Claude Code and Codex |
+| Installer | `install.sh` | Clones or `git pull --ff-only`s the repo per tool, then wires the skill |
+
+The atomic split is import-path only. Everything is re-exported flat from `index.ts`, so
+consumers write `import { NavButton } from '@facile/lib'` and never name a tier.
+
+## Consumption lifecycle
+
+1. The consumer installs the repo as a GitHub dependency. `package.json` exposes
+   `"svelte"` and `"main"` pointing at `./src/lib/index.ts` — the raw TypeScript entry.
+   There is no build step and no `dist/`.
+2. `@sveltejs/vite-plugin-svelte` compiles the `.svelte` files from `node_modules` as part
+   of the consumer's build.
+3. `import '@facile/lib/styles'` resolves through the `"./styles"` export to
+   `tokens.css`, which itself does `@import 'tailwindcss'`.
+4. Tailwind v4 reads the `@theme` block and generates `bg-fc-*`, `text-fc-*`,
+   `rounded-fc-*`, `max-w-fc-*`, `w-fc-nav-*` and `ease-fc` utilities.
+5. Tailwind scans the consumer's own source for class names. It does **not** scan
+   `node_modules` by default, so the consumer must add an `@source` directive covering
+   `@facile/lib/src`. Without it every muse component renders unstyled. See
+   [development.md](development.md).
+
+## Class composition
+
+Every component builds its class string with `twMerge()` from `tailwind-merge`, in a
+`$derived`:
+
+```ts
+const classes = $derived(twMerge('rounded-fc-md bg-fc-surface p-4', className));
+```
+
+Because `twMerge` resolves conflicts by keeping the last utility in the same group, a
+consumer passing `class="p-8"` replaces `p-4` rather than fighting it in the cascade. This
+is the library-wide contract: pass `class` and expect it to win.
+
+## Motion architecture
+
+Eight components animate. `Rideau`, `TextElevate`, `WordReveal` and `Mosaique` drive GSAP
+from `onMount`; `SideBar` tweens its own width from an `$effect`; `IconButton` and
+`NavButton` run a spring press on `pointerdown`; `Carousel` uses only native scroll snapping
+and an `IntersectionObserver`.
+
+Every GSAP path calls `prefersReducedMotion()` first and takes a non-animated branch when it
+returns `true` — the curtain drops to height `0` instantly, text is set to its final
+transform, the mosaic lands in place, the sidebar snaps to its target width, and press
+animations are skipped entirely. `Skeleton` and `Spinner` use the `motion-reduce:animate-none`
+Tailwind variant instead.
+
+The press animation is the house spring: scale to `0.88`–`0.94` in `0.08s` with `power2.in`,
+then back to `1` in `0.5s` with `elastic.out(1, 0.4)`. `IconButton` inlines it as an
+`onpointerdown` handler; `NavButton` and `SideBar` implement it as a `use:springPress` Svelte
+action so it can attach to either an `<a>` or a `<button>`.
+
+`WordReveal` additionally registers the GSAP `ScrollTrigger` and `SplitText` plugins at
+mount. `SplitText` shipped as a paid Club GreenSock plugin before GSAP 3.13; the declared
+range is `^3.12.0`, so a consumer resolving an older 3.12.x will fail to import it.
+
+## Theming model
+
+muse owns no runtime theme state. Everything is CSS custom properties inside `@theme`, which
+means a consumer overrides any token by redeclaring the variable at `:root` after importing
+the styles. That is how the suite reconciles muse with its own palette — see
+[configuration.md](configuration.md) for the aliasing pattern used in `Casier`.
+
+Dark mode is a plain `@media (prefers-color-scheme: dark)` block that swaps
+`--color-fc-page`, `--color-fc-bg`, `--color-fc-surface`, `--color-fc-component`,
+`--color-fc-fg` and `--color-fc-fg-muted`. There is no class-based toggle and no JavaScript
+involved, so a consumer with a manual theme switcher must override those variables itself.
+
+There is no border color token. Borders are drawn with alpha over the foreground color —
+`border-fc-fg/7` on nav chrome and `border-fc-fg/10` on inputs, tables and dividers — so
+they follow `--color-fc-fg` through the theme swap automatically.
+
+## Relationship to the rest of the suite
+
+muse is a `lib` repo: it ships no service, reads no environment variable, opens no socket,
+and has no involvement with `pool`, `enveloppe`, Journal, or Porte. Its only integration
+surfaces are the package export map and the two AI skill install paths.
