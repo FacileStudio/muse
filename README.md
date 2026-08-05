@@ -1,97 +1,85 @@
 # muse
 
-Svelte / SvelteKit component library + design system for Facile tools.
+Svelte 5 component library and design system for Facile tools, published as `@facile/lib`.
 
-> If you're about to write frontend for a Facile tool — pull from here first.
+muse ships 28 components arranged as atoms, molecules, organisms and motion pieces, a
+Tailwind v4 token theme, the Solar icon map, and the bundled Goga typeface. It is consumed
+directly from source — there is no build step and no `dist/`. An `install.sh` also registers
+muse as an AI skill for Claude Code and Codex so agents generate suite-shaped UI by default.
 
----
+## What it does
 
-## Install the AI skill
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/FacileStudio/muse/main/install.sh | bash
-```
-
-Detects which AI tools are installed and registers muse for each:
-
-| Tool | Install path |
-|------|-------------|
-| Claude Code | `~/.claude/skills/muse/` |
-| Codex | `~/.codex/muse/` |
-
-Works with either, or both. Re-run the same command to update.
-
----
-
-## Use as a dependency
-
-```bash
-bun add github:FacileStudio/muse
-```
-
-Or local:
-
-```bash
-git clone https://github.com/FacileStudio/muse.git
-bun add file:../muse
-```
-
-Then in your app:
-
-```svelte
-<script lang="ts">
-  import { Rideau, TextElevate } from '@facile/lib';
-</script>
-```
-
-Pull tokens once in root layout:
-
-```ts
-import '@facile/lib/styles';
-```
-
-Requires `@tailwindcss/vite` (or PostCSS) in the consumer app.
-
----
+- Exports 28 Svelte 5 components: 16 atoms, 3 molecules, 4 organisms, 5 GSAP motion pieces
+- Publishes a Tailwind v4 `@theme` block under the `fc-*` namespace — colors, radii, type
+  scale, fonts, easing, container and nav widths
+- Merges consumer classes over component defaults with `tailwind-merge`, so `class` always wins
+- Exports `icons`, a keyed map of Solar `bold-duotone` Iconify names, with an `IconKey` type
+- Bundles the Goga typeface (Medium and Semibold) as `@font-face` rules
+- Ships `prefersReducedMotion()` and `isMobile()` so every animation can degrade
+- Registers itself as an AI skill for Claude Code (`~/.claude/skills/muse/`) and Codex
+  (`~/.codex/muse/`) through `install.sh`
 
 ## Stack
 
-- **Svelte 5 + SvelteKit** — runes API (`$state`, `$props`, `$derived`)
-- **Tailwind CSS v4** — design tokens in `src/lib/styles/tokens.css`
-- **GSAP** — animation
-- **iconify-icon** — icons
+| Layer | Tech |
+|---|---|
+| Runtime | Svelte 5 runes (peer `^5.0.0`), SvelteKit |
+| Client | Tailwind CSS 4 (peer `^4.0.0`), GSAP `^3.12.0`, tailwind-merge `^3.5.0` |
 
----
+## Install
 
-## Layout
-
-```
-muse/
-├── CHARTE.md              graphical chart — colors, type, spacing, motion
-├── install.sh             one-line installer (Claude Code + Codex)
-├── integrations/
-│   └── MUSE.md            shared AI skill definition (Claude Code + Codex)
-└── src/lib/
-    ├── components/        *.svelte exports
-    ├── fonts/             bundled Goga + Helvetica Neue font files
-    ├── styles/            tokens.css (@theme block)
-    ├── utils/             shared helpers
-    └── index.ts           public re-exports
+```sh
+bun add github:FacileStudio/muse
 ```
 
+Import the theme once in the root layout, then use components anywhere:
+
+```svelte
+<script lang="ts">
+  import '@facile/lib/styles';
+  import { Button, Card, Field, Input } from '@facile/lib';
+
+  let email = $state('');
+</script>
+
+<Card>
+  <Field label="Email" helper="We only use it for the login link">
+    <Input type="email" bind:value={email} placeholder="you@example.com" />
+  </Field>
+  <Button onclick={() => console.log(email)}>Send</Button>
+</Card>
+```
+
+The consumer app needs `@tailwindcss/vite` (or the PostCSS plugin) configured, and a
+`@source` directive pointing at muse inside `node_modules` — without it Tailwind never scans
+the components and nothing is styled. See [docs/development.md](docs/development.md).
+
+## Structure
+
+```
+CHARTE.md              Visual contract — color, type, spacing, motion, icons, accessibility
+install.sh             Installs the AI skill for Claude Code and Codex
+integrations/
+  MUSE.md              The shared skill definition both tools read
+src/lib/
+  index.ts             Public re-exports — the whole surface
+  icons.ts             Solar icon name map and the IconKey type
+  components/          atoms/ molecules/ organisms/ motion/
+  fonts/               Goga Medium and Goga Semibold (.otf)
+  styles/tokens.css    Tailwind v4 @theme block, @font-face rules, dark mode
+  utils/motion.ts      prefersReducedMotion(), isMobile()
+```
+
+## Documentation
+
+| Doc | What's in it |
+|---|---|
+| [Architecture](docs/architecture.md) | How the library reaches a consumer app, and the skill path |
+| [Configuration](docs/configuration.md) | Every published token, and how suite apps alias them |
+| [Development](docs/development.md) | Local setup, the `@source` trap, adding a component |
+| [API](docs/api.md) | Every exported component with its props |
+
 ---
 
-## Adding a component
-
-1. Drop `MyThing.svelte` into `src/lib/components/`
-2. Re-export from `src/lib/index.ts`
-3. Mobile-first, no hardcoded hex — use tokens from `CHARTE.md`
-4. Hit targets ≥ 44px, works at 360px width, respects `prefers-reduced-motion`
-
----
-
-## Contributing
-
-1. Read `CHARTE.md` — visual contract
-2. Browse `src/lib/components/` before writing something new
-3. Open a PR before adding a new runtime dependency
+Part of the [Facile Suite](https://facile.studio) — self-hosted tools for creative studios
+and freelancers. One login, zero cloud dependency.
