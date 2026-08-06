@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { twMerge } from 'tailwind-merge';
+    import { twMerge } from '../../utils/cn.js';
 
     type Size = 'sm' | 'md' | 'lg';
 
@@ -14,7 +14,7 @@
         lg: 'h-10 w-10 border-[3px]'
     };
 
-    const classes = $derived(twMerge('inline-block rounded-full border-t-fc-accent animate-spin motion-reduce:animate-none', sizes[size], className));
+    const classes = $derived(twMerge('inline-block rounded-fc-pill border-fc-border border-t-fc-fg animate-spin motion-reduce:animate-none', sizes[size], className));
 </script>
 
 <span role="status" aria-label="Loading" class={classes}></span>

@@ -20,33 +20,47 @@
 }
 
 @theme {
-  /* colors → bg-fc-*, text-fc-*, -fc-* */
-  --color-fc-page: #fcfcfc;
-  --color-fc-bg: #fcfcfc;
-  --color-fc-surface: rgba(0, 0, 0, 0.04);
-  --color-fc-component: rgba(255, 255, 255, 0.67);
-  --color-fc-fg: rgba(36, 36, 36, 1);
-  --color-fc-fg-muted: rgba(36, 36, 36, 0.5);
-  --color-fc-accent: #6366f1;
-  --color-fc-accent-fg: #ffffff;
-  --color-fc-danger: #dc2626;
-  --color-fc-success: #16a34a;
+  /* colors → bg-fc-*, text-fc-*, -fc-* — chroma-zero OKLCH, matches shipped suite apps */
+  --color-fc-page: oklch(1 0 0);
+  --color-fc-bg: oklch(1 0 0);
+  --color-fc-surface: oklch(0.97 0 0);
+  --color-fc-component: oklch(0.985 0 0);
+  --color-fc-fg: oklch(0.145 0 0);
+  --color-fc-fg-muted: oklch(0.556 0 0);
+  --color-fc-accent: oklch(0.145 0 0);
+  --color-fc-accent-fg: oklch(1 0 0);
+  --color-fc-border: oklch(0.9 0 0);
+  --color-fc-ring: oklch(0.4 0 0);
+  --color-fc-danger: oklch(0.55 0.22 29);
+  --color-fc-danger-fg: oklch(1 0 0);
+  --color-fc-success: oklch(0.52 0.12 150);
+  --color-fc-warning: oklch(0.58 0.13 75);
+  --color-fc-owner: oklch(0.55 0.13 75);
+  --color-fc-admin: oklch(0.52 0.14 255);
 
   /* radii → rounded-fc-* */
   --radius-fc-xs: 4px;
-  --radius-fc-sm: 8px;
-  --radius-fc-md: 24px;
+  --radius-fc-sm: 6px;
+  --radius-fc-md: 8px;
+  --radius-fc-lg: 12px;
   --radius-fc-pill: 999px;
   --radius-fc-full: 999px;
 
-  /* type scale → text-fc-* (font-size) */
-  --text-fc-xs: 8px;
-  --text-fc-sm: 10px;
-  --text-fc-md: 12px;
-  --text-fc-lg: 14px;
-  --text-fc-xl: 20px;
-  --text-fc-2xl: 24px;
-  --text-fc-3xl: 32px;
+  /* type scale → text-fc-* (font-size + paired line-height) */
+  --text-fc-xs: 0.75rem;
+  --text-fc-xs--line-height: 1rem;
+  --text-fc-sm: 0.875rem;
+  --text-fc-sm--line-height: 1.25rem;
+  --text-fc-md: 1rem;
+  --text-fc-md--line-height: 1.5rem;
+  --text-fc-lg: 1.125rem;
+  --text-fc-lg--line-height: 1.75rem;
+  --text-fc-xl: 1.375rem;
+  --text-fc-xl--line-height: 1.75rem;
+  --text-fc-2xl: 1.75rem;
+  --text-fc-2xl--line-height: 2.125rem;
+  --text-fc-3xl: 2.25rem;
+  --text-fc-3xl--line-height: 2.5rem;
 
   /* fonts → font-fc-* / font-sans */
   --font-fc-body: 'Goga', Helvetica, Arial, sans-serif;
@@ -67,19 +81,68 @@
   --width-fc-nav-expanded: 220px;
 }
 
-:root, body {
-  font-family: 'Goga', Helvetica, Arial, sans-serif;
-  letter-spacing: -0.02%;
+/*
+ * Dark mode — variables swap, utilities pick up new values automatically.
+ *
+ * Two ways in, and they compose:
+ *   1. OS preference, automatic — nothing to wire up.
+ *   2. An explicit `.dark` / `.light` class on <html>, which always wins over the OS.
+ * The `:not(.light)` guard is what lets a user force light while the OS says dark.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-fc-page: oklch(0.09 0 0);
+    --color-fc-bg: oklch(0.09 0 0);
+    --color-fc-surface: oklch(0.18 0 0);
+    --color-fc-component: oklch(0.13 0 0);
+    --color-fc-fg: oklch(0.985 0 0);
+    --color-fc-fg-muted: oklch(0.6 0 0);
+    --color-fc-accent: oklch(0.985 0 0);
+    --color-fc-accent-fg: oklch(0.09 0 0);
+    --color-fc-border: oklch(1 0 0 / 10%);
+    --color-fc-ring: oklch(0.6 0 0);
+    --color-fc-danger: oklch(0.65 0.22 29);
+    --color-fc-success: oklch(0.72 0.14 150);
+    --color-fc-warning: oklch(0.8 0.13 75);
+    --color-fc-owner: oklch(0.78 0.13 75);
+    --color-fc-admin: oklch(0.72 0.13 255);
+  }
 }
 
-/* Dark mode — variables swap, utilities pick up new values automatically. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-fc-page: #1e1e1e;
-    --color-fc-bg: #242424;
-    --color-fc-surface: rgba(255, 255, 255, 0.06);
-    --color-fc-component: rgba(255, 255, 255, 0.05);
-    --color-fc-fg: #f4f4f5;
-    --color-fc-fg-muted: rgba(244, 244, 245, 0.5);
+:root.dark {
+  --color-fc-page: oklch(0.09 0 0);
+  --color-fc-bg: oklch(0.09 0 0);
+  --color-fc-surface: oklch(0.18 0 0);
+  --color-fc-component: oklch(0.13 0 0);
+  --color-fc-fg: oklch(0.985 0 0);
+  --color-fc-fg-muted: oklch(0.6 0 0);
+  --color-fc-accent: oklch(0.985 0 0);
+  --color-fc-accent-fg: oklch(0.09 0 0);
+  --color-fc-border: oklch(1 0 0 / 10%);
+  --color-fc-ring: oklch(0.6 0 0);
+  --color-fc-danger: oklch(0.65 0.22 29);
+  --color-fc-success: oklch(0.72 0.14 150);
+  --color-fc-warning: oklch(0.8 0.13 75);
+  --color-fc-owner: oklch(0.78 0.13 75);
+  --color-fc-admin: oklch(0.72 0.13 255);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-fc-body);
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--color-fc-page);
+    color: var(--color-fc-fg);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-fc-title);
+    letter-spacing: -0.02em;
   }
 }

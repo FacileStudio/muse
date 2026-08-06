@@ -20,7 +20,7 @@ consumer/node_modules/@facile/lib/src/lib/
         │                                 ▼
         │                          @sveltejs/vite-plugin-svelte ──▶ app bundle
         │                                                              ▲
-        ├── icons.ts ──▶ solar:*-bold-duotone names ──▶ <iconify-icon>  │
+        ├── icons.ts ──▶ solar:*-linear / mdi:* names ──▶ <iconify-icon>│
         │                                                              │
         └── styles/tokens.css ──▶ @tailwindcss/vite ───────────────────┘
                     │                     ▲
@@ -35,7 +35,7 @@ consumer/node_modules/@facile/lib/src/lib/
 ```
 FacileStudio/muse (git)
         │  curl install.sh | bash
-        ├──▶ ~/.claude/skills/muse/lib   + SKILL.md  (copied from integrations/MUSE.md)
+        ├──▶ ~/.claude/skills/muse/lib   + SKILL.md  (copied from integrations/SKILL.md)
         └──▶ ~/.codex/muse/lib           + a marked block injected into ~/.codex/AGENTS.md
 ```
 
@@ -43,16 +43,18 @@ FacileStudio/muse (git)
 
 | Piece | File | Role |
 |---|---|---|
-| Public surface | `src/lib/index.ts` | Re-exports 28 components, 2 helpers, `icons` and `IconKey`. Nothing else is importable. |
+| Public surface | `src/lib/index.ts` | Re-exports 30 components, `cn`/`twMerge`, 2 motion helpers, `icons` and `IconKey`. Nothing else is importable. |
 | Atoms | `src/lib/components/atoms/` | 16 single-element primitives — buttons, inputs, badges, surfaces |
-| Molecules | `src/lib/components/molecules/` | 3 compositions of atoms — `Field`, `NavButton`, `StatCard` |
-| Organisms | `src/lib/components/organisms/` | 4 page-level structures — `Modal`, `SideBar`, `Table`, `Topbar` |
+| Molecules | `src/lib/components/molecules/` | 4 compositions of atoms — `Field`, `NavButton`, `SpaceSwitcher`, `StatCard` |
+| Organisms | `src/lib/components/organisms/` | 5 page-level structures — `MobileNav`, `Modal`, `SideBar`, `Table`, `Topbar` |
 | Motion | `src/lib/components/motion/` | 5 GSAP-driven pieces |
-| Icons | `src/lib/icons.ts` | 13 Solar `bold-duotone` names behind stable keys |
-| Theme | `src/lib/styles/tokens.css` | `@import 'tailwindcss'`, `@font-face` rules, one `@theme` block, a `prefers-color-scheme: dark` override |
+| Icons | `src/lib/icons.ts` | 19 Iconify names behind stable keys — Solar `linear` for chrome, MDI for plus/close/chevrons |
+| Theme | `src/lib/styles/tokens.css` | `@import 'tailwindcss'`, `@font-face` rules, one `@theme` block, a media-query dark override, a `.dark` class override, and an `@layer base` |
 | Fonts | `src/lib/fonts/` | Goga Medium (500) and Goga Semibold (600) |
+| Class merge | `src/lib/utils/cn.ts` | `fc-*`-aware `tailwind-merge`. Every component imports `twMerge` from here |
 | Helpers | `src/lib/utils/motion.ts` | `prefersReducedMotion()`, `isMobile()` — both SSR-safe |
-| Skill | `integrations/MUSE.md` | One markdown file consumed by both Claude Code and Codex |
+| Demo | `demo/` | Vite playground consuming the library via `file:..`; the only thing in the repo that builds |
+| Skill | `integrations/SKILL.md` | One markdown file consumed by both Claude Code and Codex |
 | Installer | `install.sh` | Clones or `git pull --ff-only`s the repo per tool, then wires the skill |
 
 The atomic split is import-path only. Everything is re-exported flat from `index.ts`, so
@@ -76,16 +78,40 @@ consumers write `import { NavButton } from '@facile/lib'` and never name a tier.
 
 ## Class composition
 
-Every component builds its class string with `twMerge()` from `tailwind-merge`, in a
-`$derived`:
+Every component builds its class string in a `$derived`, with a `twMerge` imported from
+`src/lib/utils/cn.ts` — **not** from `tailwind-merge` directly:
 
 ```ts
-const classes = $derived(twMerge('rounded-fc-md bg-fc-surface p-4', className));
+import { twMerge } from '../../utils/cn.js';
+
+const classes = $derived(twMerge('rounded-fc-md border border-fc-border bg-fc-component p-4', className));
 ```
 
 Because `twMerge` resolves conflicts by keeping the last utility in the same group, a
 consumer passing `class="p-8"` replaces `p-4` rather than fighting it in the cascade. This
 is the library-wide contract: pass `class` and expect it to win.
+
+The indirection through `cn.ts` is not stylistic. Stock `tailwind-merge` only knows
+Tailwind's built-in scales, so `text-fc-sm` fails its font-size validator and falls through
+to the permissive `text-color` group — where it collides with `text-fc-fg` and, being later
+in the string, **deletes it**. The failure is silent and produces components that render
+with no text colour at all. `cn.ts` calls `extendTailwindMerge` to register the `fc-*`
+sizes, colours and radii in their correct groups:
+
+```ts
+export const twMerge = extendTailwindMerge({
+  extend: { classGroups: {
+    'font-size': [{ text: [/* fc-xs … fc-3xl */] }],
+    'text-color': [{ text: [/* fc-fg, fc-accent, … */] }],
+    'bg-color': [{ bg: [/* … */] }], 'border-color': [{ border: [/* … */] }],
+    rounded: [{ rounded: [/* fc-xs … fc-pill */] }]
+  } }
+});
+```
+
+It is re-exported publicly as `cn` so consumers writing their own `fc-*` markup get the same
+correct behaviour. A token added to `tokens.css` but not to `cn.ts` reopens the bug for that
+token.
 
 ## Motion architecture
 
@@ -116,14 +142,21 @@ means a consumer overrides any token by redeclaring the variable at `:root` afte
 the styles. That is how the suite reconciles muse with its own palette — see
 [configuration.md](configuration.md) for the aliasing pattern used in `Casier`.
 
-Dark mode is a plain `@media (prefers-color-scheme: dark)` block that swaps
-`--color-fc-page`, `--color-fc-bg`, `--color-fc-surface`, `--color-fc-component`,
-`--color-fc-fg` and `--color-fc-fg-muted`. There is no class-based toggle and no JavaScript
-involved, so a consumer with a manual theme switcher must override those variables itself.
+Dark mode has two entry points that compose. A `@media (prefers-color-scheme: dark)` block
+scoped `:root:not(.light)` handles the OS preference with no JavaScript; a `:root.dark` block
+handles an explicit class. Both swap the full palette. The `:not(.light)` guard is what makes
+a manual switcher work in the one case a plain media query cannot express — forcing light
+while the OS is in dark mode. `@custom-variant dark` is registered alongside, so Tailwind's
+`dark:` utilities follow the class.
 
-There is no border color token. Borders are drawn with alpha over the foreground color —
-`border-fc-fg/7` on nav chrome and `border-fc-fg/10` on inputs, tables and dividers — so
-they follow `--color-fc-fg` through the theme swap automatically.
+`tokens.css` also emits an `@layer base` that sets the font stack and tracking on `html`,
+page background and foreground on `body`, and the title face on `h1`–`h6`. Importing the
+styles therefore establishes base page colours, not only utility classes — a consumer gets a
+coherent page without writing any CSS.
+
+Borders use a real `--color-fc-border` token (`oklch(0.9 0 0)` light, `oklch(1 0 0 / 10%)`
+dark), which is the single border colour across the library. The earlier alpha-over-foreground
+approach (`border-fc-fg/7` and `/10`) is gone.
 
 ## Relationship to the rest of the suite
 

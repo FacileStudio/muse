@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { twMerge } from 'tailwind-merge';
+    import { twMerge } from '../../utils/cn.js';
 
     type Tone = 'info' | 'success' | 'warning' | 'danger';
 
@@ -17,9 +17,9 @@
     } = $props();
 
     const tones: Record<Tone, string> = {
-        info: 'bg-fc-surface text-fc-fg',
+        info: 'border-fc-border bg-fc-surface text-fc-fg',
         success: 'border-fc-success/40 bg-fc-success/10 text-fc-fg',
-        warning: 'border-yellow-500/40 bg-yellow-500/10 text-fc-fg',
+        warning: 'border-fc-warning/40 bg-fc-warning/10 text-fc-fg',
         danger: 'border-fc-danger/40 bg-fc-danger/10 text-fc-fg'
     };
 

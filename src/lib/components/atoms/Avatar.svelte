@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { twMerge } from 'tailwind-merge';
+    import { twMerge } from '../../utils/cn.js';
 
     type Size = 'sm' | 'md' | 'lg';
 
@@ -23,8 +23,8 @@
         lg: 'h-14 w-14 text-fc-md'
     };
 
-    const initial = name ? name.trim().charAt(0).toUpperCase() : '?';
-    const classes = $derived(twMerge('inline-flex items-center justify-center rounded-fc-pill bg-fc-surface text-fc-fg-muted overflow-hidden', sizes[size], className));
+    const initial = $derived(name ? name.trim().charAt(0).toUpperCase() : '?');
+    const classes = $derived(twMerge('inline-flex shrink-0 items-center justify-center rounded-fc-pill border border-fc-border bg-fc-accent text-fc-accent-fg font-semibold overflow-hidden', sizes[size], className));
 </script>
 
 <span class={classes}>

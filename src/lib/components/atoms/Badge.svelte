@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { twMerge } from 'tailwind-merge';
+    import { twMerge } from '../../utils/cn.js';
 
-    type Tone = 'neutral' | 'accent' | 'success' | 'danger';
+    type Tone = 'neutral' | 'accent' | 'success' | 'danger' | 'owner' | 'admin';
 
     let {
         tone = 'neutral',
@@ -13,11 +13,13 @@
     const tones: Record<Tone, string> = {
         neutral: 'bg-fc-surface text-fc-fg-muted border-transparent',
         accent: 'bg-fc-accent text-fc-accent-fg border-transparent',
-        success: 'bg-fc-success text-white border-transparent',
-        danger: 'bg-fc-danger text-white border-transparent'
+        success: 'bg-fc-success/10 text-fc-success border-transparent',
+        danger: 'bg-fc-danger/10 text-fc-danger border-transparent',
+        owner: 'bg-fc-owner/10 text-fc-owner border-transparent',
+        admin: 'bg-fc-admin/10 text-fc-admin border-transparent'
     };
 
-    const classes = $derived(twMerge('inline-flex items-center gap-1 rounded-fc-pill border px-2 py-0.5 text-fc-xs font-medium', tones[tone], className));
+    const classes = $derived(twMerge('inline-flex items-center gap-1 rounded-fc-pill border px-2.5 py-0.5 text-fc-xs font-medium', tones[tone], className));
 </script>
 
 <span class={classes}>

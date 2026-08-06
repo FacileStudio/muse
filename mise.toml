@@ -1,0 +1,12 @@
+[tools]
+bun = "latest"
+
+[tasks.demo]
+description = "Run the muse demo app (http://127.0.0.1:5183)"
+dir = "demo"
+run = "bun install && bun run dev"
+
+[tasks."demo:build"]
+description = "Production build of the demo app"
+dir = "demo"
+run = "bun install && bun run build"

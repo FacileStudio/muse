@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import { gsap } from 'gsap';
-    import { twMerge } from 'tailwind-merge';
+    import { twMerge } from '../../utils/cn.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import TextElevate from '../motion/TextElevate.svelte';
 
@@ -28,8 +28,11 @@
     } = $props();
 
     const classes = $derived(twMerge(
-        'px-3 py-3 flex w-full items-center gap-2 rounded-fc-md transition-colors text-fc-fg border border-fc-fg/7 hover:bg-fc-fg/7 overflow-hidden',
-        active && 'bg-fc-fg/7',
+        'flex items-center gap-2.5 rounded-fc-md text-fc-sm transition-colors overflow-hidden',
+        collapsed
+            ? 'size-11 shrink-0 self-center justify-center px-0 py-0'
+            : 'w-full min-h-11 px-3 py-2.5',
+        active ? 'bg-fc-accent text-fc-accent-fg font-medium' : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
         className
     ));
 
@@ -50,11 +53,13 @@
 </script>
 
 {#snippet inner()}
-    {#if icon}<iconify-icon {icon} width="20" height="20" class="shrink-0 text-fc-fg/66"></iconify-icon>{/if}
-    <span class="flex flex-1 items-center justify-between gap-2 text-fc-sm overflow-hidden">
-        {#if label}<TextElevate text={label} visible={!collapsed} delay={textDelay} />{/if}
-        {#if right}{@render right()}{/if}
-    </span>
+    {#if icon}<iconify-icon {icon} width="18" height="18" class="block shrink-0"></iconify-icon>{/if}
+    {#if !collapsed}
+        <span class="flex flex-1 items-center justify-between gap-2 overflow-hidden">
+            {#if label}<TextElevate text={label} visible={!collapsed} delay={textDelay} />{/if}
+            {#if right}{@render right()}{/if}
+        </span>
+    {/if}
 {/snippet}
 
 {#if href}

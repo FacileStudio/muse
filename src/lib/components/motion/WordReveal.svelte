@@ -7,7 +7,7 @@
 
     let {
         text,
-        dimColor = '#ffffff15',
+        dimColor = 'color-mix(in oklab, var(--color-fc-fg) 25%, transparent)',
         revealColor = 'var(--color-fc-fg)'
     }: { text: string; dimColor?: string; revealColor?: string } = $props();
 

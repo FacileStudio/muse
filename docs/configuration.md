@@ -11,13 +11,13 @@ use to override it.
 | `svelte` | `^5.0.0` | Peer dependency. Components use runes (`$props`, `$state`, `$bindable`, `$derived`, `$effect`) and snippets |
 | `tailwindcss` | `^4.0.0` | Peer dependency. The `@theme` block is Tailwind v4 syntax |
 | `gsap` | `^3.12.0` | Direct dependency. `WordReveal` needs `SplitText`, free only from 3.13 |
-| `tailwind-merge` | `^3.5.0` | Direct dependency. Every component merges its `class` prop with `twMerge` |
+| `tailwind-merge` | `^3.5.0` | Direct dependency. Extended in `src/lib/utils/cn.ts` to understand the `fc-*` scales; every component merges its `class` prop through that |
 
 ## Export map
 
 | Specifier | Resolves to |
 |---|---|
-| `@facile/lib` | `src/lib/index.ts` — components, helpers, `icons`, `IconKey` |
+| `@facile/lib` | `src/lib/index.ts` — components, `cn`, helpers, `icons`, `IconKey` |
 | `@facile/lib/styles` | `src/lib/styles/tokens.css` — theme, fonts, dark mode |
 
 `package.json` sets both `"svelte"` and `"main"` to the TypeScript entry. There is no
@@ -27,33 +27,60 @@ compiled output; the consumer's bundler compiles the source.
 
 Declared in `@theme`, so Tailwind emits `bg-fc-*` and `text-fc-*` for each.
 
+Chroma-zero OKLCH throughout, matching the shipped suite apps. Every value swaps under
+`@media (prefers-color-scheme: dark)`.
+
 | Token | Light | Dark | Used by |
 |---|---|---|---|
-| `--color-fc-page` | `#fcfcfc` | `#1e1e1e` | page background; no component consumes it directly |
-| `--color-fc-bg` | `#fcfcfc` | `#242424` | `Input`, `Textarea`, `Select`, `Modal`, `Topbar`, `Rideau` default |
-| `--color-fc-surface` | `rgba(0, 0, 0, 0.04)` | `rgba(255, 255, 255, 0.06)` | `Card`, `StatCard`, `Badge`, `Avatar`, `Skeleton`, `Switch` track, `Table` headers, `Alert` info |
-| `--color-fc-component` | `rgba(255, 255, 255, 0.67)` | `rgba(255, 255, 255, 0.05)` | `Component`, `SideBar` |
-| `--color-fc-fg` | `rgba(36, 36, 36, 1)` | `#f4f4f5` | text, and every border via `/7` and `/10` alpha |
-| `--color-fc-fg-muted` | `rgba(36, 36, 36, 0.5)` | `rgba(244, 244, 245, 0.5)` | placeholders, labels, `StatCard` delta |
-| `--color-fc-accent` | `#6366f1` | unchanged | `Button` primary, focus rings, `Switch` on-state, `Spinner` arc, `Carousel` dots |
-| `--color-fc-accent-fg` | `#ffffff` | unchanged | text on accent |
-| `--color-fc-danger` | `#dc2626` | unchanged | `Button` danger, `Alert` danger, `Field` error text |
-| `--color-fc-success` | `#16a34a` | unchanged | `Badge` and `Alert` success tones |
+| `--color-fc-page` | `oklch(1 0 0)` | `oklch(0.09 0 0)` | page background, set on `body` by the base layer |
+| `--color-fc-bg` | `oklch(1 0 0)` | `oklch(0.09 0 0)` | `Input`, `Textarea`, `Select`, `Modal`, `Topbar`, `MobileNav` glass |
+| `--color-fc-surface` | `oklch(0.97 0 0)` | `oklch(0.18 0 0)` | `Card`, `StatCard`, `Skeleton`, `Switch` track, `Table` headers, hover states |
+| `--color-fc-component` | `oklch(0.985 0 0)` | `oklch(0.13 0 0)` | `Component`, `SideBar`, `SpaceSwitcher` dropdown |
+| `--color-fc-fg` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` | primary text |
+| `--color-fc-fg-muted` | `oklch(0.556 0 0)` | `oklch(0.6 0 0)` | placeholders, labels, inactive nav rows |
+| `--color-fc-accent` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` | `Button` primary, active nav, `Avatar`, `Switch` on-state — **equals `fg`, so accent surfaces are inverted, not tinted** |
+| `--color-fc-accent-fg` | `oklch(1 0 0)` | `oklch(0.09 0 0)` | text on accent |
+| `--color-fc-border` | `oklch(0.9 0 0)` | `oklch(1 0 0 / 10%)` | every border in the library |
+| `--color-fc-ring` | `oklch(0.4 0 0)` | `oklch(0.6 0 0)` | `:focus-visible` outlines |
+| `--color-fc-danger` | `oklch(0.55 0.22 29)` | `oklch(0.65 0.22 29)` | `Button` danger, `Alert` danger, `Field` error text |
+| `--color-fc-danger-fg` | `oklch(1 0 0)` | `oklch(1 0 0)` | text on a solid danger fill |
+| `--color-fc-success` | `oklch(0.52 0.12 150)` | `oklch(0.72 0.14 150)` | `Badge` / `Alert` success tones |
+| `--color-fc-warning` | `oklch(0.58 0.13 75)` | `oklch(0.8 0.13 75)` | `Alert` warning tone |
+| `--color-fc-owner` | `oklch(0.55 0.13 75)` | `oklch(0.78 0.13 75)` | `Badge tone="owner"` role pill |
+| `--color-fc-admin` | `oklch(0.52 0.14 255)` | `oklch(0.72 0.13 255)` | `Badge tone="admin"` role pill |
 
-`--color-fc-accent`, `--color-fc-accent-fg`, `--color-fc-danger` and `--color-fc-success`
-hold the same value in both themes. There is deliberately **no** `--color-fc-border`;
-borders are alpha over `--color-fc-fg`.
+### Forcing a colour scheme
+
+Dark mode follows the OS by default — nothing to wire up. To let a user override it, put a
+`dark` or `light` class on `<html>`; both beat the media query:
+
+```ts
+document.documentElement.classList.toggle('dark', theme === 'dark');
+document.documentElement.classList.toggle('light', theme === 'light');
+```
+
+The media-query block is scoped `:root:not(.light)`, which is what allows an explicit
+`.light` to win while the OS is in dark mode — the case a plain `@media` rule cannot handle.
+`@custom-variant dark` is registered too, so Tailwind's `dark:` utilities follow the class.
+`demo/src/App.svelte` has a working toggle with `localStorage` persistence.
+
+`--color-fc-danger`, `--color-fc-success`, `--color-fc-warning`, `--color-fc-owner` and
+`--color-fc-admin` are the only tokens carrying chroma; everything else is pure greyscale. Semantic fills are **tinted,
+not solid** — `Badge` and the danger `Button` use `bg-<token>/10` with `text-<token>`, which
+is what the suite apps do (`bg-destructive/10 text-destructive`). Reserve solid fills for the
+inverted accent.
 
 ## Radius, type, font, motion, width tokens
 
 | Token | Value | Utility |
 |---|---|---|
 | `--radius-fc-xs` | `4px` | `rounded-fc-xs` |
-| `--radius-fc-sm` | `8px` | `rounded-fc-sm` |
-| `--radius-fc-md` | `24px` | `rounded-fc-md` — the default on nearly every component |
-| `--radius-fc-pill` | `999px` | `rounded-fc-pill` |
-| `--radius-fc-full` | `999px` | `rounded-fc-full` |
-| `--text-fc-xs` … `--text-fc-3xl` | `8` / `10` / `12` / `14` / `20` / `24` / `32px` | `text-fc-xs` … `text-fc-3xl` |
+| `--radius-fc-sm` | `6px` | `rounded-fc-sm` |
+| `--radius-fc-md` | `8px` | `rounded-fc-md` — the default on most components |
+| `--radius-fc-lg` | `12px` | `rounded-fc-lg` — `Modal`, `SideBar` |
+| `--radius-fc-pill` / `--radius-fc-full` | `999px` | `rounded-fc-pill` — `Button`, `Badge`, `Avatar`, `MobileNav` |
+| `--text-fc-xs` … `--text-fc-3xl` | `12` / `14` / `16` / `18` / `22` / `28` / `36px` | `text-fc-xs` … `text-fc-3xl` |
+| `--text-fc-*--line-height` | `16` / `20` / `24` / `28` / `28` / `34` / `40px` | applied automatically by the size utility |
 | `--font-fc-body` | `'Goga', Helvetica, Arial, sans-serif` | `font-fc-body` |
 | `--font-fc-title` | identical to `--font-fc-body` | `font-fc-title` |
 | `--font-sans` | identical to `--font-fc-body` | `font-sans` |
@@ -62,16 +89,16 @@ borders are alpha over `--color-fc-fg`.
 | `--width-fc-nav-collapsed` | `77px` | `w-fc-nav-collapsed` |
 | `--width-fc-nav-expanded` | `220px` | `w-fc-nav-expanded` |
 
-Two things to know about that table. The type scale is small in absolute terms — `text-fc-xs`
-is `8px` and `Button` labels use it, so button text renders at 8px unless you override
-`class`. And there is no `--radius-fc-lg`: `Modal` still asks for `rounded-fc-lg`, which
-Tailwind cannot generate, so the dialog falls back to square corners. Both are properties of
-the current source, not recommendations.
+`--text-fc-sm` (14px) is the UI default — nav rows, buttons and table cells all sit there,
+matching the suite's `text-sm`. Each size ships a paired `--line-height`, so `text-fc-sm`
+sets both properties in one utility.
 
-`tokens.css` also sets rules outside `@theme`: `:root` and `body` get the Goga stack and
-`letter-spacing: -0.02%`. Importing the styles therefore changes a consumer's base
-typography, not only its utility classes. Title and body fonts are the same family — the
-display/body split described in `CHARTE.md` is not in the shipped tokens.
+`tokens.css` also emits an `@layer base` block: `html` gets the Goga stack,
+`letter-spacing: -0.011em` and antialiasing; `body` gets `--color-fc-page` /
+`--color-fc-fg`; and `h1`–`h6` get `--font-fc-title` with `-0.02em` tracking. Importing the
+styles therefore sets a consumer's base typography **and page colours**, not only its
+utility classes. Title and body fonts resolve to the same family today — the split exists so
+a consumer can diverge without touching components.
 
 ## Fonts
 
@@ -80,23 +107,30 @@ Any other weight synthesizes. Helvetica Neue was dropped from the library.
 
 ## Icons
 
-`icons` is a `const` map from a stable key to a Solar Iconify name, exported alongside the
-`IconKey` type:
+`icons` is a `const` map from a stable key to an Iconify name, exported alongside the
+`IconKey` type. UI chrome is Solar **`linear`**; plus, close and the chevrons are **MDI**,
+because Solar's versions of those four read muddy at 16px.
 
 | Key | Icon | Key | Icon |
 |---|---|---|---|
-| `home` | `solar:home-2-bold-duotone` | `settings` | `solar:settings-bold-duotone` |
-| `dashboard` | `solar:qr-code-bold-duotone` | `edit` | `solar:pen-new-square-bold-duotone` |
-| `folder` | `solar:folder-open-bold-duotone` | `remove` | `solar:trash-bin-2-bold-duotone` |
-| `search` | `solar:magnifer-bold-duotone` | `calendar` | `solar:calendar-add-line-bold-duotone` |
-| `collapse` | `solar:layers-bold-duotone` | `notification` | `solar:bell-bold-duotone` |
-| `plus` | `solar:add-circle-bold-duotone` | `arrow` | `solar:alt-arrow-right-bold-duotone` |
-| `close` | `solar:close-circle-bold-duotone` | | |
+| `home` | `solar:home-2-linear` | `settings` | `solar:settings-linear` |
+| `dashboard` | `solar:chart-2-linear` | `edit` | `solar:pen-new-square-linear` |
+| `folder` | `solar:folder-linear` | `remove` | `solar:trash-bin-2-linear` |
+| `search` | `solar:magnifer-linear` | `calendar` | `solar:calendar-linear` |
+| `collapse` | `solar:sidebar-minimalistic-linear` | `notification` | `solar:bell-linear` |
+| `usersGroup` | `solar:users-group-rounded-linear` | `userCircle` | `solar:user-circle-linear` |
+| `logout` | `solar:logout-2-linear` | | |
+| `plus` | `mdi:plus` | `close` | `mdi:close` |
+| `arrow` | `mdi:chevron-right` | `chevronDown` | `mdi:chevron-down` |
+| `chevronUp` | `mdi:chevron-up` | `chevronLeft` | `mdi:chevron-left` |
+
+`bold-duotone` appears nowhere in this map by design — it is reserved for an app's own brand
+mark, which the consumer passes to `SideBar`'s `icon` prop.
 
 The map holds names only. Rendering goes through the `<iconify-icon>` custom element, which
 muse neither imports nor declares as a dependency — the consumer app must register it, or
-the tags stay inert. `NavButton` and `SideBar` render `<iconify-icon>` directly, so this
-affects them.
+the tags stay inert. `NavButton`, `SideBar`, `SpaceSwitcher`, `MobileNav` and `Mosaique`
+render `<iconify-icon>` directly, so this affects them.
 
 ## Overriding tokens
 
@@ -116,43 +150,45 @@ This is how the suite reconciles muse with its own palette rather than forking t
   --color-fc-fg-muted: var(--muted-foreground);
   --color-fc-accent: var(--primary);
   --color-fc-accent-fg: var(--primary-foreground);
+  --color-fc-border: var(--border);
+  --color-fc-ring: var(--ring);
   --color-fc-danger: var(--destructive);
+  --color-fc-danger-fg: var(--destructive-foreground);
   --color-fc-success: var(--foreground);
 
   --radius-fc-xs: calc(var(--radius) * 0.5);
   --radius-fc-sm: calc(var(--radius) * 0.75);
   --radius-fc-md: var(--radius);
+  --radius-fc-lg: calc(var(--radius) * 1.5);
   --radius-fc-pill: 999px;
   --radius-fc-full: 999px;
-
-  --text-fc-xs: 0.875rem;
-  --text-fc-sm: 0.875rem;
-  --text-fc-md: 0.875rem;
 }
 ```
 
+The type scale no longer needs flattening — muse's own `text-fc-sm` is already `0.875rem`,
+so the old three-line `--text-fc-*: 0.875rem` override in Casier's `app.css` is now a no-op
+and can be dropped.
+
 That block is adapted from `Casier/apps/client/src/app.css`, the one app in the suite that
-currently depends on `@facile/lib`. Casier also sets `--color-yellow-500` to a neutral,
-because `Alert`'s `warning` tone hardcodes `yellow-500` instead of reading a token — the only
-place in the library that escapes the `fc-*` namespace.
+currently depends on `@facile/lib`. Casier also used to set `--color-yellow-500` to a
+neutral, because `Alert`'s `warning` tone hardcoded `yellow-500`. That is fixed — the tone
+now reads `--color-fc-warning`, and **no colour in the library escapes the `fc-*` namespace**,
+so that override can be dropped.
 
-## Published defaults versus the suite's actual look
+## Published defaults now match the suite
 
-Worth stating plainly, because it surprises people: **the token values muse publishes today
-do not match any shipped Facile app.** muse defaults to an indigo accent (`#6366f1`), a
-24px `--radius-fc-md`, and an 8–32px type scale. The apps — Sablier, Vision, Nuage, Plume,
-Courrier, Agenda, Casier — run a shadcn-svelte palette that is chroma-zero OKLCH throughout
-(`--primary: oklch(0.145 0 0)`, `--background: oklch(1 0 0)`) on a single `--radius: 0.5rem`.
-The one token in the suite palette that carries any chroma is
-`--destructive: oklch(0.55 0.22 29)`.
+This used to be the section warning you that muse's palette matched nothing that shipped.
+**As of 2026-08-06 that is fixed.** The defaults were retuned to the live suite look:
+chroma-zero OKLCH on a `0.145 / 0.985` inverted accent, `--radius-fc-md: 8px` (the suite's
+`--radius: 0.5rem`), a 12–36px type scale anchored on 14px, Goga, and Solar `linear` icons.
+`--destructive`'s suite value, `oklch(0.55 0.22 29)` light / `oklch(0.65 0.22 29)` dark,
+is `--color-fc-danger` verbatim.
 
-So muse is the suite's component library, but its shipped palette is not the suite's live
-design system. Consumers close the gap by aliasing `fc-*` onto their own tokens, exactly as
-above. Two axes have converged since: icons are Solar `bold-duotone` in both, and Goga is
-the face in muse, Vision and Casier — though Sablier, Agenda, Nuage and Courrier still ship
-Inter.
+So the override block above is no longer *required* to make muse look like the suite — it is
+now only needed when an app wants muse primitives to track its own local tokens (Casier's
+case, so hand-written `bg-background` markup and muse components stay in lockstep). Aliasing
+remains the supported way to do that; forking the library is still not.
 
-`CHARTE.md` is the stated visual contract, but it has drifted from `tokens.css`: its color
-table still lists a `--fc-border` token and `TODO` values, its typography section still
-names Helvetica as the body face, and its radius line still reads 6/12/20px. `tokens.css` is
-the only source of truth for what actually renders.
+`CHARTE.md` and this page are both current as of the retheme. `tokens.css` remains the only
+source of truth for what actually renders — if the three ever disagree again, trust the CSS
+and fix the prose.

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { twMerge } from 'tailwind-merge';
+    import { twMerge } from '../../utils/cn.js';
 
     let { class: className = '' }: { class?: string } = $props();
 
