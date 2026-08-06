@@ -2,7 +2,7 @@
     import type { Snippet } from 'svelte';
     import type { HTMLButtonAttributes } from 'svelte/elements';
     import { gsap } from 'gsap';
-    import { twMerge } from 'tailwind-merge';
+    import { twMerge } from '../../utils/cn.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
 
     let {
@@ -15,7 +15,7 @@
     } = $props();
 
     const classes = $derived(twMerge(
-        'inline-flex w-10 h-10 items-center justify-center gap-[6px] rounded-fc-full border border-fc-fg/7 text-fc-fg [&_svg]:w-3 [&_svg]:h-3 transition-opacity hover:opacity-70 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-fc-accent',
+        'inline-flex size-11 shrink-0 items-center justify-center rounded-fc-pill border border-fc-border text-fc-fg [&_svg]:size-4.5 [&_iconify-icon]:block transition-colors hover:bg-fc-surface disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
         className
     ));
 

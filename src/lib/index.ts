@@ -17,8 +17,10 @@ export { default as Textarea } from './components/atoms/Textarea.svelte';
 
 export { default as Field } from './components/molecules/Field.svelte';
 export { default as NavButton } from './components/molecules/NavButton.svelte';
+export { default as SpaceSwitcher } from './components/molecules/SpaceSwitcher.svelte';
 export { default as StatCard } from './components/molecules/StatCard.svelte';
 
+export { default as MobileNav } from './components/organisms/MobileNav.svelte';
 export { default as Modal } from './components/organisms/Modal.svelte';
 export { default as SideBar } from './components/organisms/SideBar.svelte';
 export { default as Table } from './components/organisms/Table.svelte';
@@ -31,5 +33,6 @@ export { default as TextElevate } from './components/motion/TextElevate.svelte';
 export { default as WordReveal } from './components/motion/WordReveal.svelte';
 
 export { prefersReducedMotion, isMobile } from './utils/motion.js';
+export { cn, twMerge } from './utils/cn.js';
 export { icons } from './icons.js';
 export type { IconKey } from './icons.js';

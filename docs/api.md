@@ -1,8 +1,8 @@
 # muse — API
 
-The complete exported surface of `@facile/lib`, read from `src/lib/index.ts`: 28 components,
-2 motion helpers, the `icons` map and the `IconKey` type. Nothing else in the repo is
-importable.
+The complete exported surface of `@facile/lib`, read from `src/lib/index.ts`: 30 components,
+the `cn` class merger, 2 motion helpers, the `icons` map and the `IconKey` type. Nothing else
+in the repo is importable.
 
 ```ts
 import {
@@ -10,13 +10,13 @@ import {
   Alert, Avatar, Badge, Button, Card, Checkbox, Component, Divider,
   IconButton, Input, Radio, Select, Skeleton, Spinner, Switch, Textarea,
   // molecules
-  Field, NavButton, StatCard,
+  Field, NavButton, SpaceSwitcher, StatCard,
   // organisms
-  Modal, SideBar, Table, Topbar,
+  MobileNav, Modal, SideBar, Table, Topbar,
   // motion
   Carousel, Mosaique, Rideau, TextElevate, WordReveal,
   // helpers
-  prefersReducedMotion, isMobile, icons
+  cn, twMerge, prefersReducedMotion, isMobile, icons
 } from '@facile/lib';
 import type { IconKey } from '@facile/lib';
 ```
@@ -29,7 +29,10 @@ Conventions across the library:
   `on*` handler passes through. Those are marked "spreads to" below.
 - Props marked **bindable** use `$bindable()` and support `bind:`.
 - `children` is a Svelte 5 `Snippet` unless stated otherwise.
-- There is no border color token; borders are `border-fc-fg/7` or `border-fc-fg/10`.
+- Borders use the single `border-fc-border` token.
+- `twMerge` here is muse's `fc-*`-aware build from `src/lib/utils/cn.ts`, re-exported as
+  `cn`. Use it — not raw `tailwind-merge` — for any custom `fc-*` markup, or size utilities
+  will silently delete colour utilities. See [architecture.md](architecture.md).
 
 ## Atoms
 
@@ -53,17 +56,19 @@ Spreads to `<button>` (`HTMLButtonAttributes`).
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` |
 | `children` | `Snippet` | — (required) |
 
-`primary` fills with `bg-fc-accent`; `ghost` is transparent with a `bg-fc-surface` hover;
-`outline` adds `border-fc-fg/20`; `danger` fills with `bg-fc-danger` and literal `text-white`
-rather than `--color-fc-accent-fg`.
+Pill-shaped (`rounded-fc-pill`). `primary` fills with `bg-fc-accent` — which equals the
+foreground colour, so it reads as an inverted slab; `ghost` is transparent with a
+`bg-fc-surface` hover; `outline` adds `border-fc-border`; `danger` is **tinted, not solid** —
+`bg-fc-danger/10 text-fc-danger`, matching the suite's `bg-destructive/10`.
 
-All three sizes currently resolve to the same `py-2 px-4`, and the label is `text-fc-xs`,
-which the theme defines as `8px`. Pass `class` to change either.
+Sizes are real and distinct: `sm` is `h-8 px-3.5 text-fc-xs`, `md` is `h-9 px-4 text-fc-sm`,
+`lg` is `h-11 px-6 text-fc-sm`. Pass `class` to override.
 
 ### `IconButton`
 
-Round 40px icon button with the house spring press on `pointerdown`. Spreads to `<button>`
-(`HTMLButtonAttributes`). Any nested `<svg>` is forced to `12×12`.
+Round 44px icon button with the house spring press on `pointerdown`. Spreads to `<button>`
+(`HTMLButtonAttributes`). Nested `<svg>` is sized `4.5` and `<iconify-icon>` is forced to
+`display: block` so it centres.
 
 | Prop | Type | Default |
 |---|---|---|
@@ -84,7 +89,7 @@ overrides it.
 ### `Input`
 
 Spreads to `<input>` (`HTMLInputAttributes`). Fixed `h-11`, full width,
-`border-fc-fg/10`.
+`border-fc-border`.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
@@ -164,8 +169,7 @@ Status banner with `role="alert"`, `rounded-fc-md`, `text-fc-sm`.
 | `children` | `Snippet` | — | Optional |
 
 The `warning` tone is the one place in the library that uses a non-token color:
-`border-yellow-500/40 bg-yellow-500/10`. Consumers holding a strict palette override
-`--color-yellow-500` to neutralize it. The `info` tone sets no border color, so it inherits
+`border-fc-warning/40 bg-fc-warning/10`, reading the `--color-fc-warning` token. The `info` tone uses `border-fc-border`, replacing an earlier bug where it inherited
 whatever `border` resolves to.
 
 ### `Avatar`
@@ -198,7 +202,7 @@ is also how you size it (`class="h-4 w-32"`).
 
 ### `Divider`
 
-`<hr>` with `border-t border-fc-fg/10` and `my-4`. Only prop is `class`.
+`<hr>` with `border-0 border-t border-fc-border` and `my-4`. Only prop is `class`.
 
 ## Molecules
 
@@ -231,25 +235,26 @@ type="button">` with `...rest` spread onto it. Carries the house spring press as
 | Prop | Type | Default | Notes |
 |---|---|---|---|
 | `href` | `string` | — | Presence switches the element from `<button>` to `<a>` |
-| `icon` | `string` | — | Iconify name, rendered at `20×20` in `text-fc-fg/66` |
+| `icon` | `string` | — | Iconify name, rendered at `18×18`, inheriting `currentColor` |
 | `label` | `string` | — | Rendered through `TextElevate` at `text-fc-sm` |
-| `active` | `boolean` | `false` | Adds `bg-fc-fg/7` |
-| `collapsed` | `boolean` | `false` | Intended to hide the label |
+| `active` | `boolean` | `false` | Inverts the row: `bg-fc-accent text-fc-accent-fg font-medium` |
+| `collapsed` | `boolean` | `false` | Unmounts the label and makes the row a `size-11` square |
 | `textDelay` | `number` | `0.15` | Passed to `TextElevate` as its `delay` |
 | `right` | `Snippet` | — | Right-aligned content — shortcut hint, chevron, count |
 
-Base style is `px-3 py-3 w-full gap-2 rounded-fc-md border border-fc-fg/7
-hover:bg-fc-fg/7 overflow-hidden`. Extra props land on the `<button>` branch only; on the
-`<a>` branch `...rest` is not spread.
+Base style is `px-3 py-2.5 min-h-11 w-full gap-2.5 rounded-fc-md text-fc-sm overflow-hidden`,
+inactive `text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg`. When `collapsed` the row
+becomes `size-11 self-center justify-center` — a square, not a squeezed rectangle — and the
+label subtree is unmounted rather than clipped. Extra props land on the `<button>` branch
+only; on the `<a>` branch `...rest` is not spread.
 
-`collapsed` is forwarded to `TextElevate` as a `visible` prop, which `TextElevate` does not
-declare — so it currently has no effect on the label, and collapsing relies on the parent's
-width clipping the row. `CHARTE.md` additionally documents a `children` snippet on this
-component; the current source has no such prop.
+`collapsed` is forwarded to `TextElevate` as `visible`, which `TextElevate` now declares and
+animates out. `CHARTE.md` additionally documents a `children` snippet on this component; the
+current source has no such prop.
 
 ### `StatCard`
 
-KPI tile for dashboards, on `bg-fc-surface`.
+KPI tile for dashboards, on `bg-fc-component` with a `border-fc-border`.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
@@ -267,12 +272,16 @@ Collapsible vertical navigation panel on `bg-fc-component`, built from `NavButto
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `icon` | `string` | — | Iconify name for the header, rendered at `28` |
+| `icon` | `string` | — | **Brand mark** — the one icon that stays `bold-duotone`. Rendered at `24` |
 | `title` | `string` | `''` | Header text, revealed with `TextElevate` |
 | `pages` | `{ label, href, icon?, active? }[]` | `[]` | Nav links, keyed by `href` |
 | `user` | `{ name, avatar? }` | — | Footer button; falls back to the uppercased initial |
 | `collapsed` | `boolean` | `false` | **bindable** |
 | `showSearch` | `boolean` | `false` | Prepends a Search row (⌘K) and a Collapse row (⌘D) |
+| `spaces` | `{ id, name }[]` | `[]` | Non-empty renders a `SpaceSwitcher` below the header |
+| `activeSpaceId` | `string \| null` | `null` | Forwarded to `SpaceSwitcher` |
+| `onSpaceSelect` | `(id: string \| null) => void` | — | Forwarded to `SpaceSwitcher` |
+| `manageSpacesHref` | `string` | — | Forwarded as the switcher's footer link |
 
 Width tweens between `77` and `220` — the numeric equivalents of
 `--width-fc-nav-collapsed` and `--width-fc-nav-expanded` — over `0.5s` with `power2.inOut`
@@ -293,13 +302,51 @@ yourself.
     { label: 'Home',     href: '/',         icon: icons.home, active: true },
     { label: 'Settings', href: '/settings', icon: icons.settings }
   ]}
-  user={{ name: 'Gian' }}
+  user={{ name: 'Camille' }}
 />
 ```
 
+When collapsed, the brand row, every `NavButton` and the footer user button all become
+`size-11` squares rather than squeezed full-width rectangles, and their labels unmount.
+The `SpaceSwitcher` is hidden entirely — its dropdown cannot escape the panel's
+`overflow-hidden`, which the width tween requires.
+
+### `SpaceSwitcher`
+
+Dropdown switching between a personal context and a list of team spaces. Deliberately
+framework-agnostic — no router import, no backend types; the consumer handles selection.
+Closes on outside click via a `$effect`-scoped document listener.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `spaces` | `{ id, name }[]` | `[]` | Team spaces |
+| `activeId` | `string \| null` | `null` | `null` selects the personal entry |
+| `onSelect` | `(id: string \| null) => void` | — | Called with the chosen id, or `null` |
+| `personalLabel` | `string` | `'Personal'` | Label for the no-space entry |
+| `manageHref` | `string` | — | Renders a bordered footer link when set |
+| `manageLabel` | `string` | `'Manage spaces'` | Footer link text |
+
+The selected row is inverted (`bg-fc-accent text-fc-accent-fg`), matching nav convention.
+
+### `MobileNav`
+
+Floating glass pill bar fixed to the bottom, `md:hidden` — pair it with `SideBar` for
+desktop. Bottom offset is `max(0.75rem, env(safe-area-inset-bottom))`, so it clears the iOS
+home indicator. Give the scroll container `pb-28` so content can clear the bar.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `items` | `{ href, label, icon, active? }[]` | `[]` | Icon-only; `label` becomes `aria-label` and `title` |
+| `user` | `{ name, avatar? }` | — | Trailing avatar pill |
+| `profileHref` | `string` | — | Required alongside `user` for the avatar pill to render |
+| `profileActive` | `boolean` | `false` | Inverts the avatar pill like an active item |
+
+Style is `rounded-fc-pill border-fc-border/40 bg-fc-bg/55 backdrop-blur-2xl
+backdrop-saturate-150 shadow-lg`; the active item is inverted.
+
 ### `Topbar`
 
-Sticky `<header>` at `z-40`, `h-14`, `border-b border-fc-fg/10`, `bg-fc-bg/80` with
+Sticky `<header>` at `z-40`, `h-14`, `border-b border-fc-border`, `bg-fc-bg/80` with
 `backdrop-blur`. Children are laid out with `justify-between` — pass a left group and a
 right group.
 
@@ -327,7 +374,7 @@ pass a radius through `class`.
 ### `Table`
 
 Styled wrapper around a native `<table>`, inside an `overflow-x-auto` box bordered
-`border-fc-fg/10`. Descendant selectors style `th`, `td` and `tbody tr` for you; pass real
+`border-fc-border`. Descendant selectors style `th`, `td` and `tbody tr` for you; pass real
 `<thead>` / `<tbody>` markup.
 
 | Prop | Type | Default |
@@ -435,7 +482,8 @@ own reduced-motion handling.
 
 ## Icons
 
-`icons` maps 13 stable keys to Solar `bold-duotone` Iconify names, and `IconKey` is the union
+`icons` maps 19 stable keys to Iconify names — Solar `linear` for chrome, MDI for
+plus/close/chevrons — and `IconKey` is the union
 of those keys. Full table in [configuration.md](configuration.md).
 
 ```svelte

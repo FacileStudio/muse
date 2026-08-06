@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { HTMLInputAttributes } from 'svelte/elements';
-    import { twMerge } from 'tailwind-merge';
+    import { twMerge } from '../../utils/cn.js';
 
     let {
         label,
@@ -14,7 +14,7 @@
         class?: string;
     } = $props();
 
-    const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-md text-fc-fg', className));
+    const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
 </script>
 
 <label class={classes}>

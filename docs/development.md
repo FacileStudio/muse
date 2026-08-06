@@ -7,18 +7,33 @@ makes every component render unstyled.
 
 - `bun` — the suite's package manager and TypeScript runtime
 - `git` — `install.sh` clones and fast-forwards the repo in place
-- A Svelte 5 / Tailwind 4 app to render against; muse has no playground of its own
+- `mise` — optional, but it is how the demo tasks are wired
 
-## There is no build
+## The demo app
 
-`package.json` declares no `scripts` block at all. No `dev`, no `build`, no `test`, no lint.
-The `"svelte"` and `"main"` fields point straight at `src/lib/index.ts`, and consumers
-compile the `.svelte` sources out of `node_modules`. Nothing in this repo produces artifacts,
-so there is nothing to run before committing — and nothing that would have caught a typo
-either.
+`demo/` is a small Vite + Svelte 5 app that consumes the library from source and renders
+every component. It is the playground — use it to see a change before committing.
 
-The practical consequence: a broken component is only discovered inside a consumer app.
-Develop against one.
+```sh
+mise run demo          # from the repo root
+# or
+cd demo && bun install && bun run dev
+```
+
+It serves on `http://127.0.0.1:5183`. `demo/package.json` depends on `"@facile/lib": "file:.."`,
+so edits to `src/lib/` hot-reload straight into the page — no publish, no relink. `mise run
+demo:build` does a production build, which is also the cheapest way to catch a Svelte
+compile error across the whole library at once.
+
+The demo is excluded from the published package: `files` in the root `package.json` lists
+only `src/lib`, `CHARTE.md` and `README.md`.
+
+## The library itself has no build
+
+The root `package.json` declares no build step. The `"svelte"` and `"main"` fields point
+straight at `src/lib/index.ts`, and consumers compile the `.svelte` sources out of
+`node_modules`. Nothing in `src/lib` produces artifacts — `demo/` is the only thing here
+that builds, and running it is the closest thing to a test suite this repo has.
 
 ## Working against a local checkout
 
@@ -58,6 +73,48 @@ missing or pointing at the wrong directory.
 This is separate from `import '@facile/lib/styles'`. The import brings in the token
 definitions; `@source` is what makes Tailwind generate utilities from them. You need both.
 
+## The `twMerge` trap — why `utils/cn.ts` exists
+
+Stock `tailwind-merge` only knows Tailwind's built-in scales. It has no idea `fc-*` is a
+custom namespace, so it classifies **`text-fc-sm` as a text _colour_**, not a font size —
+`fc-sm` is not a recognised t-shirt size, and the `text-color` group accepts anything.
+
+The consequence is silent and vicious. Given a component that merges a variant and a size:
+
+```js
+twMerge('border border-fc-border text-fc-fg', 'h-9 px-4 text-fc-sm')
+// stock tailwind-merge → 'border border-fc-border h-9 px-4 text-fc-sm'
+//                                        text-fc-fg is GONE
+```
+
+Two "colours" collided, so the later one won and the real colour was dropped. In practice
+that shipped an outline button rendering as black text on a black background and avatar
+initials that were simply invisible — no error, no warning, just components that look
+broken in ways that send you hunting through `tokens.css`.
+
+`src/lib/utils/cn.ts` fixes it once for the whole library by teaching `tailwind-merge` the
+`fc-*` scales through `extendTailwindMerge`:
+
+```ts
+export const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size':    [{ text: ['fc-xs', 'fc-sm', /* … */] }],
+      'text-color':   [{ text: ['fc-fg', 'fc-fg-muted', /* … */] }],
+      'bg-color':     [{ bg: [/* … */] }],
+      'border-color': [{ border: [/* … */] }],
+      rounded:        [{ rounded: ['fc-xs', 'fc-sm', 'fc-md', 'fc-lg', 'fc-pill', 'fc-full'] }]
+    }
+  }
+});
+```
+
+Sizes and colours now occupy separate groups and coexist, `rounded-fc-*` values properly
+override one another instead of both surviving, and a consumer's `class` still wins.
+**Every component imports `twMerge` from this module.** If you add a token to `tokens.css`,
+add it to the matching list in `cn.ts` too — a token missing from `cn.ts` reintroduces
+exactly this bug for that token.
+
 ## Where a component goes
 
 | Tier | Directory | Rule |
@@ -76,13 +133,15 @@ The tiers are import paths only; `index.ts` re-exports everything flat.
    `svelte/elements` attribute type (`HTMLButtonAttributes`, `HTMLInputAttributes`, …) and
    spread `...rest` when the component wraps a native element.
 3. Accept `class: className = ''` and build the final class string in a `$derived` with
-   `twMerge(defaults, className)`. `className` goes last so consumers win.
+   `twMerge(defaults, className)`. `className` goes last so consumers win. **Import
+   `twMerge` from `../../utils/cn.js`, never from `tailwind-merge` directly** — see the
+   next section for why that is load-bearing.
 4. Style with `fc-*` utilities only. No raw hex, no arbitrary pixel values outside the token
-   scale. Borders are `border-fc-fg/7` (nav chrome) or `border-fc-fg/10` (inputs, tables) —
-   there is no border color token. `Alert`'s hardcoded `yellow-500` is the existing
-   violation, not the precedent.
-5. Icons come from `icons.ts`, always the Solar `bold-duotone` variant, tinted
-   `text-fc-fg/66`. Add a key there rather than inlining an Iconify name.
+   scale. Borders use the `border-fc-border` token. No colour in the library escapes the
+   `fc-*` namespace — keep it that way.
+5. Icons come from `icons.ts`, always the Solar **`linear`** variant, inheriting
+   `currentColor` (no tint class). Add a key there rather than inlining an Iconify name.
+   `bold-duotone` is reserved for brand marks — see `CHARTE.md` §8.
 6. Mobile-first: works at 360px, hit targets at least 44px, `h-dvh` rather than `h-screen`.
 7. Any animation branches on `prefersReducedMotion()` from `../../utils/motion.js`, or uses
    the `motion-reduce:` Tailwind variant. Reuse the house spring press — scale down in
@@ -105,7 +164,7 @@ curl -fsSL https://raw.githubusercontent.com/FacileStudio/muse/main/install.sh |
 ```
 
 - If `claude` is found: clones the repo to `~/.claude/skills/muse/lib` and copies
-  `integrations/MUSE.md` to `~/.claude/skills/muse/SKILL.md`, overwriting it.
+  `integrations/SKILL.md` to `~/.claude/skills/muse/SKILL.md`, overwriting it.
 - If `codex` is found: clones to `~/.codex/muse/lib` and injects the same file into
   `~/.codex/AGENTS.md` between `<!-- muse:start -->` and `<!-- muse:end -->` markers.
   Content outside the markers is preserved; the marked block is replaced wholesale.
@@ -114,7 +173,7 @@ curl -fsSL https://raw.githubusercontent.com/FacileStudio/muse/main/install.sh |
 Re-running updates: an existing clone is refreshed with `git pull --ff-only`, so a dirty or
 diverged skill clone will fail the pull rather than clobber local work.
 
-Edit `integrations/MUSE.md` to change what agents are told — both tools read that one file.
+Edit `integrations/SKILL.md` to change what agents are told — both tools read that one file.
 Committing and pushing to `FacileStudio/muse` is what ships it; there is no release step.
 
 ## Dependency policy

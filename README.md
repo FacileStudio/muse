@@ -2,19 +2,26 @@
 
 Svelte 5 component library and design system for Facile tools, published as `@facile/lib`.
 
-muse ships 28 components arranged as atoms, molecules, organisms and motion pieces, a
-Tailwind v4 token theme, the Solar icon map, and the bundled Goga typeface. It is consumed
+muse ships 30 components arranged as atoms, molecules, organisms and motion pieces, a
+Tailwind v4 token theme, the Iconify icon map, and the bundled Goga typeface. It is consumed
 directly from source — there is no build step and no `dist/`. An `install.sh` also registers
 muse as an AI skill for Claude Code and Codex so agents generate suite-shaped UI by default.
 
+The palette matches what the suite actually ships: chroma-zero OKLCH, inverted (never tinted)
+active states, 1px borders instead of shadows, Goga, and Solar `linear` icons.
+
 ## What it does
 
-- Exports 28 Svelte 5 components: 16 atoms, 3 molecules, 4 organisms, 5 GSAP motion pieces
+- Exports 30 Svelte 5 components: 16 atoms, 4 molecules, 5 organisms, 5 GSAP motion pieces
 - Publishes a Tailwind v4 `@theme` block under the `fc-*` namespace — colors, radii, type
   scale, fonts, easing, container and nav widths
-- Merges consumer classes over component defaults with `tailwind-merge`, so `class` always wins
-- Exports `icons`, a keyed map of Solar `bold-duotone` Iconify names, with an `IconKey` type
+- Merges consumer classes over component defaults with an `fc-*`-aware `tailwind-merge`
+  (`cn`), so `class` always wins **and** sizes stop colliding with colours
+- Exports `icons`, a keyed map of Iconify names — Solar `linear` for chrome, MDI for
+  plus/close/chevrons — with an `IconKey` type
 - Bundles the Goga typeface (Medium and Semibold) as `@font-face` rules
+- Supports OS dark mode out of the box, plus a `.dark` / `.light` class override so apps can
+  offer a theme toggle
 - Ships `prefersReducedMotion()` and `isMobile()` so every animation can degrade
 - Registers itself as an AI skill for Claude Code (`~/.claude/skills/muse/`) and Codex
   (`~/.codex/muse/`) through `install.sh`
@@ -59,16 +66,30 @@ the components and nothing is styled. See [docs/development.md](docs/development
 ```
 CHARTE.md              Visual contract — color, type, spacing, motion, icons, accessibility
 install.sh             Installs the AI skill for Claude Code and Codex
+mise.toml              `mise run demo` / `demo:build`
+demo/                  Vite playground rendering every component from source
 integrations/
-  MUSE.md              The shared skill definition both tools read
+  SKILL.md              The shared skill definition both tools read
 src/lib/
   index.ts             Public re-exports — the whole surface
-  icons.ts             Solar icon name map and the IconKey type
+  icons.ts             Iconify name map and the IconKey type
   components/          atoms/ molecules/ organisms/ motion/
   fonts/               Goga Medium and Goga Semibold (.otf)
   styles/tokens.css    Tailwind v4 @theme block, @font-face rules, dark mode
+  utils/cn.ts          fc-*-aware tailwind-merge — every component uses it
   utils/motion.ts      prefersReducedMotion(), isMobile()
 ```
+
+## Demo
+
+```sh
+mise run demo          # → http://127.0.0.1:5183
+```
+
+`demo/` consumes the library through `"@facile/lib": "file:.."`, so edits to `src/lib/`
+hot-reload straight into the page. Since `src/lib` has no build or test step, `mise run
+demo:build` is the cheapest way to compile-check every component at once — run it before
+pushing.
 
 ## Documentation
 
