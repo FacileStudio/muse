@@ -562,10 +562,25 @@ at `text-fc-sm`. No border. Inactive: `text-fc-fg-muted`, `hover:bg-fc-surface
 hover:text-fc-fg`. Active: **inverted**, `bg-fc-accent text-fc-accent-fg font-medium` — never
 a tinted wash, and `aria-current="page"` on the anchor so it is not styling alone.
 
-**Press animation**: scale `0.94` in `0.08s power2.in`, then `elastic.out(1, 0.4)` back to `1`
-in `0.5s`. It lives in **`src/lib/utils/press.ts` as `use:springPress`** and every pressable
-surface imports it — `NavButton`, `SideBar`'s footer card, and `IconButton` (which passes
-`0.88`, a deeper dip because an icon-only target is small enough that `0.94` reads as nothing).
+**Press animation**: dip in `0.07s power2.out`, back to `1` in `0.22s power2.out`, no
+overshoot. It lives in **`src/lib/utils/press.ts` as `use:springPress`** and every pressable
+surface imports it — `NavButton`, `SideBar`'s footer card, `IconButton`. Pass `1` to opt out
+while keeping the action attached.
+
+**The depth is solved for, not chosen.** A press moves every edge **1.5px inward whatever the
+element's size**, so the scale is computed per press: `1 - 3 / width`, clamped to
+`0.93 … 0.997`. A 44px icon button dips to `0.932`; an 868px list row dips to `0.9965`. Both
+travel exactly 1.5px.
+
+A fixed ratio cannot work in a component library, because the same action lands on both of
+those. This curve started as `0.94` returning over `0.5s` on `elastic.out(1, 0.4)` — a full
+rubber-band overshoot tuned against a 44px sidebar row. The moment it was applied to a
+full-width row it became a 26px wobble and read as the interface showing off. Even a
+restrained `0.97` still moved that row 13px per side while barely touching the icon button.
+Constant *distance* is the model that survives being reused.
+
+A press is an acknowledgement, not an event: felt, not watched. If a new pressable surface
+seems to need a bigger gesture to register, the surface is wrong.
 
 Do not re-inline it. It was hand-copied into three files once and immediately drifted into two
 different scales, which is the entire reason it is a module now. The action also kills its own

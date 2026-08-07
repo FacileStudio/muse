@@ -100,7 +100,7 @@ inside a `Button`.
 
 ### `IconButton`
 
-Round 44px icon button carrying the house spring press (`use:springPress={0.88}`). Spreads to
+Round 44px icon button carrying the house press (`use:springPress`). Spreads to
 `<button>` (`HTMLButtonAttributes`). A nested `<svg>` is sized `4.5` and a nested
 `<iconify-icon>` is forced to `display: block` so it centres.
 
@@ -972,7 +972,7 @@ Both read their value at call time and do not react to changes.
 
 | Export | Signature | Notes |
 |---|---|---|
-| `springPress` | `(node: HTMLElement, scale?: number) => ActionReturn` | Svelte action. Scale down in `0.08s` `power2.in`, back with `elastic.out(1, 0.4)` over `0.5s`. Default `0.94`; `IconButton` passes `0.88` because a small target needs a deeper dip. No-ops under reduced motion, and kills its tween on destroy |
+| `springPress` | `(node: HTMLElement, scale?: number) => ActionReturn` | Svelte action. Dip in `0.07s` `power2.out`, back to `1` in `0.22s` `power2.out`, no overshoot. Depth is solved per press so every edge travels 1.5px whatever the element's width (`1 - 3 / width`, clamped `0.93…0.997`) — pass a `scale` to override, `1` to opt out. No-ops under reduced motion, and kills its tween on destroy |
 
 It is an action rather than three inlined gsap sequences because the curve is the whole point:
 hand-copied versions drifted into two different scales the first time this was inlined.
