@@ -50,7 +50,7 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 ## Install
 
 ```sh
-bun add "github:FacileStudio/muse#v0.2.0"
+bun add "github:FacileStudio/muse#v0.3.0"
 ```
 
 Import the theme once in the root layout, then use components anywhere:

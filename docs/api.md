@@ -1,8 +1,8 @@
 # muse — API
 
-The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 48 components
-(16 atoms, 12 molecules, 8 organisms, 6 charts, 6 motion pieces), the `cn` class merger, the
-motion, press, field, secret and chart helpers, the `icons` map and the exported types.
+The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 50 components
+(16 atoms, 13 molecules, 9 organisms, 6 charts, 6 motion pieces), the `cn` class merger, the
+motion, press, field, secret, toast and chart helpers, the `icons` map and the exported types.
 Nothing else in the repo is importable — `ChartTable.svelte`, `components/charts/entry.ts`
 and `utils/dialog.ts` are internal.
 
@@ -13,9 +13,9 @@ import {
   Input, Radio, Select, Skeleton, Spinner, StatusDot, Switch, Textarea,
   // molecules
   ColorPicker, Dropzone, Field, NavButton, OptionCards, SecretField,
-  SettingsRow, SettingsSection, SpaceSwitcher, StatCard, Tabs, UploadProgress,
+  SettingsRow, SettingsSection, SpaceSwitcher, StatCard, Tabs, Toast, UploadProgress,
   // organisms
-  ConfirmModal, Drawer, MobileNav, Modal, ProfileCard, SideBar, Table, Topbar,
+  ConfirmModal, Drawer, MobileNav, Modal, ProfileCard, SideBar, Table, Toaster, Topbar,
   // charts
   BarChart, ChartLegend, ChartTooltip, DonutChart, LineChart, Sparkline,
   // motion
@@ -23,12 +23,12 @@ import {
   // helpers
   cn, twMerge, prefersReducedMotion, isMobile, springPress, getFieldContext,
   icons, USER_COLORS, USER_COLOR_LABELS, normalizeUserColor, userColorLabel,
-  REDACTED, isRedacted, maskSecret,
-  chartColor, formatCompact, niceScale, linePath, areaPath, arcPath, tickStride, resize
+  REDACTED, isRedacted, maskSecret, toast, toasts,
+  chartColor, formatCompact, niceScale, linePath, areaPath, arcPath, arcCorner, tickStride, resize
 } from '@facile/muse';
 
 import type {
-  IconKey, UserColor, FieldContext,
+  IconKey, UserColor, FieldContext, ToastTone, ToastOptions, ToastItem, ToastAction,
   ChartSeries, ChartSlice, ChartScale, ChartLegendItem, ChartTipRow, ChartRow
 } from '@facile/muse';
 ```
@@ -61,7 +61,7 @@ One vocabulary, three widths, because not every component can carry every tone:
 | Component | Tones |
 |---|---|
 | `Badge`, `StatusDot` | `neutral` `accent` `info` `success` `warning` `danger` `owner` `admin` |
-| `Alert` | `neutral` `info` `success` `warning` `danger` — the status subset; a banner has no "accent" or role meaning |
+| `Alert`, `Toast` | `neutral` `info` `success` `warning` `danger` — the status subset; a banner has no "accent" or role meaning |
 | `ConfirmModal` | `neutral` `danger` — it only decides whether the confirm button is destructive |
 
 `Button` is the deliberate exception: its `variant` is an *emphasis and shape* axis
@@ -209,7 +209,9 @@ token as text colour. No tone uses a solid saturated fill or a literal colour.
 
 ### `Alert`
 
-Status banner, `rounded-fc-md`, `text-fc-sm`, 1px tinted border. Spreads to `<div>`.
+Status banner, `rounded-fc-md`, `text-fc-sm`, **borderless**. Spreads to `<div>`. Uses the same
+pairing as `Badge` — `bg-fc-<tone>/10 text-fc-<tone>` — so the tint and the text state the tone
+together; `neutral` is `bg-fc-surface text-fc-fg`.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
@@ -359,6 +361,27 @@ arrow/Home/End keys.
 Every tab is measured through a `ResizeObserver`, not once on mount: `<iconify-icon>` is a
 custom element with no box until its data arrives over HTTP, so a tab measured at mount is one
 icon too narrow and the pill renders clipped through the label.
+
+### `Toast`
+
+One notification. `Toaster` renders these from the queue; use it directly only for a static
+example or a custom stack. Spreads to the root `<div>`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `tone` | `ToastTone` | `'neutral'` | `neutral` `info` `success` `warning` `danger` |
+| `title` | `string` | — | Bold first line; the body under it goes muted |
+| `icon` | `string \| null` | tone default | Iconify name; `null` drops the badge |
+| `action` | `ToastAction` | — | `{ label, onClick }`, one outline button |
+| `onDismiss` | `() => void` | — | Renders the 44px close button; omit it and there is none |
+| `children` | `Snippet` | — | The message |
+
+A toast floats over content it does not own, so it takes the floating-surface treatment —
+opaque `bg-fc-bg`, 1px `border-fc-border`, `shadow-lg` — and not `Alert`'s tinted wash, which
+would let whatever is underneath bleed through the tone. It lands on arbitrary content with
+no scrim beneath it, which is why it keeps the outline `ChartTooltip` drops. The tone is
+carried by the icon badge instead. `role` follows the same rule as `Alert`: `alert` for
+`warning` and `danger`, `status` otherwise.
 
 ### `SettingsRow`
 
@@ -584,6 +607,29 @@ The bar is `rounded-fc-pill bg-fc-bg/70 shadow-lg backdrop-blur-2xl backdrop-sat
 `z-50` — a floating surface, so it gets the shadow, and **no border**. The active item is
 inverted.
 
+### `Toaster`
+
+The viewport region that renders the `toast` queue. **Mount exactly one**, in the root layout
+next to the shell — inside a page, a route change unmounts a toast mid-flight.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `position` | `'top' \| 'bottom'` | `'bottom'` | Newest is always the one nearest the edge |
+
+Full-bleed on a phone, a 384px column pinned right from `sm:` up. The region is
+`pointer-events-none` and each toast re-enables its own, so the strip cannot eat clicks on
+what is behind it. It has exactly one padding utility per edge so an app can clear a fixed
+bottom nav with its own breakpoints — `<Toaster class="pb-28 md:pb-6" />`.
+
+Enter is 0.3s `quartOut` (opacity, 16px travel, `scale(0.96)`), exit 0.2s `quartIn` sliding
+out sideways, reorder via `animate:flip` — quart *is* `power3`, so this lands on the library
+curve without pulling gsap in for four properties. All three collapse to 0 under
+`prefers-reduced-motion`.
+
+**A toast cannot cover a `<dialog>`.** `showModal()` puts modals in the top layer, above
+every z-index there is. Feedback about a modal's own work belongs in the modal, or after it
+closes.
+
 ### `Topbar`
 
 Sticky `<header>` at `z-30`, `h-14`, `border-b border-fc-border`, `bg-fc-bg/80` with
@@ -767,6 +813,7 @@ opens a `ChartTooltip` with every series at that category.
 | `data` | `ChartSlice[]` | — | Required. `{ label, value, color? }` |
 | `size` | `number` | `180` | Diameter in px |
 | `thickness` | `number` | `22` | Ring width |
+| `corner` | `number` | `4` | Segment corner radius; `0` is square |
 | `showLegend` | `boolean` | `true` | |
 | `centerLabel` | `string` | — | Muted caption under the centre value |
 | `centerValue` | `string \| number` | `valueFormat(total)` | |
@@ -777,6 +824,11 @@ opens a `ChartTooltip` with every series at that category.
 The hovered wedge lifts; only that wedge is re-pathed, so the rest of the ring is untouched
 per frame. Arcs below ~1.1° are dropped — below that they are sub-pixel at any radius the
 library ships and read as missing.
+
+`corner` rounds the four ends of each segment with fillets tangent to both edges, clamped by
+`arcCorner` so a thin slice cannot round itself into a lozenge. The segment keeps its exact
+angular span — a round `stroke-linecap` would have been one line, and it would have pushed
+every slice half a ring-thickness past the angle it represents.
 
 ### `Sparkline`
 
@@ -806,6 +858,10 @@ Renders nothing when `items` is empty.
 ### `ChartTooltip`
 
 Absolutely positioned tooltip, `z-10`, for a custom plot. Its parent must be positioned.
+
+**No border.** It floats over a chart inside a `bg-fc-component` card, so it separates itself
+with one step of fill (`bg-fc-surface` — darker than the card in light mode, lighter in dark)
+plus `shadow-lg`. Three statements of "this is on top" was two too many on a 60px surface.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
@@ -842,24 +898,37 @@ navigate. Renders a fixed, `pointer-events-none` overlay at `z-[100]` sized `h-d
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `duration` | `number` | `1.5` | GSAP duration in seconds, both directions |
+| `duration` | `number` | `1.5` | GSAP duration in seconds, all three directions |
 | `color` | `string` | `'var(--color-fc-bg)'` | Any CSS colour; applied as inline `background` |
+| `start` | `'covered' \| 'open'` | `'covered'` | `'open'` mounts at zero height and skips the entrance wipe |
 
-Exports one function, reachable via `bind:this`:
+Exports two functions, reachable via `bind:this`:
 
 ```svelte
 <script lang="ts">
   import { Rideau } from '@facile/muse';
 
-  let curtain = $state<{ close: (href: string) => void } | null>(null);
+  let curtain = $state<{ close: (href?: string) => void; open: () => void } | null>(null);
 </script>
 
 <Rideau bind:this={curtain} duration={1.2} />
 <a href="/about" onclick={(e) => { e.preventDefault(); curtain?.close('/about'); }}>About</a>
 ```
 
-`close(href)` navigates with `window.location.href`, i.e. a full page load, not a SvelteKit
-client-side transition. Under reduced motion it skips the animation and navigates immediately.
+`close(href)` navigates with `window.location.href` once it has covered the screen — a full
+page load, not a SvelteKit client-side transition, unless `href` is a hash. Called with no
+argument it just covers and stays there, which is what a client-side router wants: cover,
+swap the view yourself, then `open()`.
+
+**A curtain that mounts with the page it covers can only ever play half the effect.** By the
+time it exists the old page is already gone, so arriving reads as a jump cut to a blank panel
+that then wipes away. For route transitions, mount **one** `Rideau` above the router with
+`start="open"` and drive it — `close(href)` on the way out, `open()` on arrival. Being outside
+the routed view also keeps it out of any transform: an ancestor with a `transform` (such as
+`PageTransition`'s wrapper) makes `position: fixed` resolve against that ancestor, and the
+curtain covers a column instead of the viewport. `demo/src/curtain.svelte.ts` is the pattern.
+
+Under reduced motion both directions snap to their end state; `close(href)` still navigates.
 
 ### `TextElevate`
 
@@ -934,7 +1003,7 @@ computed positions instantly. `isMobile()` is sampled once during placement, so 
 
 ## Icons
 
-`icons` maps 45 stable keys to Iconify names — Solar `linear` for chrome, MDI for
+`icons` maps 46 stable keys to Iconify names — Solar `linear` for chrome, MDI for
 plus/close/chevrons — and `IconKey` is the union of those keys. Full table in
 [configuration.md](configuration.md).
 
@@ -1013,6 +1082,29 @@ are a contract, not a style choice.
 | `userColorLabel` | `(color?: string \| null) => string` — normalizes first, so unknown values still resolve |
 | `UserColor` | `(typeof USER_COLORS)[number]` |
 
+### Toasts
+
+`src/lib/utils/toast.svelte.ts`. A module-scope rune store, so it is callable from anywhere —
+an event handler, a plain `.ts` module, a `catch` block.
+
+| Export | Signature | Notes |
+|---|---|---|
+| `toast.show` | `(message: string, options?: ToastOptions) => string` | Returns the id. Defaults to tone `neutral` |
+| `toast.neutral` / `.info` / `.success` / `.warning` / `.danger` | `(message, options?) => string` | The same, with the tone set |
+| `toast.dismiss` | `(id: string) => void` | Fires that toast's `onDismiss` |
+| `toast.clear` | `() => void` | Dismisses every toast |
+| `toasts.items` | `ToastItem[]` | The live queue, for a custom renderer |
+| `toasts.pause` / `.resume` | `(id: string) => void` | Freeze and restart one countdown |
+
+`ToastOptions` is `{ tone?, title?, duration?, icon?, action?, onDismiss? }`. `duration`
+defaults to **5000ms**; `0` pins the toast until something dismisses it — reserve that for a
+toast carrying an action, since a notification nobody can outwait is just a banner in the
+wrong place. Four toasts show at once and a fifth pushes the oldest out. Hovering or focusing
+a toast freezes its countdown, so it cannot vanish on the way to its own Undo button.
+
+Every mutator runs inside `untrack`, so `$effect(() => { if (error) toast.danger(…) })` —
+the obvious way to raise a toast from state — does not re-trigger the effect that called it.
+
 ### Chart maths
 
 `src/lib/utils/chart.ts`. The charts use these; they are exported so a custom plot can be
@@ -1025,7 +1117,8 @@ built on the same geometry instead of a second, divergent copy.
 | `niceScale` | `(min, max, tickCount?, includeZero?) => ChartScale` | Domain snapped to 1/2/5×10ⁿ steps with its tick list. `tickCount` defaults to `4`, `includeZero` to `false` — bar charts must pass `true` |
 | `linePath` | `(points: [number, number][], smooth?) => string` | SVG `d` for a polyline or a smoothed curve |
 | `areaPath` | `(points: [number, number][], baselineY: number, smooth?) => string` | The same path closed down to a baseline |
-| `arcPath` | `(cx, cy, rOuter, rInner, startAngle, endAngle) => string` | Donut wedge; `rInner <= 0` gives a pie slice. Angles in radians, clockwise from 12 o'clock |
+| `arcPath` | `(cx, cy, rOuter, rInner, startAngle, endAngle, corner?) => string` | Donut wedge; `rInner <= 0` gives a pie slice. Angles in radians, clockwise from 12 o'clock. `corner` rounds the four ends, `0` (the default) is square |
+| `arcCorner` | `(rOuter, rInner, startAngle, endAngle, corner) => number` | The corner radius that segment can actually hold: half its thickness, and never enough for the two fillets of its inner edge to meet. `0` for a full ring or a pie wedge |
 | `tickStride` | `(count, available, minSpacing) => number` | How many labels to skip so they stop colliding |
 | `resize` | `(node: HTMLElement, cb: (w: number) => void) => { destroy(): void }` | Svelte action; reports the node's width through a `ResizeObserver` |
 
