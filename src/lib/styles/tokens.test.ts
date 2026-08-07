@@ -35,6 +35,31 @@ describe('dark mode blocks', () => {
     });
 });
 
+/*
+ * `color-scheme` is not a custom property, so `block()` above does not see it and the
+ * "edit both or neither" test cannot cover it. It gets its own check, because it is the
+ * one declaration that controls everything the *browser* paints — native select popups,
+ * form internals, autofill, caret, the canvas past the page background — and losing it
+ * looks exactly like "dark mode is broken" while every token is correct.
+ */
+describe('color-scheme', () => {
+    function scheme(selector: string): string | undefined {
+        const start = css.indexOf(selector);
+        const open = css.indexOf('{', start);
+        const end = css.indexOf('}', open);
+        return css.slice(open + 1, end).match(/color-scheme\s*:\s*(\w+)\s*;/)?.[1];
+    }
+
+    test('the light default is declared on html', () => {
+        expect(css.match(/html\s*\{[\s\S]*?color-scheme:\s*light;/)).not.toBeNull();
+    });
+
+    test('both dark blocks flip it', () => {
+        expect(scheme(':root:not(.light)')).toBe('dark');
+        expect(scheme(':root.dark')).toBe('dark');
+    });
+});
+
 describe('token surface', () => {
     const light = block('@theme {');
 

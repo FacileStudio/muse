@@ -58,6 +58,22 @@ modes, and that is the constraint that sets the value. `warning` and `owner` use
 `0.58` and measured 4.04:1 and 4.10:1 tinted — both failing the AA floor promised in §9 — which
 is why they are now `0.55`. If you retune one, re-measure the tinted case, not the on-white one.
 
+### `color-scheme` is the half of dark mode tokens cannot reach
+
+`tokens.css` declares `color-scheme: light` on `html` and flips it to `dark` in **both** dark
+blocks. It is not decoration: it is what tells the browser to paint *its own* surfaces dark —
+the native `<select>` popup, form-control internals, autofill backgrounds, the caret, text
+selection, and the canvas past the page background. Without it every one of those stays light
+on a fully dark page, which reads as "dark mode is broken" while every token is correct.
+
+It works through the cascade rather than around it: the `html` rule is in `@layer base` while
+the two dark blocks are unlayered, and **unlayered styles win over layered ones regardless of
+specificity**. Forcing light on a dark OS still works, because `:root:not(.light)` excludes the
+media block and the base declaration is what remains.
+
+`tokens.test.ts` asserts it in both blocks separately, since `color-scheme` is not a custom
+property and the "edit both or neither" test only compares those.
+
 ### The container step is deliberate, and it is small
 
 `--fc-component` against `--fc-page` is a contrast ratio of **1.04:1** in light mode and
