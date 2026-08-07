@@ -42,12 +42,12 @@ Import everything flat from `@facile/lib`; the tier directories are import paths
 
 | Tier | Components |
 |---|---|
-| Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `Component` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `Switch` `Textarea` |
-| Molecules | `ColorPicker` `Dropzone` `Field` `NavButton` `SpaceSwitcher` `StatCard` `UploadProgress` |
+| Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `Component` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `StatusDot` `Switch` `Textarea` |
+| Molecules | `ColorPicker` `Dropzone` `Field` `NavButton` `OptionCards` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `Tabs` `UploadProgress` |
 | Organisms | `ConfirmModal` `Drawer` `MobileNav` `Modal` `ProfileCard` `SideBar` `Table` `Topbar` |
 | Charts | `BarChart` `ChartLegend` `ChartTooltip` `DonutChart` `LineChart` `Sparkline` |
 | Motion | `Carousel` `Mosaique` `PageTransition` `Rideau` `TextElevate` `WordReveal` |
-| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `chartColor` `formatCompact` `niceScale` `USER_COLORS` `normalizeUserColor` |
+| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `chartColor` `formatCompact` `niceScale` `USER_COLORS` `normalizeUserColor` `REDACTED` `isRedacted` `maskSecret` |
 
 Reach for these before hand-rolling — they are the ones agents most often rebuild by mistake:
 
@@ -61,9 +61,33 @@ Reach for these before hand-rolling — they are the ones agents most often rebu
 - **File upload** → `Dropzone` + `UploadProgress` (the consumer owns the actual upload).
 - **Profile / identity block** → `ProfileCard`.
 - **Route changes** → `PageTransition` keyed on the route.
+- **Section switching** → `Tabs` (inverted pill that slides; pass `href` items so the section
+  lives in the URL). Never hand-roll a tab strip.
+- **Any credential** → `SecretField` — masking, reveal-then-auto-hide, copy-with-feedback and
+  the `REDACTED` wire contract in one place. Never a `<code>` with a hand-rolled eye button.
+- **Settings rows** → `SettingsSection` + `SettingsRow`.
+- **Connection state** → `StatusDot`.
+- **Pick one of N (theme, density, view mode)** → `OptionCards`, a radiogroup of icon cards.
 
 App shell = `SideBar` (desktop, collapsible) + `MobileNav` (the `md:hidden` floating pill bar).
 `SideBar` takes `spaces` / `activeSpaceId` / `onSpaceSelect` and renders `SpaceSwitcher` itself.
+
+## Settings pages have a fixed shape
+
+Read CHARTE §14 before building one. The three rules agents break most:
+
+1. **Never add a Settings item to the sidebar nav list.** The user card at the bottom of the
+   rail is the only way in — `SideBar` `userHref` / `userActive`, and `MobileNav`
+   `profileHref`. Log out lives inside settings, not in the rail.
+2. **Sections are `Tabs` across the top with `href` items**, so `/settings/api` is a real
+   route that survives reload and browser-back. Then a `Divider`, with `gap-4` above it.
+   Canonical order: Profile · Appearance · Notifications · API · Pool · Members · Advanced.
+3. **Danger Zone is never its own tab** — it sits at the bottom of Advanced.
+
+Secrets go through `SecretField`, always: a fixed eight-dot mask that never reveals the
+length, reveal that re-hides itself after 15s, copy with a 2s check, and `REDACTED` treated
+as "the server kept it" rather than as a value. A freshly created token is shown once, in a
+`Drawer`, with `autoHideMs={0}` — and reopening that drawer must reset it.
 
 ## Token vocabulary
 

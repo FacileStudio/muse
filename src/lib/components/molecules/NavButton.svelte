@@ -55,8 +55,8 @@
 {#snippet inner()}
     {#if icon}<iconify-icon {icon} width="18" height="18" class="block shrink-0"></iconify-icon>{/if}
     {#if !collapsed}
-        <span class="flex flex-1 items-center justify-between gap-2 overflow-hidden">
-            {#if label}<TextElevate text={label} visible={!collapsed} delay={textDelay} />{/if}
+        <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
+            {#if label}<TextElevate text={label} visible={!collapsed} delay={textDelay} class="truncate" />{/if}
             {#if right}{@render right()}{/if}
         </span>
     {/if}

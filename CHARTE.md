@@ -117,7 +117,9 @@ are *text* on a 10% tint, so they need text contrast, not pastel lightness.
 - **Sans**: Goga (`'Goga'`, `Helvetica`, `Arial`, `sans-serif`) — `--font-fc-body`
 - **Display**: Goga — `--font-fc-title`. Same family as body; the display/body split is
   intentional-in-name-only so consumers can diverge without touching components.
-- **Mono**: <!-- e.g. JetBrains Mono — TODO -->
+- **Mono**: the platform stack — `--font-fc-mono`, used via `font-fc-mono`. Goga has no mono
+  cut, so this deliberately downloads nothing. It is for **machine strings only**: secrets,
+  API keys, IDs, endpoints, event channel names. Prose never wears it.
 - Only **Medium (500)** and **Semibold (600)** are bundled. Any other weight synthesizes —
   do not reach for `font-bold`, use `font-semibold`.
 
@@ -178,7 +180,7 @@ padding generous — the whitespace is doing the work the border used to.
 ## 6. Motion
 
 - Default ease: `power3.inOut` (GSAP). Overlays are the exception — they use asymmetric
-  easing (`power3.out` in, `power3.in` out); see §10.
+  easing (`power3.out` in, `power3.in` out); see §11.
 - Default duration: `0.4s` UI, `1.5s` full-page curtain (`Rideau`)
 - All motion **must** respect `prefers-reduced-motion: reduce` — fall back to opacity-only or instant.
 
@@ -305,7 +307,7 @@ Import via `import { icons } from '@facile/lib'`.
 
 ---
 
-## 9. Navigation components
+## 10. Navigation components
 
 ### NavBar
 
@@ -499,7 +501,7 @@ text-blue-600`. Use `neutral` for a plain `member` role.
 
 ---
 
-## 10. Overlays
+## 11. Overlays
 
 `Modal`, `ConfirmModal` and `Drawer` are all native `<dialog>` elements opened with
 `showModal()` — that buys the top layer, the focus trap, Escape and a real `::backdrop`
@@ -576,7 +578,7 @@ takes `pb-[max(1.25rem,env(safe-area-inset-bottom))]` to clear the iOS home indi
 
 ---
 
-## 11. Charts
+## 12. Charts
 
 Dependency-free SVG — no chart library. `LineChart`, `BarChart`, `DonutChart` and
 `Sparkline`, sharing `ChartLegend`, `ChartTooltip` and the maths in `src/lib/utils/chart.ts`
@@ -615,7 +617,7 @@ a truncated baseline makes bar lengths lie.
 
 ---
 
-## 12. Identity & files
+## 13. Identity & files
 
 ### ColorPicker + `src/lib/colors.ts`
 
@@ -690,7 +692,164 @@ tokens, tinted not solid; rows carry `role="progressbar"` with the file name in 
 
 ---
 
-## 13. Component checklist
+## 14. Settings
+
+Every suite app grows a settings page, and before muse shipped one they had all grown a
+different one — eight repos with a copy-pasted tab strip, six spellings of "copy it now, you
+will not see it again", and three apps with no switcher at all. This section is the standard.
+
+### Settings is reached from the user card, never from the nav
+
+**Never put a Settings row in the sidebar's nav list.** The only way in is the user card at
+the bottom of the rail (`SideBar`'s `userHref` / `userActive`), plus the avatar on
+`MobileNav`'s `profileHref`.
+
+```svelte
+<SideBar pages={navPages} {user} userHref="/settings" userActive={onSettings} />
+<MobileNav items={navPages} {user} profileHref="/settings" profileActive={onSettings} />
+```
+
+The nav list is for the app's actual sections — the things people came to use. Settings is
+where you go to change *yourself*, so it belongs on your own name, and a permanent nav row
+spends prime vertical space on the page people open least. The card already carries the gear
+glyph, so the affordance is not lost.
+
+Two details the card gets right and a hand-rolled one usually does not: the name is a single
+truncating line (`TextElevate` takes `class="truncate"` — a two-line name changes the height
+of the rail), and the active state is the **surface fill**, not the inverted pill the nav
+rows use, because the avatar inside already wears `bg-fc-accent` and an inverted card would
+swallow it whole. Log out lives inside settings — not in the rail.
+
+### One page, top tabs, one section per tab
+
+Sections are `Tabs` across the top of the page, then a `Divider`. Not a left sub-nav (it
+costs 256px that a settings form wants), not an endless stacked scroll.
+
+**Put the section in the URL.** `Tabs` items carry `href`, so each section is a real route:
+a link to `/settings/pool` opens on Pool, reload keeps you there, and browser-back walks the
+sections. Local `$state` tabs break all three.
+
+```svelte
+<div class="flex flex-col gap-4">
+  <Tabs items={sections.map(s => ({ ...s, href: `/settings/${s.id}` }))} value={active} />
+  <Divider class="my-0" />
+</div>
+```
+
+That `gap-4` is not arbitrary. The rule is separating a page header from its body, so it
+needs air — pulled tight under the strip it reads as an underline welded to the active pill
+and fights the pill's shape.
+
+The active tab is an inverted pill that **slides** between tabs on a 0.3s `power3.inOut`
+tween. Pass an `icon` per item; the strip scrolls horizontally on narrow screens and the
+selected tab scrolls itself into view.
+
+The canonical section order, take what the app has:
+
+| Section | For | Typical contents |
+|---|---|---|
+| **Profile** | every app | identity, display name, SSO-managed email, avatar, identity colour, log out |
+| **Appearance** | every app | theme (system/light/dark), density, language, timezone |
+| **Notifications** | anything that emails | a master switch, per-event rows, digest cadence |
+| **API** | anything with a CLI or public API | base URL, token list, create/revoke |
+| **Pool** | anything wired to Nook | enable, instance URL, shared secret, connection status, channels |
+| **Members** | anything space-scoped | member table with role pills, invites |
+| **Advanced** | every app | export, instance/version facts, **danger zone last** |
+
+Never give Danger Zone a tab of its own — it lives at the bottom of Advanced. A destructive
+action should cost a scroll, not sit one mis-click from every other tab all day.
+
+### Section and row anatomy
+
+`SettingsSection` is heading + description + optional `actions`, wrapping its children in a
+`Card` (`bare` skips the card for a `Table` or a `Dropzone`). `SettingsRow` is
+label-and-description on the left, control on the right, stacking under `sm:` and drawing
+its own top rule so a section never has to count its children.
+
+```svelte
+<SettingsSection title="Theme" description="Applied to this browser.">
+  <SettingsRow label="Compact mode" description="Tighter rows — more on screen.">
+    <Switch bind:checked={compact} aria-label="Compact mode" />
+  </SettingsRow>
+</SettingsSection>
+```
+
+`stacked` puts the control on its own full-width line — use it for anything with a text
+field. And note the `aria-label`: `Switch` renders the label *it* is given, so a `Switch` in
+a `SettingsRow` has no accessible name unless you pass one.
+
+A one-of-N preference — colour scheme, density, view mode — is `OptionCards`: a radiogroup
+of icon cards in a `stacked` row, with the selected card **inverted** like every other
+selected state. Not a `Select` (it hides the choices behind a click) and not bare `Radio`
+dots (a native radio next to a word is a form, not a preference).
+
+**The colour scheme belongs here and nowhere else.** No theme toggle floating in a corner of
+every page — it is a preference like any other, and a control pinned over every screen
+competes with that screen's own actions.
+
+### Secrets
+
+`SecretField` is the one way to show, set or copy a credential. Do not hand-roll a
+`<code>` with an eye button next to it.
+
+```svelte
+<SecretField value={token} />                          <!-- show a stored secret -->
+<SecretField bind:value={secret} editable />           <!-- set one -->
+<SecretField value={endpoint} sensitive={false} />     <!-- a URL or ID: copy, no masking -->
+```
+
+The rules it encodes, all of which were being broken somewhere in the suite:
+
+- **The mask is a fixed eight dots.** Never one dot per character — a placeholder that grows
+  with the secret tells anyone watching how long it is, which is free information for
+  whoever is guessing it. `mask="ends"` (the default) keeps the first four characters, which
+  are the public issuer prefix (`fc_rw_`, `sk_live_`), and the last four, so a key is
+  identifiable in a list without being readable. `mask="full"` shows nothing at all.
+- **Revealing is a peek, not a mode.** The value re-hides itself after `autoHideMs`
+  (15s default), because a secret left on screen ends up in a screen share long after the
+  person who revealed it walked away. Set `autoHideMs={0}` only for a one-time token the
+  user has not copied yet.
+- **Copy confirms and resets** — the glyph swaps to a check for 2s, and every state change
+  is announced through an `aria-live` region. A revealed value is `select-all`, so one click
+  takes the whole token.
+- **`REDACTED` is a wire contract, not decoration.** Several suite APIs return the eight-dot
+  string *as the field's value* and treat receiving it back unchanged as "keep what you
+  have". `SecretField` recognises it and goes inert — nothing to reveal, nothing to copy.
+  Import `REDACTED` / `isRedacted` rather than typing the dots.
+
+**Creating a token** goes in a `Drawer`: name, scope, and a required expiry — a machine
+credential that never lapses is the one nobody remembers to rotate. On success the drawer
+body *swaps* to an `Alert tone="warning"` plus a revealed `SecretField`, and reopening the
+drawer must reset that state so a previous token can never reappear.
+
+**Listing tokens** is a `Table` showing name, prefix, scope, last used and expiry. Revoked
+rows stay listed at `opacity-55` so the audit trail still names them, never disappear.
+Revoke is `variant="ghost-danger"` with `icons.revoke` — quiet until you reach for it — and
+routes through a `ConfirmModal` whose description says **what actually breaks** ("any
+pipeline still using it starts failing, and it cannot be un-revoked"), not "are you sure?".
+
+Machine strings — secrets, keys, IDs, endpoints, event channels — are set in
+`font-fc-mono`. Prose never is.
+
+### Connections and integrations
+
+Anything that holds an outbound connection (Nook Pool, a webhook target, an SMTP relay)
+reports state with `StatusDot`, and **the state is not a boolean**. "Not connected" hides
+three different situations with three different fixes, so distinguish at least: disabled,
+connecting, connected, reconnecting (with the attempt count), and gave-up. Only the
+in-flight states pulse.
+
+```svelte
+<StatusDot tone="warning" label="Reconnecting — attempt 3 of 20" pulse />
+```
+
+Pair it with the facts an operator needs — identity, epoch, pending outbox, last error — as
+`SettingsRow`s, and put the secret behind a `SecretField`. Event channels are one
+`SettingsRow` per channel with the machine name as the description.
+
+---
+
+## 15. Component checklist
 
 Before exporting a component:
 - [ ] Uses tokens, no raw hex / px outside tokens
