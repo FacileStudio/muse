@@ -1,6 +1,6 @@
 # muse
 
-Svelte 5 component library and design system for Facile tools, published as `@facile/lib`.
+Svelte 5 component library and design system for Facile tools, published as `@facile/muse`.
 
 muse ships 48 components arranged as atoms, molecules, organisms, charts and motion pieces,
 a Tailwind v4 token theme, the Iconify icon map, and the bundled Goga typeface. It is consumed
@@ -50,15 +50,15 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 ## Install
 
 ```sh
-bun add github:FacileStudio/muse
+bun add "github:FacileStudio/muse#v0.2.0"
 ```
 
 Import the theme once in the root layout, then use components anywhere:
 
 ```svelte
 <script lang="ts">
-  import '@facile/lib/styles';
-  import { Button, Card, Field, Input } from '@facile/lib';
+  import '@facile/muse/styles';
+  import { Button, Card, Field, Input } from '@facile/muse';
 
   let email = $state('');
 </script>
@@ -123,7 +123,7 @@ types line up. `mise run check` is the one that reads the types. Run `verify` be
 mise run demo          # → http://127.0.0.1:5183
 ```
 
-`demo/` aliases `@facile/lib` straight at `../src/lib/index.ts` in `vite.config.ts` — it is
+`demo/` aliases `@facile/muse` straight at `../src/lib/index.ts` in `vite.config.ts` — it is
 deliberately *not* a path dependency — so edits to `src/lib/` hot-reload straight into the
 page. `demo/src/pages/` holds the example pages; read one before building a page in a
 consumer app, they show the intended composition end to end.

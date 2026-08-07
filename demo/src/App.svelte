@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { MobileNav, PageTransition, SideBar, SpaceSwitcher, Topbar, icons } from '@facile/lib';
+    import { MobileNav, PageTransition, SideBar, SpaceSwitcher, Topbar, icons } from '@facile/muse';
     import Dashboard from './pages/Dashboard.svelte';
     import Motion from './pages/Motion.svelte';
     import Projects from './pages/Projects.svelte';

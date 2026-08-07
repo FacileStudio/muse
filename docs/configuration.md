@@ -21,8 +21,8 @@ element.
 
 | Specifier | Resolves to |
 |---|---|
-| `@facile/lib` | `src/lib/index.ts` — components, `cn`, helpers, `icons`, `USER_COLORS`, the chart maths, the exported types |
-| `@facile/lib/styles` | `src/lib/styles/tokens.css` — theme, fonts, dark mode, base layer |
+| `@facile/muse` | `src/lib/index.ts` — components, `cn`, helpers, `icons`, `USER_COLORS`, the chart maths, the exported types |
+| `@facile/muse/styles` | `src/lib/styles/tokens.css` — theme, fonts, dark mode, base layer |
 
 `package.json` sets both `"svelte"` and `"main"` to the TypeScript entry, and `"files"` ships
 only `src/lib`, `CHARTE.md` and `README.md`. There is no compiled output; the consumer's
@@ -226,7 +226,7 @@ This is how the suite reconciles muse with its own palette rather than forking t
 
 ```css
 @import 'tailwindcss';
-@source '../node_modules/@facile/lib/src';
+@source '../node_modules/@facile/muse/src';
 
 :root {
   --color-fc-page: var(--background);
@@ -253,7 +253,7 @@ This is how the suite reconciles muse with its own palette rather than forking t
 ```
 
 That block is adapted from `Casier/apps/client/src/app.css`, the one app in the suite that
-currently depends on `@facile/lib`. Two overrides it used to need are now obsolete: the type
+currently depends on `@facile/muse`. Two overrides it used to need are now obsolete: the type
 scale no longer needs flattening (muse's `text-fc-sm` is already `0.875rem`), and
 `--color-yellow-500` no longer needs neutralising (`Alert`'s warning tone reads
 `--color-fc-warning`; **no colour in the library escapes the `fc-*` namespace**).

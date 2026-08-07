@@ -18,7 +18,7 @@
         Table,
         USER_COLORS,
         icons
-    } from '@facile/lib';
+    } from '@facile/muse';
 
     type Status = 'active' | 'paused' | 'done';
 

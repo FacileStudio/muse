@@ -17,7 +17,7 @@
     "noUncheckedIndexedAccess": false,
     "baseUrl": ".",
     "paths": {
-      "@facile/lib": ["./src/lib/index.ts"]
+      "@facile/muse": ["./src/lib/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.svelte", "demo/src/**/*.ts", "demo/src/**/*.svelte"]

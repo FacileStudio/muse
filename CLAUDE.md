@@ -1,6 +1,6 @@
 # muse
 
-Svelte 5 component library and design system for Facile tools. Published as `@facile/lib`.
+Svelte 5 component library and design system for Facile tools. Published as `@facile/muse`.
 
 ## Tech stack
 
@@ -61,7 +61,7 @@ different failures; run `mise run verify` before pushing.
 Install as dependency in a consumer app:
 
 ```bash
-bun add github:FacileStudio/muse
+bun add "github:FacileStudio/muse#v0.2.0"
 ```
 
 Install the AI skill (Claude Code / Codex):
@@ -76,7 +76,7 @@ All tokens live in `src/lib/styles/tokens.css` inside a `@theme` block. Consumer
 them once in their root layout:
 
 ```ts
-import '@facile/lib/styles';
+import '@facile/muse/styles';
 ```
 
 The palette is **chroma-zero OKLCH**, matching the shipped suite apps. Namespaces: `fc-page`,
@@ -146,16 +146,16 @@ byte-identical duplicates on purpose — **edit both or neither**.
 ## Gotchas
 
 - No build step for the library -- it is consumed directly from source. There is no `dist/`.
-- The demo does **not** install `@facile/lib`. A `file:..` dependency makes bun copy the whole
+- The demo does **not** install `@facile/muse`. A `file:..` dependency makes bun copy the whole
   repo into `demo/node_modules` -- including `demo/node_modules` itself -- which recurses and
   dies with `ENOENT: failed copying files from cache to destination`. (`link:..` is worse: bun
   reads it as a *global* link and symlinks `~/.bun/install/global`.) Instead
-  `demo/vite.config.ts` aliases `@facile/lib` straight at `../src/lib/index.ts`, with
+  `demo/vite.config.ts` aliases `@facile/muse` straight at `../src/lib/index.ts`, with
   `resolve.dedupe` for `svelte`/`gsap`/`tailwind-merge` so imports from outside the demo root
   resolve, and `demo/src/app.css` imports the tokens by relative path. `tsconfig.json` mirrors
   the alias with a `paths` entry so `svelte-check` resolves the demo's imports too.
-- Consumers need **both** `import '@facile/lib/styles'` and `@source
-  '../node_modules/@facile/lib/src'`. Without the `@source`, Tailwind never scans the
+- Consumers need **both** `import '@facile/muse/styles'` and `@source
+  '../node_modules/@facile/muse/src'`. Without the `@source`, Tailwind never scans the
   components and everything renders structurally correct but completely unstyled.
 - `iconify-icon` is **not** a dependency. `Button`, `NavButton`, `Tabs`, `OptionCards`,
   `Dropzone`, `UploadProgress`, `SecretField`, `SpaceSwitcher`, `SideBar`, `MobileNav`,

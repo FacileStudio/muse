@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { OptionCards, Select, SettingsRow, SettingsSection, Switch, icons } from '@facile/lib';
+    import { OptionCards, Select, SettingsRow, SettingsSection, Switch, icons } from '@facile/muse';
     import { setTheme, theme, type ThemeMode } from '../../theme.svelte.js';
 
     let compactMode = $state(true);

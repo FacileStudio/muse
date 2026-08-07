@@ -12,7 +12,7 @@
         SettingsSection,
         UploadProgress,
         icons
-    } from '@facile/lib';
+    } from '@facile/muse';
 
     type Upload = {
         id: string;

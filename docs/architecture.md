@@ -12,9 +12,9 @@ CSS variables are turned into utility classes by the consumer's Tailwind pass.
 ```
 FacileStudio/muse (git)
         │
-        │  bun add github:FacileStudio/muse
+        │  bun add github:FacileStudio/muse#v0.2.0
         ▼
-consumer/node_modules/@facile/lib/src/lib/
+consumer/node_modules/@facile/muse/src/lib/
         │
         ├── index.ts ──▶ components/{atoms,molecules,organisms,charts,motion}/*.svelte
         │                                 │  compiled by
@@ -29,7 +29,7 @@ consumer/node_modules/@facile/lib/src/lib/
                     │                     │
                     └── fonts/Goga*.otf   │
                                           │
-                        @source '…/@facile/lib/src'  ← consumer must declare this
+                        @source '…/@facile/muse/src'  ← consumer must declare this
                                                        or no fc-* utility is emitted
 ```
 
@@ -70,7 +70,7 @@ raw.githubusercontent.com/FacileStudio/muse/main
 | Installer | `install.sh` | `curl`s `SKILL.md` and `CHARTE.md` and copies them into place |
 
 The atomic split is import-path only. Everything is re-exported flat from `index.ts`, so
-consumers write `import { NavButton } from '@facile/lib'` and never name a tier.
+consumers write `import { NavButton } from '@facile/muse'` and never name a tier.
 
 ## Consumption lifecycle
 
@@ -79,13 +79,13 @@ consumers write `import { NavButton } from '@facile/lib'` and never name a tier.
    There is no build step and no `dist/`.
 2. `@sveltejs/vite-plugin-svelte` compiles the `.svelte` files from `node_modules` as part
    of the consumer's build.
-3. `import '@facile/lib/styles'` resolves through the `"./styles"` export to
+3. `import '@facile/muse/styles'` resolves through the `"./styles"` export to
    `tokens.css`, which itself does `@import 'tailwindcss'`.
 4. Tailwind v4 reads the `@theme` block and generates `bg-fc-*`, `text-fc-*`,
    `rounded-fc-*`, `max-w-fc-*`, `w-fc-nav-*`, `size-fc-nav-item` and `ease-fc` utilities.
 5. Tailwind scans the consumer's own source for class names. It does **not** scan
    `node_modules` by default, so the consumer must add an `@source` directive covering
-   `@facile/lib/src`. Without it every muse component renders unstyled. See
+   `@facile/muse/src`. Without it every muse component renders unstyled. See
    [development.md](development.md).
 
 ## Verification without a build
@@ -95,7 +95,7 @@ it directly. Three checks stand in, and they catch different things:
 
 | Command | What it actually proves |
 |---|---|
-| `mise run check` | `svelte-check --tsconfig ./tsconfig.json --fail-on-warnings` — **the only type check**. `tsconfig.json` includes `src/**` *and* `demo/src/**`, with a `paths` alias mapping `@facile/lib` to `src/lib/index.ts`, so the demo's usage is type-checked against the library it aliases |
+| `mise run check` | `svelte-check --tsconfig ./tsconfig.json --fail-on-warnings` — **the only type check**. `tsconfig.json` includes `src/**` *and* `demo/src/**`, with a `paths` alias mapping `@facile/muse` to `src/lib/index.ts`, so the demo's usage is type-checked against the library it aliases |
 | `mise run test` | `bun test src/lib` — the chart maths in `utils/chart.test.ts` and the secret helpers in `utils/secret.test.ts`. The two pieces of real logic here that are not Svelte templates |
 | `mise run demo:build` | Every component **compiles**: template syntax, snippet misuse, unknown DOM props. Vite strips types without reading them, so this proves nothing about type correctness |
 | `mise run verify` | All three, in that order. Same steps as `.github/workflows/ci.yml` |

@@ -18,7 +18,7 @@
         Textarea,
         USER_COLORS,
         icons
-    } from '@facile/lib';
+    } from '@facile/muse';
     import {
         createWorkspaces,
         currentUser,

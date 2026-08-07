@@ -1,6 +1,6 @@
 # muse — API
 
-The complete exported surface of `@facile/lib`, read from `src/lib/index.ts`: 48 components
+The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 48 components
 (16 atoms, 12 molecules, 8 organisms, 6 charts, 6 motion pieces), the `cn` class merger, the
 motion, press, field, secret and chart helpers, the `icons` map and the exported types.
 Nothing else in the repo is importable — `ChartTable.svelte`, `components/charts/entry.ts`
@@ -25,12 +25,12 @@ import {
   icons, USER_COLORS, USER_COLOR_LABELS, normalizeUserColor, userColorLabel,
   REDACTED, isRedacted, maskSecret,
   chartColor, formatCompact, niceScale, linePath, areaPath, arcPath, tickStride, resize
-} from '@facile/lib';
+} from '@facile/muse';
 
 import type {
   IconKey, UserColor, FieldContext,
   ChartSeries, ChartSlice, ChartScale, ChartLegendItem, ChartTipRow, ChartRow
-} from '@facile/lib';
+} from '@facile/muse';
 ```
 
 Conventions across the library:
@@ -849,7 +849,7 @@ Exports one function, reachable via `bind:this`:
 
 ```svelte
 <script lang="ts">
-  import { Rideau } from '@facile/lib';
+  import { Rideau } from '@facile/muse';
 
   let curtain = $state<{ close: (href: string) => void } | null>(null);
 </script>
@@ -940,8 +940,8 @@ plus/close/chevrons — and `IconKey` is the union of those keys. Full table in
 
 ```svelte
 <script lang="ts">
-  import { icons } from '@facile/lib';
-  import type { IconKey } from '@facile/lib';
+  import { icons } from '@facile/muse';
+  import type { IconKey } from '@facile/muse';
 
   let current: IconKey = 'settings';
 </script>
