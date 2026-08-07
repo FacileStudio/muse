@@ -10,7 +10,9 @@
         class?: string;
     } = $props();
 
-    const classes = $derived(twMerge('flex flex-wrap items-center gap-x-3 gap-y-1 text-fc-xs', className));
+    /* The gap between two entries has to beat the 6px inside one, or "412 GB · 46%" and the
+       swatch of the next series read as a single run of text. */
+    const classes = $derived(twMerge('flex flex-wrap items-center gap-x-4 gap-y-2 text-fc-xs', className));
 </script>
 
 {#if items.length}
