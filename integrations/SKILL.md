@@ -43,17 +43,21 @@ Import everything flat from `@facile/muse`; the tier directories are import path
 | Tier | Components |
 |---|---|
 | Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `StatusDot` `Switch` `Textarea` |
-| Molecules | `ColorPicker` `Dropzone` `Field` `NavButton` `OptionCards` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `Tabs` `UploadProgress` |
-| Organisms | `ConfirmModal` `Drawer` `MobileNav` `Modal` `ProfileCard` `SideBar` `Table` `Topbar` |
+| Molecules | `ColorPicker` `Dropzone` `Field` `NavButton` `OptionCards` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `Tabs` `Toast` `UploadProgress` |
+| Organisms | `ConfirmModal` `Drawer` `MobileNav` `Modal` `ProfileCard` `SideBar` `Table` `Toaster` `Topbar` |
 | Charts | `BarChart` `ChartLegend` `ChartTooltip` `DonutChart` `LineChart` `Sparkline` |
 | Motion | `Carousel` `Mosaique` `PageTransition` `Rideau` `TextElevate` `WordReveal` |
-| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `springPress` `getFieldContext` `chartColor` `formatCompact` `niceScale` `linePath` `areaPath` `arcPath` `tickStride` `resize` `USER_COLORS` `USER_COLOR_LABELS` `normalizeUserColor` `userColorLabel` `REDACTED` `isRedacted` `maskSecret` |
+| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `springPress` `getFieldContext` `toast` `toasts` `chartColor` `formatCompact` `niceScale` `linePath` `areaPath` `arcPath` `arcCorner` `tickStride` `resize` `USER_COLORS` `USER_COLOR_LABELS` `normalizeUserColor` `userColorLabel` `REDACTED` `isRedacted` `maskSecret` |
 
-Types: `IconKey` `UserColor` `FieldContext` `ChartSeries` `ChartSlice` `ChartScale`
-`ChartLegendItem` `ChartTipRow` `ChartRow`.
+Types: `IconKey` `UserColor` `FieldContext` `ToastTone` `ToastOptions` `ToastItem`
+`ToastAction` `ChartSeries` `ChartSlice` `ChartScale` `ChartLegendItem` `ChartTipRow`
+`ChartRow`.
 
 Reach for these before hand-rolling — they are the ones agents most often rebuild by mistake:
 
+- **Feedback with no question in it** ("Saved", "Invoice sent", "Sync failed") → `toast`,
+  with one `<Toaster />` mounted in the root layout. Not an `Alert` pinned to the page, not a
+  `Modal`. It auto-dismisses in 5s, pauses on hover, and cannot cover a `<dialog>`.
 - **Confirmation** → `ConfirmModal` (`tone="danger"`, async `onConfirm` shows a spinner and
   stays open on reject). Never a bare `Modal` with two buttons.
 - **Bottom sheet / mobile filters** → `Drawer` (drag-to-dismiss, safe-area aware).
@@ -106,7 +110,12 @@ Colours are **chroma-zero OKLCH** — the palette is greyscale except `fc-danger
 `bg-fc-accent` / `text-fc-accent-fg` · `border-fc-border` · `outline-fc-ring` ·
 `text-fc-danger` `text-fc-success` `text-fc-info` `text-fc-warning` · `bg-fc-scrim`
 
-There are **no spacing tokens** — spacing is Tailwind's stock scale.
+There are **no spacing tokens** — spacing is Tailwind's stock scale. On a dashboard the
+steps are ranked: `gap-4` inside a card, `p-5` of card padding (`Card`'s default), `gap-4`
+between cards, `gap-10` between sections. **A gutter is never tighter than the padding of the
+cards it separates** — `gap-3` around `p-4` cards is what makes three stat tiles read as one
+panel with seams. A section heading and its description are `gap-1` inside one block, not two
+siblings of the section's own gap.
 
 One tone vocabulary: `neutral | accent | info | success | warning | danger | owner | admin`.
 `Badge` and `StatusDot` take all eight, `Alert` the status subset (no `accent`, no roles),
@@ -131,7 +140,9 @@ Five house rules that make generated UI look like the suite rather than generic 
    page with their `bg-fc-component` fill. Do not add `border border-fc-border` to a card, a
    chart wrapper or a list container. 1px borders are for separation *inside* a container
    (list rows, table row rules), form controls, `Dropzone`, and floating surfaces — which
-   also get the only shadows (`Modal`, `Drawer`, dropdowns, `MobileNav`).
+   also get the only shadows (`Modal`, `Drawer`, dropdowns, `Toast`, `MobileNav`).
+   `ChartTooltip` is the single borderless floating surface — it is 60px wide and sits inside
+   a card, so a step of fill plus its shadow is enough.
 4. **Never show scrollbars.** `tokens.css` hides them globally; scrolling still works. Do not
    re-enable them and do not add `[scrollbar-width:none]` utilities — already handled.
 5. **Never put a border or ring on an avatar.**
@@ -246,7 +257,7 @@ are not substitutes. Run `mise run verify` before pushing.
 ## Consuming from a Facile tool
 
 ```bash
-bun add "github:FacileStudio/muse#v0.2.0"
+bun add "github:FacileStudio/muse#v0.3.0"
 ```
 
 ```svelte

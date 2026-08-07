@@ -158,6 +158,19 @@ both things at once.
 Semantic fills are **tinted** (`bg-fc-<tone>/10 text-fc-<tone>`), never solid. `neutral` is the
 one untinted tone — it uses `fc-surface`.
 
+**The text is the tone, and there is no border.** Both halves of that pairing are load-bearing:
+a 10% wash under `text-fc-fg` body copy states the tone once, weakly, and adding a `/40` border
+states the same thing a second time just as weakly — the result reads as an unstyled box rather
+than a status surface. `Alert` shipped that way until it was brought in line with `Badge`.
+
+Contrast is why the tone tokens sit where they do — `text-fc-<tone>` on its own 10% tint is the
+lowest-contrast pairing in the system. Measured against sRGB relative luminance, light mode
+clears AA on `fc-page` for all four (4.55–5.10:1) and dark mode clears it for info, success and
+warning (4.74–5.48:1). Two pairings still miss 4.5:1 and are known: **`warning` on
+`fc-component`** (4.37:1) and **`danger` in dark mode** (3.84:1 on `fc-component`). Deepening
+those two tokens is the fix; it has not been done because the tokens are shared with `Badge`,
+`StatusDot` and the role pills.
+
 ---
 
 ## 3. Typography
@@ -198,6 +211,41 @@ The only spacing values the theme adds are the two the nav geometry depends on, 
 are interlocked with the sidebar's width tween and cannot be picked freely:
 `--spacing-fc-nav-item` (44px) and `--spacing-fc-nav-content` (196px). See §10.
 
+### Dashboard rhythm
+
+A page of cards has four spacings and they are ranked, not picked per component. Bottom to
+top, each step is bigger than the one it contains:
+
+| Step | Value | Where |
+|---|---|---|
+| Inside a card | `gap-4` (16px) | title → chart, label → value |
+| Card padding | `p-5` (20px) | `Card`, and therefore `StatCard` and `SettingsSection` |
+| Between cards | `gap-4` (16px) | grid gutters, and stacked rows of cards |
+| Between sections | `gap-10` (40px) | the page's own column |
+
+The rule that was being broken: **a gutter must not be tighter than the padding of the cards
+it separates.** Dashboards here ran `gap-3` gutters around `p-4` cards, so three stat cards
+read as one panel with seams. And a section's heading binds to its body with the same 16px
+the body uses internally — heading and description are `gap-1` *inside* one block, never two
+siblings of the section's own `gap-4`, or the description floats between the two and belongs
+to neither.
+
+```svelte
+<div class="flex flex-col gap-10">
+  <section class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <h2 class="text-fc-lg font-semibold text-fc-fg">Storage</h2>
+      <p class="text-fc-sm text-fc-fg-muted">Across every space you own.</p>
+    </div>
+    <div class="grid gap-4 lg:grid-cols-2"> … </div>
+  </section>
+</div>
+```
+
+A chart card in a grid row is as tall as its tallest neighbour. Give the chart `flex-1` so it
+centres in the height it was handed instead of hanging off the title — `DonutChart` is
+`justify-center` for exactly this.
+
 Container max-widths:
 - mobile: 100%
 - `sm` ≥ 640px: 600px
@@ -224,10 +272,18 @@ card or a list container.
 - **form controls**, which need a visible edge to read as editable — `Input`, `Select`,
   `Textarea`, `SpaceSwitcher`'s trigger;
 - **`Dropzone`**, whose dashed outline *is* the affordance;
-- **floating surfaces**, which pair it with a shadow.
+- **floating surfaces**, which pair it with a shadow — `Modal`, `Drawer`, dropdowns, `Toast`.
+
+**`ChartTooltip` is the exception.** It is 60px wide, it follows the pointer, and it lives
+*inside* a chart card rather than on top of the page — so it separates itself with one step
+of fill (`bg-fc-surface`, darker than the card in light mode and lighter in dark) plus
+`shadow-lg`, and no outline. At that size the outline was most of what you saw. A `Toast`
+keeps its border: it lands on arbitrary content with no scrim under it, and unlike the
+tooltip it has no card around it to belong to.
 
 Because the light-mode fill is a subtle step (`oklch(0.985)` on `oklch(1)`), keep container
-padding generous — the whitespace is doing the work the border used to.
+padding generous — the whitespace is doing the work the border used to. `Card` is **`p-5`**
+(20px); it was `p-4` and read cramped against its own fill.
 
 ---
 
@@ -271,6 +327,13 @@ It animates **in only** — there is no exit tween, because a true crossfade nee
 mounted at once and that doubles every page's state. `Rideau` remains the tool for full-page
 curtain navigation; `PageTransition` is for client-side route swaps.
 
+**A curtain belongs above the router, never inside the page it covers.** Mounted with the
+page, it exists only after the old view is gone, so it can play the reveal but not the cover
+— the arrival reads as a jump cut to a blank panel that then wipes. One instance at the app
+root with `start="open"`, driven `close(href)` out and `open()` in, covers both halves; it
+also sits outside `PageTransition`'s transform, and a transformed ancestor resolves
+`position: fixed` against itself, which shrinks a viewport curtain to a content column.
+
 ---
 
 ## 7. Responsive rules
@@ -286,6 +349,21 @@ Scrolling itself is completely untouched — wheel, trackpad, touch, keyboard an
 `scrollIntoView` all behave normally. If something is unreachable, the container is the bug;
 never "fix" it by showing a scrollbar. Long content still needs its own affordances: keep a
 partial row visible at the fold, or pair the scroll area with arrows the way `Carousel` does.
+
+**Anything carrying `sr-only` needs a positioned ancestor.** `sr-only` is `position: absolute`,
+and an absolutely positioned box whose nearest *positioned* ancestor is the initial containing
+block belongs to the **document**, not to whatever scroll container it happens to sit inside —
+`overflow` on an unpositioned ancestor does not clip it. In the standard shell, where the
+scroller is an inner `<main>` and the outer shell is `h-dvh overflow-hidden`, a stray `sr-only`
+node lands at its flow offset in *document* coordinates. Scroll to the bottom of a long page and
+the window itself then scrolls another couple of thousand pixels into empty white, dragging the
+whole shell off screen. `Switch`, `Avatar` and `SecretField` each shipped this; all three are
+`relative` now, and `Dropzone` and the chart roots already were. This is the vertical twin of
+the `ChartTable` note in §12 — same rule, same cause.
+
+**An app's single scroll container should be `overscroll-contain`.** When `<main>` is the only
+scroller there is nothing useful to chain a flick past either end into, and without it the
+gesture reaches the document and rubber-bands the shell.
 
 - Mobile-first: write the small layout, then enhance with `sm:` / `md:` / `lg:`.
 - Min supported width: **360px**.
@@ -357,7 +435,7 @@ icon stays inert unless the consumer registers the custom element.
 
 Import via `import { icons } from '@facile/muse'`.
 
-**45 keys — 39 Solar, 6 MDI.** If a glyph you need is missing, add a key rather than inlining
+**46 keys — 40 Solar, 6 MDI.** If a glyph you need is missing, add a key rather than inlining
 the string at the call site; that is what keeps the pack and style rules above from being
 re-litigated in every component.
 
@@ -384,7 +462,7 @@ Solar (`linear`, UI chrome):
 | `icons.server` | `solar:server-linear` | `icons.code` | `solar:code-linear` |
 | `icons.history` | `solar:history-linear` | `icons.card` | `solar:card-linear` |
 | `icons.download` | `solar:download-linear` | `icons.filter` | `solar:filter-linear` |
-| `icons.mail` | `solar:letter-linear` | | |
+| `icons.mail` | `solar:letter-linear` | `icons.error` | `solar:close-circle-linear` |
 
 MDI (plus, close, chevrons — Solar's read muddy at small sizes):
 
@@ -487,7 +565,7 @@ jolt at the end of the collapse:
 
 Vertical spacing in the nav column is `[&>*+*]:mt-5`, not `gap-5`. A flex `gap` belongs to
 the *container*, so it vanishes the instant a child unmounts and cannot be animated; a margin
-belongs to the child, so `transition:slide` animates it away with the element's height.
+belongs to the child, so the block's transition animates it away with the element's height.
 
 **Collapse and expand are not symmetric, and the asymmetry is the whole trick.** `SideBar`
 keeps a private `narrow` state that lags the public `collapsed` prop, and every row reads
@@ -504,12 +582,23 @@ the animation, not by the state flag that starts it.
 
 **Block children of the sidebar are the exception** — they key off `collapsed`, not `narrow`,
 and carry their own fade. `SpaceSwitcher` sits in the column as a `w-fc-nav-content` fixed
-block (`--spacing-fc-nav-content: 196px`) wrapped in `transition:slide`. Two reasons: a
-`w-full` block *reflows* as the rail narrows instead of being clipped like the labels, and a
-plain `{#if}` pops it in and out at whichever end of the tween it flips. The fixed width
-makes the rail clip it horizontally; `slide` animates its height *and* margin to zero over
-the same 300ms as the width tween, so the rows below drift up instead of snapping; and
-Svelte holds the node in the DOM until the outro lands.
+block (`--spacing-fc-nav-content: 196px`). It is fixed-width because a `w-full` block
+*reflows* as the rail narrows instead of being clipped like the labels — but that is also why
+it cannot morph the way a nav row does: at 68px the rail simply guillotines it.
+
+So it leaves on its own terms, through a custom transition rather than `slide`:
+
+- **height and margin** shrink to zero over the same 300ms as the width tween, on
+  `cubicInOut` — which is `power3.inOut`, the same curve — so the rows below drift up
+  instead of snapping, and Svelte holds the node in the DOM until the outro lands.
+- **opacity is not linear with the height.** It finishes in the first 55% of the collapse
+  (`FADE_START = 0.45`), so the control is invisible well before the rail is narrow enough
+  to cut it. Reversed on expand, it waits for the rail to be wide enough to hold it.
+- **an 8px lift** rides along, matching `PageTransition`'s travel.
+
+A plain `{#if}` pops it in and out at whichever end of the tween it flips; `slide` alone
+keeps it fully opaque while the rail crosses it, which is the frame where the fixed width
+shows as a clipped stub spilling past the rail.
 
 **A collapsed nav item is a fixed `size-fc-nav-item` square — never `w-full aspect-square`.**
 `aspect-square` looks equivalent at rest but ties the item's *height* to its animating width,
@@ -751,6 +840,34 @@ reflex:
 - Button order is `flex-col-reverse` on mobile (confirm on top) and `sm:flex-row
   sm:justify-end` on desktop (cancel left, confirm right).
 
+### Toast
+
+Feedback that needs no answer, and never blocks. `toast.success('Invoice sent.')` from
+anywhere; a single `<Toaster />` in the root layout renders the queue.
+
+```svelte
+<!-- root layout, once, outside the router -->
+<Toaster class="pb-28 md:pb-6" />
+```
+
+| Where | Rule |
+|---|---|
+| Tone | The `Alert` subset — `neutral` `info` `success` `warning` `danger`. The sugar is named after it (`toast.danger`, not `toast.error`) |
+| Duration | 5s by default. `0` pins it, and is only for a toast carrying an action |
+| Stack | Four at once, newest nearest the screen edge; a fifth pushes the oldest out |
+| Placement | Full-bleed above the safe area on a phone, a 384px column pinned right from `sm:` |
+| Motion | 0.3s `quartOut` in, 0.2s `quartIn` out, `animate:flip` on reorder — quart *is* `power3` |
+
+Hover or focus **freezes the countdown**. A toast that disappears while you are reading it,
+or on the way to its own Undo button, is worse than no toast.
+
+**A toast is not a dialog.** It cannot ask a question, it cannot be the only place an error
+is reported, and it cannot cover a `<dialog>` — `showModal()` owns the top layer, above every
+z-index there is. A modal reporting its own success closes first, then toasts.
+
+Its one border is deliberate: unlike `ChartTooltip` it lands on arbitrary content with no
+card and no scrim under it, so it keeps the outline (§5).
+
 ### Drawer
 
 Bottom sheet, the mobile counterpart to `Modal`. Full-bleed under `sm:`, capped at
@@ -820,13 +937,22 @@ Shared contract:
   axis label, so it re-derived the whole layout ~60×/second for 0.6s to move some rectangles.
 - Mount animation is 0.6s `power3.out` (line draw-in, bars from the baseline, donut sweep),
   skipped under `prefers-reduced-motion`.
+- **Nothing in a chart has a sharp corner.** Bars are rounded 4px on the ends that face
+  nothing — the end sitting on the baseline stays square, because it is resting on the axis.
+  In a stacked bar *every* segment above the baseline one is bounded by a 2px gap on both
+  sides, so all four of its corners are rounded; leaving them square drew a seam through the
+  middle of every bar. `DonutChart` does the same with `corner` (4px default) through
+  `arcCorner`, which clamps the radius to half the ring thickness and to what the slice's
+  own inner edge can hold. Rounding is done with fillets tangent to both edges, never with a
+  round `stroke-linecap` — a linecap pushes the segment half a thickness past the angle it
+  represents, which makes the slice lie about its share.
 - One axis. Never a second y-scale — two measures of different magnitude are two charts.
 
 | Component | Key props |
 |-----------|-----------|
 | `LineChart` | `series`, `labels`, `area`, `smooth`, `showGrid`, `showLegend`, `yFormat`, `xFormat`, `yTicks`, `height` |
 | `BarChart` | `series`, `labels`, `stacked`, `horizontal`, `showGrid`, `showLegend`, `yFormat`, `yTicks`, `height` |
-| `DonutChart` | `data`, `size`, `thickness`, `showLegend`, `centerLabel`, `centerValue`, `valueFormat` |
+| `DonutChart` | `data`, `size`, `thickness`, `corner`, `showLegend`, `centerLabel`, `centerValue`, `valueFormat` |
 | `Sparkline` | `data`, `height`, `area`, `smooth`, `color`, `showLast`, `valueFormat` |
 
 `DonutChart`'s `size` is a **maximum**, not a fixed width — it clamps to its container, so

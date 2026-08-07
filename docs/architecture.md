@@ -12,7 +12,7 @@ CSS variables are turned into utility classes by the consumer's Tailwind pass.
 ```
 FacileStudio/muse (git)
         │
-        │  bun add github:FacileStudio/muse#v0.2.0
+        │  bun add github:FacileStudio/muse#v0.3.0
         ▼
 consumer/node_modules/@facile/muse/src/lib/
         │
