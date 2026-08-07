@@ -42,16 +42,19 @@ Import everything flat from `@facile/lib`; the tier directories are import paths
 
 | Tier | Components |
 |---|---|
-| Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `Component` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `StatusDot` `Switch` `Textarea` |
+| Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `StatusDot` `Switch` `Textarea` |
 | Molecules | `ColorPicker` `Dropzone` `Field` `NavButton` `OptionCards` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `Tabs` `UploadProgress` |
 | Organisms | `ConfirmModal` `Drawer` `MobileNav` `Modal` `ProfileCard` `SideBar` `Table` `Topbar` |
 | Charts | `BarChart` `ChartLegend` `ChartTooltip` `DonutChart` `LineChart` `Sparkline` |
 | Motion | `Carousel` `Mosaique` `PageTransition` `Rideau` `TextElevate` `WordReveal` |
-| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `chartColor` `formatCompact` `niceScale` `USER_COLORS` `normalizeUserColor` `REDACTED` `isRedacted` `maskSecret` |
+| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `springPress` `getFieldContext` `chartColor` `formatCompact` `niceScale` `linePath` `areaPath` `arcPath` `tickStride` `resize` `USER_COLORS` `USER_COLOR_LABELS` `normalizeUserColor` `userColorLabel` `REDACTED` `isRedacted` `maskSecret` |
+
+Types: `IconKey` `UserColor` `FieldContext` `ChartSeries` `ChartSlice` `ChartScale`
+`ChartLegendItem` `ChartTipRow` `ChartRow`.
 
 Reach for these before hand-rolling — they are the ones agents most often rebuild by mistake:
 
-- **Confirmation** → `ConfirmModal` (`tone="danger"`, async `onconfirm` shows a spinner and
+- **Confirmation** → `ConfirmModal` (`tone="danger"`, async `onConfirm` shows a spinner and
   stays open on reject). Never a bare `Modal` with two buttons.
 - **Bottom sheet / mobile filters** → `Drawer` (drag-to-dismiss, safe-area aware).
 - **Any chart** → `LineChart` `BarChart` `DonutChart` `Sparkline`. Dependency-free SVG; do
@@ -63,6 +66,11 @@ Reach for these before hand-rolling — they are the ones agents most often rebu
 - **Route changes** → `PageTransition` keyed on the route.
 - **Section switching** → `Tabs` (inverted pill that slides; pass `href` items so the section
   lives in the URL). Never hand-roll a tab strip.
+- **Any labelled form control** → `Field`. It renders a real `<label for>`, and muse's own
+  `Input` / `Select` / `Textarea` pick up its id, `aria-describedby` and `aria-invalid` through
+  context — `<Field label="Email"><Input /></Field>` is correctly labelled with nothing extra.
+  For a control muse does not own, take the ids from the snippet parameters:
+  `{#snippet children({ id, describedBy })}`.
 - **Any credential** → `SecretField` — masking, reveal-then-auto-hide, copy-with-feedback and
   the `REDACTED` wire contract in one place. Never a `<code>` with a hand-rolled eye button.
 - **Settings rows** → `SettingsSection` + `SettingsRow`.
@@ -92,21 +100,28 @@ as "the server kept it" rather than as a value. A freshly created token is shown
 ## Token vocabulary
 
 Colours are **chroma-zero OKLCH** — the palette is greyscale except `fc-danger`,
-`fc-success`, `fc-warning`, `fc-owner`, `fc-admin`, and the six chart series slots.
+`fc-success`, `fc-info`, `fc-warning`, `fc-owner`, `fc-admin`, and the six chart series slots.
 
 `bg-fc-page` `bg-fc-bg` `bg-fc-surface` `bg-fc-component` · `text-fc-fg` `text-fc-fg-muted`
 `bg-fc-accent` / `text-fc-accent-fg` · `border-fc-border` · `outline-fc-ring` ·
-`text-fc-danger` `text-fc-success` `text-fc-warning`
+`text-fc-danger` `text-fc-success` `text-fc-info` `text-fc-warning` · `bg-fc-scrim`
+
+There are **no spacing tokens** — spacing is Tailwind's stock scale.
+
+One tone vocabulary: `neutral | accent | info | success | warning | danger | owner | admin`.
+`Badge` and `StatusDot` take all eight, `Alert` the status subset (no `accent`, no roles),
+`ConfirmModal` only `neutral | danger`. There is no `muted` and no `default` — those are
+`neutral`. `Button`'s `variant` is a separate axis (emphasis and shape), not a tone.
 
 Chart series: `fc-chart-1`…`fc-chart-6` (purple, orange, aqua, red, green, pink) — Sablier's
 identity palette. Assign **by series index in fixed order, never by rank**; `fc-danger` and
-`fc-success` are reserved for status and are never series colours. The slot order is
-CVD-validated — do not reorder it by taste.
+`fc-success` are reserved for status and are never series colours. Do not reorder the slots by
+taste — two charts on one page have to agree about what "series 2" looks like.
 
 Radii: `rounded-fc-xs` 4 · `fc-sm` 6 · `fc-md` 8 · `fc-lg` 12 · `fc-pill` 999
 Type: `text-fc-xs` 12 · **`text-fc-sm` 14 ← the UI default** · `fc-md` 16 · `fc-lg` 18 · `fc-xl` 22 · `fc-2xl` 28 · `fc-3xl` 36
 
-Three house rules that make generated UI look like the suite rather than generic Tailwind:
+Five house rules that make generated UI look like the suite rather than generic Tailwind:
 
 1. **Active and primary states are inverted, never tinted.** `bg-fc-accent text-fc-accent-fg`
    — `fc-accent` deliberately equals `fc-fg`, so a selected nav row is a solid inverted slab.
@@ -122,6 +137,14 @@ Three house rules that make generated UI look like the suite rather than generic
 5. **Never put a border or ring on an avatar.**
 
 `Button` is a pill. Buttons, badges and avatars are `rounded-fc-pill`; panels are `fc-md`/`fc-lg`.
+
+Two more that are easy to forget because nothing visibly breaks: every `<button>` declares
+`type` (an undeclared one inside a form submits it), and focus is always the single ring
+`focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring`.
+
+Callback props are camelCase `onX` — `onChange` `onSelect` `onClose` `onConfirm` `onCancel`
+`onReveal` `onCopy` `onFiles` `onReject`. Lowercase `on*` is a native DOM handler passing
+through `...rest`.
 
 ### Buttons take icons as props
 
@@ -167,8 +190,9 @@ or every muse component renders structurally correct and completely unstyled:
 @source '../node_modules/@facile/lib/src';
 ```
 
-**3. `iconify-icon` is not a muse dependency.** `Button`, `SideBar`, `NavButton`,
-`SpaceSwitcher`, `MobileNav`, `Dropzone`, `UploadProgress` and `Mosaique` render `<iconify-icon>` elements that stay inert unless the
+**3. `iconify-icon` is not a muse dependency.** `Button`, `NavButton`, `Tabs`, `OptionCards`,
+`Dropzone`, `UploadProgress`, `SecretField`, `SpaceSwitcher`, `SideBar`, `MobileNav`, `Modal`,
+`Drawer` and `ConfirmModal` render `<iconify-icon>` elements that stay inert unless the
 consumer registers the custom element (`import 'iconify-icon'`, or the CDN script in
 `app.html` as the Go-family apps do).
 
@@ -176,7 +200,12 @@ consumer registers the custom element (`import 'iconify-icon'`, or the CDN scrip
 
 Follows the OS automatically. To let a user toggle it, put `dark` / `light` on `<html>` —
 both beat the media query, which is scoped `:root:not(.light)` precisely so forcing light
-works while the OS is dark. `demo/src/App.svelte` has a working persisted toggle.
+works while the OS is dark. Write both classes and let `system` write neither; a script that
+only ever adds `.dark` strands anyone forcing light on a dark OS.
+
+The demo does this in `demo/src/theme.svelte.ts` (state + `localStorage`), applied from
+`demo/src/App.svelte`, with the control itself in `demo/src/pages/settings/Appearance.svelte`
+— in Settings, like every other preference, never floating over every page.
 
 ## Seeing your work
 
@@ -189,16 +218,30 @@ mise run demo      # from the repo root → http://127.0.0.1:5183
 `demo/src/pages/` holds the example pages (Dashboard, Projects, Spaces, Settings) — read one
 before building a page, they show the intended composition end to end.
 
-`mise run demo:build` is the cheapest way to catch a compile error across every component at
-once; `mise run test` covers the chart maths. Run both before pushing.
+Verification is three separate things, because there is no build to fail:
+
+```bash
+mise run check        # svelte-check over src/lib and demo/src — the ONLY type check
+mise run test         # bun test src/lib — chart maths and secret helpers
+mise run demo:build   # compiles every component; vite strips types, so it type-checks NOTHING
+mise run verify       # all three, i.e. what CI runs
+```
+
+`demo:build` catches template and syntax errors; `mise run check` catches type errors. They
+are not substitutes. Run `mise run verify` before pushing.
 
 ## Adding to the library
 
 1. Drop the component in `src/lib/components/<atoms|molecules|organisms|charts|motion>/`
 2. Accept `class` and merge with `twMerge(defaults, className)` — `className` last
-3. Re-export from `src/lib/index.ts` — a component that is not re-exported does not exist
-4. Update `CHARTE.md` if you changed a token or a documented invariant
-5. Commit and push to `FacileStudio/muse`
+3. Spread `...rest` on the root element, last, so a consumer attribute wins. Put your own
+   handlers after it only when the component stops working without them
+4. Re-export from `src/lib/index.ts` — a component that is not re-exported does not exist
+5. Add any new `fc-*` token to `src/lib/utils/cn.ts` as well as `tokens.css`, or twMerge will
+   silently eat it
+6. `mise run verify`
+7. Update `CHARTE.md` if you changed a token or a documented invariant
+8. Commit and push to `FacileStudio/muse`
 
 ## Consuming from a Facile tool
 

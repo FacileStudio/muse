@@ -1,7 +1,8 @@
 # muse — Architecture
 
 How a source-only Svelte library reaches a consumer app, what the Tailwind v4 theme actually
-publishes, and how the same repo doubles as an AI skill for Claude Code and Codex.
+publishes, how the repo is verified without a build, and how it doubles as an AI skill for
+Claude Code and Codex.
 
 ## Runtime topology
 
@@ -15,7 +16,7 @@ FacileStudio/muse (git)
         ▼
 consumer/node_modules/@facile/lib/src/lib/
         │
-        ├── index.ts ──▶ components/{atoms,molecules,organisms,motion}/*.svelte
+        ├── index.ts ──▶ components/{atoms,molecules,organisms,charts,motion}/*.svelte
         │                                 │  compiled by
         │                                 ▼
         │                          @sveltejs/vite-plugin-svelte ──▶ app bundle
@@ -32,30 +33,41 @@ consumer/node_modules/@facile/lib/src/lib/
                                                        or no fc-* utility is emitted
 ```
 
+The skill install is a separate, much smaller path — two files fetched over HTTPS, no clone:
+
 ```
-FacileStudio/muse (git)
-        │  curl install.sh | bash
-        ├──▶ ~/.claude/skills/muse/lib   + SKILL.md  (copied from integrations/SKILL.md)
-        └──▶ ~/.codex/muse/lib           + a marked block injected into ~/.codex/AGENTS.md
+raw.githubusercontent.com/FacileStudio/muse/main
+        │  curl -fsSL install.sh | bash
+        │
+        ├── integrations/SKILL.md ─┬─▶ ~/.claude/skills/muse/SKILL.md   (if `claude` on PATH)
+        │                          └─▶ a marked block in ~/.codex/AGENTS.md  (if `codex` on PATH)
+        └── CHARTE.md ─────────────┬─▶ ~/.claude/skills/muse/CHARTE.md
+                                   └─▶ ~/.codex/muse/CHARTE.md
 ```
 
 ## Components
 
 | Piece | File | Role |
 |---|---|---|
-| Public surface | `src/lib/index.ts` | Re-exports 30 components, `cn`/`twMerge`, 2 motion helpers, `icons` and `IconKey`. Nothing else is importable. |
+| Public surface | `src/lib/index.ts` | Re-exports 48 components plus `cn`/`twMerge`, the motion/press/field/secret/chart helpers, `icons`, `USER_COLORS` and the exported types. Nothing else is importable |
 | Atoms | `src/lib/components/atoms/` | 16 single-element primitives — buttons, inputs, badges, surfaces |
-| Molecules | `src/lib/components/molecules/` | 4 compositions of atoms — `Field`, `NavButton`, `SpaceSwitcher`, `StatCard` |
-| Organisms | `src/lib/components/organisms/` | 5 page-level structures — `MobileNav`, `Modal`, `SideBar`, `Table`, `Topbar` |
-| Motion | `src/lib/components/motion/` | 5 GSAP-driven pieces |
-| Icons | `src/lib/icons.ts` | 19 Iconify names behind stable keys — Solar `linear` for chrome, MDI for plus/close/chevrons |
-| Theme | `src/lib/styles/tokens.css` | `@import 'tailwindcss'`, `@font-face` rules, one `@theme` block, a media-query dark override, a `.dark` class override, and an `@layer base` |
+| Molecules | `src/lib/components/molecules/` | 12 compositions of atoms — form rows, settings rows, nav rows, uploads, secrets |
+| Organisms | `src/lib/components/organisms/` | 8 page-level structures — dialogs, nav, header, table, profile |
+| Charts | `src/lib/components/charts/` | 6 exported SVG charts and chart parts, plus internal `ChartTable.svelte` and `entry.ts` |
+| Motion | `src/lib/components/motion/` | 6 pieces that exist for the animation, not the markup |
+| Icons | `src/lib/icons.ts` | 45 Iconify names behind stable keys — Solar `linear` for chrome, MDI for plus/close/chevrons |
+| Theme | `src/lib/styles/tokens.css` | `@import 'tailwindcss'`, `@font-face` rules, an `@theme` block, an `@theme static` block for the chart slots, a media-query dark override, a `.dark` class override, and an `@layer base` |
 | Fonts | `src/lib/fonts/` | Goga Medium (500) and Goga Semibold (600) |
 | Class merge | `src/lib/utils/cn.ts` | `fc-*`-aware `tailwind-merge`. Every component imports `twMerge` from here |
-| Helpers | `src/lib/utils/motion.ts` | `prefersReducedMotion()`, `isMobile()` — both SSR-safe |
-| Demo | `demo/` | Vite playground consuming the library via `file:..`; the only thing in the repo that builds |
+| Motion helpers | `src/lib/utils/motion.ts` | `prefersReducedMotion()`, `isMobile()` — both SSR-safe |
+| Press | `src/lib/utils/press.ts` | `springPress`, the one press curve, as a `use:` action |
+| Field context | `src/lib/utils/field.ts` | `setFieldContext` / `getFieldContext` — how a `Field` labels the control below it |
+| Dialog controller | `src/lib/utils/dialog.ts` | `createDialog` — open/close sync, exit-animation latch, backdrop hit-test, body scroll lock. **Internal**; `Modal` and `Drawer` are the API |
+| Chart maths | `src/lib/utils/chart.ts` | Scales, paths, arcs, bar and donut geometry, the `resize` action. Partly exported |
+| Secrets | `src/lib/utils/secret.ts` | `REDACTED`, `isRedacted`, `maskSecret` |
+| Demo | `demo/` | Vite playground consuming the library through a **vite alias**, not a dependency |
 | Skill | `integrations/SKILL.md` | One markdown file consumed by both Claude Code and Codex |
-| Installer | `install.sh` | Clones or `git pull --ff-only`s the repo per tool, then wires the skill |
+| Installer | `install.sh` | `curl`s `SKILL.md` and `CHARTE.md` and copies them into place |
 
 The atomic split is import-path only. Everything is re-exported flat from `index.ts`, so
 consumers write `import { NavButton } from '@facile/lib'` and never name a tier.
@@ -70,11 +82,30 @@ consumers write `import { NavButton } from '@facile/lib'` and never name a tier.
 3. `import '@facile/lib/styles'` resolves through the `"./styles"` export to
    `tokens.css`, which itself does `@import 'tailwindcss'`.
 4. Tailwind v4 reads the `@theme` block and generates `bg-fc-*`, `text-fc-*`,
-   `rounded-fc-*`, `max-w-fc-*`, `w-fc-nav-*` and `ease-fc` utilities.
+   `rounded-fc-*`, `max-w-fc-*`, `w-fc-nav-*`, `size-fc-nav-item` and `ease-fc` utilities.
 5. Tailwind scans the consumer's own source for class names. It does **not** scan
    `node_modules` by default, so the consumer must add an `@source` directive covering
    `@facile/lib/src`. Without it every muse component renders unstyled. See
    [development.md](development.md).
+
+## Verification without a build
+
+The library produces no artifact, so "does it build" is not a question that can be asked of
+it directly. Three checks stand in, and they catch different things:
+
+| Command | What it actually proves |
+|---|---|
+| `mise run check` | `svelte-check --tsconfig ./tsconfig.json --fail-on-warnings` — **the only type check**. `tsconfig.json` includes `src/**` *and* `demo/src/**`, with a `paths` alias mapping `@facile/lib` to `src/lib/index.ts`, so the demo's usage is type-checked against the library it aliases |
+| `mise run test` | `bun test src/lib` — the chart maths in `utils/chart.test.ts` and the secret helpers in `utils/secret.test.ts`. The two pieces of real logic here that are not Svelte templates |
+| `mise run demo:build` | Every component **compiles**: template syntax, snippet misuse, unknown DOM props. Vite strips types without reading them, so this proves nothing about type correctness |
+| `mise run verify` | All three, in that order. Same steps as `.github/workflows/ci.yml` |
+
+The distinction matters because the demo build is fast and feels like a full check. It is not.
+A prop typed `string` handed a `number` sails straight through `demo:build` and is caught only
+by `check`. Run `verify`.
+
+CI (`.github/workflows/ci.yml`) runs on every push to `main` and every pull request: install
+with `--frozen-lockfile`, then the same three steps.
 
 ## Class composition
 
@@ -84,7 +115,7 @@ Every component builds its class string in a `$derived`, with a `twMerge` import
 ```ts
 import { twMerge } from '../../utils/cn.js';
 
-const classes = $derived(twMerge('rounded-fc-md border border-fc-border bg-fc-component p-4', className));
+const classes = $derived(twMerge('rounded-fc-md bg-fc-component p-4', className));
 ```
 
 Because `twMerge` resolves conflicts by keeping the last utility in the same group, a
@@ -96,15 +127,16 @@ Tailwind's built-in scales, so `text-fc-sm` fails its font-size validator and fa
 to the permissive `text-color` group — where it collides with `text-fc-fg` and, being later
 in the string, **deletes it**. The failure is silent and produces components that render
 with no text colour at all. `cn.ts` calls `extendTailwindMerge` to register the `fc-*`
-sizes, colours and radii in their correct groups:
+font families, sizes, colours and radii in their correct groups:
 
 ```ts
 export const twMerge = extendTailwindMerge({
   extend: { classGroups: {
+    'font-family': [{ font: ['fc-body', 'fc-title', 'fc-mono'] }],
     'font-size': [{ text: [/* fc-xs … fc-3xl */] }],
-    'text-color': [{ text: [/* fc-fg, fc-accent, … */] }],
+    'text-color': [{ text: [/* fc-fg, fc-accent, fc-info, … */] }],
     'bg-color': [{ bg: [/* … */] }], 'border-color': [{ border: [/* … */] }],
-    rounded: [{ rounded: [/* fc-xs … fc-pill */] }]
+    rounded: [{ rounded: [/* fc-xs … fc-full */] }]
   } }
 });
 ```
@@ -113,27 +145,53 @@ It is re-exported publicly as `cn` so consumers writing their own `fc-*` markup 
 correct behaviour. A token added to `tokens.css` but not to `cn.ts` reopens the bug for that
 token.
 
+## Prop passthrough
+
+Atoms, molecules and organisms spread `...rest` onto their root element, placed **last** so a
+consumer attribute wins over the component default. That is the rule; the exceptions are all
+cases where the component's own behaviour depends on winning:
+
+- `Modal` and `Drawer` spread the dialog controller's `onclose` / `oncancel` / `onclick`
+  after `rest`. Those three are what keep `open` in sync and make the dialog dismissible; a
+  consumer `onclick` would otherwise silently break closing.
+- `Tabs`, `ColorPicker` and `OptionCards` keep their `role`, `aria-*` and `onkeydown` after
+  `rest` — the roving-tabindex keyboard model is the component.
+- `Dropzone` keeps its five drag handlers after `rest`.
+
+Chart and motion components take `class` only and spread nothing.
+
 ## Motion architecture
 
-Eight components animate. `Rideau`, `TextElevate`, `WordReveal` and `Mosaique` drive GSAP
-from `onMount`; `SideBar` tweens its own width from an `$effect`; `IconButton` and
-`NavButton` run a spring press on `pointerdown`; `Carousel` uses only native scroll snapping
-and an `IntersectionObserver`.
+Animation is GSAP everywhere except `Carousel`, which uses native scroll snapping and an
+`IntersectionObserver`, and `Skeleton` / `Spinner`, which are CSS animations behind the
+`motion-reduce:` variant.
+
+| Where | What animates |
+|---|---|
+| `motion/` | `Rideau` (curtain height), `TextElevate` (rise), `WordReveal` (ScrollTrigger + SplitText scrub), `Mosaique` (bloom out from centre), `PageTransition` (keyed fade + lift) |
+| `organisms/` | `SideBar` tweens its own width from an `$effect`; `Modal` scales, `Drawer` translates, each handing its tweens to the shared dialog controller |
+| `molecules/` | `Tabs` slides its indicator pill |
+| `charts/` | `entry.ts` — a 0→1 progress tween, a dash-offset draw-in for lines, opacity fades for areas |
+| everywhere pressable | `springPress` from `utils/press.ts` — `IconButton`, `NavButton` (both the `<a>` and the `<button>` branch), and `SideBar`'s footer user card |
 
 Every GSAP path calls `prefersReducedMotion()` first and takes a non-animated branch when it
-returns `true` — the curtain drops to height `0` instantly, text is set to its final
-transform, the mosaic lands in place, the sidebar snaps to its target width, and press
-animations are skipped entirely. `Skeleton` and `Spinner` use the `motion-reduce:animate-none`
-Tailwind variant instead.
+returns `true`: the curtain drops to height `0` instantly, text is set to its final transform,
+the mosaic lands in place, the sidebar snaps to its target width, charts jump to their final
+state, and press animations are skipped. `tokens.css` additionally carries a global
+`@media (prefers-reduced-motion: reduce)` block that collapses every CSS animation and
+transition — including consumer-authored ones — to `0.01ms` rather than `none`, so
+`transitionend` still fires and nothing waiting on it hangs.
 
-The press animation is the house spring: scale to `0.88`–`0.94` in `0.08s` with `power2.in`,
-then back to `1` in `0.5s` with `elastic.out(1, 0.4)`. `IconButton` inlines it as an
-`onpointerdown` handler; `NavButton` and `SideBar` implement it as a `use:springPress` Svelte
-action so it can attach to either an `<a>` or a `<button>`.
+The press curve lives in one action rather than inline in each component precisely because it
+is the kind of thing that drifts: three hand-copied gsap sequences ended up on two different
+scales the first time it was inlined. Same reasoning behind `utils/dialog.ts` — `Modal` and
+`Drawer` share the open/close state machine, the closing latch, the backdrop hit-test and the
+refcounted body scroll lock, but keep their own tweens, because a modal scaling and a sheet
+translating on different curves is not duplication.
 
-`WordReveal` additionally registers the GSAP `ScrollTrigger` and `SplitText` plugins at
-mount. `SplitText` shipped as a paid Club GreenSock plugin before GSAP 3.13; the declared
-range is `^3.12.0`, so a consumer resolving an older 3.12.x will fail to import it.
+`WordReveal` registers the GSAP `ScrollTrigger` and `SplitText` plugins at mount and kills
+both on destroy. `SplitText` was a paid Club GreenSock plugin before GSAP 3.13; the
+dependency floor is `^3.13.0` for exactly that reason — on 3.12 the import does not resolve.
 
 ## Theming model
 
@@ -147,16 +205,23 @@ scoped `:root:not(.light)` handles the OS preference with no JavaScript; a `:roo
 handles an explicit class. Both swap the full palette. The `:not(.light)` guard is what makes
 a manual switcher work in the one case a plain media query cannot express — forcing light
 while the OS is in dark mode. `@custom-variant dark` is registered alongside, so Tailwind's
-`dark:` utilities follow the class.
+`dark:` utilities follow the class. The two blocks are byte-identical duplicates on purpose:
+plain CSS cannot share a declaration block between a media query and a class selector, and
+`light-dark()` needs Chrome 123, ahead of the Chrome 111 floor Tailwind v4 targets. Edit both
+or neither.
 
-`tokens.css` also emits an `@layer base` that sets the font stack and tracking on `html`,
-page background and foreground on `body`, and the title face on `h1`–`h6`. Importing the
-styles therefore establishes base page colours, not only utility classes — a consumer gets a
-coherent page without writing any CSS.
+The chart slots live in a separate `@theme static` block. `chartColor()` builds the variable
+name with a template literal, so the strings `fc-chart-3`…`fc-chart-6` appear in no source
+file — a plain `@theme` would emit only the slots Tailwind saw used, and an undefined `var()`
+in an SVG `fill` renders black.
 
-Borders use a real `--color-fc-border` token (`oklch(0.9 0 0)` light, `oklch(1 0 0 / 10%)`
-dark), which is the single border colour across the library. The earlier alpha-over-foreground
-approach (`border-fc-fg/7` and `/10`) is gone.
+`tokens.css` also emits an `@layer base` that sets the font stack and tracking on `html`, page
+background and foreground on `body`, the title face on `h1`–`h6`, the global scrollbar
+suppression, and the reduced-motion rule. Importing the styles therefore establishes base page
+behaviour, not only utility classes.
+
+Borders use a single `--color-fc-border` token (`oklch(0.9 0 0)` light, `oklch(1 0 0 / 10%)`
+dark) across the whole library.
 
 ## Relationship to the rest of the suite
 

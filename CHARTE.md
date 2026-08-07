@@ -3,16 +3,20 @@
 Visual contract for every Facile tool. Agents read this **before** generating any UI.
 
 > Status: **matches the shipped Facile Suite look** (Sablier / Nuage / Casier / Plume /
-> Courrier), audited 2026-08-07. Chroma-zero OKLCH for chrome; colour appears only in
-> `--fc-danger`, the role pills, and the six chart series slots.
+> Courrier). Audited and reconciled against source on 2026-08-07 — before that pass this
+> document described spacing tokens that did not exist, a `NavBar` component that was renamed
+> long ago, and two different collapsed-rail widths in the same section. Every value below was
+> read out of `src/lib/` rather than remembered.
+>
+> Chroma-zero OKLCH for chrome; colour appears only in the status tokens, the two role pills,
+> and the six chart series slots.
 
 ---
 
 ## 1. Brand
 
 - **Name**: Facile
-- **Tone**: clean, technical, quiet — no color noise outside destructive states and
-  semantic role pills.
+- **Tone**: clean, technical, quiet — no colour noise outside status and role meaning.
 - **Voice in UI copy**: <!-- TODO -->
 
 ---
@@ -23,7 +27,8 @@ CSS custom properties. Source of truth: `src/lib/styles/tokens.css`.
 
 | Token               | Light                | Dark                  | Usage                       |
 |---------------------|----------------------|------------------------|-----------------------------|
-| `--fc-page`/`--fc-bg`| `oklch(1 0 0)`       | `oklch(0.09 0 0)`      | page background             |
+| `--fc-page`          | `oklch(1 0 0)`       | `oklch(0.09 0 0)`      | document canvas             |
+| `--fc-bg`            | `oklch(1 0 0)`       | `oklch(0.09 0 0)`      | a component's own default fill — same value as `page` today, separate so an app can tint one without the other |
 | `--fc-surface`       | `oklch(0.97 0 0)`    | `oklch(0.18 0 0)`      | muted fills, hover states   |
 | `--fc-component`     | `oklch(0.985 0 0)`   | `oklch(0.13 0 0)`      | cards, sidebar/panel bg     |
 | `--fc-fg`             | `oklch(0.145 0 0)`  | `oklch(0.985 0 0)`     | primary text                |
@@ -32,8 +37,34 @@ CSS custom properties. Source of truth: `src/lib/styles/tokens.css`.
 | `--fc-accent-fg`      | `oklch(1 0 0)`      | `oklch(0.09 0 0)`      | text on accent               |
 | `--fc-border`         | `oklch(0.9 0 0)`    | `oklch(1 0 0 / 10%)`   | dividers, outlines            |
 | `--fc-ring`           | `oklch(0.4 0 0)`    | `oklch(0.6 0 0)`       | focus rings                   |
-| `--fc-danger`         | `oklch(0.55 0.22 29)`| `oklch(0.65 0.22 29)` | destructive — **the one chroma token** |
-| `--fc-success`        | `oklch(0.6 0.16 145)`| `oklch(0.7 0.16 145)` | success / positive             |
+| `--fc-scrim`          | `oklch(0 0 0 / 50%)` | `oklch(0 0 0 / 50%)`  | overlay backdrops — same in both modes |
+| `--fc-danger`         | `oklch(0.55 0.22 29)`| `oklch(0.65 0.22 29)` | destructive                    |
+| `--fc-danger-fg`      | `oklch(1 0 0)`      | `oklch(1 0 0)`         | text on a solid danger fill   |
+| `--fc-success`        | `oklch(0.52 0.12 150)`| `oklch(0.72 0.14 150)`| success / positive            |
+| `--fc-info`           | `oklch(0.52 0.14 255)`| `oklch(0.72 0.13 255)`| informational status          |
+| `--fc-warning`        | `oklch(0.55 0.13 75)`| `oklch(0.8 0.13 75)`   | caution                        |
+| `--fc-owner`          | `oklch(0.55 0.13 64)`| `oklch(0.78 0.13 64)`  | `owner` role pill              |
+| `--fc-admin`          | `oklch(0.5 0.16 292)`| `oklch(0.75 0.14 292)` | `admin` role pill              |
+
+**Chrome is chroma-zero; chroma is reserved for meaning.** Everything structural — page,
+surface, component, foreground, accent, border, ring — sits at chroma 0. Colour appears only
+where it carries information: the five status tokens (`danger`, `success`, `info`, `warning`),
+the two role pills (`owner`, `admin`), and the six chart series slots. Nothing else.
+
+**The lightness of the tinted tokens is derived, not chosen.** `danger`, `success`, `info`,
+`warning`, `owner` and `admin` are all read as `text-fc-<tone>` on `bg-fc-<tone>/10` — the
+lowest-contrast use any of them gets. Every one clears **4.5:1 in that configuration**, in both
+modes, and that is the constraint that sets the value. `warning` and `owner` used to sit at
+`0.58` and measured 4.04:1 and 4.10:1 tinted — both failing the AA floor promised in §9 — which
+is why they are now `0.55`. If you retune one, re-measure the tinted case, not the on-white one.
+
+### The container step is deliberate, and it is small
+
+`--fc-component` against `--fc-page` is a contrast ratio of **1.04:1** in light mode and
+**1.03:1** in dark. That is the entire visual separation a `Card` gets, because §5 forbids
+giving it a border. It is enough on a decent screen and it is *not* enough on a dim laptop, a
+projector, or anything uncalibrated. Know that you are making that trade. If a specific surface
+must survive bad conditions, raise it to `--fc-surface` rather than reintroducing an outline.
 
 ### Chart series tokens
 
@@ -83,7 +114,8 @@ left the later slots undefined — and an undefined `var()` in an SVG `fill` ren
 Rules:
 - **Assign by series index, in fixed order, never by rank.** A filter that drops a series
   must not repaint the survivors.
-- **`fc-danger` and `fc-success` are reserved status colours** and are never series slots.
+- **The status tokens (`fc-danger`, `fc-success`, `fc-warning`, `fc-info`) are reserved** and
+  are never series slots.
 - Recommended ceiling is **6 series**; past that `chartColor()` wraps, so fold the tail into
   an "Other" bucket or facet into small multiples instead.
 - Grid and axis lines are `fc-border`; tick labels are `fc-fg-muted` at `text-fc-xs`. Value
@@ -105,10 +137,26 @@ Both pair with `icon={icons.remove}` and both should route through a `ConfirmMod
 (`tone="danger"`) rather than deleting on click.
 
 **Active nav / selected state is inverted (`bg-fc-accent text-fc-accent-fg`), never
-tinted.** Role/status pills are the one place extra chroma is allowed outside danger —
-see Badge `owner`/`admin` tones below, which use the `fc-owner` / `fc-admin` tokens. Those
-two are hue-matched to the identity palette (orange 64 / purple 292) but kept deep — they
-are *text* on a 10% tint, so they need text contrast, not pastel lightness.
+tinted.** Role pills use the `fc-owner` / `fc-admin` tokens — hue-matched to the identity
+palette (orange 64 / purple 292) but kept deep, because they are *text* on a 10% tint and so
+need text contrast, not pastel lightness.
+
+### One tone vocabulary
+
+`Alert`, `Badge`, `StatusDot` and `ConfirmModal` all take a `tone`, and they take **the same
+one**:
+
+`neutral` · `accent` · `info` · `success` · `warning` · `danger` · `owner` · `admin`
+
+Not every component uses every tone, but no component invents a name of its own. There is no
+`muted`, no `default`, no `primary` — those were three different spellings of `neutral` and
+they are gone. `Button` is the one component with a `variant` instead, and that is not a
+synonym: `variant` selects an action's *emphasis and shape* (`primary`, `ghost`, `outline`),
+`tone` selects a *semantic colour*. `danger` appears in both because a destructive action is
+both things at once.
+
+Semantic fills are **tinted** (`bg-fc-<tone>/10 text-fc-<tone>`), never solid. `neutral` is the
+one untinted tone — it uses `fc-surface`.
 
 ---
 
@@ -142,7 +190,13 @@ Scale — `text-fc-*`, each with a paired line-height:
 
 ## 4. Spacing & layout
 
-4-pt grid. Tokens: `--fc-space-1` = 4px, `--fc-space-2` = 8px, `--fc-space-3` = 12px, `--fc-space-4` = 16px, `--fc-space-6` = 24px, `--fc-space-8` = 32px, `--fc-space-12` = 48px.
+4-pt grid, supplied by **Tailwind's own spacing scale** — `p-1` is 4px, `p-2` 8px, `p-3` 12px,
+`p-4` 16px, `p-6` 24px, `p-8` 32px, `p-12` 48px. muse defines **no `--fc-space-*` tokens** and
+does not need to; use the stock utilities.
+
+The only spacing values the theme adds are the two the nav geometry depends on, because they
+are interlocked with the sidebar's width tween and cannot be picked freely:
+`--spacing-fc-nav-item` (44px) and `--spacing-fc-nav-content` (196px). See §10.
 
 Container max-widths:
 - mobile: 100%
@@ -181,8 +235,20 @@ padding generous — the whitespace is doing the work the border used to.
 
 - Default ease: `power3.inOut` (GSAP). Overlays are the exception — they use asymmetric
   easing (`power3.out` in, `power3.in` out); see §11.
+- **`--ease-fc` is the CSS spelling of that same curve** (`cubic-bezier(0.77, 0, 0.175, 1)`),
+  so a CSS transition and a GSAP tween running side by side match. It used to hold
+  easeInOutCubic — `power2.inOut` — which meant the two halves of the system eased differently.
 - Default duration: `0.4s` UI, `1.5s` full-page curtain (`Rideau`)
-- All motion **must** respect `prefers-reduced-motion: reduce` — fall back to opacity-only or instant.
+- **All motion respects `prefers-reduced-motion: reduce`, on both sides.** Every JS animation
+  checks `prefersReducedMotion()` before it tweens, *and* `tokens.css` collapses CSS animation
+  and transition durations globally in the base layer. Neither alone is sufficient: the JS
+  guard does nothing for `transition-colors`, and the CSS reset does nothing for a GSAP
+  timeline. Durations are collapsed rather than removed so `transitionend` still fires.
+- Reduced motion means *do not animate*, not *do not interact*. `Drawer`'s drag-to-dismiss
+  still works under it; it just snaps instead of springing.
+- **Anything that registers with GSAP must unregister.** A `ScrollTrigger` or `SplitText`
+  created in `onMount` and never reverted keeps a detached node alive and recomputes on every
+  scroll for the life of the page. Wrap it in `gsap.context()` and revert it from the teardown.
 
 ### PageTransition
 
@@ -223,7 +289,17 @@ partial row visible at the fold, or pair the scroll area with arrows the way `Ca
 
 - Mobile-first: write the small layout, then enhance with `sm:` / `md:` / `lg:`.
 - Min supported width: **360px**.
-- Hit targets ≥ **44×44px**.
+- **Hit targets ≥ 44×44px for anything a thumb is expected to find**: icon-only buttons
+  (`IconButton` is `size-11`), nav rows (`--spacing-fc-nav-item` is 44px, which is also
+  `min-h-11`), form controls (`Input`, `Select`, `SecretField` are all `h-11`), tabs, and every
+  control in `MobileNav`.
+
+  **`Button` is the documented exception.** Its `md` default is `h-9` (36px) and `sm` is `h-8`
+  (32px), matching the density the suite actually ships. Use `size="lg"` (`h-11`) for anything
+  touch-primary — a mobile action bar, a `Drawer` footer, a full-width form submit. A row of
+  36px buttons in a desktop table is fine; the same row as the only control on a phone is not.
+  `Checkbox` and `Radio` are 16px boxes by design and must be wrapped in a `<label>` with
+  padding so the *label* carries the target.
 - No fixed pixel heights for content areas; use `min-h-*` instead.
 - Test at: 360, 414, 768, 1024, 1440.
 
@@ -281,18 +357,40 @@ icon stays inert unless the consumer registers the custom element.
 
 Import via `import { icons } from '@facile/lib'`.
 
+**45 keys — 39 Solar, 6 MDI.** If a glyph you need is missing, add a key rather than inlining
+the string at the call site; that is what keeps the pack and style rules above from being
+re-litigated in every component.
+
+Solar (`linear`, UI chrome):
+
 | Key | Icon | Key | Icon |
 |-----|------|-----|------|
-| `icons.home` | `solar:home-2-linear` | `icons.settings` | `solar:settings-linear` |
-| `icons.dashboard` | `solar:chart-2-linear` | `icons.edit` | `solar:pen-new-square-linear` |
-| `icons.folder` | `solar:folder-linear` | `icons.remove` | `solar:trash-bin-2-linear` |
-| `icons.search` | `solar:magnifer-linear` | `icons.calendar` | `solar:calendar-linear` |
-| `icons.collapse` | `solar:sidebar-minimalistic-linear` | `icons.notification` | `solar:bell-linear` |
+| `icons.collapse` | `solar:sidebar-minimalistic-linear` | `icons.search` | `solar:magnifer-linear` |
+| `icons.settings` | `solar:settings-linear` | `icons.edit` | `solar:pen-new-square-linear` |
+| `icons.remove` | `solar:trash-bin-2-linear` | `icons.calendar` | `solar:calendar-linear` |
+| `icons.home` | `solar:home-2-linear` | `icons.notification` | `solar:bell-linear` |
+| `icons.dashboard` | `solar:chart-2-linear` | `icons.folder` | `solar:folder-linear` |
 | `icons.usersGroup` | `solar:users-group-rounded-linear` | `icons.userCircle` | `solar:user-circle-linear` |
 | `icons.logout` | `solar:logout-2-linear` | `icons.warning` | `solar:danger-triangle-linear` |
 | `icons.info` | `solar:info-circle-linear` | `icons.upload` | `solar:cloud-upload-linear` |
 | `icons.clock` | `solar:clock-circle-linear` | `icons.refresh` | `solar:refresh-linear` |
-| `icons.plus` | `mdi:plus` | `icons.close` | `mdi:close` |
+| `icons.eye` | `solar:eye-linear` | `icons.eyeClosed` | `solar:eye-closed-linear` |
+| `icons.copy` | `solar:copy-linear` | `icons.check` | `solar:check-circle-linear` |
+| `icons.key` | `solar:key-linear` | `icons.revoke` | `solar:forbidden-circle-linear` |
+| `icons.shield` | `solar:shield-check-linear` | `icons.palette` | `solar:pallete-2-linear` |
+| `icons.sun` | `solar:sun-linear` | `icons.moon` | `solar:moon-linear` |
+| `icons.monitor` | `solar:monitor-linear` | `icons.globe` | `solar:global-linear` |
+| `icons.plug` | `solar:plug-circle-linear` | `icons.bolt` | `solar:bolt-linear` |
+| `icons.server` | `solar:server-linear` | `icons.code` | `solar:code-linear` |
+| `icons.history` | `solar:history-linear` | `icons.card` | `solar:card-linear` |
+| `icons.download` | `solar:download-linear` | `icons.filter` | `solar:filter-linear` |
+| `icons.mail` | `solar:letter-linear` | | |
+
+MDI (plus, close, chevrons — Solar's read muddy at small sizes):
+
+| Key | Icon | Key | Icon |
+|-----|------|-----|------|
+| `icons.close` | `mdi:close` | `icons.plus` | `mdi:plus` |
 | `icons.arrow` | `mdi:chevron-right` | `icons.chevronDown` | `mdi:chevron-down` |
 | `icons.chevronUp` | `mdi:chevron-up` | `icons.chevronLeft` | `mdi:chevron-left` |
 
@@ -300,42 +398,75 @@ Import via `import { icons } from '@facile/lib'`.
 
 ## 9. Accessibility
 
-- Color contrast ≥ WCAG AA (4.5:1 body, 3:1 large text).
-- Focus ring visible — `:focus-visible` outline using `--fc-accent`.
-- All interactive elements reachable by keyboard.
-- Iconify icons must have `aria-label` when standalone.
+- **Contrast ≥ WCAG AA** — 4.5:1 body text, 3:1 large text and non-text. Every semantic token
+  is measured against its own 10% tint (§2), not against white, because that is how they are
+  actually used. The documented exception is the chart palette in light mode, which trades
+  3:1 for the pastel look and pays for it with the relief rule (§12).
+- **One focus ring, everywhere**:
+  `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring`.
+  It is `--fc-ring`, not `--fc-accent` — the accent is the same ink as the foreground, so a
+  ring drawn in it disappears against inverted active states. Form controls use the same ring
+  as buttons; `:focus-visible` always matches for text inputs, so there is no reason to weaken
+  it to `:focus`.
+- **All interactive elements reachable by keyboard**, and every composite widget
+  (`ColorPicker`, `OptionCards`, `Tabs`) is a real roving-tabindex radiogroup/tablist with one
+  tab stop, arrows to move, Home/End to jump.
+- **`<iconify-icon>` is decorative unless it is the only content.** A standalone icon button
+  needs an `aria-label`; an icon beside a text label must not repeat it.
+- **Live regions are earned.** `role="alert"` is assertive and interrupts a screen reader
+  mid-sentence — it is for `warning` and `danger` only. Everything else is `role="status"`.
+- **Every `<button>` declares its `type`.** An undeclared button inside a form submits it.
+- **Overlays lock the background.** `<dialog>.showModal()` gives the focus trap, Escape and
+  focus restore for free, but it does *not* stop the page behind from scrolling.
+- Hit targets: see §7. `Button` `sm`/`md` are the documented desktop-density exception.
 
 ---
 
 ## 10. Navigation components
 
-### NavBar
+### SideBar
 
-Collapsible vertical nav sidebar. Built on `Component` (inherits `bg-fc-component rounded-fc-md`). Manages its own collapsed state via `$bindable`.
+Collapsible vertical nav rail. Manages its own collapsed state via `$bindable`. (It was once
+called `NavBar`; there is no `NavBar` export and has not been for some time.)
 
 ```svelte
-<NavBar
-  icon="lucide:layout-dashboard"
+<SideBar
+  icon="solar:pallete-2-bold-duotone"
   title="Facile"
   bind:collapsed
   showSearch
   pages={[
-    { label: 'Home',     href: '/',        icon: 'lucide:home',     active: true },
-    { label: 'Settings', href: '/settings', icon: 'lucide:settings' }
+    { label: 'Dashboard', href: '/',         icon: icons.dashboard, active: true },
+    { label: 'Projects',  href: '/projects', icon: icons.folder }
   ]}
-  user={{ name: 'Gian', avatar: '/pfp.jpg' }}
+  user={{ name: 'Camille', avatar: '/pfp.jpg' }}
+  userHref="/settings"
 />
 ```
 
+Note what is **not** in `pages`: Settings. It is reached from the user card via `userHref` —
+see §14.
+
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `icon` | `string` | — | Iconify icon for the header |
+| `icon` | `string` | — | Brand mark — the one `bold-duotone` glyph in the rail |
 | `title` | `string` | `''` | App / section name |
 | `pages` | `Page[]` | `[]` | Nav links. Each: `{ label, href, icon?, active? }` |
-| `user` | `User` | — | `{ name, avatar? }` — shown in the footer button |
-| `collapsed` | `boolean` | `false` | Bindable. Collapses to `77px` (`--width-fc-nav-collapsed`), labels hidden |
+| `user` | `User` | — | `{ name, avatar? }` — shown in the footer card |
+| `userHref` | `string` | — | Makes the user card a link — this is the route to settings |
+| `userActive` | `boolean` | `false` | Marks the user card active (surface fill, not inverted) |
+| `collapsed` | `boolean` | `false` | Bindable. Collapses to `68px` (`--width-fc-nav-collapsed`), labels hidden |
 | `showSearch` | `boolean` | `false` | Renders a search NavButton with ⌘K hint |
+| `spaces` | `{ id, name }[]` | `[]` | Renders a `SpaceSwitcher` when non-empty and expanded |
+| `activeSpaceId` | `string \| null` | `null` | Selected space — forwarded to `SpaceSwitcher`'s `activeId` |
+| `onSpaceSelect` | `(id: string \| null) => void` | — | Selection callback |
+| `manageSpacesHref` | `string` | — | Footer link in the switcher |
 | `class` | `string` | — | Passed through `twMerge` |
+
+The rail reads its two widths out of the theme at runtime (`getComputedStyle` on
+`--width-fc-nav-collapsed` / `--width-fc-nav-expanded`), so the tokens below are the single
+source of truth and retuning them actually reaches the tween. It used to hardcode `68` and
+`220` in the gsap call, where a token change never arrived.
 
 ---
 
@@ -381,10 +512,11 @@ the same 300ms as the width tween, so the rows below drift up instead of snappin
 Svelte holds the node in the DOM until the outro lands.
 
 **A collapsed nav item is a fixed `size-fc-nav-item` square — never `w-full aspect-square`.**
-The rail geometry is `77px = 53px item + 12px padding either side`. `aspect-square` looks
-equivalent at rest but ties the item's *height* to its animating width, so mid-collapse each
-button renders ~200px tall and shrinks — the inverted active row turns into a giant black
-square for a few frames. Any fixed dimension is immune; a derived one is not.
+`aspect-square` looks equivalent at rest but ties the item's *height* to its animating width,
+so mid-collapse each button renders ~200px tall and shrinks — the inverted active row turns
+into a giant black square for a few frames. Any fixed dimension is immune; a derived one is
+not. (The geometry is the `68 = 44 + 12 + 12` above. An earlier revision of this document also
+claimed `77px = 53px + 12 + 12` a few paragraphs later; that was never the shipped value.)
 
 **The `icon` prop is the brand mark — it is the one icon that stays `bold-duotone.`**
 Everything else in the sidebar (nav rows, search, collapse, the footer settings gear) is
@@ -393,20 +525,20 @@ what makes the app's identity read against a column of hairline chrome icons.
 
 ### NavButton
 
-The atomic button unit used inside NavBar. Also standalone for custom nav UIs.
+The atomic button unit used inside `SideBar`. Also standalone for custom nav UIs.
 
 ```svelte
 <!-- As a link -->
-<NavButton href="/dashboard" icon="lucide:home" label="Home" active />
+<NavButton href="/dashboard" icon={icons.home} label="Home" active />
 
 <!-- As a button with custom snippets -->
 <NavButton>
   {#snippet children()}
-    <Avatar name="Gian" size="sm" />
-    <span>Gian</span>
+    <Avatar name="Camille" size="sm" />
+    <span>Camille</span>
   {/snippet}
   {#snippet right()}
-    <iconify-icon icon="lucide:settings" width="14" />
+    <iconify-icon icon={icons.settings} width="16" height="16" class="block"></iconify-icon>
   {/snippet}
 </NavButton>
 ```
@@ -422,11 +554,23 @@ The atomic button unit used inside NavBar. Also standalone for custom nav UIs.
 | `children` | `Snippet` | — | Overrides the entire left side |
 | `right` | `Snippet` | — | Right-side content (hidden when collapsed) |
 
-**Style invariants**: `px-3 py-3 w-full`, `gap-2`, `rounded-fc-sm`, `overflow-hidden`, icon `width="20"` (no color class — inherits `currentColor`), label via `TextElevate` at `text-fc-sm`. No border. Inactive: `text-fc-fg-muted`, `hover:bg-fc-surface hover:text-fc-fg`. Active: **inverted**, `bg-fc-accent text-fc-accent-fg font-medium` — never a tinted wash.
+**Style invariants**: expanded is `w-full min-h-11 px-3 py-2.5`, collapsed is a fixed
+`size-fc-nav-item` square; `gap-2.5`, `rounded-fc-md`, `overflow-hidden`, icon `width="18"`
+`height="18"` `class="block shrink-0"` (no colour class — it inherits `currentColor`, which
+is what lets the inverted active state flip the glyph with the label), label via `TextElevate`
+at `text-fc-sm`. No border. Inactive: `text-fc-fg-muted`, `hover:bg-fc-surface
+hover:text-fc-fg`. Active: **inverted**, `bg-fc-accent text-fc-accent-fg font-medium` — never
+a tinted wash, and `aria-current="page"` on the anchor so it is not styling alone.
 
-**Press animation**: scale `0.94` in `0.08s power2.in`, then `elastic.out(1, 0.4)` back to
-`1` in `0.5s`. Implemented as a `use:springPress` Svelte action — `SideBar`'s footer button
-uses the identical curve, so every pressable row in the nav feels the same.
+**Press animation**: scale `0.94` in `0.08s power2.in`, then `elastic.out(1, 0.4)` back to `1`
+in `0.5s`. It lives in **`src/lib/utils/press.ts` as `use:springPress`** and every pressable
+surface imports it — `NavButton`, `SideBar`'s footer card, and `IconButton` (which passes
+`0.88`, a deeper dip because an icon-only target is small enough that `0.94` reads as nothing).
+
+Do not re-inline it. It was hand-copied into three files once and immediately drifted into two
+different scales, which is the entire reason it is a module now. The action also kills its own
+tween on destroy, so a component that unmounts mid-press does not leave gsap animating a
+detached node.
 
 ### SpaceSwitcher
 
@@ -462,9 +606,17 @@ but the same component lands low in short viewports and inside drawers. Any muse
 anchored to a trigger owes the user this behaviour — a menu that opens off-screen is simply
 broken.
 
+It closes on Escape and returns focus to the trigger, and it sits at **`z-40`** — the
+floating-out-of-a-trigger layer. It used to be `z-50`, tied with `MobileNav`, so on a phone
+the two resolved by DOM order.
+
 Wired into `SideBar` via its own `spaces` / `activeSpaceId` / `onSpaceSelect` /
 `manageSpacesHref` props — renders between the header and search/nav when `spaces` is
-non-empty and the sidebar isn't collapsed.
+non-empty and the sidebar isn't collapsed. `SideBar` forwards `activeSpaceId` to this
+component's `activeId`; note the deliberate rename at the boundary, and note that it was
+wrong for a long time — `SideBar` passed `activeSpaceId` straight through to a prop that does
+not exist, so the switcher never knew what was selected. Nothing caught it until the library
+gained a type-checker.
 
 ### MobileNav
 
@@ -494,18 +646,45 @@ Hidden at `md:` and above — pair with `SideBar` for desktop.
 
 ### Badge role tones
 
-`owner` and `admin` tones render the colored role pills used across Nuage/Courrier/Plume
-member lists — the one deliberate exception to the chroma-zero rule, matching real
-member-role UI: `owner` → `bg-amber-500/10 text-amber-600`, `admin` → `bg-blue-500/10
-text-blue-600`. Use `neutral` for a plain `member` role.
+`owner` and `admin` tones render the coloured role pills used across Nuage/Courrier/Plume
+member lists: `owner` → `bg-fc-owner/10 text-fc-owner`, `admin` → `bg-fc-admin/10
+text-fc-admin`. Use `neutral` for a plain `member` role.
+
+Both go through the **tokens**, not through stock Tailwind palette colours. An earlier
+revision of this section prescribed `bg-amber-500/10 text-amber-600` and `bg-blue-500/10
+text-blue-600` — raw palette classes, in the document that bans them. The source was always
+right; the contract had drifted.
 
 ---
 
 ## 11. Overlays
 
 `Modal`, `ConfirmModal` and `Drawer` are all native `<dialog>` elements opened with
-`showModal()` — that buys the top layer, the focus trap, Escape and a real `::backdrop`
-without a line of custom code.
+`showModal()` — that buys the top layer, the focus trap, Escape, focus restore and a real
+`::backdrop` without a line of custom code. It does **not** buy a background scroll lock, an
+accessible name, or a correct backdrop hit-test, and all three of those were missing.
+
+**One controller, `src/lib/utils/dialog.ts`.** `Modal` and `Drawer` each hand-rolled the same
+~80 lines — the `closing` latch, the `cancel` handling, the `getBoundingClientRect()` backdrop
+test, the close dispatch — and had already drifted apart: only `Drawer` guarded
+`event.detail === 0`, so a keyboard-activated button *inside* a `Modal` reported click
+coordinates of `0,0`, read as a backdrop click, and closed the dialog. `createDialog()` owns
+all of it, plus a refcounted body scroll lock released on close and on destroy. The enter and
+exit **tweens** stay in the components, because Modal (scale+fade) and Drawer (translate)
+genuinely animate differently — that is not duplication.
+
+Its handlers are the one place in this library where the component wins over the consumer:
+they are spread *after* `...rest`, because a caller passing `onclick` would otherwise silently
+break closing.
+
+**Every overlay must have an accessible name.** `Modal` wires `aria-labelledby` to the `<h2>`
+it renders from `title`; `ConfirmModal` passes its own title id through. Before that, every
+confirmation dialog in the suite was an unnamed modal — a screen reader announced "dialog" and
+nothing else.
+
+**Ids come from `$props.id()`, never a module-scoped counter.** `Drawer` used `let uid = 0` at
+module scope, which is the canonical SSR hydration-mismatch generator: server-order and
+client-order increments diverge and `aria-labelledby` ends up pointing at nothing.
 
 **Two invariants for anything built on `<dialog>`:**
 
@@ -519,8 +698,9 @@ without a line of custom code.
 
 Motion: overlays use asymmetric easing (`power3.out` in, `power3.in` out) rather than the
 library default `power3.inOut`. Modal 0.2s / 0.15s, Drawer 0.35s / 0.25s. Both skip tweens
-entirely under `prefers-reduced-motion`. The backdrop is instant, not faded — `::backdrop`
-is not a tweenable target.
+entirely under `prefers-reduced-motion` — but skipping a tween is not the same as removing a
+feature: `Drawer`'s drag-to-dismiss still works under reduced motion, it just snaps instead of
+springing back. The backdrop is instant, not faded — `::backdrop` is not a tweenable target.
 
 ### Modal
 
@@ -531,7 +711,7 @@ is not a tweenable target.
 | `dismissible` | `boolean` | `true` | `false` blocks Escape and backdrop clicks |
 | `showClose` | `boolean` | `false` | 44px `mdi:close` button, only when `dismissible` |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | `max-w-sm` / `max-w-md` / `max-w-lg` |
-| `onclose` | `() => void` | — | Fires once, after the exit tween |
+| `onClose` | `() => void` | — | Fires once, after the exit tween |
 | `header` / `footer` | `Snippet` | — | Replace the heading / append below the body |
 
 ### ConfirmModal
@@ -544,10 +724,10 @@ Composed on `Modal` — never re-implement the dialog.
 | `title` | `string` | required | Heading |
 | `description` | `string` | — | Muted body line |
 | `confirmLabel` / `cancelLabel` | `string` | `'Confirm'` / `'Cancel'` | Button text |
-| `tone` | `'default' \| 'danger'` | `'default'` | `danger` → danger button + tinted `solar:danger-triangle-linear` badge |
+| `tone` | `'neutral' \| 'danger'` | `'neutral'` | `danger` → danger button + tinted `icons.warning` badge |
 | `icon` | `string` | — | Overrides the badge icon |
-| `onconfirm` | `() => void \| Promise<void>` | — | A promise disables both buttons and shows a Spinner; resolves → close, rejects → **stays open** |
-| `oncancel` | `() => void` | — | Cancel button, Escape and backdrop all route here |
+| `onConfirm` | `() => void \| Promise<void>` | — | A promise disables both buttons and shows a Spinner; resolves → close, rejects → **stays open** |
+| `onCancel` | `() => void` | — | Cancel button, Escape and backdrop all route here |
 
 Rules that are not negotiable, because they are what stops people deleting things by
 reflex:
@@ -569,7 +749,7 @@ Bottom sheet, the mobile counterpart to `Modal`. Full-bleed under `sm:`, capped 
 | `showHandle` | `boolean` | `true` | Drag grabber in a 44px touch strip |
 | `showClose` | `boolean` | `false` | 44px `mdi:close` button |
 | `dismissible` | `boolean` | `true` | `false` disables Escape, backdrop **and** drag |
-| `onclose` | `() => void` | — | Fires on the dialog's `close` event |
+| `onClose` | `() => void` | — | Fires on the dialog's `close` event |
 
 Drag-to-dismiss is on the handle and header only — never the scrollable body, or dragging
 to scroll becomes ambiguous. Dismiss fires past **25% of panel height** or **0.5 px/ms**
@@ -581,17 +761,36 @@ takes `pb-[max(1.25rem,env(safe-area-inset-bottom))]` to clear the iOS home indi
 ## 12. Charts
 
 Dependency-free SVG — no chart library. `LineChart`, `BarChart`, `DonutChart` and
-`Sparkline`, sharing `ChartLegend`, `ChartTooltip` and the maths in `src/lib/utils/chart.ts`
-(`niceScale`, `linePath`, `areaPath`, `arcPath`, `chartColor`, `formatCompact`, `resize`).
+`Sparkline`, sharing `ChartLegend`, `ChartTooltip`, an internal `ChartTable` and the maths in
+`src/lib/utils/chart.ts`.
+
+**All of the geometry lives in `chart.ts`, not in the templates.** `barGeometry`, `barPath`,
+`donutSegments`, the series helpers (`seriesEmpty`, `seriesLegend`, `seriesRows`,
+`seriesTipRows`, …) and the axis metrics (`labelWidth`, `axisPadLeft`, `labelStride`) are
+pure functions there, which is what makes them testable — `BarChart` and `LineChart` were
+441 and 347 lines of largely the same component twice, including a byte-identical `sr-only`
+table. `BarChart` is now 249. The entry tweens live in `charts/entry.ts`, deliberately
+separate so the test file never has to import gsap.
+
+The public subset re-exported from `@facile/lib` is `chartColor`, `formatCompact`,
+`niceScale`, `linePath`, `areaPath`, `arcPath`, `tickStride` and `resize`, plus the
+`ChartSeries` / `ChartSlice` / `ChartScale` / `ChartLegendItem` / `ChartTipRow` / `ChartRow`
+types. Everything else is importable by path but not part of the API surface.
 
 Shared contract:
 - Charts measure their container with a `ResizeObserver` and render at **real pixel
   dimensions** — never `preserveAspectRatio="none"`, which distorts strokes and text.
   `Sparkline` is the exception; it is decorative and scales with CSS.
-- **Empty or all-zero data renders a muted `emptyLabel`**, never a broken axis or a `NaN`
-  path.
-- Every chart is `role="img"` with a summarising `aria-label` **plus a visually hidden
-  `<table>`** of the values — identity is never carried by colour alone. That table must be
+- **Empty data renders a muted `emptyLabel`**, never a broken axis or a `NaN` path. **A series
+  of zeros is data, not emptiness** — `isEmpty` used to include `values.every(v => v === 0)`,
+  so "0 errors today" and every fresh account rendered "No data" instead of a truthful flat
+  line at zero. `DonutChart` is the exception and keeps `total <= 0`, because an arc with no
+  total genuinely cannot be drawn.
+- Every chart carries a visually hidden `<table>` of its values — identity is never carried by
+  colour alone — and the `<svg>` beside it is **`aria-hidden`**. Both used to be exposed, with
+  the table's `<caption>` repeating the svg's `aria-label` verbatim, so a screen reader read
+  every chart twice. The table is the accessible representation; the drawing is decoration.
+  That table must be
   wrapped in a `<div class="sr-only">`, never carry `sr-only` itself: **`overflow: hidden` is
   ignored on `<table>`** (a table box is not a block container), so the class clips the table
   visually via `clip-path` while its wide `white-space: nowrap` content still contributes
@@ -599,6 +798,11 @@ Shared contract:
   the *document*, giving the whole page a horizontal scrollbar and a second vertical one.
 - A hover layer is default-on everywhere except `Sparkline`: crosshair + per-series markers
   on `LineChart`, whole-category hit bands on `BarChart`, segment lift on `DonutChart`.
+  `ChartTooltip` places itself on **both** axes, bounded by the plot box intersected with the
+  viewport, and measures once per open rather than on every pointer move.
+- **Nothing that depends on the entry animation may sit in the same `$derived` as the
+  geometry.** `BarChart` read its tween `progress` inside the block that also measured every
+  axis label, so it re-derived the whole layout ~60×/second for 0.6s to move some rectangles.
 - Mount animation is 0.6s `power3.out` (line draw-in, bars from the baseline, donut sweep),
   skipped under `prefers-reduced-motion`.
 - One axis. Never a second y-scale — two measures of different magnitude are two charts.
@@ -608,7 +812,10 @@ Shared contract:
 | `LineChart` | `series`, `labels`, `area`, `smooth`, `showGrid`, `showLegend`, `yFormat`, `xFormat`, `yTicks`, `height` |
 | `BarChart` | `series`, `labels`, `stacked`, `horizontal`, `showGrid`, `showLegend`, `yFormat`, `yTicks`, `height` |
 | `DonutChart` | `data`, `size`, `thickness`, `showLegend`, `centerLabel`, `centerValue`, `valueFormat` |
-| `Sparkline` | `data`, `height`, `area`, `smooth`, `color`, `showLast` |
+| `Sparkline` | `data`, `height`, `area`, `smooth`, `color`, `showLast`, `valueFormat` |
+
+`DonutChart`'s `size` is a **maximum**, not a fixed width — it clamps to its container, so
+`size={400}` on a 360px viewport no longer overflows.
 
 `series` is `{ name, data: number[], color? }[]`; `DonutChart` takes
 `{ label, value, color? }[]`. `smooth` uses Fritsch–Carlson monotone cubics, so the curve
@@ -640,6 +847,7 @@ falls back to the first colour) because this value arrives from a database colum
 | `size` | `'sm' \| 'md'` | `'md'` | Changes the **dot**, never the hit target |
 | `name` | `string` | — | Renders a hidden input so the value posts with a form |
 | `onSelect` | `(color: string) => void` | — | Fires alongside the bind |
+| `label` | `string` | — | `aria-label` for the radiogroup. There is no default: two unlabelled groups on a page announce identically, and a fabricated name is worse than none |
 
 It is a real `role="radiogroup"` with a **roving tabindex** — one tab stop, arrows move and
 select with wrapping, Home/End jump to the ends, Space/Enter go through the native button.
@@ -812,6 +1020,9 @@ The rules it encodes, all of which were being broken somewhere in the suite:
 - **Copy confirms and resets** — the glyph swaps to a check for 2s, and every state change
   is announced through an `aria-live` region. A revealed value is `select-all`, so one click
   takes the whole token.
+- **Callbacks are `onReveal` / `onCopy`**, and the label association prop is **`for`**, the
+  same name `SettingsRow` uses. It was `id` here and `for` there — one concept, two spellings,
+  in adjacent components.
 - **`REDACTED` is a wire contract, not decoration.** Several suite APIs return the eight-dot
   string *as the field's value* and treat receiving it back unchanged as "keep what you
   have". `SecretField` recognises it and goes inert — nothing to reveal, nothing to copy.
@@ -852,9 +1063,27 @@ Pair it with the facts an operator needs — identity, epoch, pending outbox, la
 ## 15. Component checklist
 
 Before exporting a component:
-- [ ] Uses tokens, no raw hex / px outside tokens
-- [ ] Mobile-first layout, tested at 360px
+
+- [ ] Uses tokens — no raw hex, no stock Tailwind palette colours, no arbitrary px where a
+      token exists
+- [ ] Typed `$props()` with a `HTMLXAttributes` intersection, and `{...rest}` spread **last**
+      so a consumer can always reach `id`, `data-*` and `aria-*`
+- [ ] `class` accepted and merged through `twMerge` from `utils/cn.js` — never
+      `tailwind-merge` directly
+- [ ] Every `<button>` declares `type`
+- [ ] The house focus ring on anything interactive (§9)
+- [ ] Uses the shared `tone` vocabulary (§2), not a private one
+- [ ] Callback props are camelCase `onX`
+- [ ] Icons come from `icons.ts`, with `width`, `height`, `class="block"` and no colour class
+- [ ] Mobile-first layout, checked at 360px; hit targets per §7
 - [ ] Keyboard + screen-reader accessible
-- [ ] Respects `prefers-reduced-motion`
-- [ ] Props documented with JSDoc
+- [ ] Respects `prefers-reduced-motion`, and every gsap registration is reverted on destroy
+- [ ] Rendered somewhere in `demo/` — that is the only thing that proves it still works
 - [ ] Re-exported from `src/lib/index.ts`
+- [ ] `mise run verify` is green (types, tests, demo build)
+
+The first eight of these are mechanical, and `mise run check` enforces most of them. It was
+added after an audit found the library shipping four different focus-ring treatments, five
+callback casings, three tone vocabularies and a `SideBar` that had been passing a prop name
+`SpaceSwitcher` never had. None of that survives a type-checker; none of it was being caught
+by a human.
