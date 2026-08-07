@@ -18,19 +18,25 @@
         children?: Snippet;
     } = $props();
 
+    /*
+        Same pairing as `Badge`: the tint carries the tone and the text is the tone itself.
+        There is no border. A 10% wash under black body copy states the tone once, weakly,
+        and then a `/40` border states it again — two pale outlines saying the same thing,
+        which is what made these read as unstyled boxes rather than a status surface.
+    */
     const tones: Record<Tone, string> = {
-        neutral: 'border-fc-border bg-fc-surface text-fc-fg',
-        info: 'border-fc-info/40 bg-fc-info/10 text-fc-fg',
-        success: 'border-fc-success/40 bg-fc-success/10 text-fc-fg',
-        warning: 'border-fc-warning/40 bg-fc-warning/10 text-fc-fg',
-        danger: 'border-fc-danger/40 bg-fc-danger/10 text-fc-fg'
+        neutral: 'bg-fc-surface text-fc-fg',
+        info: 'bg-fc-info/10 text-fc-info',
+        success: 'bg-fc-success/10 text-fc-success',
+        warning: 'bg-fc-warning/10 text-fc-warning',
+        danger: 'bg-fc-danger/10 text-fc-danger'
     };
 
     /* `alert` is an assertive live region: it interrupts whatever the screen reader
        is saying. Only earn that for tones the user must act on. */
     const role = $derived(tone === 'warning' || tone === 'danger' ? 'alert' : 'status');
 
-    const classes = $derived(twMerge('rounded-fc-md border p-3 text-fc-sm', tones[tone], className));
+    const classes = $derived(twMerge('rounded-fc-md p-3 text-fc-sm', tones[tone], className));
 </script>
 
 <div class={classes} {role} {...rest}>
