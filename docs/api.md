@@ -585,7 +585,9 @@ Collapsible vertical navigation panel on `bg-fc-component`, built from `NavButto
 | `userHref` | `string` | — | Makes the footer card a link. **This is the only entry point to settings** |
 | `userActive` | `boolean` | `false` | Marks the card active with the surface fill, not the inverted pill |
 | `collapsed` | `boolean` | `false` | **bindable** |
-| `showSearch` | `boolean` | `false` | Prepends a Search row (⌘K) and a Collapse row (⌘D) |
+| `showSearch` | `boolean` | `false` | Prepends a Search row. The ⌘K chip renders only when `onSearch` is given |
+| `onSearch` | `() => void` | — | Search row click handler, and the ⌘K binding |
+| `showCollapse` | `boolean` | `true` | Renders the Collapse row (⌘D) |
 | `spaces` | `{ id, name }[]` | `[]` | Non-empty renders a `SpaceSwitcher` below the header |
 | `activeSpaceId` | `string \| null` | `null` | Forwarded to `SpaceSwitcher` |
 | `onSpaceSelect` | `(id: string \| null) => void` | — | Forwarded to `SpaceSwitcher` |
@@ -602,8 +604,17 @@ inline by GSAP, overriding it with `class` will not hold.
 
 The rows' visual collapse deliberately lags `collapsed`: expanding switches the layout first
 so the growing rail reveals it, collapsing keeps the wide layout and lets the shrinking rail
-clip it away. The collapse toggle only exists when `showSearch` is true; otherwise drive
-`collapsed` yourself.
+clip it away.
+
+The Collapse row is on by default (`showCollapse`) and no longer rides along with
+`showSearch`. It used to live inside that branch, which — with `showSearch` off by default —
+shipped a rail whose width tween nothing in the UI could start. Pass `showCollapse={false}`
+for a rail that stays expanded and drive `collapsed` yourself.
+
+Both shortcuts are implemented: a single `document` keydown listener, ⌘D toggling `collapsed`
+and ⌘K calling `onSearch`, each `preventDefault()`ed. ⌘K exists only when `onSearch` does;
+`showSearch` without it is a decorative row. Because the listener is on `document`, mount one
+`SideBar` — two would both answer ⌘D and cancel out. Use `MobileNav` for small screens.
 
 ```svelte
 <SideBar
@@ -611,6 +622,7 @@ clip it away. The collapse toggle only exists when `showSearch` is true; otherwi
   title="Facile"
   bind:collapsed
   showSearch
+  onSearch={openPalette}
   pages={[
     { label: 'Home',     href: '/',         icon: icons.home, active: true },
     { label: 'Projects', href: '/projects', icon: icons.folder }

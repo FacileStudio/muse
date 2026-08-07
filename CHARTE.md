@@ -568,6 +568,7 @@ called `NavBar`; there is no `NavBar` export and has not been for some time.)
   title="Facile"
   bind:collapsed
   showSearch
+  onSearch={openPalette}
   pages={[
     { label: 'Dashboard', href: '/',         icon: icons.dashboard, active: true },
     { label: 'Projects',  href: '/projects', icon: icons.folder }
@@ -589,12 +590,31 @@ see §14.
 | `userHref` | `string` | — | Makes the user card a link — this is the route to settings |
 | `userActive` | `boolean` | `false` | Marks the user card active (surface fill, not inverted) |
 | `collapsed` | `boolean` | `false` | Bindable. Collapses to `68px` (`--width-fc-nav-collapsed`), labels hidden |
-| `showSearch` | `boolean` | `false` | Renders a search NavButton with ⌘K hint |
+| `showSearch` | `boolean` | `false` | Renders the Search row. The ⌘K chip only appears with `onSearch` |
+| `onSearch` | `() => void` | — | Search row click handler, and what ⌘K fires |
+| `showCollapse` | `boolean` | `true` | Renders the Collapse row (⌘D) |
 | `spaces` | `{ id, name }[]` | `[]` | Renders a `SpaceSwitcher` when non-empty and expanded |
 | `activeSpaceId` | `string \| null` | `null` | Selected space — forwarded to `SpaceSwitcher`'s `activeId` |
 | `onSpaceSelect` | `(id: string \| null) => void` | — | Selection callback |
 | `manageSpacesHref` | `string` | — | Footer link in the switcher |
 | `class` | `string` | — | Passed through `twMerge` |
+
+**`showCollapse` defaults to `true`, and that is deliberate.** The Collapse row used to live
+inside the `showSearch` branch, so with `showSearch` defaulting to `false` a consumer could
+`bind:collapsed` all it liked and the rail shipped with no way for a *user* to trigger the
+width tween — the entire animation below was dead on arrival. The two rows are now
+independent. A rail that must stay expanded passes `showCollapse={false}` and drives
+`collapsed` itself.
+
+**The chips are real shortcuts, not decoration.** The component registers one `document`
+keydown listener: ⌘D toggles `collapsed`, ⌘K calls `onSearch`, both `preventDefault()`ed so
+the browser's bookmark and search bindings do not fire underneath. They previously advertised
+keys nothing listened for. ⌘K is bound only when `onSearch` is passed — `showSearch` alone
+renders a Search row that looks the part and does nothing, chip included.
+
+That listener is on `document`, so **mount exactly one `SideBar`.** Two of them both handle
+⌘D and toggle their own `collapsed` in opposite directions, which reads as the shortcut being
+broken. The desktop rail is the one; small screens get `MobileNav`.
 
 The rail reads its two widths out of the theme at runtime (`getComputedStyle` on
 `--width-fc-nav-collapsed` / `--width-fc-nav-expanded`), so the tokens below are the single
