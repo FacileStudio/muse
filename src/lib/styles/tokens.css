@@ -67,6 +67,11 @@
   --font-fc-title: 'Goga', Helvetica, Arial, sans-serif;
   --font-sans: 'Goga', Helvetica, Arial, sans-serif;
 
+  /* Mono is for machine strings only — secrets, keys, IDs, endpoints. Goga has no mono cut,
+     so this is the platform stack: nothing extra to download, and it lands on the font the
+     user already reads code in. */
+  --font-fc-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+
   /* motion → ease-fc */
   --ease-fc: cubic-bezier(0.65, 0, 0.35, 1);
 

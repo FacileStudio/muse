@@ -2,7 +2,7 @@
 
 Svelte 5 component library and design system for Facile tools, published as `@facile/lib`.
 
-muse ships 42 components arranged as atoms, molecules, organisms, charts and motion pieces,
+muse ships 49 components arranged as atoms, molecules, organisms, charts and motion pieces,
 a Tailwind v4 token theme, the Iconify icon map, and the bundled Goga typeface. It is consumed
 directly from source — there is no build step and no `dist/`. An `install.sh` also registers
 muse as an AI skill for Claude Code and Codex so agents generate suite-shaped UI by default.
@@ -13,7 +13,10 @@ icons — plus a CVD-validated six-slot chart palette derived from Sablier's ide
 
 ## What it does
 
-- Exports 42 Svelte 5 components: 16 atoms, 7 molecules, 8 organisms, 6 charts, 6 motion pieces
+- Exports 49 Svelte 5 components: 17 atoms, 12 molecules, 8 organisms, 6 charts, 6 motion pieces
+- Standardises the settings page — `Tabs`, `SettingsSection`, `SettingsRow`, and a
+  `SecretField` that masks, reveals-then-re-hides, and copies credentials the same way in
+  every app
 - Ships dependency-free SVG charts (`LineChart`, `BarChart`, `DonutChart`, `Sparkline`) with
   hover, empty states and a screen-reader data table — no charting library
 - Publishes a Tailwind v4 `@theme` block under the `fc-*` namespace — colors, radii, type
@@ -90,8 +93,9 @@ src/lib/
 mise run demo          # → http://127.0.0.1:5183
 ```
 
-`demo/` consumes the library through `"@facile/lib": "file:.."`, so edits to `src/lib/`
-hot-reload straight into the page. Since `src/lib` has no build or test step, `mise run
+`demo/` aliases `@facile/lib` straight at `../src/lib/index.ts` in `vite.config.ts` — it is
+deliberately *not* a path dependency — so edits to `src/lib/` hot-reload straight into the
+page. Since `src/lib` has no build or test step, `mise run
 demo:build` is the cheapest way to compile-check every component at once — run it before
 pushing.
 

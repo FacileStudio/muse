@@ -30,6 +30,7 @@ const radii = ['fc-xs', 'fc-sm', 'fc-md', 'fc-lg', 'fc-pill', 'fc-full'];
 export const twMerge = extendTailwindMerge({
     extend: {
         classGroups: {
+            'font-family': [{ font: ['fc-body', 'fc-title', 'fc-mono'] }],
             'font-size': [{ text: sizes }],
             'text-color': [{ text: colors }],
             'bg-color': [{ bg: colors }],

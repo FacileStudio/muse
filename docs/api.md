@@ -138,14 +138,19 @@ exclusive.
 
 ### `Switch`
 
-Toggle backed by a visually hidden checkbox and a `peer`-driven track. **Does not spread** —
-these four props are the whole surface, so no `id`, `name` or event handler passes through.
+Toggle backed by a visually hidden checkbox and a `peer`-driven track. Extends
+`HTMLInputAttributes`; `...rest` spreads onto the input, so `id`, `name`, `aria-label` and
+`onchange` all pass through.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
 | `checked` | `boolean` | `false` | **bindable** |
 | `label` | `string` | — | Optional text |
 | `disabled` | `boolean` | `false` | Dims the row and blocks the input |
+
+The accessible name comes from `label`. A `Switch` used inside a `SettingsRow` — where the
+text lives in the row, not the switch — has **no** accessible name unless you pass
+`aria-label`.
 
 ### `Badge`
 
@@ -199,6 +204,19 @@ arc. Halts under `motion-reduce`.
 
 Pulsing placeholder block, `rounded-fc-sm`, `bg-fc-surface/60`. Only prop is `class` — that
 is also how you size it (`class="h-4 w-32"`).
+
+### `StatusDot`
+
+Coloured dot plus optional text, for connection and health state.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `tone` | `'success' \| 'danger' \| 'warning' \| 'muted' \| 'accent'` | `'muted'` | |
+| `label` | `string` | — | Rendered beside the dot |
+| `pulse` | `boolean` | `false` | Adds an `animate-ping` ring, hidden under `motion-reduce` |
+
+Reserve `pulse` for genuinely in-flight states (connecting, reconnecting) — a permanently
+pulsing dot is just noise. State is not a boolean: see CHARTE §14.
 
 ### `Divider`
 
@@ -263,6 +281,104 @@ KPI tile for dashboards, on `bg-fc-component` with a `border-fc-border`.
 | `delta` | `string` | — | Trend line under the value |
 | `children` | `Snippet` | — | Optional slot for a sparkline or extra content |
 
+### `OptionCards`
+
+Single-select radiogroup rendered as icon cards — theme, density, view mode, plan. The
+selected card is **inverted**, matching every other selected state in the suite.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `options` | `{ value, label, icon?, disabled? }[]` | `[]` | |
+| `value` | `string` | `''` | **bindable** |
+| `name` | `string` | — | Emits a hidden input so the group posts in a plain form |
+| `label` | `string` | `'Options'` | `aria-label` for the radiogroup |
+| `onSelect` | `(value: string) => void` | — | |
+
+`role="radiogroup"` with roving tabindex and arrow/Home/End keys, skipping disabled options.
+Cards are `h-11` and sized to their content — the group hugs the options rather than
+stretching across the row — and wrap on narrow screens. There is no description slot on
+purpose: the explanation belongs in the `SettingsRow` above, not repeated in every card.
+
+### `SecretField`
+
+The one way to show, set or copy a credential. Renders a mono field plus `IconButton`
+reveal and copy actions. See CHARTE §14 for the rules it encodes.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `value` | `string` | `''` | **bindable** |
+| `editable` | `boolean` | `false` | `false` renders a read-only `<output>`; `true` renders an input |
+| `sensitive` | `boolean` | `true` | `false` shows the value plainly and drops the eye — for URLs and IDs |
+| `copyable` | `boolean` | `true` | |
+| `mask` | `'ends' \| 'full'` | `'ends'` | `ends` keeps the first four and last four characters |
+| `visible` | `boolean` | `false` | **bindable** |
+| `autoHideMs` | `number` | `15000` | Re-hides a revealed value. `0` disables |
+| `label` / `helper` / `error` / `placeholder` | `string` | — | |
+| `disabled` | `boolean` | `false` | |
+| `id` | `string` | — | Ties the `<label>` to the field |
+| `actions` | `Snippet` | — | Extra buttons after copy — rotate, revoke |
+| `onreveal` | `(visible: boolean) => void` | — | Fires on toggle; hook your audit log here |
+| `oncopy` | `(ok: boolean) => void` | — | `false` when the clipboard write threw |
+
+The mask is a fixed eight dots and never mirrors the real length. A value equal to
+`REDACTED` is treated as "the server kept it": the field goes inert, since there is nothing
+to reveal or copy.
+
+```svelte
+<SecretField value={token} />
+<SecretField bind:value={secret} editable />
+<SecretField value={endpoint} sensitive={false} />
+```
+
+### `SettingsRow`
+
+Label and description on the left, control on the right; stacks under `sm:`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `label` | `string` | — | |
+| `description` | `string` | — | `text-fc-xs`, muted |
+| `for` | `string` | — | Renders the label as a real `<label for>` |
+| `stacked` | `boolean` | `false` | Control on its own full-width line — use for text fields |
+| `children` | `Snippet` | — | The control |
+
+Each row draws its own top rule with `first:border-t-0`, so a section never has to know how
+many rows it holds.
+
+### `SettingsSection`
+
+Heading, description, optional actions, and a `Card` around the body.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `title` | `string` | — | `text-fc-lg`, semibold |
+| `description` | `string` | — | |
+| `actions` | `Snippet` | — | Right-aligned beside the heading |
+| `bare` | `boolean` | `false` | Skips the `Card` — for a `Table` or a `Dropzone` |
+| `bodyClass` | `string` | `''` | Merged onto the body |
+| `children` | `Snippet` | — | |
+
+### `Tabs`
+
+Horizontal section switcher. The active tab is an inverted pill that **slides** on a 0.3s
+`power3.inOut` tween; the strip scrolls horizontally on narrow screens.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `items` | `{ id, label, icon?, badge?, href?, disabled? }[]` | `[]` | |
+| `value` | `string` | `''` | **bindable**. The active `id` |
+| `onchange` | `(id: string) => void` | — | Button mode only |
+| `panelId` | `string` | — | Sets `aria-controls` on each tab |
+| `label` | `string` | `'Sections'` | `aria-label` for the tablist |
+
+Two modes, chosen by the items. Give items an `href` and they render as links with
+`aria-current` — the mode to use for settings, so the section lives in the URL. Without
+`href` they are `role="tab"` buttons with roving tabindex and arrow/Home/End keys.
+
+Every tab is measured through a `ResizeObserver`, not once on mount: `<iconify-icon>` has no
+box until its data arrives over HTTP, so a tab measured at mount is one icon too narrow and
+the pill renders clipped through the label.
+
 ## Organisms
 
 ### `SideBar`
@@ -275,7 +391,9 @@ Collapsible vertical navigation panel on `bg-fc-component`, built from `NavButto
 | `icon` | `string` | — | **Brand mark** — the one icon that stays `bold-duotone`. Rendered at `24` |
 | `title` | `string` | `''` | Header text, revealed with `TextElevate` |
 | `pages` | `{ label, href, icon?, active? }[]` | `[]` | Nav links, keyed by `href` |
-| `user` | `{ name, avatar? }` | — | Footer button; falls back to the uppercased initial |
+| `user` | `{ name, avatar? }` | — | Footer card; falls back to the uppercased initial |
+| `userHref` | `string` | — | Makes the footer card a link. **This is the only entry point to settings** |
+| `userActive` | `boolean` | `false` | Marks the card active with the surface fill, not the inverted pill |
 | `collapsed` | `boolean` | `false` | **bindable** |
 | `showSearch` | `boolean` | `false` | Prepends a Search row (⌘K) and a Collapse row (⌘D) |
 | `spaces` | `{ id, name }[]` | `[]` | Non-empty renders a `SpaceSwitcher` below the header |
@@ -283,9 +401,9 @@ Collapsible vertical navigation panel on `bg-fc-component`, built from `NavButto
 | `onSpaceSelect` | `(id: string \| null) => void` | — | Forwarded to `SpaceSwitcher` |
 | `manageSpacesHref` | `string` | — | Forwarded as the switcher's footer link |
 
-Width tweens between `77` and `220` — the numeric equivalents of
-`--width-fc-nav-collapsed` and `--width-fc-nav-expanded` — over `0.5s` with `power2.inOut`
-after a `0.1s` delay. The first pass uses `gsap.set` so there is no animation on mount, and
+Width tweens between `68` and `220` — the numeric equivalents of
+`--width-fc-nav-collapsed` and `--width-fc-nav-expanded` — over `0.3s` with `power3.inOut`.
+The first pass uses `gsap.set` so there is no animation on mount, and
 `prefersReducedMotion()` makes every later change a `set` too. Because the width is written
 inline by GSAP, overriding it with a `class` will not hold.
 
@@ -300,11 +418,16 @@ yourself.
   showSearch
   pages={[
     { label: 'Home',     href: '/',         icon: icons.home, active: true },
-    { label: 'Settings', href: '/settings', icon: icons.settings }
+    { label: 'Projects', href: '/projects', icon: icons.folder }
   ]}
   user={{ name: 'Camille' }}
+  userHref="/settings"
+  userActive={onSettings}
 />
 ```
+
+**Never list Settings in `pages`.** The footer user card is the way in — it already carries
+the gear glyph. See CHARTE §14.
 
 When collapsed, the brand row, every `NavButton` and the footer user button all become
 `size-11` squares rather than squeezed full-width rectangles, and their labels unmount.
@@ -417,9 +540,11 @@ Text that rises into view on mount, animated with `power3.out`.
 | Prop | Type | Default | Notes |
 |---|---|---|---|
 | `text` | `string` | — | Required. Rendered as plain text |
+| `visible` | `boolean` | `true` | `false` drops the text back out — how the sidebar hides labels on collapse |
 | `delay` | `number` | `0.2` | Seconds before the tween starts |
 | `stagger` | `number` | `0.1` | Passed to GSAP; affects nothing today since one node animates |
 | `duration` | `number` | `1` | Seconds |
+| `class` | `string` | `''` | Merged onto the inner span — pass `truncate` for an ellipsis |
 
 Under reduced motion the text is set to its final position with no tween. The animation runs
 once from `onMount`; changing `text` afterwards updates the DOM without re-animating.
@@ -509,6 +634,14 @@ is undefined, so server rendering takes the "not reduced, not mobile" branch.
 |---|---|---|
 | `prefersReducedMotion` | `() => boolean` | `window.matchMedia('(prefers-reduced-motion: reduce)').matches` |
 | `isMobile` | `() => boolean` | `window.innerWidth < 768` |
+
+Secret helpers live in `src/lib/utils/secret.ts`:
+
+| Export | Signature | Notes |
+|---|---|---|
+| `REDACTED` | `'••••••••'` | A **wire contract** — several suite APIs send it as a field's value and read it back unchanged as "keep the stored secret" |
+| `isRedacted` | `(value: string) => boolean` | True for a run of dots |
+| `maskSecret` | `(value: string, mode?: 'ends' \| 'full') => string` | Fixed-length mask; never leaks the real length |
 
 Both read their value at call time and do not react to changes. `isMobile()` in particular
 is sampled once inside `Mosaique`'s `onMount`, so a resize past 768px does not re-layout.
