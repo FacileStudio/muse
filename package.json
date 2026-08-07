@@ -1,6 +1,6 @@
 {
   "name": "@facile/muse",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Svelte/SvelteKit component library for Facile tools",
   "type": "module",
   "svelte": "./src/lib/index.ts",
@@ -8,7 +8,8 @@
   "exports": {
     ".": {
       "svelte": "./src/lib/index.ts",
-      "types": "./src/lib/index.ts"
+      "types": "./src/lib/index.ts",
+      "default": "./src/lib/index.ts"
     },
     "./styles": "./src/lib/styles/tokens.css"
   },
