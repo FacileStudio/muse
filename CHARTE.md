@@ -428,6 +428,25 @@ with the label. `children` still accepts arbitrary content when a prop will not 
 takes `icons.plus` — a delete button that looks exactly like every other button is how
 people delete things by accident.
 
+### An action that navigates is a link — `href`, not a shaped `<a>`
+
+`Button` and `Card` both render an `<a>` when given `href`, and that exists because without it
+every landing page and every clickable tile in the suite rebuilt their classes by hand. A
+button-shaped `<a>` is not a stylistic preference: a link has to be middle-clickable,
+openable in a new tab, and visible in the status bar, and a `<button>` with an `onclick`
+navigation is none of those.
+
+```svelte
+<Button href="/projects" iconRight={icons.arrow}>All projects</Button>
+<Card href="/projects/7" class="flex flex-col gap-4"> … </Card>
+```
+
+`Card href` also adds what a static surface does not need: the focus ring, a hover step **up**
+to `fc-surface`, and `group`, so a child arrow or icon tile can answer the hover. `Button`
+keeps `disabled` working on both branches — the anchor drops its `href`, takes
+`aria-disabled` and `tabindex="-1"`, and the `aria-disabled:pointer-events-none` class is what
+actually stops the navigation, since `disabled` means nothing to an `<a>`.
+
 Same caveat as the rest of the library: `iconify-icon` is not a dependency, so `Button`'s
 icon stays inert unless the consumer registers the custom element.
 
@@ -435,7 +454,7 @@ icon stays inert unless the consumer registers the custom element.
 
 Import via `import { icons } from '@facile/muse'`.
 
-**46 keys — 40 Solar, 6 MDI.** If a glyph you need is missing, add a key rather than inlining
+**47 keys — 40 Solar, 7 MDI.** If a glyph you need is missing, add a key rather than inlining
 the string at the call site; that is what keeps the pack and style rules above from being
 re-litigated in every component.
 
@@ -469,8 +488,9 @@ MDI (plus, close, chevrons — Solar's read muddy at small sizes):
 | Key | Icon | Key | Icon |
 |-----|------|-----|------|
 | `icons.close` | `mdi:close` | `icons.plus` | `mdi:plus` |
-| `icons.arrow` | `mdi:chevron-right` | `icons.chevronDown` | `mdi:chevron-down` |
-| `icons.chevronUp` | `mdi:chevron-up` | `icons.chevronLeft` | `mdi:chevron-left` |
+| `icons.minus` | `mdi:minus` | `icons.arrow` | `mdi:chevron-right` |
+| `icons.chevronDown` | `mdi:chevron-down` | `icons.chevronUp` | `mdi:chevron-up` |
+| `icons.chevronLeft` | `mdi:chevron-left` | | |
 
 ---
 
@@ -747,6 +767,15 @@ Style: `rounded-fc-pill bg-fc-bg/70 backdrop-blur-2xl backdrop-saturate-150 shad
 no border and no ring; the blur and the shadow do the separating. Active item inverted
 (`bg-fc-accent text-fc-accent-fg`).
 Hidden at `md:` and above — pair with `SideBar` for desktop.
+
+**Six items plus the avatar is the ceiling, and the width budget is why.** Every target is a
+fixed `size-fc-nav-item` square (44px — the same token as a sidebar row, and the §7 hit-target
+floor), gaps and padding shrink under `sm:`, and at 360px that leaves 336px of usable bar for
+7 × 44 + 6 × 2 = 320px. Items used to be `px-3.5 py-2`: 50×38, which both overflowed past four
+items and missed the touch target by 6px vertically. Past six the strip scrolls horizontally
+rather than running off screen — scrollbars are hidden globally (§7), so what you get is a
+partial pill at the edge as the affordance. Treat that as a safety valve, not a design: if a
+phone needs seven destinations, one of them belongs somewhere else.
 
 ### Badge role tones
 

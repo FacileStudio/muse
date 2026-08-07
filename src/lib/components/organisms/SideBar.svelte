@@ -27,6 +27,8 @@
         activeSpaceId = null,
         onSpaceSelect,
         manageSpacesHref,
+        personalSpaceLabel,
+        manageSpacesLabel,
         class: className = '',
         ...rest
     }: HTMLAttributes<HTMLDivElement> & {
@@ -42,6 +44,8 @@
         activeSpaceId?: string | null;
         onSpaceSelect?: (id: string | null) => void;
         manageSpacesHref?: string;
+        personalSpaceLabel?: string;
+        manageSpacesLabel?: string;
         class?: string;
     } = $props();
 
@@ -141,7 +145,17 @@
 
         {#if spaces.length > 0 && !collapsed}
             <div class="w-fc-nav-content shrink-0" transition:switcherReveal>
-                <SpaceSwitcher {spaces} activeId={activeSpaceId} onSelect={onSpaceSelect} manageHref={manageSpacesHref} />
+                <!-- Every label the switcher takes is forwarded. It is the only way a consumer
+                     can reach them through the rail, and the two that were missing meant an app
+                     whose unscoped context is not called "Personal" simply could not say so. -->
+                <SpaceSwitcher
+                    {spaces}
+                    activeId={activeSpaceId}
+                    onSelect={onSpaceSelect}
+                    manageHref={manageSpacesHref}
+                    personalLabel={personalSpaceLabel}
+                    manageLabel={manageSpacesLabel}
+                />
             </div>
         {/if}
 
