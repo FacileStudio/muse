@@ -1,26 +1,38 @@
 <script lang="ts">
     import {
+        Alert,
         Badge,
         BarChart,
         Button,
         Card,
+        ChartLegend,
+        ChartTooltip,
+        Checkbox,
         ConfirmModal,
         DonutChart,
         Drawer,
         Field,
+        IconButton,
         Input,
         LineChart,
         Modal,
+        Radio,
         Sparkline,
         SpaceSwitcher,
         Spinner,
         StatCard,
+        StatusDot,
         Switch,
+        chartColor,
         icons
     } from '@facile/lib';
+    import { spaces, wait } from '../data.js';
 
     let notify = $state(true);
     let email = $state('');
+    let billing = $state('camille.facile.studio');
+    let digest = $state('weekly');
+    let scopes = $state({ projects: true, invoices: false, exports: true });
     let activeSpaceId = $state<string | null>('acme');
     let modalOpen = $state(false);
     let confirmOpen = $state(false);
@@ -28,10 +40,9 @@
     let drawerOpen = $state(false);
     let lastAction = $state('nothing yet');
 
-    const spaces = [
-        { id: 'acme', name: 'Acme Studio' },
-        { id: 'nova', name: 'Nova Collective' }
-    ];
+    const billingError = $derived(
+        billing.length > 0 && !billing.includes('@') ? 'An email address needs an @.' : undefined
+    );
 
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
 
@@ -53,7 +64,16 @@
         { label: 'Other', value: 61 }
     ];
 
-    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    const legend = storage.map((slice, i) => ({
+        name: slice.label,
+        color: chartColor(i),
+        value: `${slice.value} GB`
+    }));
+
+    const tipRows = [
+        { name: 'Billable', value: '152 h', color: chartColor(0) },
+        { name: 'Internal', value: '47 h', color: chartColor(1) }
+    ];
 
     async function deleteSpace() {
         await wait(1200);
@@ -111,6 +131,24 @@
     </section>
 
     <section class="flex flex-col gap-4">
+        <h2 class="text-fc-lg font-semibold text-fc-fg">Chart parts</h2>
+        <p class="text-fc-sm text-fc-fg-muted">
+            The legend and the tooltip are exported separately, so a chart muse does not ship
+            can still read as one of ours.
+        </p>
+        <div class="grid gap-3 lg:grid-cols-2">
+            <Card class="flex flex-col gap-3">
+                <p class="text-fc-sm font-medium text-fc-fg">ChartLegend</p>
+                <ChartLegend items={legend} />
+            </Card>
+            <Card class="relative flex min-h-32 flex-col gap-3">
+                <p class="text-fc-sm font-medium text-fc-fg">ChartTooltip</p>
+                <ChartTooltip x={120} y={80} title="Aug" rows={tipRows} visible />
+            </Card>
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
         <h2 class="text-fc-lg font-semibold text-fc-fg">Buttons</h2>
         <div class="flex flex-wrap items-center gap-3">
             <Button variant="primary" size="sm" icon={icons.plus}>Create</Button>
@@ -124,17 +162,45 @@
             <Button variant="danger" icon={icons.remove}>Delete</Button>
             <Button variant="primary" disabled icon={icons.logout}>Disabled</Button>
         </div>
+        <div class="flex flex-wrap items-center gap-3">
+            <IconButton variant="default" aria-label="Edit" title="Default">
+                <iconify-icon icon={icons.edit} width="18" height="18" class="block"></iconify-icon>
+            </IconButton>
+            <IconButton variant="ghost" aria-label="Refresh" title="Ghost">
+                <iconify-icon icon={icons.refresh} width="18" height="18" class="block"></iconify-icon>
+            </IconButton>
+            <IconButton variant="danger" aria-label="Delete" title="Danger">
+                <iconify-icon icon={icons.remove} width="18" height="18" class="block"></iconify-icon>
+            </IconButton>
+        </div>
     </section>
 
     <section class="flex flex-col gap-4">
-        <h2 class="text-fc-lg font-semibold text-fc-fg">Badges</h2>
+        <h2 class="text-fc-lg font-semibold text-fc-fg">Tones</h2>
         <div class="flex flex-wrap items-center gap-2">
             <Badge tone="neutral">Member</Badge>
             <Badge tone="owner">Owner</Badge>
             <Badge tone="admin">Admin</Badge>
             <Badge tone="accent">Accent</Badge>
+            <Badge tone="info">Beta</Badge>
             <Badge tone="success">Active</Badge>
+            <Badge tone="warning">Expiring</Badge>
             <Badge tone="danger">Revoked</Badge>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <StatusDot tone="neutral" label="Idle" />
+            <StatusDot tone="accent" label="Selected" />
+            <StatusDot tone="info" label="Syncing" />
+            <StatusDot tone="success" label="Connected" />
+            <StatusDot tone="warning" label="Reconnecting" pulse />
+            <StatusDot tone="danger" label="Offline" />
+        </div>
+        <div class="grid gap-2 lg:grid-cols-2">
+            <Alert tone="neutral">Neutral — context, no state attached to it.</Alert>
+            <Alert tone="info">Info — something worth knowing, nothing to do about it.</Alert>
+            <Alert tone="success">Success — the thing you asked for happened.</Alert>
+            <Alert tone="warning" title="Warning">Something needs a decision before long.</Alert>
+            <Alert tone="danger" title="Danger">Something failed and is still failing.</Alert>
         </div>
     </section>
 
@@ -144,6 +210,32 @@
             <Field label="Email" helper="Used for space invitations.">
                 <Input bind:value={email} placeholder="you@facile.studio" type="email" />
             </Field>
+
+            <!-- Field owns the id, the description and the invalid flag; the Input picks all
+                 three up from context, so this is a labelled, described, aria-invalid control
+                 with nothing wired by hand. -->
+            <Field
+                label="Billing email"
+                error={billingError}
+                helper="Invoices and payment receipts go here."
+            >
+                <Input bind:value={billing} placeholder="billing@facile.studio" type="email" />
+            </Field>
+
+            <fieldset class="flex flex-col gap-2">
+                <legend class="mb-1 text-fc-sm text-fc-fg">Export scopes</legend>
+                <Checkbox bind:checked={scopes.projects} label="Projects and tasks" />
+                <Checkbox bind:checked={scopes.invoices} label="Invoices" />
+                <Checkbox bind:checked={scopes.exports} label="Tracked time" />
+            </fieldset>
+
+            <fieldset class="flex flex-col gap-2">
+                <legend class="mb-1 text-fc-sm text-fc-fg">Digest frequency</legend>
+                <Radio bind:group={digest} value="daily" name="digest" label="Every morning" />
+                <Radio bind:group={digest} value="weekly" name="digest" label="Monday mornings" />
+                <Radio bind:group={digest} value="never" name="digest" label="Never" />
+            </fieldset>
+
             <Switch bind:checked={notify} label="Email notifications" class="text-fc-sm" />
             <div class="flex items-center gap-3 text-fc-sm text-fc-fg-muted">
                 <Spinner size="sm" /> Loading state
@@ -156,13 +248,13 @@
         <p class="text-fc-sm text-fc-fg-muted">Last action: {lastAction}</p>
         <div class="flex flex-wrap items-center gap-3">
             <Button variant="outline" icon={icons.plus} onclick={() => (modalOpen = true)}>Invite</Button>
-            <Button variant="outline" icon="solar:upload-linear" onclick={() => (confirmOpen = true)}>
+            <Button variant="outline" icon={icons.upload} onclick={() => (confirmOpen = true)}>
                 Publish
             </Button>
             <Button variant="danger" icon={icons.remove} onclick={() => (deleteOpen = true)}>
                 Delete space
             </Button>
-            <Button variant="outline" icon="solar:filter-linear" onclick={() => (drawerOpen = true)}>
+            <Button variant="outline" icon={icons.filter} onclick={() => (drawerOpen = true)}>
                 Filters
             </Button>
         </div>
@@ -194,7 +286,7 @@
                 Cancel
             </Button>
             <Button
-                icon="solar:letter-linear"
+                icon={icons.mail}
                 class="w-full sm:w-auto"
                 onclick={() => {
                     modalOpen = false;
@@ -212,8 +304,10 @@
     title="Publish this report?"
     description="Everyone in Acme Studio will be able to read it."
     confirmLabel="Publish"
-    onconfirm={() => (lastAction = 'published the report')}
-    oncancel={() => (lastAction = 'cancelled the publish')}
+    onConfirm={() => {
+        lastAction = 'published the report';
+    }}
+    onCancel={() => (lastAction = 'cancelled the publish')}
 />
 
 <ConfirmModal
@@ -222,8 +316,8 @@
     title="Delete Nova Collective?"
     description="This removes the space, its members and every tracked entry. This cannot be undone."
     confirmLabel="Delete space"
-    onconfirm={deleteSpace}
-    oncancel={() => (lastAction = 'kept Nova Collective')}
+    onConfirm={deleteSpace}
+    onCancel={() => (lastAction = 'kept Nova Collective')}
 />
 
 <Drawer
@@ -250,7 +344,7 @@
                 Reset
             </Button>
             <Button
-                icon="mdi:check"
+                icon={icons.check}
                 class="flex-1"
                 onclick={() => {
                     drawerOpen = false;

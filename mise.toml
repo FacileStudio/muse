@@ -1,8 +1,12 @@
 [tools]
 bun = "latest"
 
+[tasks.check]
+description = "Type-check every component and util (svelte-check)"
+run = "bun install && bunx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings"
+
 [tasks.test]
-description = "Run the chart maths checks"
+description = "Run the chart and secret maths checks"
 run = "bun test src/lib"
 
 [tasks.demo]
@@ -11,6 +15,10 @@ dir = "demo"
 run = "bun install && bun run dev"
 
 [tasks."demo:build"]
-description = "Production build of the demo app"
+description = "Production build of the demo app — compiles every component"
 dir = "demo"
 run = "bun install && bun run build"
+
+[tasks.verify]
+description = "Everything CI would run: types, tests, demo build"
+depends = ["check", "test", "demo:build"]

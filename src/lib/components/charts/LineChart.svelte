@@ -1,18 +1,30 @@
 <script lang="ts">
-    import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
     import {
+        AREA_OPACITY,
+        CHAR_W,
+        PAD_BOTTOM,
+        PAD_TOP,
         areaPath,
-        chartColor,
+        axisPadLeft,
         formatCompact,
+        labelStride,
         linePath,
         niceScale,
         resize,
-        tickStride,
+        seriesColor,
+        seriesCount,
+        seriesEmpty,
+        seriesLegend,
+        seriesRows,
+        seriesSummary,
+        seriesTipRows,
+        seriesValues,
         type ChartSeries
     } from '../../utils/chart.js';
+    import { drawIn } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
+    import ChartTable from './ChartTable.svelte';
     import ChartTooltip from './ChartTooltip.svelte';
 
     let {
@@ -45,8 +57,6 @@
         class?: string;
     } = $props();
 
-    const CHAR_W = 6.4;
-
     let w = $state(0);
     let svgEl: SVGSVGElement | null = $state(null);
     let hover = $state(-1);
@@ -54,9 +64,9 @@
 
     const classes = $derived(twMerge('relative w-full', className));
 
-    const count = $derived(Math.max(labels.length, ...series.map((s) => s.data.length), 0));
-    const values = $derived(series.flatMap((s) => s.data.filter((v) => Number.isFinite(v))));
-    const isEmpty = $derived(series.length === 0 || count === 0 || values.length === 0 || values.every((v) => v === 0));
+    const count = $derived(seriesCount(series, labels));
+    const values = $derived(seriesValues(series));
+    const isEmpty = $derived(seriesEmpty(series, labels));
 
     const scale = $derived(
         isEmpty
@@ -69,16 +79,13 @@
         Array.from({ length: count }, (_, i) => xFormat(labels[i] ?? String(i + 1), i))
     );
 
-    const padTop = 10;
-    const padBottom = $derived(labels.length ? 24 : 8);
-    const padLeft = $derived(
-        Math.min(96, Math.max(30, Math.max(0, ...yLabels.map((t) => t.length)) * CHAR_W + 10))
-    );
+    const padBottom = $derived(labels.length ? PAD_BOTTOM : 8);
+    const padLeft = $derived(axisPadLeft(yLabels));
     const padRight = $derived(
         Math.max(10, Math.min(44, (xLabels[xLabels.length - 1]?.length ?? 0) * CHAR_W * 0.5))
     );
     const plotW = $derived(Math.max(0, w - padLeft - padRight));
-    const plotH = $derived(Math.max(0, height - padTop - padBottom));
+    const plotH = $derived(Math.max(0, height - PAD_TOP - padBottom));
 
     const xAt = (i: number): number =>
         count <= 1 ? padLeft + plotW / 2 : padLeft + (i / (count - 1)) * plotW;
@@ -86,10 +93,10 @@
     const yAt = (v: number): number => {
         const span = scale.max - scale.min;
         const t = span === 0 ? 0.5 : (v - scale.min) / span;
-        return padTop + (1 - t) * plotH;
+        return PAD_TOP + (1 - t) * plotH;
     };
 
-    const colorAt = (i: number): string => series[i]?.color ?? chartColor(i);
+    const colorAt = (i: number): string => seriesColor(series, i);
 
     const seriesPoints = $derived.by(() => {
         if (isEmpty || plotW <= 0) return [] as [number, number][][];
@@ -104,33 +111,13 @@
         });
     });
 
-    const stride = $derived(
-        tickStride(count, plotW, Math.max(28, Math.max(0, ...xLabels.map((l) => l.length)) * CHAR_W + 12))
-    );
+    const stride = $derived(labelStride(count, plotW, xLabels));
 
     const legendOn = $derived(showLegend ?? series.length > 1);
-    const legendItems = $derived(series.map((s, i) => ({ name: s.name, color: colorAt(i) })));
-
-    const summary = $derived(
-        `Line chart of ${series.length} series across ${count} points: ${series.map((s) => s.name).join(', ')}`
-    );
-
-    const tableRows = $derived(
-        Array.from({ length: count }, (_, i) => ({
-            label: labels[i] ?? String(i + 1),
-            cells: series.map((s) => (Number.isFinite(s.data[i]) ? yFormat(s.data[i]) : ''))
-        }))
-    );
-
-    const tipRows = $derived(
-        hover < 0
-            ? []
-            : series.map((s, i) => ({
-                  name: s.name,
-                  value: Number.isFinite(s.data[hover]) ? yFormat(s.data[hover]) : '—',
-                  color: colorAt(i)
-              }))
-    );
+    const legendItems = $derived(seriesLegend(series));
+    const summary = $derived(seriesSummary('Line', series, count, 'points'));
+    const tableRows = $derived(seriesRows(series, labels, count, yFormat));
+    const tipRows = $derived(seriesTipRows(series, hover, yFormat));
 
     const tipX = $derived(hover < 0 ? 0 : xAt(hover));
     const tipY = $derived.by(() => {
@@ -139,7 +126,7 @@
             .map((s) => s.data[hover])
             .filter((v) => Number.isFinite(v))
             .map((v) => yAt(v));
-        const y = ys.length ? Math.min(...ys) : padTop;
+        const y = ys.length ? Math.min(...ys) : PAD_TOP;
         return Math.max(14, Math.min(height - 14, y));
     });
 
@@ -162,24 +149,7 @@
     $effect(() => {
         if (started || isEmpty || plotW <= 0 || !svgEl) return;
         started = true;
-        if (!animate || prefersReducedMotion()) return;
-        const paths = Array.from(svgEl.querySelectorAll<SVGPathElement>('[data-line]'));
-        paths.forEach((path) => {
-            const len = path.getTotalLength();
-            if (!len) return;
-            gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-            gsap.to(path, {
-                strokeDashoffset: 0,
-                duration: 0.6,
-                ease: 'power3.out',
-                onComplete: () => {
-                    path.style.removeProperty('stroke-dasharray');
-                    path.style.removeProperty('stroke-dashoffset');
-                }
-            });
-        });
-        const fills = Array.from(svgEl.querySelectorAll<SVGPathElement>('[data-area]'));
-        if (fills.length) gsap.fromTo(fills, { opacity: 0 }, { opacity: 0.12, duration: 0.6, ease: 'power3.out' });
+        drawIn(svgEl, animate);
     });
 </script>
 
@@ -198,8 +168,7 @@
                 width={w}
                 height={height}
                 viewBox="0 0 {w} {height}"
-                role="img"
-                aria-label={summary}
+                aria-hidden="true"
                 focusable="false"
                 class="block"
                 onpointermove={locate}
@@ -208,7 +177,7 @@
                 onpointercancel={clear}
             >
                 {#if showGrid}
-                    <g aria-hidden="true" shape-rendering="crispEdges">
+                    <g shape-rendering="crispEdges">
                         {#each scale.ticks as tick, i (i)}
                             <line
                                 x1={padLeft}
@@ -222,7 +191,7 @@
                     </g>
                 {/if}
 
-                <g aria-hidden="true">
+                <g>
                     {#each scale.ticks as tick, i (i)}
                         <text
                             x={padLeft - 8}
@@ -234,12 +203,12 @@
                 </g>
 
                 {#if labels.length}
-                    <g aria-hidden="true">
+                    <g>
                         {#each xLabels as label, i (i)}
                             {#if i % stride === 0}
                                 <text
                                     x={xAt(i)}
-                                    y={padTop + plotH + 16}
+                                    y={PAD_TOP + plotH + 16}
                                     text-anchor="middle"
                                     class="fill-fc-fg-muted text-fc-xs">{label}</text
                                 >
@@ -249,19 +218,19 @@
                 {/if}
 
                 {#if area}
-                    <g aria-hidden="true">
+                    <g>
                         {#each seriesPoints as pts, i (i)}
                             <path
-                                d={areaPath(pts, padTop + plotH, smooth)}
+                                d={areaPath(pts, PAD_TOP + plotH, smooth)}
                                 fill={colorAt(i)}
-                                opacity="0.12"
+                                opacity={AREA_OPACITY}
                                 data-area
                             />
                         {/each}
                     </g>
                 {/if}
 
-                <g aria-hidden="true">
+                <g>
                     {#each seriesPoints as pts, i (i)}
                         <path
                             d={linePath(pts, smooth)}
@@ -276,12 +245,12 @@
                 </g>
 
                 {#if hover >= 0}
-                    <g aria-hidden="true">
+                    <g>
                         <line
                             x1={xAt(hover)}
-                            y1={padTop}
+                            y1={PAD_TOP}
                             x2={xAt(hover)}
-                            y2={padTop + plotH}
+                            y2={PAD_TOP + plotH}
                             stroke="var(--color-fc-ring)"
                             stroke-width="1"
                         />
@@ -300,7 +269,7 @@
                     </g>
                 {/if}
 
-                <rect x="0" y="0" width={w} height={height} fill="transparent" aria-hidden="true" />
+                <rect x="0" y="0" width={w} height={height} fill="transparent" />
             </svg>
 
             <ChartTooltip
@@ -318,29 +287,7 @@
             </div>
         {/if}
 
-        <div class="sr-only">
-            <table>
-                <caption>{summary}</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Label</th>
-                        {#each series as s, i (i)}
-                            <th scope="col">{s.name}</th>
-                        {/each}
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each tableRows as row, i (i)}
-                        <tr>
-                            <th scope="row">{row.label}</th>
-                            {#each row.cells as cell, j (j)}
-                                <td>{cell}</td>
-                            {/each}
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
-        </div>
+        <ChartTable caption={summary} head="Label" columns={series.map((s) => s.name)} rows={tableRows} />
     {:else}
         <div style:height="{height}px"></div>
     {/if}

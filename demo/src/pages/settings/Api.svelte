@@ -14,6 +14,7 @@
         Table,
         icons
     } from '@facile/lib';
+    import { wait } from '../../data.js';
 
     type Token = {
         id: string;
@@ -64,8 +65,6 @@
 
     let revokeTarget = $state<Token | null>(null);
     let revokeOpen = $state(false);
-
-    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     function openCreate() {
         /* Reset first: reopening the drawer must never re-show a token from a previous run. */
@@ -246,5 +245,5 @@
     description={`"${revokeTarget?.name ?? ''}" stops working immediately, and any pipeline or CLI still using it starts failing. It cannot be un-revoked. The row stays listed so the audit log still names what it did.`}
     confirmLabel="Revoke token"
     cancelLabel="Keep it"
-    onconfirm={revoke}
+    onConfirm={revoke}
 />

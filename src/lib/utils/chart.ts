@@ -1,9 +1,55 @@
 export type ChartSeries = { name: string; data: number[]; color?: string };
 export type ChartSlice = { label: string; value: number; color?: string };
 export type ChartScale = { min: number; max: number; ticks: number[] };
+export type ChartRow = { label: string; cells: string[] };
+export type ChartTipRow = { name: string; value: string; color?: string };
+export type ChartLegendItem = { name: string; color: string; value?: string };
+export type ChartPoint = { x: number; y: number };
+export type ChartBox = { x: number; y: number; w: number; h: number };
+export type ChartLine = { x1: number; y1: number; x2: number; y2: number };
+export type ChartTick = { x: number; y: number; anchor: 'start' | 'middle' | 'end'; text: string };
+
+export type BarCorner = 'top' | 'bottom' | 'left' | 'right' | 'none';
+export type BarSpec = {
+    near: number;
+    size: number;
+    offset: number;
+    thick: number;
+    corner: BarCorner;
+    color: string;
+};
+export type BarGeometry = {
+    specs: BarSpec[];
+    bands: ChartBox[];
+    grid: ChartLine[];
+    valueTicks: ChartTick[];
+    catTicks: ChartTick[];
+    anchors: ChartPoint[];
+    base: number;
+};
+export type DonutSegment = {
+    label: string;
+    value: number;
+    frac: number;
+    color: string;
+    a0: number;
+    a1: number;
+    mid: number;
+};
 
 const SLOT_COUNT = 6;
-const TAU = Math.PI * 2;
+
+/** ~1.1°: below this an arc is sub-pixel at any donut radius we ship and reads as missing. */
+const MIN_ARC = 0.02;
+
+export const TAU = Math.PI * 2;
+
+/** Average glyph advance of the bundled Goga face at `text-fc-xs`, used to size axis gutters. */
+export const CHAR_W = 6.4;
+export const PAD_TOP = 10;
+export const PAD_BOTTOM = 24;
+export const ENTRY_DURATION = 0.6;
+export const AREA_OPACITY = 0.12;
 
 const r2 = (n: number): number => Math.round(n * 100) / 100;
 const clean = (n: number): number => Number(n.toPrecision(12));
@@ -91,6 +137,65 @@ export function formatCompact(n: number): string {
         }
     }
     return String(n);
+}
+
+export function seriesCount(series: ChartSeries[], labels: string[] = []): number {
+    return Math.max(labels.length, ...series.map((s) => s.data.length), 0);
+}
+
+export function seriesValues(series: ChartSeries[]): number[] {
+    return series.flatMap((s) => s.data.filter((v) => Number.isFinite(v)));
+}
+
+/**
+ * Emptiness is the absence of points, never their value. An all-zero series is real
+ * data — "0 errors today" has to draw a confident flat baseline, not an empty state.
+ */
+export function seriesEmpty(series: ChartSeries[], labels: string[] = []): boolean {
+    return series.length === 0 || seriesCount(series, labels) === 0 || seriesValues(series).length === 0;
+}
+
+export function seriesColor(series: ChartSeries[], index: number): string {
+    return series[index]?.color ?? chartColor(index);
+}
+
+export function seriesLegend(series: ChartSeries[]): ChartLegendItem[] {
+    return series.map((s, i) => ({ name: s.name, color: seriesColor(series, i) }));
+}
+
+export function seriesSummary(kind: string, series: ChartSeries[], count: number, unit: string): string {
+    return `${kind} chart of ${series.length} series across ${count} ${unit}: ${series
+        .map((s) => s.name)
+        .join(', ')}`;
+}
+
+export function categoryLabels(labels: string[], count: number): string[] {
+    return Array.from({ length: count }, (_, i) => labels[i] ?? String(i + 1));
+}
+
+export function seriesRows(
+    series: ChartSeries[],
+    labels: string[],
+    count: number,
+    format: (n: number) => string
+): ChartRow[] {
+    return categoryLabels(labels, count).map((label, i) => ({
+        label,
+        cells: series.map((s) => (Number.isFinite(s.data[i]) ? format(s.data[i]) : ''))
+    }));
+}
+
+export function seriesTipRows(
+    series: ChartSeries[],
+    index: number,
+    format: (n: number) => string
+): ChartTipRow[] {
+    if (!(index >= 0)) return [];
+    return series.map((s, i) => ({
+        name: s.name,
+        value: Number.isFinite(s.data[index]) ? format(s.data[index]) : '—',
+        color: seriesColor(series, i)
+    }));
 }
 
 /**
@@ -202,6 +307,223 @@ export function tickStride(count: number, available: number, minSpacing: number)
     if (count <= 1 || available <= 0 || minSpacing <= 0) return 1;
     const fits = Math.max(1, Math.floor(available / minSpacing));
     return Math.max(1, Math.ceil(count / fits));
+}
+
+export function labelWidth(labels: string[]): number {
+    let longest = 0;
+    for (const label of labels) {
+        if (label.length > longest) longest = label.length;
+    }
+    return longest * CHAR_W;
+}
+
+export function axisPadLeft(labels: string[]): number {
+    return Math.min(96, Math.max(30, labelWidth(labels) + 10));
+}
+
+export function labelStride(count: number, available: number, labels: string[]): number {
+    return tickStride(count, available, Math.max(28, labelWidth(labels) + 12));
+}
+
+const MAX_THICK = 24;
+const BAR_GAP = 2;
+
+/**
+ * Bar layout in final, un-animated form: `near`/`size` are the position and length along
+ * the value axis, `offset`/`thick` the position and breadth along the category axis. The
+ * entry tween only interpolates `near` and `size`, so none of this has to be recomputed
+ * per frame.
+ */
+export function barGeometry(input: {
+    series: ChartSeries[];
+    labels: string[];
+    count: number;
+    scale: ChartScale;
+    width: number;
+    height: number;
+    stacked: boolean;
+    horizontal: boolean;
+    format: (n: number) => string;
+}): BarGeometry {
+    const { series, labels, count, scale, width, height, stacked, horizontal, format } = input;
+    const specs: BarSpec[] = [];
+    const bands: ChartBox[] = [];
+    const grid: ChartLine[] = [];
+    const valueTicks: ChartTick[] = [];
+    const catTicks: ChartTick[] = [];
+    const anchors: ChartPoint[] = [];
+    const out: BarGeometry = { specs, bands, grid, valueTicks, catTicks, anchors, base: 0 };
+    if (count <= 0 || width <= 0) return out;
+
+    const valueLabels = scale.ticks.map((t) => format(t));
+    const catLabels = categoryLabels(labels, count);
+    const padLeft = horizontal
+        ? Math.min(Math.max(56, width * 0.36), Math.max(56, labelWidth(catLabels) + 12))
+        : axisPadLeft(valueLabels);
+    const padRight = horizontal ? Math.max(12, labelWidth(valueLabels.slice(-1)) / 2) : 10;
+    const plotW = Math.max(0, width - padLeft - padRight);
+    const plotH = Math.max(0, height - PAD_TOP - PAD_BOTTOM);
+    if (plotW <= 0 || plotH <= 0) return out;
+
+    const span = scale.max - scale.min || 1;
+    const vAt = (v: number): number =>
+        horizontal
+            ? padLeft + ((v - scale.min) / span) * plotW
+            : PAD_TOP + (1 - (v - scale.min) / span) * plotH;
+    const base = vAt(0);
+    const bandSize = (horizontal ? plotH : plotW) / count;
+    const bandOrigin = horizontal ? PAD_TOP : padLeft;
+    const slots = stacked ? 1 : Math.max(1, series.length);
+    const groupSize = Math.min(bandSize * 0.72, slots * MAX_THICK + (slots - 1) * BAR_GAP);
+    const thick = Math.max(1, (groupSize - BAR_GAP * (slots - 1)) / slots);
+    out.base = base;
+
+    for (const tick of scale.ticks) {
+        const p = vAt(tick);
+        if (horizontal) grid.push({ x1: p, y1: PAD_TOP, x2: p, y2: PAD_TOP + plotH });
+        else grid.push({ x1: padLeft, y1: p, x2: padLeft + plotW, y2: p });
+        valueTicks.push(
+            horizontal
+                ? { x: p, y: PAD_TOP + plotH + 16, anchor: 'middle', text: format(tick) }
+                : { x: padLeft - 8, y: p + 4, anchor: 'end', text: format(tick) }
+        );
+    }
+
+    const catStride = horizontal ? tickStride(count, plotH, 18) : labelStride(count, plotW, catLabels);
+
+    for (let i = 0; i < count; i++) {
+        const start = bandOrigin + i * bandSize + (bandSize - groupSize) / 2;
+        const along = bandOrigin + i * bandSize;
+
+        if (horizontal) {
+            bands.push({ x: padLeft, y: along, w: plotW, h: bandSize });
+            if (i % catStride === 0) {
+                catTicks.push({ x: padLeft - 10, y: along + bandSize / 2 + 4, anchor: 'end', text: catLabels[i] });
+            }
+        } else {
+            bands.push({ x: along, y: PAD_TOP, w: bandSize, h: plotH });
+            if (i % catStride === 0) {
+                catTicks.push({
+                    x: along + bandSize / 2,
+                    y: PAD_TOP + plotH + 16,
+                    anchor: 'middle',
+                    text: catLabels[i]
+                });
+            }
+        }
+
+        let extreme = base;
+        let pos = 0;
+        let neg = 0;
+        let lastPos = -1;
+        let lastNeg = -1;
+        if (stacked) {
+            for (let j = 0; j < series.length; j++) {
+                const v = series[j].data[i];
+                if (!Number.isFinite(v) || v === 0) continue;
+                if (v > 0) lastPos = j;
+                else lastNeg = j;
+            }
+        }
+
+        for (let j = 0; j < series.length; j++) {
+            const v = series[j].data[i];
+            if (!Number.isFinite(v) || v === 0) continue;
+
+            const from = stacked ? (v > 0 ? pos : neg) : 0;
+            const to = from + v;
+            if (stacked) {
+                if (v > 0) pos = to;
+                else neg = to;
+            }
+
+            const a = vAt(from);
+            const b = vAt(to);
+            let near = Math.min(a, b);
+            let size = Math.abs(b - a);
+            if (stacked && from !== 0) {
+                if ((v > 0) === horizontal) near += BAR_GAP;
+                size = Math.max(0, size - BAR_GAP);
+            }
+            if (size <= 0) continue;
+
+            const rounded = !stacked || (v > 0 ? j === lastPos : j === lastNeg);
+            const offset = stacked ? start : start + j * (thick + BAR_GAP);
+            const color = seriesColor(series, j);
+
+            if (horizontal) {
+                specs.push({ near, size, offset, thick, corner: rounded ? (v > 0 ? 'right' : 'left') : 'none', color });
+                const edge = v > 0 ? near + size : near;
+                if (v > 0 ? edge > extreme : edge < extreme) extreme = edge;
+            } else {
+                specs.push({ near, size, offset, thick, corner: rounded ? (v > 0 ? 'top' : 'bottom') : 'none', color });
+                const edge = v > 0 ? near : near + size;
+                if (v > 0 ? edge < extreme : edge > extreme) extreme = edge;
+            }
+        }
+
+        anchors.push(
+            horizontal
+                ? { x: extreme, y: along + bandSize / 2 }
+                : { x: along + bandSize / 2, y: extreme }
+        );
+    }
+
+    return out;
+}
+
+export function barPath(bar: ChartBox & { corner: BarCorner }): string {
+    const bw = Math.max(0, bar.w);
+    const bh = Math.max(0, bar.h);
+    if (bw <= 0 || bh <= 0) return '';
+    const x = r2(bar.x);
+    const y = r2(bar.y);
+    const rv = Math.min(4, bw / 2, bh);
+    const rh = Math.min(4, bh / 2, bw);
+    if (bar.corner === 'top') {
+        return `M${x} ${y + bh}L${x} ${y + rv}Q${x} ${y} ${x + rv} ${y}L${x + bw - rv} ${y}Q${x + bw} ${y} ${x + bw} ${y + rv}L${x + bw} ${y + bh}Z`;
+    }
+    if (bar.corner === 'bottom') {
+        return `M${x} ${y}L${x} ${y + bh - rv}Q${x} ${y + bh} ${x + rv} ${y + bh}L${x + bw - rv} ${y + bh}Q${x + bw} ${y + bh} ${x + bw} ${y + bh - rv}L${x + bw} ${y}Z`;
+    }
+    if (bar.corner === 'right') {
+        return `M${x} ${y}L${x + bw - rh} ${y}Q${x + bw} ${y} ${x + bw} ${y + rh}L${x + bw} ${y + bh - rh}Q${x + bw} ${y + bh} ${x + bw - rh} ${y + bh}L${x} ${y + bh}Z`;
+    }
+    if (bar.corner === 'left') {
+        return `M${x + bw} ${y}L${x + rh} ${y}Q${x} ${y} ${x} ${y + rh}L${x} ${y + bh - rh}Q${x} ${y + bh} ${x + rh} ${y + bh}L${x + bw} ${y + bh}Z`;
+    }
+    return `M${x} ${y}h${bw}v${bh}h${-bw}Z`;
+}
+
+/**
+ * A slice narrower than the separator gap keeps its full span and is floored at
+ * `MIN_ARC`: inset by half a gap on each side it would collapse to nothing and vanish
+ * from the ring while still being listed in the legend.
+ */
+export function donutSegments(slices: ChartSlice[], gap: number): DonutSegment[] {
+    const out: DonutSegment[] = [];
+    const total = slices.reduce((sum, d) => sum + d.value, 0);
+    if (!(total > 0)) return out;
+    let acc = 0;
+    for (let i = 0; i < slices.length; i++) {
+        const slice = slices[i];
+        const frac = slice.value / total;
+        const start = acc * TAU;
+        const end = (acc + frac) * TAU;
+        acc += frac;
+        const inset = end - start > gap * 2 ? gap / 2 : 0;
+        const a0 = start + inset;
+        out.push({
+            label: slice.label,
+            value: slice.value,
+            frac,
+            color: slice.color ?? chartColor(i),
+            a0,
+            a1: Math.max(a0 + MIN_ARC, end - inset),
+            mid: (start + end) / 2
+        });
+    }
+    return out;
 }
 
 export function resize(node: HTMLElement, cb: (w: number) => void): { destroy(): void } {

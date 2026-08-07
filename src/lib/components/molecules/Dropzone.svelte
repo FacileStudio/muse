@@ -1,6 +1,8 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { HTMLLabelAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
+    import { icons } from '../../icons.js';
 
     type Reason = 'type' | 'size' | 'count';
     type Rejection = { file: File; reason: Reason };
@@ -17,8 +19,9 @@
         onFiles,
         onReject,
         children,
-        class: className = ''
-    }: {
+        class: className = '',
+        ...rest
+    }: HTMLLabelAttributes & {
         files?: File[];
         accept?: string;
         multiple?: boolean;
@@ -96,6 +99,16 @@
         depth = Math.max(0, depth - 1);
     };
 
+    /* A drag that ends outside the window never sends the balancing dragleave, so without
+       this the zone stays lit until the next full drag cycle. */
+    const handleEnd = () => {
+        depth = 0;
+    };
+
+    $effect(() => {
+        if (disabled) depth = 0;
+    });
+
     const handleOver = (event: DragEvent) => {
         event.preventDefault();
         if (event.dataTransfer) event.dataTransfer.dropEffect = disabled ? 'none' : 'copy';
@@ -123,8 +136,10 @@
     class={classes}
     data-dragging={dragging ? 'true' : undefined}
     aria-disabled={disabled ? 'true' : undefined}
+    {...rest}
     ondragenter={handleEnter}
     ondragleave={handleLeave}
+    ondragend={handleEnd}
     ondragover={handleOver}
     ondrop={handleDrop}
 >
@@ -142,14 +157,14 @@
         {@render children()}
     {:else}
         <span class="text-fc-fg-muted">
-            <iconify-icon icon="solar:cloud-upload-linear" width="28" height="28" class="block"></iconify-icon>
+            <iconify-icon icon={icons.upload} width="28" height="28" class="block"></iconify-icon>
         </span>
         <span class="text-fc-sm font-medium">{label}</span>
         {#if hint}<span class="text-fc-xs text-fc-fg-muted">{hint}</span>{/if}
         <span
             class="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-fc-pill border border-fc-border px-4 text-fc-sm"
         >
-            <iconify-icon icon="solar:folder-with-files-linear" width="16" height="16" class="block"></iconify-icon>
+            <iconify-icon icon={icons.folder} width="16" height="16" class="block"></iconify-icon>
             Browse
         </span>
     {/if}

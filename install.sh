@@ -127,8 +127,10 @@ report() {
 # --- main -------------------------------------------------------------------
 
 main() {
-  parse_args "$@"
+  # Colours before args: parse_args can die(), and die() dereferences $C_ERR
+  # under `set -u`.
   setup_colors
+  parse_args "$@"
   info "Installing $NAME"
   make_workdir
   fetch_skill

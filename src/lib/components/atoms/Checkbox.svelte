@@ -7,7 +7,7 @@
         checked = $bindable(false),
         class: className = '',
         ...rest
-    }: HTMLInputAttributes & {
+    }: Omit<HTMLInputAttributes, 'type' | 'checked'> & {
         label?: string;
         checked?: boolean;
         class?: string;
@@ -20,7 +20,7 @@
     <input
         type="checkbox"
         bind:checked
-        class="h-4 w-4 rounded-fc-sm accent-fc-accent disabled:opacity-50"
+        class="h-4 w-4 rounded-fc-sm accent-fc-accent disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
         {...rest}
     />
     {#if label}<span>{label}</span>{/if}

@@ -12,6 +12,7 @@
         Switch,
         icons
     } from '@facile/lib';
+    import { wait } from '../../data.js';
 
     type State = 'off' | 'connecting' | 'connected' | 'reconnecting' | 'failed';
 
@@ -36,8 +37,8 @@
      * flight and a client that has burned all twenty retries — three situations with three
      * different things to do about them, and telling them apart is the whole job of this card.
      */
-    const status = $derived.by((): { tone: 'success' | 'warning' | 'danger' | 'muted'; label: string; pulse: boolean } => {
-        if (!enabled) return { tone: 'muted', label: 'Disabled', pulse: false };
+    const status = $derived.by((): { tone: 'success' | 'warning' | 'danger' | 'neutral'; label: string; pulse: boolean } => {
+        if (!enabled) return { tone: 'neutral', label: 'Disabled', pulse: false };
         switch (connection) {
             case 'connected':
                 return { tone: 'success', label: 'Connected', pulse: false };
@@ -48,11 +49,9 @@
             case 'failed':
                 return { tone: 'danger', label: 'Gave up after 20 attempts', pulse: false };
             default:
-                return { tone: 'muted', label: 'Not connected', pulse: false };
+                return { tone: 'neutral', label: 'Not connected', pulse: false };
         }
     });
-
-    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     async function connect() {
         saving = true;
@@ -79,7 +78,6 @@
         {#snippet actions()}
             <Button
                 variant="outline"
-                size="sm"
                 icon={icons.refresh}
                 disabled={!enabled || connection === 'connecting'}
                 onclick={connect}
@@ -96,12 +94,16 @@
             <Switch bind:checked={enabled} aria-label="Emit events" />
         </SettingsRow>
 
-        <SettingsRow label="Identity" description="How this app names itself on the pool.">
-            <code class="font-fc-mono text-fc-sm text-fc-fg">muse:acme</code>
+        <SettingsRow label="Identity" description="How this app names itself on the pool." stacked>
+            <SecretField value="muse:acme" sensitive={false} class="w-full" />
         </SettingsRow>
 
-        <SettingsRow label="Epoch" description="Changes when Nook restarts and replays are re-anchored.">
-            <code class="font-fc-mono text-fc-sm text-fc-fg-muted">7f3a9c21</code>
+        <SettingsRow
+            label="Epoch"
+            description="Changes when Nook restarts and replays are re-anchored."
+            stacked
+        >
+            <SecretField value="7f3a9c21" sensitive={false} class="w-full" />
         </SettingsRow>
 
         <SettingsRow label="Outbox" description="Events held locally until the socket comes back.">

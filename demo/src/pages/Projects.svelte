@@ -140,7 +140,7 @@
                     <option value="name">Sort by name</option>
                     <option value="hours">Sort by hours</option>
                 </Select>
-                <Button variant="outline" icon="solar:filter-linear" onclick={() => (filtersOpen = true)}>
+                <Button variant="outline" icon={icons.filter} onclick={() => (filtersOpen = true)}>
                     Filters
                 </Button>
             </div>
@@ -224,9 +224,12 @@
                         </div>
                         <div class="flex items-center justify-between gap-3">
                             <span class="text-fc-sm tabular-nums text-fc-fg-muted">{project.hours} h tracked</span>
+                            <!-- `lg` and not the `sm` used in the table above: CHARTE §7 makes
+                                 `sm` a desktop-density exception, and this card is the phone
+                                 layout where Delete is the only control in the row. -->
                             <Button
                                 variant="ghost-danger"
-                                size="sm"
+                                size="lg"
                                 icon={icons.remove}
                                 aria-label="Delete {project.name}"
                                 onclick={() => askDelete(project)}
@@ -288,8 +291,8 @@
     title="Delete {pendingDelete?.name ?? 'this project'}?"
     description="Its tracked hours stay in the space history, but the project disappears from every list."
     confirmLabel="Delete project"
-    onconfirm={confirmDelete}
-    oncancel={() => (pendingDelete = null)}
+    onConfirm={confirmDelete}
+    onCancel={() => (pendingDelete = null)}
 />
 
 <Drawer bind:open={filtersOpen} title="Filters" description="Narrow the project list." showClose>
@@ -317,7 +320,7 @@
             >
                 Reset
             </Button>
-            <Button icon="mdi:check" class="flex-1" onclick={() => (filtersOpen = false)}>Apply</Button>
+            <Button icon={icons.check} class="flex-1" onclick={() => (filtersOpen = false)}>Apply</Button>
         </div>
     {/snippet}
 </Drawer>

@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { HTMLAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
     import Card from '../atoms/Card.svelte';
 
@@ -10,8 +11,9 @@
         bare = false,
         bodyClass = '',
         class: className = '',
-        children
-    }: {
+        children,
+        ...rest
+    }: HTMLAttributes<HTMLElement> & {
         title?: string;
         description?: string;
         actions?: Snippet;
@@ -24,7 +26,7 @@
     const body = $derived(twMerge('flex flex-col gap-4', bodyClass));
 </script>
 
-<section class={twMerge('flex flex-col gap-4', className)}>
+<section class={twMerge('flex flex-col gap-4', className)} {...rest}>
     {#if title || description || actions}
         <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div class="flex min-w-0 flex-col gap-1">

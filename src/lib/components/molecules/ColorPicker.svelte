@@ -12,6 +12,7 @@
         showLabels = false,
         size = 'md',
         name,
+        label,
         onSelect,
         class: className = '',
         ...rest
@@ -22,6 +23,7 @@
         showLabels?: boolean;
         size?: Size;
         name?: string;
+        label?: string;
         onSelect?: (color: string) => void;
         class?: string;
     } = $props();
@@ -50,9 +52,16 @@
         swatchEls[index]?.focus();
     }
 
+    /*
+     * An unselected group has no anchor to step from, so a forward key opens on the first
+     * swatch and a backward key on the last — the plain modulo landed both on index 0,
+     * which made ArrowLeft look broken until something was already selected.
+     */
     function move(delta: number) {
-        if (colors.length === 0) return;
-        select(selectedIndex < 0 ? 0 : (selectedIndex + delta + colors.length) % colors.length);
+        const n = colors.length;
+        if (n === 0) return;
+        if (selectedIndex < 0) return select(delta > 0 ? 0 : n - 1);
+        select((selectedIndex + delta + n) % n);
     }
 
     function handleKeydown(event: KeyboardEvent) {
@@ -80,9 +89,10 @@
 </script>
 
 <div
+    class={twMerge('flex flex-wrap items-start gap-1', className)}
     {...rest}
     role="radiogroup"
-    class={twMerge('flex flex-wrap items-start gap-1', className)}
+    aria-label={label}
     onkeydown={handleKeydown}
 >
     {#each colors as color, i}

@@ -13,7 +13,7 @@
         options = [],
         value = $bindable(''),
         name,
-        label = 'Options',
+        label,
         onSelect,
         class: className = '',
         ...rest
@@ -39,12 +39,17 @@
         cards[index]?.focus();
     }
 
+    /*
+     * An unselected group has no anchor to step from, so a forward key opens on the first
+     * card and a backward key on the last; stepping from index 0 either way skipped the
+     * first card entirely on ArrowRight. Disabled options are stepped over, not landed on.
+     */
     function move(delta: number) {
-        if (options.length === 0) return;
-        const from = selectedIndex < 0 ? 0 : selectedIndex;
-        /* Skip disabled options rather than landing on one and going nowhere. */
-        for (let step = 1; step <= options.length; step++) {
-            const next = (from + delta * step + options.length * step) % options.length;
+        const n = options.length;
+        if (n === 0) return;
+        const start = selectedIndex < 0 ? (delta > 0 ? 0 : n - 1) : (selectedIndex + delta + n) % n;
+        for (let step = 0; step < n; step++) {
+            const next = (start + delta * step + n * n) % n;
             if (!options[next]?.disabled) return select(next);
         }
     }
@@ -74,11 +79,11 @@
 </script>
 
 <div
+    class={twMerge('flex flex-wrap gap-2', className)}
     {...rest}
     role="radiogroup"
     aria-label={label}
     onkeydown={handleKeydown}
-    class={twMerge('flex flex-wrap gap-2', className)}
 >
     {#each options as option, i (option.value)}
         {@const selected = i === selectedIndex}

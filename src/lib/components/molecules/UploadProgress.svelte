@@ -1,5 +1,7 @@
 <script lang="ts">
+    import type { HTMLAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
+    import { icons } from '../../icons.js';
     import IconButton from '../atoms/IconButton.svelte';
     import Spinner from '../atoms/Spinner.svelte';
 
@@ -18,8 +20,9 @@
         onCancel,
         onRetry,
         showTotal = true,
-        class: className = ''
-    }: {
+        class: className = '',
+        ...rest
+    }: HTMLAttributes<HTMLDivElement> & {
         items: Item[];
         onCancel?: (id: string) => void;
         onRetry?: (id: string) => void;
@@ -67,7 +70,7 @@
 </script>
 
 {#if items.length > 0}
-    <div class={classes}>
+    <div class={classes} {...rest}>
         <ul class="flex flex-col gap-2">
             {#each items as item (item.id)}
                 <li class={twMerge('rounded-fc-md border p-3', rowTone(item.status))}>
@@ -77,13 +80,13 @@
                                 <Spinner size="sm" />
                             {:else if item.status === 'done'}
                                 <span class="text-fc-success">
-                                    <iconify-icon icon="mdi:check" width="18" height="18" class="block"
+                                    <iconify-icon icon={icons.check} width="18" height="18" class="block"
                                     ></iconify-icon>
                                 </span>
                             {:else if item.status === 'error'}
                                 <span class="text-fc-danger">
                                     <iconify-icon
-                                        icon="solar:danger-triangle-linear"
+                                        icon={icons.warning}
                                         width="18"
                                         height="18"
                                         class="block"
@@ -92,7 +95,7 @@
                             {:else}
                                 <span class="text-fc-fg-muted">
                                     <iconify-icon
-                                        icon="solar:clock-circle-linear"
+                                        icon={icons.clock}
                                         width="18"
                                         height="18"
                                         class="block"
@@ -113,7 +116,7 @@
                                 class="border-transparent text-fc-fg-muted hover:text-fc-fg"
                                 onclick={() => onRetry?.(item.id)}
                             >
-                                <iconify-icon icon="solar:refresh-linear" width="18" height="18" class="block"
+                                <iconify-icon icon={icons.refresh} width="18" height="18" class="block"
                                 ></iconify-icon>
                             </IconButton>
                         {/if}
@@ -125,7 +128,7 @@
                                 class="border-transparent text-fc-fg-muted hover:text-fc-fg"
                                 onclick={() => onCancel?.(item.id)}
                             >
-                                <iconify-icon icon="mdi:close" width="18" height="18" class="block"></iconify-icon>
+                                <iconify-icon icon={icons.close} width="18" height="18" class="block"></iconify-icon>
                             </IconButton>
                         {/if}
                     </div>

@@ -6,16 +6,17 @@
         ConfirmModal,
         Input,
         Select,
+        SettingsRow,
         SettingsSection,
         Table,
         icons
     } from '@facile/lib';
+    import { currentUser, roleLabel, roleTone, wait, type Member, type Role } from '../../data.js';
 
-    type Role = 'owner' | 'admin' | 'member';
-    type Member = { id: string; name: string; email: string; role: Role; joined: string };
+    type TeamMember = Member & { joined: string };
 
-    let members = $state<Member[]>([
-        { id: 'm1', name: 'Camille', email: 'camille@facile.studio', role: 'owner', joined: 'Mar 2024' },
+    let members = $state<TeamMember[]>([
+        { id: 'm1', name: currentUser.name, email: currentUser.email, role: 'owner', joined: 'Mar 2024' },
         { id: 'm2', name: 'Sacha', email: 'sacha@facile.studio', role: 'admin', joined: 'Jun 2024' },
         { id: 'm3', name: 'Noor', email: 'noor@facile.studio', role: 'member', joined: 'Jan 2026' }
     ]);
@@ -25,10 +26,8 @@
     let inviteEmail = $state('');
     let inviteRole = $state<Role>('member');
 
-    let removeTarget = $state<Member | null>(null);
+    let removeTarget = $state<TeamMember | null>(null);
     let removeOpen = $state(false);
-
-    const roleTone = (role: Role) => (role === 'owner' ? 'owner' : role === 'admin' ? 'admin' : 'neutral');
 
     function invite(e: Event) {
         e.preventDefault();
@@ -39,7 +38,7 @@
     }
 
     async function remove() {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await wait(500);
         members = members.filter((m) => m.id !== removeTarget?.id);
         removeTarget = null;
     }
@@ -72,7 +71,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td><Badge tone={roleTone(member.role)}>{member.role}</Badge></td>
+                        <td><Badge tone={roleTone[member.role]}>{roleLabel[member.role]}</Badge></td>
                         <td class="whitespace-nowrap text-fc-fg-muted">{member.joined}</td>
                         <td class="text-right">
                             {#if member.role !== 'owner'}
@@ -118,25 +117,16 @@
     {#if invites.length > 0}
         <SettingsSection title="Pending invites" description="Unaccepted after 7 days, they expire.">
             {#each invites as invite (invite.email)}
-                <div
-                    class="flex items-center justify-between gap-3 border-t border-fc-border py-3 first:border-t-0 first:pt-0 last:pb-0"
-                >
-                    <div class="flex min-w-0 flex-col">
-                        <span class="truncate text-fc-sm text-fc-fg">{invite.email}</span>
-                        <span class="text-fc-xs text-fc-fg-muted">Sent {invite.sent}</span>
-                    </div>
-                    <div class="flex shrink-0 items-center gap-2">
-                        <Badge>{invite.role}</Badge>
-                        <Button
-                            variant="ghost-danger"
-                            size="sm"
-                            icon={icons.close}
-                            onclick={() => (invites = invites.filter((i) => i.email !== invite.email))}
-                        >
-                            Cancel
-                        </Button>
-                    </div>
-                </div>
+                <SettingsRow label={invite.email} description="Sent {invite.sent}">
+                    <Badge tone={roleTone[invite.role]}>{roleLabel[invite.role]}</Badge>
+                    <Button
+                        variant="ghost-danger"
+                        icon={icons.close}
+                        onclick={() => (invites = invites.filter((i) => i.email !== invite.email))}
+                    >
+                        Cancel
+                    </Button>
+                </SettingsRow>
             {/each}
         </SettingsSection>
     {/if}
@@ -149,5 +139,5 @@
     description={`${removeTarget?.name ?? ''} loses access to Acme Studio immediately. Their entries and files stay — they are just no longer theirs to open.`}
     confirmLabel="Remove"
     cancelLabel="Keep access"
-    onconfirm={remove}
+    onConfirm={remove}
 />

@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { HTMLAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
     import Avatar from '../atoms/Avatar.svelte';
     import Badge from '../atoms/Badge.svelte';
@@ -9,6 +10,9 @@
     type Orientation = 'vertical' | 'horizontal';
     type Meta = { label: string; value: string };
 
+    /* `role` is the member's role in the workspace, not an ARIA role — the DOM attribute of
+       the same name is dropped from the passthrough so the two cannot collide into an
+       intersection type no caller can satisfy. */
     let {
         name,
         email,
@@ -19,8 +23,9 @@
         actions,
         children,
         orientation = 'horizontal',
-        class: className = ''
-    }: {
+        class: className = '',
+        ...rest
+    }: Omit<HTMLAttributes<HTMLDivElement>, 'role'> & {
         name: string;
         email?: string;
         avatar?: string;
@@ -53,7 +58,7 @@
     );
 </script>
 
-<Card class={classes}>
+<Card class={classes} {...rest}>
     <div class={identityClasses}>
         <span class="relative inline-flex shrink-0">
             <Avatar src={avatar} alt={name} {name} size="lg" />

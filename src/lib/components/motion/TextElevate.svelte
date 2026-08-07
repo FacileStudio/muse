@@ -19,7 +19,7 @@
         class?: string;
     } = $props();
 
-    let inner: HTMLDivElement | null = $state(null);
+    let inner: HTMLSpanElement | null = $state(null);
     let mounted = false;
 
     $effect(() => {
@@ -27,23 +27,34 @@
         const shown = visible;
         if (!node) return;
 
+        gsap.killTweensOf(node);
+
         if (prefersReducedMotion()) {
             gsap.set(node, { y: 0, opacity: shown ? 1 : 0 });
             mounted = true;
             return;
         }
 
-        gsap.killTweensOf(node);
         if (!shown) {
             gsap.to(node, { y: '100%', opacity: 0, duration: 0.25, ease: 'power3.in' });
-            return;
+        } else {
+            gsap.fromTo(
+                node,
+                { y: '100%', opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration,
+                    stagger,
+                    delay: mounted ? 0.05 : delay,
+                    ease: 'power3.out'
+                }
+            );
+            mounted = true;
         }
-        gsap.fromTo(
-            node,
-            { y: '100%', opacity: 0 },
-            { y: 0, opacity: 1, duration, stagger, delay: mounted ? 0.05 : delay, ease: 'power3.out' }
-        );
-        mounted = true;
+
+        /* A tween left running against a detached node keeps ticking until it completes. */
+        return () => gsap.killTweensOf(node);
     });
 </script>
 

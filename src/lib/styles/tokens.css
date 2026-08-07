@@ -20,7 +20,10 @@
 }
 
 @theme {
-  /* colors → bg-fc-*, text-fc-*, -fc-* — chroma-zero OKLCH, matches shipped suite apps */
+  /* colors → bg-fc-*, text-fc-*, -fc-* — chroma-zero OKLCH, matches shipped suite apps.
+     `page` and `bg` carry the same value today and are kept separate on purpose: `page` is
+     the document canvas, `bg` is a component's own default fill, and an app that wants a
+     tinted canvas should be able to move one without the other. */
   --color-fc-page: oklch(1 0 0);
   --color-fc-bg: oklch(1 0 0);
   --color-fc-surface: oklch(0.97 0 0);
@@ -34,11 +37,25 @@
   --color-fc-danger: oklch(0.55 0.22 29);
   --color-fc-danger-fg: oklch(1 0 0);
   --color-fc-success: oklch(0.52 0.12 150);
-  --color-fc-warning: oklch(0.58 0.13 75);
-  --color-fc-owner: oklch(0.58 0.14 64);
+  /* `info` is a status colour like success and warning, not a second accent. It exists
+     because without it `Alert tone="info"` and `StatusDot tone="info"` had to borrow
+     `fc-accent` and rendered identically to `tone="accent"` — a tone that is
+     indistinguishable from another tone is not a tone. */
+  --color-fc-info: oklch(0.52 0.14 255);
+  /* Lightness here is set by the tinted-text case, not by taste: these are read as
+     `text-fc-warning` on `bg-fc-warning/10`, which is the *lowest*-contrast use any
+     semantic token gets. At the previous 0.58 both landed at 4.0–4.1:1 and missed AA.
+     0.55 clears 4.5:1 on page, on `fc-component`, and on their own 10% tint. */
+  --color-fc-warning: oklch(0.55 0.13 75);
+  --color-fc-owner: oklch(0.55 0.13 64);
   --color-fc-admin: oklch(0.5 0.16 292);
 
-  /* radii → rounded-fc-* */
+  /* Scrim behind overlays. A token rather than a literal because `Modal` and `Drawer`
+     both draw one and they must never disagree. */
+  --color-fc-scrim: oklch(0 0 0 / 50%);
+
+  /* radii → rounded-fc-* — `pill` and `full` are the same value, kept as two names so
+     "a pill-shaped button" and "a circular avatar" read differently at the call site. */
   --radius-fc-xs: 4px;
   --radius-fc-sm: 6px;
   --radius-fc-md: 8px;
@@ -72,8 +89,11 @@
      user already reads code in. */
   --font-fc-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
 
-  /* motion → ease-fc */
-  --ease-fc: cubic-bezier(0.65, 0, 0.35, 1);
+  /* motion → ease-fc. This is the CSS spelling of GSAP's `power3.inOut`, the library's
+     default JS ease, so a consumer's CSS transition lands on the same curve as a muse
+     animation running beside it. It previously held easeInOutCubic (`power2.inOut`), which
+     meant the two halves of the system eased differently. */
+  --ease-fc: cubic-bezier(0.77, 0, 0.175, 1);
 
   /* containers → container-fc-* via max-w-fc-* */
   --container-fc-sm: 600px;
@@ -81,7 +101,8 @@
   --container-fc-lg: 960px;
   --container-fc-xl: 1200px;
 
-  /* nav sidebar widths — mirrored in SideBar.svelte GSAP targets */
+  /* nav sidebar widths — SideBar reads these off getComputedStyle for its width tween, so
+     these two values are the single source of truth and changing them reaches the animation */
   --width-fc-nav-collapsed: 68px;
   --width-fc-nav-expanded: 220px;
 
@@ -96,6 +117,22 @@
      reflowing them. */
   --spacing-fc-nav-content: 196px;
 }
+
+/*
+ * Stacking order. Tailwind's `z-*` utilities carry the numbers; this is the contract
+ * that says which number a thing gets, because "pick one and hope" is how a dropdown
+ * ends up tied with the mobile nav bar and resolved by DOM order.
+ *
+ *   z-0   in-flow content, and anything establishing a local context (Tabs, Mosaique)
+ *   z-10  chart overlays that must clear their own svg (ChartTooltip)
+ *   z-30  sticky page chrome (Topbar)
+ *   z-40  surfaces floating out of a trigger (SpaceSwitcher's dropdown)
+ *   z-50  viewport-fixed chrome (MobileNav)
+ *   z-[100] full-page curtain (Rideau)
+ *
+ * `Modal`, `ConfirmModal` and `Drawer` are absent by design: `<dialog>.showModal()`
+ * promotes them to the browser's top layer, which sits above every z-index there is.
+ */
 
 /*
  * Chart series — Sablier's identity palette, deepened so it stays legible as a chart mark.
@@ -122,6 +159,13 @@
  *   1. OS preference, automatic — nothing to wire up.
  *   2. An explicit `.dark` / `.light` class on <html>, which always wins over the OS.
  * The `:not(.light)` guard is what lets a user force light while the OS says dark.
+ *
+ * The two blocks below are deliberately byte-identical duplicates. Plain CSS has no way
+ * to share a declaration block between a media query and a class selector, and the one
+ * mechanism that would collapse them — `light-dark()` — needs Chrome 123, ahead of the
+ * Chrome 111 floor Tailwind v4 targets. **Edit both or neither** — `tokens.test.ts` asserts
+ * they stay identical, so drifting one is a test failure rather than a dark-mode bug nobody
+ * notices for a month.
  */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -139,6 +183,7 @@
     --color-fc-ring: oklch(0.6 0 0);
     --color-fc-danger: oklch(0.65 0.22 29);
     --color-fc-success: oklch(0.72 0.14 150);
+    --color-fc-info: oklch(0.72 0.13 255);
     --color-fc-warning: oklch(0.8 0.13 75);
     --color-fc-owner: oklch(0.78 0.13 64);
     --color-fc-admin: oklch(0.75 0.14 292);
@@ -164,6 +209,7 @@
   --color-fc-ring: oklch(0.6 0 0);
   --color-fc-danger: oklch(0.65 0.22 29);
   --color-fc-success: oklch(0.72 0.14 150);
+  --color-fc-info: oklch(0.72 0.13 255);
   --color-fc-warning: oklch(0.8 0.13 75);
   --color-fc-owner: oklch(0.78 0.13 64);
   --color-fc-admin: oklch(0.75 0.14 292);
@@ -208,5 +254,23 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-fc-title);
     letter-spacing: -0.02em;
+  }
+
+  /*
+   * Reduced motion, globally. Every JS animation in the library already checks
+   * prefersReducedMotion() before it tweens, but that does nothing for the CSS side —
+   * `transition-colors`, `transition-all`, `animate-spin` and every consumer-authored
+   * transition ran at full speed regardless. Durations are collapsed rather than set to
+   * `none` so transitionend/animationend still fire and nothing that waits on them hangs.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

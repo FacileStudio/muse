@@ -19,26 +19,40 @@
     } = $props();
 
     let el: HTMLDivElement | null = $state(null);
-    let tween: ReturnType<typeof gsap.fromTo> | null = null;
 
+    /*
+        Two things this effect has to get right.
+
+        {#key} swaps the node out from under an in-flight tween, so the teardown has to kill
+        it — otherwise the old, detached div keeps being animated to completion.
+
+        And `clearProps` is not cosmetic. gsap leaves `transform: translate(0px, 0px)` on the
+        node when the tween lands, and *any* transform makes an element the containing block
+        for `position: fixed` descendants. A fixed overlay rendered inside the routed page —
+        `Rideau`, a fixed toolbar, anything full-bleed — then anchors to this wrapper instead
+        of the viewport and starts overflowing its scroll container. Wiping the transform at
+        the end costs nothing and keeps the wrapper transparent to layout.
+    */
     $effect(() => {
-        if (!el) return;
-        tween?.kill();
+        const node = el;
+        if (!node) return;
+        gsap.killTweensOf(node);
         if (prefersReducedMotion()) {
-            gsap.set(el, { opacity: 1, y: 0 });
-            return;
+            gsap.set(node, { opacity: 1, clearProps: 'transform' });
+        } else {
+            gsap.fromTo(
+                node,
+                { opacity: 0, y: distance },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration,
+                    ease: 'power3.out',
+                    onComplete: () => gsap.set(node, { clearProps: 'transform' })
+                }
+            );
         }
-        tween = gsap.fromTo(
-            el,
-            { opacity: 0, y: distance },
-            {
-                opacity: 1,
-                y: 0,
-                duration,
-                ease: 'power3.out',
-                onComplete: () => (tween = null)
-            }
-        );
+        return () => gsap.killTweensOf(node);
     });
 </script>
 

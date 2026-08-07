@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
-    import { arcPath, chartColor, formatCompact, type ChartSlice } from '../../utils/chart.js';
+    import { TAU, arcPath, donutSegments, formatCompact, resize, type ChartSlice } from '../../utils/chart.js';
+    import { tweenProgress } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
+    import ChartTable from './ChartTable.svelte';
     import ChartTooltip from './ChartTooltip.svelte';
 
     let {
@@ -30,60 +30,48 @@
         class?: string;
     } = $props();
 
-    const TAU = Math.PI * 2;
     const LIFT = 4;
 
+    let w = $state(0);
     let hover = $state(-1);
     let sweep = $state(0);
     let started = false;
 
     const classes = $derived(twMerge('relative flex flex-col items-center gap-3', className));
 
+    const box = $derived(w > 0 ? Math.max(48, Math.min(size, w)) : size);
+
     const slices = $derived(data.filter((d) => Number.isFinite(d.value) && d.value > 0));
     const total = $derived(slices.reduce((sum, d) => sum + d.value, 0));
     const isEmpty = $derived(slices.length === 0 || total <= 0);
 
-    const cx = $derived(size / 2);
-    const rOuter = $derived(Math.max(6, size / 2 - LIFT));
+    const cx = $derived(box / 2);
+    const rOuter = $derived(Math.max(6, box / 2 - LIFT));
     const rInner = $derived(Math.max(0, rOuter - Math.max(2, thickness)));
     const gap = $derived(slices.length > 1 ? Math.min(0.12, 2 / Math.max(1, rOuter)) : 0);
 
-    const segments = $derived.by(() => {
-        const out: { label: string; value: number; frac: number; color: string; a0: number; a1: number; mid: number }[] = [];
-        if (isEmpty) return out;
-        let acc = 0;
-        for (let i = 0; i < slices.length; i++) {
-            const slice = slices[i];
-            const frac = slice.value / total;
-            const start = acc * TAU;
-            const end = (acc + frac) * TAU;
-            acc += frac;
-            const a0 = start + gap / 2;
-            const a1 = Math.max(a0, end - gap / 2);
-            out.push({
-                label: slice.label,
-                value: slice.value,
-                frac,
-                color: slice.color ?? chartColor(i),
-                a0,
-                a1,
-                mid: (start + end) / 2
-            });
-        }
-        return out;
-    });
+    const segments = $derived(donutSegments(slices, gap));
 
-    const wedges = $derived.by(() => {
+    const arcs = $derived.by(() => {
         const limit = TAU * sweep;
-        return segments.map((seg, i) => {
+        return segments.map((seg) => {
             const a0 = Math.min(seg.a0, limit);
             const a1 = Math.min(seg.a1, limit);
-            const lifted = hover === i;
+            const drawn = a1 - a0 > 0.0005;
             return {
-                d: a1 - a0 > 0.0005 ? arcPath(cx, cx, lifted ? rOuter + LIFT : rOuter, rInner, a0, a1) : '',
+                a0,
+                a1,
+                drawn,
+                d: drawn ? arcPath(cx, cx, rOuter, rInner, a0, a1) : '',
                 color: seg.color
             };
         });
+    });
+
+    /* Only the hovered wedge is re-pathed on pointermove; `arcs` never reads `hover`. */
+    const lifted = $derived.by(() => {
+        const arc = hover >= 0 ? arcs[hover] : undefined;
+        return arc?.drawn ? arcPath(cx, cx, rOuter + LIFT, rInner, arc.a0, arc.a1) : '';
     });
 
     const percent = (frac: number): string => `${Math.round(frac * 1000) / 10}%`;
@@ -102,13 +90,20 @@
             .join(', ')}`
     );
 
+    const tableRows = $derived(
+        segments.map((seg) => ({
+            label: seg.label,
+            cells: [valueFormat(seg.value), percent(seg.frac)]
+        }))
+    );
+
     const tip = $derived.by(() => {
         const seg = hover >= 0 ? segments[hover] : undefined;
         if (!seg) return { x: 0, y: 0, rows: [] as { name: string; value: string; color?: string }[], title: '' };
         const r = (rOuter + rInner) / 2;
         return {
             x: cx + r * Math.sin(seg.mid),
-            y: Math.max(14, Math.min(size - 14, cx - r * Math.cos(seg.mid))),
+            y: Math.max(14, Math.min(box - 14, cx - r * Math.cos(seg.mid))),
             title: seg.label,
             rows: [{ name: percent(seg.frac), value: valueFormat(seg.value), color: seg.color }]
         };
@@ -117,46 +112,35 @@
     $effect(() => {
         if (started || isEmpty) return;
         started = true;
-        if (!animate || prefersReducedMotion()) {
-            sweep = 1;
-            return;
-        }
-        const proxy = { t: 0 };
-        gsap.to(proxy, {
-            t: 1,
-            duration: 0.6,
-            ease: 'power3.out',
-            onUpdate: () => (sweep = proxy.t)
-        });
+        tweenProgress(animate, (t) => (sweep = t));
     });
 </script>
 
-<div class={classes}>
+<div class={classes} use:resize={(width) => (w = width)}>
     {#if isEmpty}
         <div
             class="flex w-full items-center justify-center text-fc-sm text-fc-fg-muted"
-            style:min-height="{size}px"
+            style:min-height="{box}px"
         >
             {emptyLabel}
         </div>
     {:else}
-        <div class="relative" style:width="{size}px" style:height="{size}px">
+        <div class="relative" style:width="{box}px" style:height="{box}px">
             <svg
-                width={size}
-                height={size}
-                viewBox="0 0 {size} {size}"
-                role="img"
-                aria-label={summary}
+                width={box}
+                height={box}
+                viewBox="0 0 {box} {box}"
+                aria-hidden="true"
                 focusable="false"
                 class="block"
                 onpointerleave={() => (hover = -1)}
                 onpointercancel={() => (hover = -1)}
             >
-                {#each wedges as wedge, i (i)}
-                    {#if wedge.d}
+                {#each arcs as arc, i (i)}
+                    {#if arc.drawn}
                         <path
-                            d={wedge.d}
-                            fill={wedge.color}
+                            d={hover === i ? lifted : arc.d}
+                            fill={arc.color}
                             aria-hidden="true"
                             onpointerenter={() => (hover = i)}
                             onpointermove={() => (hover = i)}
@@ -182,26 +166,6 @@
             <ChartLegend items={legendItems} class="justify-center" />
         {/if}
 
-        <div class="sr-only">
-            <table>
-                <caption>{summary}</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Slice</th>
-                        <th scope="col">Value</th>
-                        <th scope="col">Share</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each segments as seg, i (i)}
-                        <tr>
-                            <th scope="row">{seg.label}</th>
-                            <td>{valueFormat(seg.value)}</td>
-                            <td>{percent(seg.frac)}</td>
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
-        </div>
+        <ChartTable caption={summary} head="Slice" columns={['Value', 'Share']} rows={tableRows} />
     {/if}
 </div>

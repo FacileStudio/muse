@@ -1,5 +1,6 @@
 <script lang="ts">
     import { gsap } from 'gsap';
+    import type { HTMLAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import { resize } from '../../utils/chart.js';
@@ -16,20 +17,22 @@
     let {
         items = [],
         value = $bindable(''),
-        onchange,
+        onChange,
         panelId,
         label = 'Sections',
-        class: className = ''
-    }: {
+        class: className = '',
+        ...rest
+    }: HTMLAttributes<HTMLDivElement> & {
         items?: Item[];
         value?: string;
-        onchange?: (id: string) => void;
+        onChange?: (id: string) => void;
         panelId?: string;
         label?: string;
         class?: string;
     } = $props();
 
-    let strip: HTMLElement | null = $state(null);
+    const uid = $props.id();
+
     let indicator: HTMLElement | null = $state(null);
     let placed = false;
 
@@ -40,7 +43,7 @@
     function select(item: Item, scroll = true) {
         if (item.disabled) return;
         value = item.id;
-        onchange?.(item.id);
+        onChange?.(item.id);
         if (scroll) tabs[item.id]?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
 
@@ -67,9 +70,21 @@
         gsap.to(indicator, { ...to, duration: 0.3, ease: 'power3.inOut' });
     }
 
+    /*
+     * The pill follows the rendered width of a tab, so the dependency has to be everything
+     * that changes that width — a relabelled tab or a badge appearing moves the target
+     * without moving `items.length`, which is what the old effect watched and why the pill
+     * went stale on any in-place edit.
+     */
+    const layout = $derived(
+        `${value}#${items.map((i) => `${i.id}:${i.label}:${i.icon ?? ''}:${i.badge ?? ''}`).join('|')}`
+    );
+
+    let lastLayout = '';
+
     $effect(() => {
-        value;
-        items.length;
+        if (layout === lastLayout) return;
+        lastLayout = layout;
         place();
     });
 
@@ -91,13 +106,13 @@
 </script>
 
 <div
-    bind:this={strip}
+    use:resize={() => place(false)}
+    class={twMerge('relative flex w-full items-center gap-1 overflow-x-auto', className)}
+    {...rest}
     role={routed ? undefined : 'tablist'}
     aria-label={routed ? undefined : label}
     aria-orientation={routed ? undefined : 'horizontal'}
     onkeydown={routed ? undefined : keydown}
-    use:resize={() => place(false)}
-    class={twMerge('relative flex w-full items-center gap-1 overflow-x-auto', className)}
 >
     <span
         bind:this={indicator}
@@ -150,7 +165,7 @@
                 bind:this={tabs[item.id]}
                 type="button"
                 role="tab"
-                id="{item.id}-tab"
+                id="{uid}-{item.id}-tab"
                 aria-selected={active}
                 aria-controls={panelId}
                 tabindex={active ? 0 : -1}
