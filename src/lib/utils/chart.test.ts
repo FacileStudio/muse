@@ -1,5 +1,6 @@
 import { expect, test } from 'bun:test';
 import {
+    arcCorner,
     arcPath,
     areaPath,
     axisPadLeft,
@@ -66,6 +67,30 @@ test('monotone smoothing never overshoots the samples', () => {
 
 test('arcPath closes a full circle without collapsing', () => {
     expect(arcPath(50, 50, 40, 20, 0, Math.PI * 2)).toStartWith('M');
+});
+
+test('arcCorner never lets the fillets of one segment meet', () => {
+    /* Half the radial thickness is the ceiling however wide the slice is… */
+    expect(arcCorner(40, 20, 0, Math.PI, 999)).toBe(10);
+    /* …and a narrow slice is capped by its own inner edge instead. */
+    const narrow = arcCorner(40, 20, 0, 0.2, 999);
+    expect(narrow).toBeGreaterThan(0);
+    expect(narrow).toBeLessThan(10);
+    expect(2 * Math.asin(narrow / (20 + narrow))).toBeLessThanOrEqual(0.2 + 1e-9);
+    /* A full ring has no corners, and neither has a pie wedge. */
+    expect(arcCorner(40, 20, 0, TAU, 4)).toBe(0);
+    expect(arcCorner(40, 0, 0, 1, 4)).toBe(0);
+});
+
+test('arcPath rounds inside the ring it was given', () => {
+    const d = arcPath(50, 50, 40, 20, 0, 1, 4);
+    expect(d).toStartWith('M');
+    expect(d).toEndWith('Z');
+    expect(d).not.toContain('NaN');
+    const points = d.match(/-?\d+(\.\d+)?/g)!.map(Number);
+    expect(points.every((n) => n >= -1 && n <= 91)).toBe(true);
+    /* corner 0 is the old sharp path, byte for byte. */
+    expect(arcPath(50, 50, 40, 20, 0, 1, 0)).toBe(arcPath(50, 50, 40, 20, 0, 1));
 });
 
 test('chartColor wraps through six fixed slots', () => {
@@ -160,7 +185,7 @@ test('barGeometry survives a degenerate box and a flat-zero series', () => {
     expect(none.base).toBe(0);
 });
 
-test('barGeometry rounds only the outer end of a stack', () => {
+test('barGeometry squares a stack only where it meets the baseline', () => {
     const stack = bars(
         [
             { name: 'a', data: [5, 5] },
@@ -169,14 +194,17 @@ test('barGeometry rounds only the outer end of a stack', () => {
         true
     );
     expect(stack.specs).toHaveLength(4);
+    /* One grounded segment per category, rounded at the top only; the segment above it
+       floats between two gaps and is rounded all round. */
     expect(stack.specs.filter((s) => s.corner === 'top')).toHaveLength(2);
-    expect(stack.specs.filter((s) => s.corner === 'none')).toHaveLength(2);
+    expect(stack.specs.filter((s) => s.corner === 'all')).toHaveLength(2);
     expect(stack.specs.every((s) => s.size > 0 && Number.isFinite(s.near))).toBe(true);
+    expect(bars([{ name: 'a', data: [5, 5] }]).specs.every((s) => s.corner === 'top')).toBe(true);
 });
 
 test('barPath emits a closed path per corner style and nothing for a zero box', () => {
     expect(barPath({ x: 0, y: 0, w: 0, h: 10, corner: 'top' })).toBe('');
-    for (const corner of ['top', 'bottom', 'left', 'right', 'none'] as const) {
+    for (const corner of ['top', 'bottom', 'left', 'right', 'all', 'none'] as const) {
         const d = barPath({ x: 1, y: 2, w: 10, h: 20, corner });
         expect(d).toStartWith('M');
         expect(d).toEndWith('Z');
