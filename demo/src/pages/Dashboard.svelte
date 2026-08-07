@@ -25,7 +25,7 @@
         Switch,
         chartColor,
         icons
-    } from '@facile/lib';
+    } from '@facile/muse';
     import { spaces, wait } from '../data.js';
 
     let notify = $state(true);

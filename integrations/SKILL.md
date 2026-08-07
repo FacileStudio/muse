@@ -13,8 +13,8 @@ description: >
 
 Visual contract (Claude Code): `~/.claude/skills/muse/CHARTE.md`
 Visual contract (Codex): `~/.codex/muse/CHARTE.md`
-Package name when consumed: `@facile/lib`
-Source of truth in a consumer app: `node_modules/@facile/lib/src/lib/`
+Package name when consumed: `@facile/muse`
+Source of truth in a consumer app: `node_modules/@facile/muse/src/lib/`
 Repo: `https://github.com/FacileStudio/muse`
 
 ## When to apply
@@ -28,17 +28,17 @@ Opt-out triggers: "no muse", "skip lib", "raw svelte" → dormant for the sessio
 
 - Read `CHARTE.md` (installed beside this file) first — the visual contract: colours, type,
   spacing, motion, a11y, and the invariants that make UI look like the suite
-- Read `node_modules/@facile/lib/src/lib/index.ts` — reuse existing components before
+- Read `node_modules/@facile/muse/src/lib/index.ts` — reuse existing components before
   creating new ones; if the package is not installed, read the table below
 - Generate Svelte 5 + SvelteKit only; runes API: `$state`, `$props`, `$derived`, `$effect`; TypeScript on
-- Style with Tailwind v4 token utilities only. Token source: `node_modules/@facile/lib/src/lib/styles/tokens.css`
+- Style with Tailwind v4 token utilities only. Token source: `node_modules/@facile/muse/src/lib/styles/tokens.css`
 - GSAP for animations; always respect `prefers-reduced-motion`
 - Mobile-first: min width 360px, hit targets ≥ 44px, use `100dvh` not `100vh`
 - Never hardcode hex — use tokens or ask before adding a new one
 
 ## What is in the box
 
-Import everything flat from `@facile/lib`; the tier directories are import paths only.
+Import everything flat from `@facile/muse`; the tier directories are import paths only.
 
 | Tier | Components |
 |---|---|
@@ -167,7 +167,7 @@ destructive row actions** (delete in a table or member list) — muted at rest, 
 - **Solar `linear`** for all UI chrome — `solar:settings-linear`, `solar:folder-linear`, …
 - **`bold-duotone` is for an app's brand mark only** (what you pass to `SideBar`'s `icon` prop). Never for nav or action icons.
 - **MDI for plus, close and chevrons** — `mdi:plus` `mdi:close` `mdi:chevron-right|left|up|down`. Solar's versions of those read muddy at 16px.
-- Prefer a key from `@facile/lib`'s `icons` map over inlining a name; add a key there if missing.
+- Prefer a key from `@facile/muse`'s `icons` map over inlining a name; add a key there if missing.
 - Icons inherit `currentColor` — do not give them their own colour class, or inverted active states will not flip them.
 - Always pass `width` **and** `height` plus `class="block"`. `<iconify-icon>` is inline by default and its baseline descender knocks icon/label pairs out of alignment.
 - Sizes: 16 inline · 18 nav rows · 24 brand mark.
@@ -178,7 +178,7 @@ destructive row actions** (delete in a table or member list) — muted at rest, 
 Stock `tailwind-merge` does not know `fc-*` is a custom scale, so it classifies `text-fc-sm`
 as a *colour* and silently deletes `text-fc-fg` from the same string — yielding black-on-black
 buttons and invisible avatar initials, with no error. Inside the library import
-`twMerge` from `../../utils/cn.js`; in a consumer app import `cn` from `@facile/lib`.
+`twMerge` from `../../utils/cn.js`; in a consumer app import `cn` from `@facile/muse`.
 Add any new `fc-*` token to the matching list in `src/lib/utils/cn.ts` or you reintroduce this.
 
 **2. Tailwind v4 does not scan `node_modules`.** A consumer needs both lines in `app.css`,
@@ -186,8 +186,8 @@ or every muse component renders structurally correct and completely unstyled:
 
 ```css
 @import 'tailwindcss';
-@import '@facile/lib/styles';
-@source '../node_modules/@facile/lib/src';
+@import '@facile/muse/styles';
+@source '../node_modules/@facile/muse/src';
 ```
 
 **3. `iconify-icon` is not a muse dependency.** `Button`, `NavButton`, `Tabs`, `OptionCards`,
@@ -246,16 +246,16 @@ are not substitutes. Run `mise run verify` before pushing.
 ## Consuming from a Facile tool
 
 ```bash
-bun add github:FacileStudio/muse
+bun add "github:FacileStudio/muse#v0.2.0"
 ```
 
 ```svelte
 <script lang="ts">
-  import { Button, SideBar, icons } from '@facile/lib';
+  import { Button, SideBar, icons } from '@facile/muse';
 </script>
 ```
 
-Root layout once: `import '@facile/lib/styles';`
+Root layout once: `import '@facile/muse/styles';`
 Consumer app needs `@tailwindcss/vite` (or PostCSS) configured, plus the `@source` line above.
 
 An app that already has its own palette should **alias `fc-*` onto its own tokens** in

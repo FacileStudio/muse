@@ -10,7 +10,7 @@
         SettingsSection,
         Table,
         icons
-    } from '@facile/lib';
+    } from '@facile/muse';
     import { currentUser, roleLabel, roleTone, wait, type Member, type Role } from '../../data.js';
 
     type TeamMember = Member & { joined: string };

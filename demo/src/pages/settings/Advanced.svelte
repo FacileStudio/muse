@@ -7,7 +7,7 @@
         SettingsRow,
         SettingsSection,
         icons
-    } from '@facile/lib';
+    } from '@facile/muse';
     import { wait } from '../../data.js';
 
     let exporting = $state(false);

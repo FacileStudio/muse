@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Divider, PageTransition, Tabs, icons } from '@facile/lib';
+    import { Divider, PageTransition, Tabs, icons } from '@facile/muse';
     import Profile from './settings/Profile.svelte';
     import Appearance from './settings/Appearance.svelte';
     import Notifications from './settings/Notifications.svelte';

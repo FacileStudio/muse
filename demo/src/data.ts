@@ -1,4 +1,4 @@
-import { USER_COLORS } from '@facile/lib';
+import { USER_COLORS } from '@facile/muse';
 
 export type Role = 'owner' | 'admin' | 'member';
 

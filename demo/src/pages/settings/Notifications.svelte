@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Alert, Select, SettingsRow, SettingsSection, Switch } from '@facile/lib';
+    import { Alert, Select, SettingsRow, SettingsSection, Switch } from '@facile/muse';
 
     let emailNotifications = $state(true);
     let mentions = $state(true);

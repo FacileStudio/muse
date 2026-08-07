@@ -355,7 +355,7 @@ icon stays inert unless the consumer registers the custom element.
 
 ### Icon library — `src/lib/icons.ts`
 
-Import via `import { icons } from '@facile/lib'`.
+Import via `import { icons } from '@facile/muse'`.
 
 **45 keys — 39 Solar, 6 MDI.** If a glyph you need is missing, add a key rather than inlining
 the string at the call site; that is what keeps the pack and style rules above from being
@@ -787,7 +787,7 @@ pure functions there, which is what makes them testable — `BarChart` and `Line
 table. `BarChart` is now 249. The entry tweens live in `charts/entry.ts`, deliberately
 separate so the test file never has to import gsap.
 
-The public subset re-exported from `@facile/lib` is `chartColor`, `formatCompact`,
+The public subset re-exported from `@facile/muse` is `chartColor`, `formatCompact`,
 `niceScale`, `linePath`, `areaPath`, `arcPath`, `tickStride` and `resize`, plus the
 `ChartSeries` / `ChartSlice` / `ChartScale` / `ChartLegendItem` / `ChartTipRow` / `ChartRow`
 types. Everything else is importable by path but not part of the API surface.

@@ -1,6 +1,6 @@
 {
-  "name": "@facile/lib",
-  "version": "0.1.0",
+  "name": "@facile/muse",
+  "version": "0.2.0",
   "description": "Svelte/SvelteKit component library for Facile tools",
   "type": "module",
   "svelte": "./src/lib/index.ts",
@@ -12,7 +12,9 @@
     },
     "./styles": "./src/lib/styles/tokens.css"
   },
-  "sideEffects": ["**/*.css"],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
     "src/lib",
     "CHARTE.md",
@@ -32,5 +34,12 @@
     "svelte-check": "^4.1.0",
     "typescript": "^5.7.0"
   },
-  "keywords": ["svelte", "sveltekit", "facile", "ui", "components", "tailwindcss"]
+  "keywords": [
+    "svelte",
+    "sveltekit",
+    "facile",
+    "ui",
+    "components",
+    "tailwindcss"
+  ]
 }

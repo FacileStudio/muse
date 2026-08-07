@@ -11,7 +11,7 @@
         StatusDot,
         Switch,
         icons
-    } from '@facile/lib';
+    } from '@facile/muse';
     import { wait } from '../../data.js';
 
     type State = 'off' | 'connecting' | 'connected' | 'reconnecting' | 'failed';

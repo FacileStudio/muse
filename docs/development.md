@@ -24,7 +24,7 @@ mise run verify       # all three, in that order: what CI runs
 proves every component *compiles* — template syntax, snippet misuse, an unknown attribute on a
 DOM element — and says nothing about whether the types agree. A prop typed `string` handed a
 `number` sails straight through it. `mise run check` is the type check, and it covers the demo
-too: `tsconfig.json` includes `demo/src/**` with a `paths` alias mapping `@facile/lib` to
+too: `tsconfig.json` includes `demo/src/**` with a `paths` alias mapping `@facile/muse` to
 `src/lib/index.ts`, mirroring the vite alias, so the demo's usage is checked against the
 library it aliases.
 
@@ -51,17 +51,17 @@ committing.
 mise run demo          # from the repo root → http://127.0.0.1:5183
 ```
 
-It resolves `@facile/lib` through a **vite alias**, not a dependency:
+It resolves `@facile/muse` through a **vite alias**, not a dependency:
 
 ```ts
 // demo/vite.config.ts
 resolve: {
-  alias: { '@facile/lib': fileURLToPath(new URL('../src/lib/index.ts', import.meta.url)) },
+  alias: { '@facile/muse': fileURLToPath(new URL('../src/lib/index.ts', import.meta.url)) },
   dedupe: ['svelte', 'gsap', 'tailwind-merge']
 }
 ```
 
-**Do not replace that with `"@facile/lib": "file:.."` in `demo/package.json`.** Bun copies the
+**Do not replace that with `"@facile/muse": "file:.."` in `demo/package.json`.** Bun copies the
 whole repo into `demo/node_modules` — including `demo/node_modules` itself — which recurses
 and dies with `ENOENT: failed copying files from cache to destination`. `link:..` is worse:
 bun reads it as a *global* link and symlinks `~/.bun/install/global`. The alias also needs
@@ -98,7 +98,7 @@ add the package to the SvelteKit app's `optimizeDeps.exclude`, or restart the de
 
 Tailwind v4 scans your source for class names and emits only what it finds. It does **not**
 scan `node_modules`. Since every muse component's styling lives in class strings inside
-`node_modules/@facile/lib`, Tailwind never sees `bg-fc-component`, `rounded-fc-md`, or any
+`node_modules/@facile/muse`, Tailwind never sees `bg-fc-component`, `rounded-fc-md`, or any
 other `fc-*` utility, and emits none of them.
 
 The result is not a warning or an error. It is a page of correctly structured, entirely
@@ -109,16 +109,16 @@ Fix it with one line in the consumer's `app.css`:
 
 ```css
 @import 'tailwindcss';
-@source '../node_modules/@facile/lib/src';
+@source '../node_modules/@facile/muse/src';
 ```
 
 The path is relative to the CSS file. From `apps/client/src/app.css` in a suite monorepo that
-resolves to `apps/client/node_modules/@facile/lib/src`; if your package manager hoists to the
+resolves to `apps/client/node_modules/@facile/muse/src`; if your package manager hoists to the
 workspace root, point at the root `node_modules` instead. Verify by inspecting a rendered muse
 component — if it has classes but no computed background, the directive is missing or pointing
 at the wrong directory.
 
-This is separate from `import '@facile/lib/styles'`. The import brings in the token
+This is separate from `import '@facile/muse/styles'`. The import brings in the token
 definitions; `@source` is what makes Tailwind generate utilities from them. You need both.
 
 ## The `twMerge` trap — why `utils/cn.ts` exists

@@ -12,7 +12,7 @@
         TextElevate,
         WordReveal,
         icons
-    } from '@facile/lib';
+    } from '@facile/muse';
 
     let heading = $state(true);
 
