@@ -3,7 +3,14 @@ bun = "latest"
 
 [tasks.check]
 description = "Type-check every component and util (svelte-check)"
-run = "bun install && bunx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings"
+# The demo install is not optional: tsconfig covers demo/src, and svelte-check
+# reads demo/svelte.config.js, which imports a demo devDependency. On a fresh
+# clone, skipping it fails with one ERR_MODULE_NOT_FOUND per demo file.
+run = [
+    "bun install",
+    "bun install --cwd demo",
+    "bunx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
+]
 
 [tasks.test]
 description = "Run the chart and secret maths checks"
