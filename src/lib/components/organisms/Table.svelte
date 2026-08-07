@@ -7,7 +7,7 @@
         class: className = ''
     }: { children: Snippet; class?: string } = $props();
 
-    const classes = $derived(twMerge('w-full overflow-x-auto rounded-fc-md border border-fc-border', className));
+    const classes = $derived(twMerge('w-full overflow-x-auto rounded-fc-md bg-fc-component', className));
 </script>
 
 <div class={classes}>

@@ -11,9 +11,10 @@ description: >
 
 # muse — Facile UI component library
 
-Library path (Claude Code): `~/.claude/skills/muse/lib`
-Library path (Codex): `~/.codex/muse/lib`
+Visual contract (Claude Code): `~/.claude/skills/muse/CHARTE.md`
+Visual contract (Codex): `~/.codex/muse/CHARTE.md`
 Package name when consumed: `@facile/lib`
+Source of truth in a consumer app: `node_modules/@facile/lib/src/lib/`
 Repo: `https://github.com/FacileStudio/muse`
 
 ## When to apply
@@ -25,10 +26,12 @@ Opt-out triggers: "no muse", "skip lib", "raw svelte" → dormant for the sessio
 
 ## Rules
 
-- Read `lib/CHARTE.md` first — visual contract (colors, type, spacing, motion, a11y)
-- Read `lib/src/lib/index.ts` — reuse existing components before creating new ones
+- Read `CHARTE.md` (installed beside this file) first — the visual contract: colours, type,
+  spacing, motion, a11y, and the invariants that make UI look like the suite
+- Read `node_modules/@facile/lib/src/lib/index.ts` — reuse existing components before
+  creating new ones; if the package is not installed, read the table below
 - Generate Svelte 5 + SvelteKit only; runes API: `$state`, `$props`, `$derived`, `$effect`; TypeScript on
-- Style with Tailwind v4 token utilities only. Token source: `lib/src/lib/styles/tokens.css`
+- Style with Tailwind v4 token utilities only. Token source: `node_modules/@facile/lib/src/lib/styles/tokens.css`
 - GSAP for animations; always respect `prefers-reduced-motion`
 - Mobile-first: min width 360px, hit targets ≥ 44px, use `100dvh` not `100vh`
 - Never hardcode hex — use tokens or ask before adding a new one
@@ -40,10 +43,24 @@ Import everything flat from `@facile/lib`; the tier directories are import paths
 | Tier | Components |
 |---|---|
 | Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `Component` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `Switch` `Textarea` |
-| Molecules | `Field` `NavButton` `SpaceSwitcher` `StatCard` |
-| Organisms | `MobileNav` `Modal` `SideBar` `Table` `Topbar` |
-| Motion | `Carousel` `Mosaique` `Rideau` `TextElevate` `WordReveal` |
-| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` |
+| Molecules | `ColorPicker` `Dropzone` `Field` `NavButton` `SpaceSwitcher` `StatCard` `UploadProgress` |
+| Organisms | `ConfirmModal` `Drawer` `MobileNav` `Modal` `ProfileCard` `SideBar` `Table` `Topbar` |
+| Charts | `BarChart` `ChartLegend` `ChartTooltip` `DonutChart` `LineChart` `Sparkline` |
+| Motion | `Carousel` `Mosaique` `PageTransition` `Rideau` `TextElevate` `WordReveal` |
+| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `chartColor` `formatCompact` `niceScale` `USER_COLORS` `normalizeUserColor` |
+
+Reach for these before hand-rolling — they are the ones agents most often rebuild by mistake:
+
+- **Confirmation** → `ConfirmModal` (`tone="danger"`, async `onconfirm` shows a spinner and
+  stays open on reject). Never a bare `Modal` with two buttons.
+- **Bottom sheet / mobile filters** → `Drawer` (drag-to-dismiss, safe-area aware).
+- **Any chart** → `LineChart` `BarChart` `DonutChart` `Sparkline`. Dependency-free SVG; do
+  not add a charting library, and do not pass your own series colours.
+- **Identity colour** → `ColorPicker` + `USER_COLORS` (Sablier's palette, a persisted data
+  contract — do not restyle the six hexes).
+- **File upload** → `Dropzone` + `UploadProgress` (the consumer owns the actual upload).
+- **Profile / identity block** → `ProfileCard`.
+- **Route changes** → `PageTransition` keyed on the route.
 
 App shell = `SideBar` (desktop, collapsible) + `MobileNav` (the `md:hidden` floating pill bar).
 `SideBar` takes `spaces` / `activeSpaceId` / `onSpaceSelect` and renders `SpaceSwitcher` itself.
@@ -51,11 +68,16 @@ App shell = `SideBar` (desktop, collapsible) + `MobileNav` (the `md:hidden` floa
 ## Token vocabulary
 
 Colours are **chroma-zero OKLCH** — the palette is greyscale except `fc-danger`,
-`fc-success`, `fc-warning`, `fc-owner`, `fc-admin`.
+`fc-success`, `fc-warning`, `fc-owner`, `fc-admin`, and the six chart series slots.
 
 `bg-fc-page` `bg-fc-bg` `bg-fc-surface` `bg-fc-component` · `text-fc-fg` `text-fc-fg-muted`
 `bg-fc-accent` / `text-fc-accent-fg` · `border-fc-border` · `outline-fc-ring` ·
 `text-fc-danger` `text-fc-success` `text-fc-warning`
+
+Chart series: `fc-chart-1`…`fc-chart-6` (purple, orange, aqua, red, green, pink) — Sablier's
+identity palette. Assign **by series index in fixed order, never by rank**; `fc-danger` and
+`fc-success` are reserved for status and are never series colours. The slot order is
+CVD-validated — do not reorder it by taste.
 
 Radii: `rounded-fc-xs` 4 · `fc-sm` 6 · `fc-md` 8 · `fc-lg` 12 · `fc-pill` 999
 Type: `text-fc-xs` 12 · **`text-fc-sm` 14 ← the UI default** · `fc-md` 16 · `fc-lg` 18 · `fc-xl` 22 · `fc-2xl` 28 · `fc-3xl` 36
@@ -66,17 +88,39 @@ Three house rules that make generated UI look like the suite rather than generic
    — `fc-accent` deliberately equals `fc-fg`, so a selected nav row is a solid inverted slab.
 2. **Semantic fills are tinted, not solid.** `bg-fc-danger/10 text-fc-danger`, matching the
    suite's `bg-destructive/10`. A solid saturated block is wrong.
-3. **Separation is a 1px `border-fc-border`, not elevation.** Shadows only on genuinely
-   floating things — dropdowns, `Modal`, the `MobileNav` bar.
+3. **Container surfaces carry no border.** `Card`, `StatCard` and `Table` separate from the
+   page with their `bg-fc-component` fill. Do not add `border border-fc-border` to a card, a
+   chart wrapper or a list container. 1px borders are for separation *inside* a container
+   (list rows, table row rules), form controls, `Dropzone`, and floating surfaces — which
+   also get the only shadows (`Modal`, `Drawer`, dropdowns, `MobileNav`).
+4. **Never show scrollbars.** `tokens.css` hides them globally; scrolling still works. Do not
+   re-enable them and do not add `[scrollbar-width:none]` utilities — already handled.
+5. **Never put a border or ring on an avatar.**
 
 `Button` is a pill. Buttons, badges and avatars are `rounded-fc-pill`; panels are `fc-md`/`fc-lg`.
+
+### Buttons take icons as props
+
+```svelte
+<Button icon={icons.plus}>New project</Button>
+<Button variant="danger" icon={icons.remove}>Delete</Button>
+```
+
+Never hand-write `<iconify-icon>` inside a `Button` — the prop sizes the glyph to the button
+and emits the required `width`/`height`/`class="block"`. Action buttons should carry an icon:
+creation `icons.plus`, destruction `icons.remove`.
+
+Variants: `primary` `outline` `ghost` `danger` `ghost-danger`. Use **`ghost-danger` for
+destructive row actions** (delete in a table or member list) — muted at rest, red on hover.
+`danger` is always-tinted, for standalone destructive buttons. Both route through
+`ConfirmModal`, never delete on click.
 
 ## Icons
 
 - **Solar `linear`** for all UI chrome — `solar:settings-linear`, `solar:folder-linear`, …
 - **`bold-duotone` is for an app's brand mark only** (what you pass to `SideBar`'s `icon` prop). Never for nav or action icons.
 - **MDI for plus, close and chevrons** — `mdi:plus` `mdi:close` `mdi:chevron-right|left|up|down`. Solar's versions of those read muddy at 16px.
-- Prefer a key from `lib/src/lib/icons.ts` over inlining a name; add a key there if it is missing.
+- Prefer a key from `@facile/lib`'s `icons` map over inlining a name; add a key there if missing.
 - Icons inherit `currentColor` — do not give them their own colour class, or inverted active states will not flip them.
 - Always pass `width` **and** `height` plus `class="block"`. `<iconify-icon>` is inline by default and its baseline descender knocks icon/label pairs out of alignment.
 - Sizes: 16 inline · 18 nav rows · 24 brand mark.
@@ -88,7 +132,7 @@ Stock `tailwind-merge` does not know `fc-*` is a custom scale, so it classifies 
 as a *colour* and silently deletes `text-fc-fg` from the same string — yielding black-on-black
 buttons and invisible avatar initials, with no error. Inside the library import
 `twMerge` from `../../utils/cn.js`; in a consumer app import `cn` from `@facile/lib`.
-Add any new `fc-*` token to the matching list in `utils/cn.ts` or you reintroduce this.
+Add any new `fc-*` token to the matching list in `src/lib/utils/cn.ts` or you reintroduce this.
 
 **2. Tailwind v4 does not scan `node_modules`.** A consumer needs both lines in `app.css`,
 or every muse component renders structurally correct and completely unstyled:
@@ -99,8 +143,8 @@ or every muse component renders structurally correct and completely unstyled:
 @source '../node_modules/@facile/lib/src';
 ```
 
-**3. `iconify-icon` is not a muse dependency.** `SideBar`, `NavButton`, `SpaceSwitcher`,
-`MobileNav` and `Mosaique` render `<iconify-icon>` elements that stay inert unless the
+**3. `iconify-icon` is not a muse dependency.** `Button`, `SideBar`, `NavButton`,
+`SpaceSwitcher`, `MobileNav`, `Dropzone`, `UploadProgress` and `Mosaique` render `<iconify-icon>` elements that stay inert unless the
 consumer registers the custom element (`import 'iconify-icon'`, or the CDN script in
 `app.html` as the Go-family apps do).
 
@@ -118,14 +162,17 @@ works while the OS is dark. `demo/src/App.svelte` has a working persisted toggle
 mise run demo      # from the repo root → http://127.0.0.1:5183
 ```
 
-There is no build or test step for `src/lib` itself, so `mise run demo:build` is the
-cheapest way to catch a compile error across every component at once. Run it before pushing.
+`demo/src/pages/` holds the example pages (Dashboard, Projects, Spaces, Settings) — read one
+before building a page, they show the intended composition end to end.
+
+`mise run demo:build` is the cheapest way to catch a compile error across every component at
+once; `mise run test` covers the chart maths. Run both before pushing.
 
 ## Adding to the library
 
-1. Drop the component in `lib/src/lib/components/<atoms|molecules|organisms|motion>/`
+1. Drop the component in `src/lib/components/<atoms|molecules|organisms|charts|motion>/`
 2. Accept `class` and merge with `twMerge(defaults, className)` — `className` last
-3. Re-export from `lib/src/lib/index.ts` — a component that is not re-exported does not exist
+3. Re-export from `src/lib/index.ts` — a component that is not re-exported does not exist
 4. Update `CHARTE.md` if you changed a token or a documented invariant
 5. Commit and push to `FacileStudio/muse`
 

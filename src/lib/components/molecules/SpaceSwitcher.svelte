@@ -24,7 +24,23 @@
 
     let open = $state(false);
     let rootEl: HTMLElement | null = $state(null);
+    let triggerEl: HTMLButtonElement | null = $state(null);
+    let dropUp = $state(false);
+    let maxHeight = $state(320);
     const activeSpace = $derived(spaces.find((s) => s.id === activeId) ?? null);
+
+    const GAP = 6;
+    const MARGIN = 8;
+    const MIN_HEIGHT = 160;
+
+    function place() {
+        if (!triggerEl) return;
+        const box = triggerEl.getBoundingClientRect();
+        const below = window.innerHeight - box.bottom - GAP - MARGIN;
+        const above = box.top - GAP - MARGIN;
+        dropUp = below < MIN_HEIGHT && above > below;
+        maxHeight = Math.max(MIN_HEIGHT, Math.floor(dropUp ? above : below));
+    }
 
     function select(id: string | null) {
         onSelect?.(id);
@@ -35,18 +51,31 @@
         if (rootEl && !rootEl.contains(e.target as Node)) open = false;
     }
 
+    function toggle() {
+        if (!open) place();
+        open = !open;
+    }
+
     $effect(() => {
         if (!open) return;
+        place();
         document.addEventListener('click', handleClickOutside);
-        return () => document.removeEventListener('click', handleClickOutside);
+        window.addEventListener('resize', place);
+        window.addEventListener('scroll', place, true);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+            window.removeEventListener('resize', place);
+            window.removeEventListener('scroll', place, true);
+        };
     });
 </script>
 
 <div bind:this={rootEl} class={twMerge('relative', className)}>
     <button
+        bind:this={triggerEl}
         type="button"
         class="flex w-full items-center gap-2.5 min-h-11 rounded-fc-md border border-fc-border bg-fc-surface/50 px-3 py-2 text-left text-fc-sm transition-colors hover:bg-fc-surface"
-        onclick={() => (open = !open)}
+        onclick={toggle}
         aria-expanded={open}
     >
         <iconify-icon
@@ -67,8 +96,14 @@
     </button>
 
     {#if open}
-        <div class="absolute left-0 right-0 z-50 mt-1.5 overflow-hidden rounded-fc-md border border-fc-border bg-fc-component shadow-lg shadow-black/20">
-            <div class="max-h-64 overflow-auto p-1">
+        <div
+            class={twMerge(
+                'absolute left-0 right-0 z-50 flex flex-col overflow-hidden rounded-fc-md border border-fc-border bg-fc-component shadow-lg shadow-black/20',
+                dropUp ? 'bottom-full mb-1.5' : 'top-full mt-1.5'
+            )}
+            style:max-height="{maxHeight}px"
+        >
+            <div class="min-h-0 flex-1 overflow-auto p-1">
                 <button
                     type="button"
                     class={twMerge(

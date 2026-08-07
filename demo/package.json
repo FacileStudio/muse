@@ -8,7 +8,6 @@
     "preview": "vite preview --port 5183"
   },
   "dependencies": {
-    "@facile/lib": "file:..",
     "gsap": "^3.12.0",
     "iconify-icon": "^2.2.0",
     "svelte": "^5.0.0",

@@ -1,6 +1,10 @@
 [tools]
 bun = "latest"
 
+[tasks.test]
+description = "Run the chart maths checks"
+run = "bun test src/lib"
+
 [tasks.demo]
 description = "Run the muse demo app (http://127.0.0.1:5183)"
 dir = "demo"

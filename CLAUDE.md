@@ -17,22 +17,26 @@ muse/
   CHARTE.md                   Visual contract (colors, type, spacing, motion, a11y rules)
   install.sh                  One-line installer for Claude Code and Codex AI skill integration
   mise.toml                   `mise run demo` / `demo:build`
-  demo/                       Vite playground rendering every component from source
+  demo/                       Vite SPA playground — src/pages/ (hash router) renders every component
   integrations/SKILL.md       Shared AI skill definition
   src/lib/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map + IconKey type
-    components/               30 Svelte components (atoms/ molecules/ organisms/ motion/)
+    colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
+    components/               42 Svelte components (atoms/ molecules/ organisms/ motion/ charts/)
     fonts/                    Bundled Goga font files (.otf)
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
     utils/cn.ts               fc-*-aware tailwind-merge — every component uses it
     utils/motion.ts           prefersReducedMotion() and isMobile() helpers
+    utils/chart.ts            scales, paths, arcs, resize action — shared by charts/
 ```
 
 ## Key commands
 
-The library itself has no build, test or lint step — components are consumed directly from
-source via the `svelte` and `main` exports pointing to `src/lib/index.ts`.
+The library has no build or lint step — components are consumed directly from source via the
+`svelte` and `main` exports pointing to `src/lib/index.ts`. The only tests are
+`mise run test` (`bun test`), covering the chart maths in `src/lib/utils/chart.ts` — the one
+piece of logic here that is not a Svelte template.
 
 The demo is the only thing that builds, and it is the closest thing to a test suite:
 
@@ -65,7 +69,9 @@ import '@facile/lib/styles';
 The palette is **chroma-zero OKLCH**, matching the shipped suite apps. Namespaces: `fc-page`,
 `fc-bg`, `fc-surface`, `fc-component`, `fc-fg`, `fc-fg-muted`, `fc-accent`, `fc-accent-fg`,
 `fc-border`, `fc-ring`, `fc-danger`, `fc-danger-fg`, `fc-success`, `fc-warning`, `fc-owner`,
-`fc-admin`. Use via Tailwind utilities like `bg-fc-bg`, `text-fc-fg`, `rounded-fc-md`.
+`fc-admin`, plus `fc-chart-1`…`fc-chart-6` for categorical chart series (Sablier's identity
+palette, deepened for legibility). Use via Tailwind utilities like `bg-fc-bg`, `text-fc-fg`,
+`rounded-fc-md`.
 
 Type scale is 12/14/16/18/22/28/36px with paired line-heights — **`text-fc-sm` (14px) is the
 UI default**. Radii: `fc-xs` 4, `fc-sm` 6, `fc-md` 8, `fc-lg` 12, `fc-pill` 999.
@@ -83,7 +89,12 @@ and an explicit `.dark` class, so apps can offer a manual toggle.
   same class string. Any new `fc-*` token must be added to `cn.ts` too.
 - Active and primary states are **inverted** (`bg-fc-accent text-fc-accent-fg`), never tinted.
   Semantic fills are the opposite — tinted (`bg-fc-danger/10 text-fc-danger`), never solid.
-- Separation is a 1px `border-fc-border`; shadows only on floating things.
+- **Never show scrollbars.** `tokens.css` hides them globally in the base layer; scrolling
+  still works everywhere. A visible scrollbar takes layout width and shifts content sideways.
+  Don't re-enable them, and don't add `[scrollbar-width:none]` utilities — already handled.
+- Container surfaces (`Card`, `StatCard`, `Table`) carry **no border** — the `bg-fc-component`
+  fill separates them. 1px `border-fc-border` is for separation *inside* a container, form
+  controls, `Dropzone`, and floating surfaces. Shadows only on floating things.
 - Icons: Solar **`linear`** for chrome, MDI for plus/close/chevrons, `bold-duotone` for brand
   marks only. Icons inherit `currentColor`; always pass `width`, `height` and `class="block"`.
 - Mobile-first: minimum supported width is 360px, hit targets >= 44px, use `100dvh` not `100vh`.
@@ -95,10 +106,17 @@ and an explicit `.dark` class, so apps can offer a manual toggle.
 ## Gotchas
 
 - No build step for the library -- it is consumed directly from source. There is no `dist/`.
+- The demo does **not** install `@facile/lib`. A `file:..` dependency makes bun copy the whole
+  repo into `demo/node_modules` -- including `demo/node_modules` itself -- which recurses and
+  dies with `ENOENT: failed copying files from cache to destination`. (`link:..` is worse: bun
+  reads it as a *global* link and symlinks `~/.bun/install/global`.) Instead
+  `demo/vite.config.ts` aliases `@facile/lib` straight at `../src/lib/index.ts`, with
+  `resolve.dedupe` for `svelte`/`gsap`/`tailwind-merge` so imports from outside the demo root
+  resolve, and `demo/src/app.css` imports the tokens by relative path.
 - Consumers need **both** `import '@facile/lib/styles'` and `@source
   '../node_modules/@facile/lib/src'`. Without the `@source`, Tailwind never scans the
   components and everything renders structurally correct but completely unstyled.
-- `iconify-icon` is **not** a dependency. `SideBar`, `NavButton`, `SpaceSwitcher`, `MobileNav`
+- `iconify-icon` is **not** a dependency. `Button`, `SideBar`, `NavButton`, `SpaceSwitcher`, `MobileNav`, `Dropzone`, `UploadProgress`
   and `Mosaique` render `<iconify-icon>` elements that stay inert unless the consumer app
   registers the custom element.
 - Only Goga Medium and Semibold ship, so `font-bold` synthesizes -- prefer `font-semibold`.

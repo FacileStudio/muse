@@ -35,8 +35,8 @@
   --color-fc-danger-fg: oklch(1 0 0);
   --color-fc-success: oklch(0.52 0.12 150);
   --color-fc-warning: oklch(0.58 0.13 75);
-  --color-fc-owner: oklch(0.55 0.13 75);
-  --color-fc-admin: oklch(0.52 0.14 255);
+  --color-fc-owner: oklch(0.58 0.14 64);
+  --color-fc-admin: oklch(0.5 0.16 292);
 
   /* radii → rounded-fc-* */
   --radius-fc-xs: 4px;
@@ -77,8 +77,37 @@
   --container-fc-xl: 1200px;
 
   /* nav sidebar widths — mirrored in SideBar.svelte GSAP targets */
-  --width-fc-nav-collapsed: 77px;
+  --width-fc-nav-collapsed: 68px;
   --width-fc-nav-expanded: 220px;
+
+  /* Collapsed nav item — a fixed square, so the sidebar's width tween cannot distort it.
+     68px rail = 44px item + 12px padding either side, and 44px is exactly `min-h-11`, the
+     expanded row height. Matching them is what stops every row growing at the instant the
+     collapsed layout lands. */
+  --spacing-fc-nav-item: 44px;
+
+  /* Expanded nav content width (220px rail - 12px padding either side). Block children of
+     the sidebar take this fixed width so the collapse tween clips them instead of
+     reflowing them. */
+  --spacing-fc-nav-content: 196px;
+}
+
+/*
+ * Chart series — Sablier's identity palette, deepened so it stays legible as a chart mark.
+ *
+ * `static` is load-bearing: chartColor() builds the var name with a template literal
+ * (`--color-fc-chart-${n}`), so the strings `fc-chart-3`…`fc-chart-6` never appear in any
+ * source file. A plain @theme block only emits the variables Tailwind saw used, which left
+ * every slot past the ones hardcoded in the demo undefined — and an undefined var() in an
+ * SVG `fill` falls back to black.
+ */
+@theme static {
+  --color-fc-chart-1: oklch(0.7 0.15 292);
+  --color-fc-chart-2: oklch(0.755 0.13 64);
+  --color-fc-chart-3: oklch(0.72 0.11 190);
+  --color-fc-chart-4: oklch(0.68 0.15 15);
+  --color-fc-chart-5: oklch(0.76 0.16 135);
+  --color-fc-chart-6: oklch(0.73 0.14 339);
 }
 
 /*
@@ -106,8 +135,14 @@
     --color-fc-danger: oklch(0.65 0.22 29);
     --color-fc-success: oklch(0.72 0.14 150);
     --color-fc-warning: oklch(0.8 0.13 75);
-    --color-fc-owner: oklch(0.78 0.13 75);
-    --color-fc-admin: oklch(0.72 0.13 255);
+    --color-fc-owner: oklch(0.78 0.13 64);
+    --color-fc-admin: oklch(0.75 0.14 292);
+    --color-fc-chart-1: oklch(0.58 0.15 292);
+    --color-fc-chart-2: oklch(0.66 0.14 64);
+    --color-fc-chart-3: oklch(0.6 0.12 195);
+    --color-fc-chart-4: oklch(0.55 0.16 15);
+    --color-fc-chart-5: oklch(0.64 0.15 135);
+    --color-fc-chart-6: oklch(0.62 0.14 339);
   }
 }
 
@@ -125,8 +160,14 @@
   --color-fc-danger: oklch(0.65 0.22 29);
   --color-fc-success: oklch(0.72 0.14 150);
   --color-fc-warning: oklch(0.8 0.13 75);
-  --color-fc-owner: oklch(0.78 0.13 75);
-  --color-fc-admin: oklch(0.72 0.13 255);
+  --color-fc-owner: oklch(0.78 0.13 64);
+  --color-fc-admin: oklch(0.75 0.14 292);
+  --color-fc-chart-1: oklch(0.58 0.15 292);
+  --color-fc-chart-2: oklch(0.66 0.14 64);
+  --color-fc-chart-3: oklch(0.6 0.12 195);
+  --color-fc-chart-4: oklch(0.55 0.16 15);
+  --color-fc-chart-5: oklch(0.64 0.15 135);
+  --color-fc-chart-6: oklch(0.62 0.14 339);
 }
 
 @layer base {
@@ -134,6 +175,24 @@
     font-family: var(--font-fc-body);
     letter-spacing: -0.011em;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+   * Scrollbars are never visible. A classic scrollbar takes layout width, so it shifts the
+   * whole page sideways the moment content grows past one screen — and shifts it back when
+   * a modal locks the body. Scrolling itself is untouched: wheel, trackpad, touch, keyboard
+   * and the scroll-into-view APIs all still work. Do not "fix" a scroll bug by re-showing
+   * these; if content is unreachable, the container is the bug.
+   */
+  *,
+  *::before,
+  *::after {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
   }
 
   body {

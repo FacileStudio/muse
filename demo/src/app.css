@@ -1,6 +1,6 @@
 @import 'tailwindcss';
-@import '@facile/lib/styles';
-@source '../node_modules/@facile/lib/src';
+@import '../../src/lib/styles/tokens.css';
+@source '../../src/lib';
 
 body {
   margin: 0;

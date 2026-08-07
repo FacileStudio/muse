@@ -17,7 +17,13 @@ const colors = [
     'fc-success',
     'fc-warning',
     'fc-owner',
-    'fc-admin'
+    'fc-admin',
+    'fc-chart-1',
+    'fc-chart-2',
+    'fc-chart-3',
+    'fc-chart-4',
+    'fc-chart-5',
+    'fc-chart-6'
 ];
 const radii = ['fc-xs', 'fc-sm', 'fc-md', 'fc-lg', 'fc-pill', 'fc-full'];
 
