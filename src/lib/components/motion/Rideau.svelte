@@ -7,8 +7,14 @@
     let {
         duration = 1.5,
         color = 'var(--color-fc-bg)',
+        start = 'covered',
         class: className = ''
-    }: { duration?: number; color?: string; class?: string } = $props();
+    }: {
+        duration?: number;
+        color?: string;
+        start?: 'covered' | 'open';
+        class?: string;
+    } = $props();
 
     let rideau: HTMLDivElement | null = $state(null);
 
@@ -19,7 +25,12 @@
     onMount(() => {
         const node = rideau;
         if (!node) return;
-        if (prefersReducedMotion()) {
+        /*
+            `start="open"` is for a curtain that outlives the page it covers — one mounted at
+            the app root and driven by navigation. Mounting it covered would wipe the screen
+            once on boot, which is a transition away from nothing.
+        */
+        if (start === 'open' || prefersReducedMotion()) {
             node.style.height = '0';
             return;
         }
@@ -30,21 +41,30 @@
     });
 
     /*
-        Not wrapped in the mount context: this tween owns the navigation that follows it,
-        so reverting it on destroy would cancel the very thing it was started for.
+        Neither tween is wrapped in the mount context: `close` owns the navigation that
+        follows it, so reverting it on destroy would cancel the very thing it was started
+        for, and `open` runs on a curtain the route change did not remount.
     */
-    export function close(href: string) {
+    export function close(href?: string) {
         if (!rideau) return;
+        const done = () => {
+            if (href) window.location.href = href;
+        };
         if (prefersReducedMotion()) {
-            window.location.href = href;
+            rideau.style.height = '100dvh';
+            done();
             return;
         }
-        gsap.to(rideau, {
-            height: '100dvh',
-            duration,
-            ease: 'power3.inOut',
-            onComplete: () => (window.location.href = href)
-        });
+        gsap.to(rideau, { height: '100dvh', duration, ease: 'power3.inOut', onComplete: done });
+    }
+
+    export function open() {
+        if (!rideau) return;
+        if (prefersReducedMotion()) {
+            rideau.style.height = '0';
+            return;
+        }
+        gsap.to(rideau, { height: 0, duration, ease: 'power3.inOut' });
     }
 </script>
 

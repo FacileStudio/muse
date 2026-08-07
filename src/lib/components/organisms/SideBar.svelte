@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import { slide } from 'svelte/transition';
+    import { cubicInOut } from 'svelte/easing';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
     import NavButton from '../molecules/NavButton.svelte';
@@ -64,6 +64,7 @@
      * SSR and a consumer that forgot to import the stylesheet.
      */
     const FALLBACK_WIDTH = { collapsed: 68, expanded: 220 };
+    const RAIL_DURATION = 0.3;
 
     function railWidth(el: HTMLElement, isCollapsed: boolean): number {
         const token = isCollapsed ? '--width-fc-nav-collapsed' : '--width-fc-nav-expanded';
@@ -88,7 +89,7 @@
         if (!isCollapsed) narrow = false;
         tween = gsap.to(navEl, {
             width: w,
-            duration: 0.3,
+            duration: RAIL_DURATION,
             ease: 'power3.inOut',
             onComplete: () => {
                 narrow = isCollapsed;
@@ -96,6 +97,31 @@
             }
         });
     });
+
+    /*
+     * Every other row morphs into the narrow rail; the space switcher is the one that cannot,
+     * because it is a fixed-width control and a shrinking rail simply guillotines it. So it
+     * leaves on its own terms: lift and fade over the first half of the tween — gone well
+     * before the rail is narrow enough to cut it — then hand its height back so the rows below
+     * rise on the same curve. Reversed on expand, it waits for the rail to be wide enough to
+     * hold it before it appears.
+     *
+     * cubicInOut is power3.inOut, so this lands on the same curve as the rail beside it.
+     */
+    const FADE_START = 0.45;
+
+    function switcherReveal(node: HTMLElement) {
+        const height = node.offsetHeight;
+        const marginTop = Number.parseFloat(getComputedStyle(node).marginTop) || 0;
+        return {
+            duration: prefersReducedMotion() ? 0 : RAIL_DURATION * 1000,
+            easing: cubicInOut,
+            css: (t: number, u: number) => {
+                const fade = Math.max(0, (t - FADE_START) / (1 - FADE_START));
+                return `overflow: hidden; height: ${t * height}px; margin-top: ${t * marginTop}px; opacity: ${fade}; transform: translateY(${-u * 8}px)`;
+            }
+        };
+    }
 </script>
 
 <div
@@ -114,10 +140,7 @@
         </div>
 
         {#if spaces.length > 0 && !collapsed}
-            <div
-                class="w-fc-nav-content shrink-0"
-                transition:slide={{ duration: prefersReducedMotion() ? 0 : 300 }}
-            >
+            <div class="w-fc-nav-content shrink-0" transition:switcherReveal>
                 <SpaceSwitcher {spaces} activeId={activeSpaceId} onSelect={onSpaceSelect} manageHref={manageSpacesHref} />
             </div>
         {/if}
