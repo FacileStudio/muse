@@ -23,8 +23,10 @@
         StatCard,
         StatusDot,
         Switch,
+        Toast,
         chartColor,
-        icons
+        icons,
+        toast
     } from '@facile/muse';
     import { spaces, wait } from '../data.js';
 
@@ -89,36 +91,47 @@
         </p>
     </div>
 
+    <!-- One rhythm for the whole page: 40px between sections, 16px between the cards of a
+         section, 20px of card padding, and a section's heading bound to its body by the
+         same 16px. Card gutters used to be 12px — tighter than the padding inside the cards
+         they separate, which reads as three panels leaning on each other. -->
     <section class="flex flex-col gap-4">
-        <div class="grid gap-3 sm:grid-cols-3">
+        <div class="grid gap-4 sm:grid-cols-3">
             <StatCard label="Tracked" value="1 054 h" delta="+12% vs last month">
-                <Sparkline data={tracked[0].data} class="mt-2" showLast />
+                <Sparkline data={tracked[0].data} class="mt-3" showLast />
             </StatCard>
             <StatCard label="Invoiced" value="€48.2k" delta="+8% vs last month">
-                <Sparkline data={invoices[0].data} color="var(--color-fc-chart-5)" class="mt-2" showLast />
+                <Sparkline data={invoices[0].data} color="var(--color-fc-chart-5)" class="mt-3" showLast />
             </StatCard>
             <StatCard label="Overdue" value="10" delta="−3 vs last month">
-                <Sparkline data={invoices[2].data} color="var(--color-fc-chart-2)" class="mt-2" showLast />
+                <Sparkline data={invoices[2].data} color="var(--color-fc-chart-2)" class="mt-3" showLast />
             </StatCard>
         </div>
 
-        <Card class="flex flex-col gap-3">
+        <Card class="flex flex-col gap-4">
             <p class="text-fc-sm font-medium text-fc-fg">Hours tracked per month</p>
             <LineChart series={tracked} labels={months} area height={240} />
         </Card>
 
-        <div class="grid gap-3 lg:grid-cols-2">
-            <Card class="flex flex-col gap-3">
+        <div class="grid gap-4 lg:grid-cols-2">
+            <Card class="flex flex-col gap-4">
                 <p class="text-fc-sm font-medium text-fc-fg">Invoices by status</p>
                 <BarChart series={invoices} labels={months} stacked height={220} />
             </Card>
-            <Card class="flex flex-col gap-3">
+            <Card class="flex flex-col gap-4">
                 <p class="text-fc-sm font-medium text-fc-fg">Storage used</p>
-                <DonutChart data={storage} centerLabel="of 1 TB used" valueFormat={(n) => `${n} GB`} />
+                <!-- flex-1 so the ring centres in the height the taller neighbour sets,
+                     instead of hanging off the title. -->
+                <DonutChart
+                    data={storage}
+                    centerLabel="of 1 TB used"
+                    valueFormat={(n) => `${n} GB`}
+                    class="flex-1"
+                />
             </Card>
         </div>
 
-        <Card class="flex flex-col gap-3">
+        <Card class="flex flex-col gap-4">
             <p class="text-fc-sm font-medium text-fc-fg">Top clients</p>
             <BarChart
                 series={[{ name: 'Revenue', data: [24, 18, 15, 11, 7] }]}
@@ -131,17 +144,19 @@
     </section>
 
     <section class="flex flex-col gap-4">
-        <h2 class="text-fc-lg font-semibold text-fc-fg">Chart parts</h2>
-        <p class="text-fc-sm text-fc-fg-muted">
-            The legend and the tooltip are exported separately, so a chart muse does not ship
-            can still read as one of ours.
-        </p>
-        <div class="grid gap-3 lg:grid-cols-2">
-            <Card class="flex flex-col gap-3">
+        <div class="flex flex-col gap-1">
+            <h2 class="text-fc-lg font-semibold text-fc-fg">Chart parts</h2>
+            <p class="text-fc-sm text-fc-fg-muted">
+                The legend and the tooltip are exported separately, so a chart muse does not ship
+                can still read as one of ours.
+            </p>
+        </div>
+        <div class="grid gap-4 lg:grid-cols-2">
+            <Card class="flex flex-col gap-4">
                 <p class="text-fc-sm font-medium text-fc-fg">ChartLegend</p>
                 <ChartLegend items={legend} />
             </Card>
-            <Card class="relative flex min-h-32 flex-col gap-3">
+            <Card class="relative flex min-h-32 flex-col gap-4">
                 <p class="text-fc-sm font-medium text-fc-fg">ChartTooltip</p>
                 <ChartTooltip x={120} y={80} title="Aug" rows={tipRows} visible />
             </Card>
@@ -244,8 +259,10 @@
     </section>
 
     <section class="flex flex-col gap-4">
-        <h2 class="text-fc-lg font-semibold text-fc-fg">Overlays</h2>
-        <p class="text-fc-sm text-fc-fg-muted">Last action: {lastAction}</p>
+        <div class="flex flex-col gap-1">
+            <h2 class="text-fc-lg font-semibold text-fc-fg">Overlays</h2>
+            <p class="text-fc-sm text-fc-fg-muted">Last action: {lastAction}</p>
+        </div>
         <div class="flex flex-wrap items-center gap-3">
             <Button variant="outline" icon={icons.plus} onclick={() => (modalOpen = true)}>Invite</Button>
             <Button variant="outline" icon={icons.upload} onclick={() => (confirmOpen = true)}>
@@ -257,6 +274,72 @@
             <Button variant="outline" icon={icons.filter} onclick={() => (drawerOpen = true)}>
                 Filters
             </Button>
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+            <h2 class="text-fc-lg font-semibold text-fc-fg">Toasts</h2>
+            <p class="text-fc-sm text-fc-fg-muted">
+                Feedback that does not need an answer. Call <code>toast.success(…)</code> from
+                anywhere — the single <code>&lt;Toaster /&gt;</code> in the layout renders it.
+            </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+            <Button
+                variant="outline"
+                icon={icons.check}
+                onclick={() => toast.success('Invoice sent to Acme Studio.')}
+            >
+                Success
+            </Button>
+            <Button
+                variant="outline"
+                icon={icons.info}
+                onclick={() => toast.info('Export queued — the link arrives by email.')}
+            >
+                Info
+            </Button>
+            <Button
+                variant="outline"
+                icon={icons.warning}
+                onclick={() => toast.warning('Two invoices are past their due date.', { title: 'Overdue' })}
+            >
+                Warning
+            </Button>
+            <Button
+                variant="danger"
+                icon={icons.error}
+                onclick={() =>
+                    toast.danger('Could not reach the server. Nothing was saved.', {
+                        title: 'Sync failed',
+                        duration: 8000
+                    })}
+            >
+                Danger
+            </Button>
+            <Button
+                variant="outline"
+                icon={icons.remove}
+                onclick={() =>
+                    toast.neutral('Deleted “Nova rebrand”.', {
+                        action: { label: 'Undo', onClick: () => toast.success('Restored “Nova rebrand”.') }
+                    })}
+            >
+                With an action
+            </Button>
+            <Button variant="ghost" icon={icons.refresh} onclick={() => toast.clear()}>Clear</Button>
+        </div>
+        <!-- The same component, sitting still, so the anatomy is readable without chasing a
+             five-second timer. -->
+        <div class="flex max-w-sm flex-col gap-3">
+            <Toast tone="success" title="Invoice sent">Acme Studio · €4 200 · due in 30 days.</Toast>
+            <Toast
+                tone="neutral"
+                action={{ label: 'Undo', onClick: () => toast.success('Restored “Nova rebrand”.') }}
+            >
+                Deleted “Nova rebrand”.
+            </Toast>
         </div>
     </section>
 
