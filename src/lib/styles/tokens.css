@@ -171,6 +171,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
+    /* Tells the browser to paint *its own* surfaces dark: the native <select> popup, form
+       control internals, autofill, the caret, text selection, and the canvas past the page
+       background. Without it every one of those stays light on a dark page, which is the
+       half of "dark mode" a token cannot reach. Must be in both blocks — see below. */
+    color-scheme: dark;
+
     --color-fc-page: oklch(0.09 0 0);
     --color-fc-bg: oklch(0.09 0 0);
     --color-fc-surface: oklch(0.18 0 0);
@@ -197,6 +203,9 @@
 }
 
 :root.dark {
+  /* Twin of the declaration in the media block above — see the note there. */
+  color-scheme: dark;
+
   --color-fc-page: oklch(0.09 0 0);
   --color-fc-bg: oklch(0.09 0 0);
   --color-fc-surface: oklch(0.18 0 0);
@@ -226,6 +235,15 @@
     font-family: var(--font-fc-body);
     letter-spacing: -0.011em;
     -webkit-font-smoothing: antialiased;
+
+    /*
+     * The light default. The two dark blocks above flip it to `dark`, and they are
+     * *unlayered* while this sits in `@layer base` — unlayered wins over layered whatever
+     * the specificity, so the override lands without needing `!important` or a longer
+     * selector. Forcing light on a dark OS also works: `:root:not(.light)` excludes the
+     * media block, so this declaration is what remains.
+     */
+    color-scheme: light;
   }
 
   /*
