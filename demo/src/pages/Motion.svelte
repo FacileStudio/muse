@@ -7,12 +7,12 @@
         Card,
         Carousel,
         Mosaique,
-        Rideau,
         Switch,
         TextElevate,
         WordReveal,
         icons
     } from '@facile/muse';
+    import { curtain } from '../curtain.svelte.js';
 
     let heading = $state(true);
 
@@ -46,8 +46,6 @@
         { id: 't6', label: 'GSAP', note: 'power3.inOut' }
     ];
 
-    let curtain = $state<{ close: (href: string) => void } | undefined>();
-
     /*
      * WordReveal scrubs against ScrollTrigger's default scroller — the window — and in this
      * app the window never scrolls, <main> does. Scroll events do not bubble out of an
@@ -70,17 +68,6 @@
     });
 </script>
 
-<!--
-    Mounted with the page: Rideau wipes itself away on mount, which is the entrance half of
-    the effect, and `close()` plays it back out before navigating.
-
-    `w-full` overrides its own `w-screen` because PageTransition leaves a transform on its
-    wrapper, and a transformed ancestor makes `position: fixed` resolve against that wrapper
-    instead of the viewport. At screen width that would push a viewport-wide panel past the
-    scroll container and give the page a horizontal scroll it never had.
--->
-<Rideau bind:this={curtain} duration={0.9} class="w-full" />
-
 <div class="flex flex-col gap-10">
     <div class="flex flex-col gap-2">
         <h1 class="text-fc-2xl font-semibold text-fc-fg">Motion</h1>
@@ -94,14 +81,16 @@
     <section class="flex flex-col gap-4">
         <h2 class="text-fc-lg font-semibold text-fc-fg">Rideau</h2>
         <p class="text-fc-sm text-fc-fg-muted">
-            The full-page curtain, and the reason this section sits at the top: it is anchored
-            to the top of the page, so it is only worth pressing from here.
+            The full-page curtain — you came in behind it. One instance lives at the app root,
+            above the router, so it can cover the page you leave and uncover the one you land
+            on; a curtain mounted inside the routed view only ever gets to play the second
+            half, which is why arriving used to look like a jump cut to a blank panel.
         </p>
         <Button
             variant="outline"
             icon={icons.arrow}
             class="self-start"
-            onclick={() => curtain?.close('#/dashboard')}
+            onclick={() => curtain.el?.close('#/dashboard')}
         >
             Curtain out to Dashboard
         </Button>
