@@ -1,0 +1,11 @@
+/*
+ * The documented consumer recipe, exactly — two lines and nothing else.
+ *
+ * `@import` proves the package's `./styles` export resolves from node_modules and that the
+ * bundled Goga `url()`s get rewritten. `@source` proves Tailwind scans the installed
+ * package: without it every muse class is purged and the app renders structurally correct
+ * and completely unstyled. tokens.css imports tailwindcss itself, so there is no second
+ * `@import 'tailwindcss'` here.
+ */
+@import '@facile/muse/styles';
+@source '../node_modules/@facile/muse/src';

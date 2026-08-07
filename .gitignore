@@ -2,6 +2,12 @@ node_modules/
 .svelte-kit/
 build/
 dist/
+
+# The smoke harness packs the library into the repo root and installs it into smoke/.
+# Its lockfile is deliberately not tracked: the script deletes it every run so the tarball
+# is genuinely re-extracted rather than served from a cached resolution.
+muse-smoke.tgz
+smoke/bun.lock
 .env
 .env.*
 !.env.example

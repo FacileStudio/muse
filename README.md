@@ -13,7 +13,7 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 
 ## What it does
 
-- Exports 48 Svelte 5 components: 16 atoms, 12 molecules, 8 organisms, 6 charts, 6 motion pieces
+- Exports 51 Svelte 5 components: 16 atoms, 14 molecules, 9 organisms, 6 charts, 6 motion pieces
 - Standardises the settings page — `Tabs`, `SettingsSection`, `SettingsRow`, and a
   `SecretField` that masks, reveals-then-re-hides, and copies credentials the same way in
   every app

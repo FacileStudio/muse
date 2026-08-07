@@ -33,3 +33,10 @@ jobs:
       - name: Build the demo
         working-directory: demo
         run: bun run build
+
+      # The demo aliases @facile/muse at the source, so it never exercises the exports map,
+      # the dependency optimizer, SSR or a real node_modules layout — six of the seven
+      # defects found on first adoption were invisible to every step above. This installs
+      # the packed package into a SvelteKit app and asserts the consumer contract.
+      - name: Consumer smoke test
+        run: sh ./scripts/smoke.sh

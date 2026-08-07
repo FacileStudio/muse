@@ -1,7 +1,7 @@
 # muse — API
 
 The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 50 components
-(16 atoms, 13 molecules, 9 organisms, 6 charts, 6 motion pieces), the `cn` class merger, the
+(16 atoms, 14 molecules, 9 organisms, 6 charts, 6 motion pieces), the `cn` class merger, the
 motion, press, field, secret, toast and chart helpers, the `icons` map and the exported types.
 Nothing else in the repo is importable — `ChartTable.svelte`, `components/charts/entry.ts`
 and `utils/dialog.ts` are internal.
@@ -488,6 +488,29 @@ Swatch radiogroup over the shared identity palette. Spreads to the group `<div>`
 | `onSelect` | `(color: string) => void` | — | |
 
 The six hexes are a persisted data contract shared with Sablier — do not restyle them.
+
+### `EmptyState`
+
+A list with nothing in it. Renders a `Card` (`bare` skips it) with `py-12` and centred
+content. Spreads to the root element.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `title` | `string` | — (required) | `text-fc-sm font-medium` |
+| `icon` | `string` | — | Muted glyph above the title, 24px |
+| `description` | `string` | — | Muted, capped at `max-w-sm` |
+| `bare` | `boolean` | `false` | Skip the `Card` — for use inside one, or in a table's empty row |
+| `children` | `Snippet` | — | The action that resolves the state |
+
+```svelte
+<EmptyState icon={icons.folder} title="No projects yet" description="Create one to start tracking.">
+  <Button icon={icons.plus}>New project</Button>
+</EmptyState>
+```
+
+The height is deliberate: a two-line card where a list should be reads as a rendering
+failure. Title and description are one `gap-1` block inside the outer `gap-4` so the
+description binds to the title rather than floating between it and the action.
 
 ### `Dropzone`
 

@@ -7,6 +7,7 @@
         ColorPicker,
         ConfirmModal,
         Drawer,
+        EmptyState,
         Field,
         Input,
         Modal,
@@ -153,13 +154,15 @@
                 {/each}
             </div>
         {:else if visible.length === 0}
-            <Card class="flex flex-col items-center gap-3 py-12 text-center">
-                <p class="text-fc-sm font-medium text-fc-fg">No project matches “{search}”</p>
-                <p class="text-fc-sm text-fc-fg-muted">Try another name, or clear the filters.</p>
+            <EmptyState
+                icon={icons.search}
+                title="No project matches “{search}”"
+                description="Try another name, or clear the filters."
+            >
                 <Button variant="outline" icon={icons.refresh} onclick={() => { search = ''; statusFilter = 'all'; }}>
                     Clear filters
                 </Button>
-            </Card>
+            </EmptyState>
         {:else}
             <div class="hidden md:block">
                 <Table>
