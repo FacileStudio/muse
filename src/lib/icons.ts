@@ -13,6 +13,7 @@ export const icons = {
   userCircle:    'solar:user-circle-linear',
   logout:        'solar:logout-2-linear',
   warning:       'solar:danger-triangle-linear',
+  error:         'solar:close-circle-linear',
   info:          'solar:info-circle-linear',
   upload:        'solar:cloud-upload-linear',
   clock:         'solar:clock-circle-linear',
