@@ -118,7 +118,7 @@
         <Button icon={icons.plus} onclick={() => (createOpen = true)}>New project</Button>
     </div>
 
-    <section class="grid gap-3 sm:grid-cols-3">
+    <section class="grid gap-4 sm:grid-cols-3">
         <StatCard label="Active" value={activeCount} delta="of {projects.length} projects">
             <Sparkline data={projects[0]?.trend ?? []} class="mt-2" showLast />
         </StatCard>

@@ -1,6 +1,6 @@
 {
   "name": "@facile/muse",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Svelte/SvelteKit component library for Facile tools",
   "type": "module",
   "svelte": "./src/lib/index.ts",

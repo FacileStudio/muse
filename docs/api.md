@@ -71,7 +71,8 @@ One vocabulary, three widths, because not every component can carry every tone:
 
 ### `Button`
 
-Pill-shaped button. Spreads to `<button>` (`HTMLButtonAttributes`).
+Pill-shaped button. Spreads to `<button>` (`HTMLButtonAttributes`) — or to `<a>` when `href`
+is set.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
@@ -80,6 +81,8 @@ Pill-shaped button. Spreads to `<button>` (`HTMLButtonAttributes`).
 | `icon` | `string` | — | Iconify name, rendered before the label |
 | `iconRight` | `string` | — | Iconify name, rendered after the label |
 | `type` | `string` | `'button'` | Declared so a button in a form does not submit it by accident |
+| `href` | `string` | — | Renders an `<a>` instead. `target`, `rel` and `download` come with it |
+| `disabled` | `boolean` | `false` | On the anchor branch: drops `href`, sets `aria-disabled` and `tabindex="-1"` |
 | `children` | `Snippet` | — | Optional — an icon-only button is legal |
 
 `primary` fills with `bg-fc-accent` — which equals the foreground colour, so it reads as an
@@ -116,12 +119,18 @@ it rather than replacing it.
 
 ### `Card`
 
-Container surface: `rounded-fc-md bg-fc-component p-4`. **No border** — the fill is what
-separates it from the page. Spreads to `<div>`.
+Container surface: `rounded-fc-md bg-fc-component p-5`. **No border** — the fill is what
+separates it from the page. Spreads to `<div>`, or to `<a>` when `href` is set.
 
 | Prop | Type | Default |
 |---|---|---|
+| `href` | `string` | — |
 | `children` | `Snippet` | — (required) |
+
+With `href` the card becomes a link and picks up `group`, `transition-colors`, a
+`hover:bg-fc-surface` step and the house focus ring — the affordances a `<div>` cannot carry.
+Children can react to the hover through `group-hover:`. Without it nothing changes, so
+`Card` stays a plain surface by default.
 
 ### `Input`
 
@@ -558,6 +567,8 @@ Collapsible vertical navigation panel on `bg-fc-component`, built from `NavButto
 | `activeSpaceId` | `string \| null` | `null` | Forwarded to `SpaceSwitcher` |
 | `onSpaceSelect` | `(id: string \| null) => void` | — | Forwarded to `SpaceSwitcher` |
 | `manageSpacesHref` | `string` | — | Forwarded as the switcher's footer link |
+| `personalSpaceLabel` | `string` | — | Forwarded as the switcher's `personalLabel` (default `'Personal'`) |
+| `manageSpacesLabel` | `string` | — | Forwarded as the switcher's `manageLabel` (default `'Manage spaces'`) |
 
 The width tween **reads the tokens** — `getComputedStyle` for `--width-fc-nav-collapsed` and
 `--width-fc-nav-expanded`, falling back to 68 and 220 only for SSR or a consumer that skipped
@@ -606,6 +617,10 @@ indicator. Give the scroll container `pb-28` so content can clear the bar. Sprea
 The bar is `rounded-fc-pill bg-fc-bg/70 shadow-lg backdrop-blur-2xl backdrop-saturate-150` at
 `z-50` — a floating surface, so it gets the shadow, and **no border**. The active item is
 inverted.
+
+Each target is a fixed `size-fc-nav-item` (44px) square, and the bar's gaps and padding shrink
+under `sm:` so **six items plus the avatar** fit the 360px floor. Beyond that the strip scrolls
+horizontally instead of overflowing the viewport.
 
 ### `Toaster`
 

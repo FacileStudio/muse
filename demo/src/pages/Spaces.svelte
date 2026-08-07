@@ -157,7 +157,7 @@
             <h2 class="text-fc-lg font-semibold text-fc-fg">{selected.name}</h2>
             <p class="text-fc-sm text-fc-fg-muted">{selected.description || 'No description yet.'}</p>
 
-            <div class="grid gap-3 sm:grid-cols-3">
+            <div class="grid gap-4 sm:grid-cols-3">
                 <StatCard label="Members" value={selected.members.length} />
                 <StatCard label="Projects" value={selected.projects} />
                 <StatCard label="Hours tracked" value="{selected.hours} h" />

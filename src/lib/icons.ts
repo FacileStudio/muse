@@ -41,6 +41,7 @@ export const icons = {
   mail:          'solar:letter-linear',
   close:         'mdi:close',
   plus:          'mdi:plus',
+  minus:         'mdi:minus',
   arrow:         'mdi:chevron-right',
   chevronDown:   'mdi:chevron-down',
   chevronUp:     'mdi:chevron-up',

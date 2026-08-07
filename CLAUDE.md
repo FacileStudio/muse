@@ -23,7 +23,7 @@ muse/
   integrations/SKILL.md       Shared AI skill definition
   src/lib/
     index.ts                  Public re-exports (all components + utils)
-    icons.ts                  Iconify name map (46 keys) + IconKey type
+    icons.ts                  Iconify name map (47 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
     components/               50 Svelte components (atoms/ molecules/ organisms/ charts/ motion/)
     fonts/                    Bundled Goga font files (.otf)

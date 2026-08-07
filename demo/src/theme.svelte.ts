@@ -2,7 +2,17 @@ export type ThemeMode = 'system' | 'light' | 'dark';
 
 const KEY = 'muse-theme';
 
+/*
+ * `typeof document === 'undefined'` is the guard, and the choice matters because this file
+ * gets copied into apps. `typeof localStorage === 'undefined'` is the obvious spelling and it
+ * is broken: recent Node defines a `localStorage` global, so the check passes on the server
+ * and `getItem` throws anyway. A SvelteKit consumer should use `browser` from
+ * `$app/environment`; `document` is the framework-free equivalent.
+ */
+const browser = typeof document !== 'undefined';
+
 function stored(): ThemeMode {
+    if (!browser) return 'system';
     const raw = localStorage.getItem(KEY);
     return raw === 'light' || raw === 'dark' || raw === 'system' ? raw : 'system';
 }

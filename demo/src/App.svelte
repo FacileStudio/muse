@@ -121,6 +121,8 @@
             {activeSpaceId}
             onSpaceSelect={(id) => (activeSpaceId = id)}
             manageSpacesHref="#/spaces"
+            personalSpaceLabel="No space"
+            manageSpacesLabel="All spaces"
             {user}
             userHref="#/settings"
             userActive={onSettings}

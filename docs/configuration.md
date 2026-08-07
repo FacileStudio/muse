@@ -181,7 +181,7 @@ The shipped files are labeled "GogaTest" (test license).
 ## Icons
 
 `icons` is a `const` map from a stable key to an Iconify name, exported alongside the
-`IconKey` type. 46 keys. UI chrome is Solar **`linear`**; plus, close and the chevrons are
+`IconKey` type. 47 keys. UI chrome is Solar **`linear`**; plus, close and the chevrons are
 **MDI**, because Solar's versions of those read muddy at 16px.
 
 | Key | Icon | Key | Icon |

@@ -1,23 +1,31 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import type { HTMLButtonAttributes } from 'svelte/elements';
+    import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
 
     type Variant = 'primary' | 'ghost' | 'outline' | 'danger' | 'ghost-danger';
     type Size = 'sm' | 'md' | 'lg';
 
     let {
+        href,
         type = 'button',
         variant = 'primary',
         size = 'md',
+        disabled = false,
         icon,
         iconRight,
         class: className = '',
         children,
         ...rest
-    }: HTMLButtonAttributes & {
+    }: Omit<HTMLButtonAttributes, 'type'> & {
+        href?: string;
+        target?: HTMLAnchorAttributes['target'];
+        rel?: HTMLAnchorAttributes['rel'];
+        download?: HTMLAnchorAttributes['download'];
+        type?: HTMLButtonAttributes['type'];
         variant?: Variant;
         size?: Size;
+        disabled?: boolean;
         icon?: string;
         iconRight?: string;
         class?: string;
@@ -41,10 +49,19 @@
         lg: 'h-11 px-6 text-fc-md'
     };
 
-    const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc-pill justify-center gap-2 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring', variants[variant], sizes[size], className));
+    /*
+     * `aria-disabled:*` mirrors the `disabled:*` pair because an <a> has no disabled state —
+     * the attribute is advisory, so the pointer-events kill is what actually stops the
+     * navigation. A <button> never matches these; a link never matches the native ones.
+     */
+    /* `rest` is declared button-shaped, so the anchor branch needs it re-cast — one component,
+       two elements, and Svelte's handler props are invariant in their element type. */
+    const anchorRest = $derived(rest as unknown as HTMLAnchorAttributes);
+
+    const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc-pill justify-center gap-2 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring', variants[variant], sizes[size], className));
 </script>
 
-<button {type} class={classes} {...rest}>
+{#snippet content()}
     {#if icon}
         <iconify-icon {icon} width={glyph} height={glyph} class="block shrink-0"></iconify-icon>
     {/if}
@@ -52,4 +69,27 @@
     {#if iconRight}
         <iconify-icon icon={iconRight} width={glyph} height={glyph} class="block shrink-0"></iconify-icon>
     {/if}
-</button>
+{/snippet}
+
+<!--
+  An action that navigates is a link, and a link that looks like a button is still a link:
+  it has to be middle-clickable, openable in a new tab and reachable from the status bar.
+  Without `href` every call site rebuilt these classes on an <a> by hand — which is exactly
+  how a design system leaks. `type` is dropped on the anchor branch: on an <a> it means
+  content-type, not button behaviour.
+-->
+{#if href}
+    <a
+        href={disabled ? undefined : href}
+        aria-disabled={disabled ? 'true' : undefined}
+        tabindex={disabled ? -1 : undefined}
+        class={classes}
+        {...anchorRest}
+    >
+        {@render content()}
+    </a>
+{:else}
+    <button {type} {disabled} class={classes} {...rest}>
+        {@render content()}
+    </button>
+{/if}

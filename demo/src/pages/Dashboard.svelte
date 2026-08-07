@@ -41,6 +41,13 @@
     let deleteOpen = $state(false);
     let drawerOpen = $state(false);
     let lastAction = $state('nothing yet');
+    let seats = $state(3);
+
+    const cardLinks = [
+        { href: '#/projects', label: 'Projects', meta: '12 active', icon: icons.folder },
+        { href: '#/spaces', label: 'Spaces', meta: '3 spaces', icon: icons.usersGroup },
+        { href: '#/settings', label: 'Settings', meta: 'Profile and API', icon: icons.settings }
+    ];
 
     const billingError = $derived(
         billing.length > 0 && !billing.includes('@') ? 'An email address needs an @.' : undefined
@@ -187,6 +194,59 @@
             <IconButton variant="danger" aria-label="Delete" title="Danger">
                 <iconify-icon icon={icons.remove} width="18" height="18" class="block"></iconify-icon>
             </IconButton>
+            <!-- icons.minus is the pair to icons.plus: MDI, because Solar's reads muddy at
+                 16px. A stepper is where it earns its keep. -->
+            <div class="flex items-center gap-2">
+                <IconButton variant="ghost" aria-label="Fewer" onclick={() => (seats = Math.max(1, seats - 1))}>
+                    <iconify-icon icon={icons.minus} width="18" height="18" class="block"></iconify-icon>
+                </IconButton>
+                <span class="w-6 text-center text-fc-sm tabular-nums text-fc-fg">{seats}</span>
+                <IconButton variant="ghost" aria-label="More" onclick={() => (seats = seats + 1)}>
+                    <iconify-icon icon={icons.plus} width="18" height="18" class="block"></iconify-icon>
+                </IconButton>
+            </div>
+        </div>
+
+        <!-- An action that navigates renders as an <a> and keeps the button's shape, so it is
+             still middle-clickable and still shows its target in the status bar. -->
+        <div class="flex flex-wrap items-center gap-3">
+            <Button href="#/projects" iconRight={icons.arrow}>All projects</Button>
+            <Button href="#/spaces" variant="outline" icon={icons.usersGroup}>Spaces</Button>
+            <Button href="#/motion" variant="ghost" iconRight={icons.arrow}>Motion</Button>
+            <Button href="#/settings" disabled iconRight={icons.arrow}>Disabled link</Button>
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+            <h2 class="text-fc-lg font-semibold text-fc-fg">Cards that navigate</h2>
+            <p class="text-fc-sm text-fc-fg-muted">
+                `href` turns a Card into an anchor and adds the hover step, the focus ring and
+                `group`, so children can answer the hover.
+            </p>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-3">
+            {#each cardLinks as link (link.href)}
+                <Card href={link.href} class="flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <span
+                            class="flex size-9 items-center justify-center rounded-fc-sm bg-fc-surface text-fc-fg transition-colors group-hover:bg-fc-component"
+                        >
+                            <iconify-icon icon={link.icon} width="18" height="18" class="block"></iconify-icon>
+                        </span>
+                        <iconify-icon
+                            icon={icons.arrow}
+                            width="16"
+                            height="16"
+                            class="block text-fc-fg-muted transition-transform group-hover:translate-x-0.5"
+                        ></iconify-icon>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="truncate text-fc-sm font-medium text-fc-fg">{link.label}</p>
+                        <p class="truncate text-fc-xs text-fc-fg-muted">{link.meta}</p>
+                    </div>
+                </Card>
+            {/each}
         </div>
     </section>
 
