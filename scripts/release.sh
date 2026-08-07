@@ -39,8 +39,13 @@ CURRENT=$(grep -m1 '"version"' package.json | sed 's/.*"version": "\(.*\)".*/\1/
 echo "release: $CURRENT -> $VERSION"
 
 # Verify before the bump, so a failure leaves the tree exactly as it was found.
+#
+# The `|| fail` is not decoration. `set -e` on its own aborts here without a word, and the
+# first real use of this script did exactly that — the gate failed because a previous smoke
+# run still held its port, and the script exited between "running the full gate" and any
+# explanation. A release that stops has to say so.
 echo "release: running the full gate"
-mise run verify
+mise run verify || fail "the gate failed — nothing was changed, no commit and no tag"
 
 # In-place sed is not portable between GNU and BSD, so write through a temp file.
 sed "s/\"version\": \"$CURRENT\"/\"version\": \"$VERSION\"/" package.json > package.json.tmp
