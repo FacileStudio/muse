@@ -23,6 +23,8 @@
         userActive = false,
         collapsed = $bindable(false),
         showSearch = false,
+        showCollapse = true,
+        onSearch,
         spaces = [],
         activeSpaceId = null,
         onSpaceSelect,
@@ -40,6 +42,8 @@
         userActive?: boolean;
         collapsed?: boolean;
         showSearch?: boolean;
+        showCollapse?: boolean;
+        onSearch?: () => void;
         spaces?: SpaceItem[];
         activeSpaceId?: string | null;
         onSpaceSelect?: (id: string | null) => void;
@@ -100,6 +104,33 @@
                 tween = null;
             }
         });
+    });
+
+    /*
+     * The ⌘K / ⌘D chips shipped for months with nothing bound behind them — decoration
+     * describing a keybinding no one had implemented. This is that binding. The handler
+     * reads `collapsed` only inside the closure so the effect does not take it as a
+     * dependency and tear the listener down on every toggle.
+     *
+     * Document-scoped, so two mounted SideBars would both answer ⌘D and cancel each other
+     * out. Every consumer mounts exactly one rail; if that ever stops being true, this
+     * needs an owner rather than a listener per instance.
+     */
+    $effect(() => {
+        if (!showCollapse && !onSearch) return;
+        const onKeydown = (e: KeyboardEvent) => {
+            if (!(e.metaKey || e.ctrlKey) || e.altKey) return;
+            const key = e.key.toLowerCase();
+            if (key === 'd' && showCollapse) {
+                e.preventDefault();
+                collapsed = !collapsed;
+            } else if (key === 'k' && onSearch) {
+                e.preventDefault();
+                onSearch();
+            }
+        };
+        document.addEventListener('keydown', onKeydown);
+        return () => document.removeEventListener('keydown', onKeydown);
     });
 
     /*
@@ -175,24 +206,32 @@
             </div>
         {/if}
 
-        {#if showSearch}
+        {#if showSearch || showCollapse}
             <div class="flex flex-col gap-1">
-                <NavButton icon={icons.search} label="Search" collapsed={narrow}>
-                    {#snippet right()}
-                        <span class="text-fc-xs opacity-50 shrink-0">⌘K</span>
-                    {/snippet}
-                </NavButton>
-                <NavButton
-                    icon={icons.collapse}
-                    label="Collapse"
-                    collapsed={narrow}
-                    onclick={() => (collapsed = !collapsed)}
-                    aria-label={collapsed ? 'Expand' : 'Collapse'}
-                >
-                    {#snippet right()}
-                        <span class="text-fc-xs opacity-50 shrink-0">⌘D</span>
-                    {/snippet}
-                </NavButton>
+                {#if showSearch}
+                    <NavButton icon={icons.search} label="Search" collapsed={narrow} onclick={onSearch}>
+                        {#snippet right()}
+                            <!-- No handler, no chip: the shortcut hint is a promise, and an
+                                 unwired Search row cannot keep it. -->
+                            {#if onSearch}
+                                <span class="text-fc-xs opacity-50 shrink-0">⌘K</span>
+                            {/if}
+                        {/snippet}
+                    </NavButton>
+                {/if}
+                {#if showCollapse}
+                    <NavButton
+                        icon={icons.collapse}
+                        label="Collapse"
+                        collapsed={narrow}
+                        onclick={() => (collapsed = !collapsed)}
+                        aria-label={collapsed ? 'Expand' : 'Collapse'}
+                    >
+                        {#snippet right()}
+                            <span class="text-fc-xs opacity-50 shrink-0">⌘D</span>
+                        {/snippet}
+                    </NavButton>
+                {/if}
             </div>
         {/if}
 
