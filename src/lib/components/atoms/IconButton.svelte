@@ -31,6 +31,6 @@
     ));
 </script>
 
-<button {type} class={classes} use:springPress={0.88} {...rest}>
+<button {type} class={classes} use:springPress {...rest}>
     {@render children()}
 </button>
