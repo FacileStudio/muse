@@ -1,11 +1,12 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import type { ChartLegendItem } from '../../utils/chart.js';
 
     let {
         items = [],
         class: className = ''
     }: {
-        items: { name: string; color: string; value?: string }[];
+        items: ChartLegendItem[];
         class?: string;
     } = $props();
 

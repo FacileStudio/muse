@@ -1,73 +1,36 @@
 <script lang="ts">
     import {
         Alert,
-        Avatar,
         Badge,
         Button,
         Card,
         ColorPicker,
         ConfirmModal,
-        Divider,
         Drawer,
         Field,
         Input,
         Modal,
+        NavButton,
         Select,
+        SettingsRow,
         SpaceSwitcher,
         StatCard,
         Textarea,
         USER_COLORS,
         icons
     } from '@facile/lib';
+    import {
+        createWorkspaces,
+        currentUser,
+        newMember,
+        roleLabel,
+        roleTone,
+        type Member,
+        type Role,
+        type Workspace
+    } from '../data.js';
 
-    type Role = 'owner' | 'admin' | 'neutral';
-
-    type Member = { id: string; name: string; email: string; role: Role };
-
-    type Space = {
-        id: string;
-        name: string;
-        description: string;
-        color: string;
-        projects: number;
-        hours: number;
-        members: Member[];
-    };
-
-    let spaces = $state<Space[]>([
-        {
-            id: 'acme',
-            name: 'Acme Studio',
-            description: 'Client work, invoicing and shared assets.',
-            color: USER_COLORS[0],
-            projects: 3,
-            hours: 390,
-            members: [
-                { id: 'm1', name: 'Camille', email: 'camille@facile.studio', role: 'owner' },
-                { id: 'm2', name: 'Noah', email: 'noah@facile.studio', role: 'admin' },
-                { id: 'm3', name: 'Mazouz', email: 'mazouz@facile.studio', role: 'neutral' },
-                { id: 'm4', name: 'Yann', email: 'yann@facile.studio', role: 'neutral' }
-            ]
-        },
-        {
-            id: 'nova',
-            name: 'Nova Collective',
-            description: 'Side projects and experiments.',
-            color: USER_COLORS[5],
-            projects: 2,
-            hours: 167,
-            members: [{ id: 'm1', name: 'Camille', email: 'camille@facile.studio', role: 'owner' }]
-        },
-        {
-            id: 'hedra',
-            name: 'Hedra',
-            description: 'Brand identity retainer.',
-            color: USER_COLORS[2],
-            projects: 0,
-            hours: 0,
-            members: []
-        }
-    ]);
+    let spaces = $state<Workspace[]>(createWorkspaces());
 
     let selectedId = $state('acme');
     let activeSpaceId = $state<string | null>('acme');
@@ -82,12 +45,10 @@
     let draftColor = $state(USER_COLORS[1] as string);
 
     let inviteEmail = $state('');
-    let inviteRole = $state('neutral');
+    let inviteRole = $state<Role>('member');
     let inviteSent = $state('');
 
     let roleFilter = $state('all');
-
-    const roleLabel = { owner: 'Owner', admin: 'Admin', neutral: 'Member' };
 
     const selected = $derived(spaces.find((s) => s.id === selectedId) ?? spaces[0]);
 
@@ -107,7 +68,7 @@
             color: draftColor,
             projects: 0,
             hours: 0,
-            members: [{ id: 'm1', name: 'Camille', email: 'camille@facile.studio', role: 'owner' }]
+            members: [{ id: 'm1', name: currentUser.name, email: currentUser.email, role: 'owner' }]
         });
         selectedId = id;
         draftName = '';
@@ -117,12 +78,9 @@
 
     function invite() {
         if (!inviteEmail.trim() || !selected) return;
-        selected.members.push({
-            id: `m${selected.members.length + 1}`,
-            name: inviteEmail.split('@')[0],
-            email: inviteEmail.trim(),
-            role: inviteRole as Role
-        });
+        selected.members.push(
+            newMember(`m${selected.members.length + 1}`, inviteEmail.trim(), inviteRole)
+        );
         inviteSent = `Invitation sent to ${inviteEmail.trim()}`;
         inviteEmail = '';
         setTimeout(() => (inviteSent = ''), 3000);
@@ -149,7 +107,7 @@
             </p>
         </div>
         <div class="flex items-center gap-3">
-            <Button variant="outline" icon="solar:filter-linear" onclick={() => (filtersOpen = true)}>
+            <Button variant="outline" icon={icons.filter} onclick={() => (filtersOpen = true)}>
                 Filters
             </Button>
             <Button icon={icons.plus} onclick={() => (createOpen = true)}>New space</Button>
@@ -169,35 +127,29 @@
             />
         </div>
 
-        <div class="flex flex-col gap-2">
+        <Card class="flex flex-col gap-1 p-2">
             {#each spaces as space (space.id)}
-                <Card class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <button
-                        type="button"
-                        class="flex min-w-0 flex-1 items-center gap-3 text-left"
-                        onclick={() => (selectedId = space.id)}
-                        aria-pressed={space.id === selectedId}
-                    >
-                        <span
-                            class="h-8 w-8 shrink-0 rounded-fc-pill"
-                            style:background-color={space.color}
-                        ></span>
-                        <span class="min-w-0">
-                            <span class="block truncate text-fc-sm font-medium text-fc-fg">{space.name}</span>
-                            <span class="block truncate text-fc-xs text-fc-fg-muted">
+                <NavButton
+                    icon={icons.usersGroup}
+                    label={space.name}
+                    active={space.id === selectedId}
+                    aria-pressed={space.id === selectedId}
+                    onclick={() => (selectedId = space.id)}
+                >
+                    {#snippet right()}
+                        <span class="flex shrink-0 items-center gap-2">
+                            <span class="hidden text-fc-xs opacity-70 sm:inline">
                                 {space.members.length} member{space.members.length === 1 ? '' : 's'} · {space.projects} projects
                             </span>
+                            <span
+                                class="h-2.5 w-2.5 shrink-0 rounded-fc-pill"
+                                style:background-color={space.color}
+                            ></span>
                         </span>
-                    </button>
-                    <div class="flex shrink-0 items-center gap-2">
-                        {#if space.id === selectedId}<Badge tone="accent">Selected</Badge>{/if}
-                        <Badge tone={space.members[0]?.role ?? 'neutral'}>
-                            {roleLabel[space.members[0]?.role ?? 'neutral']}
-                        </Badge>
-                    </div>
-                </Card>
+                    {/snippet}
+                </NavButton>
             {/each}
-        </div>
+        </Card>
     </section>
 
     {#if selected}
@@ -223,32 +175,23 @@
                     </p>
                 </Card>
             {:else}
-                <Card class="flex flex-col gap-1 p-2">
-                    {#each visibleMembers as member, i (member.id)}
-                        {#if i > 0}<Divider />{/if}
-                        <div class="flex items-center justify-between gap-3 px-2 py-2.5">
-                            <div class="flex min-w-0 items-center gap-3">
-                                <Avatar name={member.name} size="sm" />
-                                <div class="min-w-0">
-                                    <p class="truncate text-fc-sm font-medium text-fc-fg">{member.name}</p>
-                                    <p class="truncate text-fc-xs text-fc-fg-muted">{member.email}</p>
-                                </div>
-                            </div>
-                            <div class="flex shrink-0 items-center gap-2">
-                                <Badge tone={member.role}>{roleLabel[member.role]}</Badge>
-                                {#if member.role !== 'owner'}
-                                    <Button
-                                        variant="ghost-danger"
-                                        size="sm"
-                                        icon={icons.remove}
-                                        aria-label="Remove {member.name}"
-                                        onclick={() => askRemove(member)}
-                                    >
-                                        Remove
-                                    </Button>
-                                {/if}
-                            </div>
-                        </div>
+                <!-- SettingsRow draws the rule on its own top edge and drops it on the first
+                     child, so the list needs no manual Divider and no index. -->
+                <Card class="flex flex-col">
+                    {#each visibleMembers as member (member.id)}
+                        <SettingsRow label={member.name} description={member.email}>
+                            <Badge tone={roleTone[member.role]}>{roleLabel[member.role]}</Badge>
+                            {#if member.role !== 'owner'}
+                                <Button
+                                    variant="ghost-danger"
+                                    icon={icons.remove}
+                                    aria-label="Remove {member.name}"
+                                    onclick={() => askRemove(member)}
+                                >
+                                    Remove
+                                </Button>
+                            {/if}
+                        </SettingsRow>
                     {/each}
                 </Card>
             {/if}
@@ -267,7 +210,7 @@
                 </div>
                 <Field label="Role">
                     <Select bind:value={inviteRole} class="min-w-36">
-                        <option value="neutral">Member</option>
+                        <option value="member">Member</option>
                         <option value="admin">Admin</option>
                     </Select>
                 </Field>
@@ -303,8 +246,8 @@
     title="Remove {pendingRemoval?.name ?? 'this member'}?"
     description="They lose access to every project in this space. Their tracked hours are kept."
     confirmLabel="Remove member"
-    onconfirm={confirmRemove}
-    oncancel={() => (pendingRemoval = null)}
+    onConfirm={confirmRemove}
+    onCancel={() => (pendingRemoval = null)}
 />
 
 <Drawer bind:open={filtersOpen} title="Filters" description="Narrow the member list." showClose>
@@ -313,7 +256,7 @@
             <option value="all">All roles</option>
             <option value="owner">Owner</option>
             <option value="admin">Admin</option>
-            <option value="neutral">Member</option>
+            <option value="member">Member</option>
         </Select>
     </Field>
     {#snippet footer()}
@@ -321,7 +264,7 @@
             <Button variant="ghost" icon={icons.refresh} class="flex-1" onclick={() => (roleFilter = 'all')}>
                 Reset
             </Button>
-            <Button icon="mdi:check" class="flex-1" onclick={() => (filtersOpen = false)}>Apply</Button>
+            <Button icon={icons.check} class="flex-1" onclick={() => (filtersOpen = false)}>Apply</Button>
         </div>
     {/snippet}
 </Drawer>

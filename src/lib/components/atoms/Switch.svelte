@@ -19,7 +19,7 @@
 </script>
 
 <label class={classes}>
-    <input type="checkbox" bind:checked {disabled} class="peer sr-only" {...rest} />
+    <input type="checkbox" role="switch" bind:checked {disabled} class="peer sr-only" {...rest} />
     <span
         class="relative h-6 w-11 shrink-0 rounded-fc-pill border border-fc-border bg-fc-surface transition-colors peer-checked:border-fc-accent peer-checked:bg-fc-accent peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fc-ring peer-checked:[&>span]:translate-x-5 peer-checked:[&>span]:bg-fc-accent-fg"
     >

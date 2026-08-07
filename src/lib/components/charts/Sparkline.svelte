@@ -1,8 +1,15 @@
 <script lang="ts">
-    import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
-    import { areaPath, linePath, resize } from '../../utils/chart.js';
+    import {
+        AREA_OPACITY,
+        areaPath,
+        formatCompact,
+        linePath,
+        resize,
+        type ChartRow
+    } from '../../utils/chart.js';
+    import { drawIn } from './entry.js';
+    import ChartTable from './ChartTable.svelte';
 
     let {
         data = [],
@@ -11,6 +18,7 @@
         smooth = true,
         color = 'var(--color-fc-chart-1)',
         showLast = false,
+        valueFormat = formatCompact,
         animate = true,
         emptyLabel = 'No data',
         class: className = ''
@@ -21,6 +29,7 @@
         smooth?: boolean;
         color?: string;
         showLast?: boolean;
+        valueFormat?: (n: number) => string;
         animate?: boolean;
         emptyLabel?: string;
         class?: string;
@@ -33,7 +42,7 @@
     const classes = $derived(twMerge('block w-full', className));
 
     const values = $derived(data.filter((v) => Number.isFinite(v)));
-    const isEmpty = $derived(values.length === 0 || values.every((v) => v === 0));
+    const isEmpty = $derived(values.length === 0);
 
     const low = $derived(isEmpty ? 0 : Math.min(...values));
     const high = $derived(isEmpty ? 1 : Math.max(...values));
@@ -61,28 +70,21 @@
     const stroke = $derived(linePath(points, smooth));
     const fill = $derived(area ? areaPath(points, padY + plotH, smooth) : '');
     const last = $derived(points.length ? points[points.length - 1] : null);
-    const summary = $derived(`Sparkline of ${values.length} values, from ${values[0] ?? 0} to ${values[values.length - 1] ?? 0}`);
+
+    const summary = $derived(
+        `Sparkline of ${values.length} values, from ${valueFormat(values[0] ?? 0)} to ${valueFormat(
+            values[values.length - 1] ?? 0
+        )}`
+    );
+
+    const tableRows = $derived.by((): ChartRow[] =>
+        values.map((v, i) => ({ label: String(i + 1), cells: [valueFormat(v)] }))
+    );
 
     $effect(() => {
         if (started || isEmpty || plotW <= 0 || !svgEl) return;
         started = true;
-        if (!animate || prefersReducedMotion()) return;
-        const path = svgEl.querySelector<SVGPathElement>('[data-line]');
-        if (path) {
-            const len = path.getTotalLength();
-            gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-            gsap.to(path, {
-                strokeDashoffset: 0,
-                duration: 0.6,
-                ease: 'power3.out',
-                onComplete: () => {
-                    path.style.removeProperty('stroke-dasharray');
-                    path.style.removeProperty('stroke-dashoffset');
-                }
-            });
-        }
-        const rest = svgEl.querySelectorAll<SVGElement>('[data-fade]');
-        if (rest.length) gsap.fromTo(rest, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power3.out' });
+        drawIn(svgEl, animate);
     });
 </script>
 
@@ -97,13 +99,12 @@
             width={w}
             height={height}
             viewBox="0 0 {w} {height}"
-            role="img"
-            aria-label={summary}
+            aria-hidden="true"
             focusable="false"
             class="block"
         >
             {#if fill}
-                <path d={fill} fill={color} opacity="0.12" data-fade aria-hidden="true" />
+                <path d={fill} fill={color} opacity={AREA_OPACITY} data-area />
             {/if}
             <path
                 d={stroke}
@@ -113,7 +114,6 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 data-line
-                aria-hidden="true"
             />
             {#if showLast && last}
                 <circle
@@ -124,10 +124,11 @@
                     stroke="var(--color-fc-component)"
                     stroke-width="2"
                     data-fade
-                    aria-hidden="true"
                 />
             {/if}
         </svg>
+
+        <ChartTable caption={summary} head="Point" columns={['Value']} rows={tableRows} />
     {:else}
         <div style:height="{height}px"></div>
     {/if}

@@ -1,9 +1,20 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { gsap } from 'gsap';
+    import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
+    import { springPress } from '../../utils/press.js';
     import TextElevate from '../motion/TextElevate.svelte';
+
+    type Own = {
+        href?: string;
+        icon?: string;
+        label?: string;
+        active?: boolean;
+        collapsed?: boolean;
+        textDelay?: number;
+        class?: string;
+        right?: Snippet;
+    };
 
     let {
         href,
@@ -15,41 +26,19 @@
         class: className = '',
         right,
         ...rest
-    }: {
-        href?: string;
-        icon?: string;
-        label?: string;
-        active?: boolean;
-        collapsed?: boolean;
-        textDelay?: number;
-        class?: string;
-        right?: Snippet;
-        [key: string]: unknown;
-    } = $props();
+    }: Own & (HTMLAnchorAttributes | HTMLButtonAttributes) = $props();
+
+    const anchorRest = $derived(rest as HTMLAnchorAttributes);
+    const buttonRest = $derived(rest as HTMLButtonAttributes);
 
     const classes = $derived(twMerge(
-        'flex items-center gap-2.5 rounded-fc-md text-fc-sm transition-colors overflow-hidden',
+        'flex items-center gap-2.5 rounded-fc-md text-fc-sm transition-colors overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
         collapsed
             ? 'size-fc-nav-item shrink-0 self-center justify-center gap-0 p-0'
             : 'w-full min-h-11 px-3 py-2.5',
         active ? 'bg-fc-accent text-fc-accent-fg font-medium' : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
         className
     ));
-
-    function springPress(node: HTMLElement) {
-        function down() {
-            if (prefersReducedMotion()) return;
-            gsap.killTweensOf(node, 'scale');
-            gsap.to(node, {
-                scale: 0.94,
-                duration: 0.08,
-                ease: 'power2.in',
-                onComplete: () => gsap.to(node, { scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
-            });
-        }
-        node.addEventListener('pointerdown', down);
-        return { destroy() { node.removeEventListener('pointerdown', down); } };
-    }
 </script>
 
 {#snippet inner()}
@@ -63,11 +52,17 @@
 {/snippet}
 
 {#if href}
-    <a {href} class={classes} use:springPress>
+    <a
+        {href}
+        aria-current={active ? 'page' : undefined}
+        class={classes}
+        use:springPress
+        {...anchorRest}
+    >
         {@render inner()}
     </a>
 {:else}
-    <button type="button" class={classes} use:springPress {...rest}>
+    <button type="button" class={classes} use:springPress {...buttonRest}>
         {@render inner()}
     </button>
 {/if}

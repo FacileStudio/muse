@@ -1,5 +1,6 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import type { ChartTipRow } from '../../utils/chart.js';
 
     let {
         x,
@@ -12,13 +13,15 @@
         x: number;
         y: number;
         title?: string;
-        rows: { name: string; value: string; color?: string }[];
+        rows: ChartTipRow[];
         visible: boolean;
         class?: string;
     } = $props();
 
+    const OFFSET = 12;
+
     let el: HTMLDivElement | null = $state(null);
-    let flip = $state(false);
+    let box = $state({ w: 0, h: 0, pw: 0, ph: 0, left: 0, view: 0 });
 
     const classes = $derived(
         twMerge(
@@ -27,13 +30,47 @@
         )
     );
 
+    /**
+     * Measured once per open and again only when the tooltip or its plot actually resizes.
+     * Reading `offsetWidth` per pointermove forced a synchronous layout on every frame.
+     */
     $effect(() => {
-        const px = x;
-        const shown = visible;
-        if (!el || !shown) return;
-        const parent = el.parentElement;
+        const node = el;
+        if (!node || !visible) return;
+        const parent = node.parentElement;
         if (!parent) return;
-        flip = px + 12 + el.offsetWidth > parent.clientWidth;
+        const measure = () => {
+            box = {
+                w: node.offsetWidth,
+                h: node.offsetHeight,
+                pw: parent.clientWidth,
+                ph: parent.clientHeight,
+                left: parent.getBoundingClientRect().left,
+                view: typeof window === 'undefined' ? 0 : window.innerWidth
+            };
+        };
+        measure();
+        if (typeof ResizeObserver === 'undefined') return;
+        const observer = new ResizeObserver(measure);
+        observer.observe(node);
+        observer.observe(parent);
+        return () => observer.disconnect();
+    });
+
+    /**
+     * Bounds are the plot box intersected with the viewport, so a chart flush against a
+     * card edge flips inward instead of spilling out of the card.
+     */
+    const place = $derived.by(() => {
+        if (!box.w || !box.h) return { left: x + OFFSET, top: y, centred: true };
+        const min = Math.max(0, -box.left);
+        const max = Math.max(min, Math.min(box.pw, box.view - box.left) - box.w);
+        const wanted = x + OFFSET > max ? x - OFFSET - box.w : x + OFFSET;
+        return {
+            left: Math.min(Math.max(wanted, min), max),
+            top: Math.min(Math.max(y - box.h / 2, 0), Math.max(0, box.ph - box.h)),
+            centred: false
+        };
     });
 </script>
 
@@ -41,9 +78,9 @@
     <div
         bind:this={el}
         class={classes}
-        style:left="{x}px"
-        style:top="{y}px"
-        style:transform={flip ? 'translate(calc(-100% - 12px), -50%)' : 'translate(12px, -50%)'}
+        style:left="{place.left}px"
+        style:top="{place.top}px"
+        style:transform={place.centred ? 'translateY(-50%)' : 'none'}
     >
         {#if title}
             <div class="mb-1 text-fc-fg font-medium">{title}</div>

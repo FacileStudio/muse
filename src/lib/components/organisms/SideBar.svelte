@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { HTMLAttributes } from 'svelte/elements';
     import { slide } from 'svelte/transition';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
@@ -7,6 +8,7 @@
     import TextElevate from '../motion/TextElevate.svelte';
     import { icons } from '../../icons.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
+    import { springPress } from '../../utils/press.js';
 
     type Page = { label: string; href: string; icon?: string; active?: boolean };
     type User = { name: string; avatar?: string };
@@ -25,8 +27,9 @@
         activeSpaceId = null,
         onSpaceSelect,
         manageSpacesHref,
-        class: className = ''
-    }: {
+        class: className = '',
+        ...rest
+    }: HTMLAttributes<HTMLDivElement> & {
         icon?: string;
         title?: string;
         pages?: Page[];
@@ -55,10 +58,25 @@
      */
     let narrow = $state(false);
 
+    /*
+     * The rail width is a token, so the tween has to read the token — hardcoding the pair
+     * here is how a retheme silently stops reaching the animation. The fallbacks only cover
+     * SSR and a consumer that forgot to import the stylesheet.
+     */
+    const FALLBACK_WIDTH = { collapsed: 68, expanded: 220 };
+
+    function railWidth(el: HTMLElement, isCollapsed: boolean): number {
+        const token = isCollapsed ? '--width-fc-nav-collapsed' : '--width-fc-nav-expanded';
+        const fallback = isCollapsed ? FALLBACK_WIDTH.collapsed : FALLBACK_WIDTH.expanded;
+        if (typeof window === 'undefined') return fallback;
+        const parsed = Number.parseFloat(getComputedStyle(el).getPropertyValue(token));
+        return Number.isFinite(parsed) ? parsed : fallback;
+    }
+
     $effect(() => {
         const isCollapsed = collapsed;
         if (!navEl) return;
-        const w = isCollapsed ? 68 : 220;
+        const w = railWidth(navEl, isCollapsed);
         tween?.kill();
         tween = null;
         if (!ready || prefersReducedMotion()) {
@@ -78,30 +96,16 @@
             }
         });
     });
-
-    function springPress(node: HTMLElement) {
-        function down() {
-            if (prefersReducedMotion()) return;
-            gsap.killTweensOf(node, 'scale');
-            gsap.to(node, {
-                scale: 0.94,
-                duration: 0.08,
-                ease: 'power2.in',
-                onComplete: () => gsap.to(node, { scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
-            });
-        }
-        node.addEventListener('pointerdown', down);
-        return { destroy() { node.removeEventListener('pointerdown', down); } };
-    }
 </script>
 
 <div
     bind:this={navEl}
     class={twMerge('relative bg-fc-component rounded-fc-lg flex flex-col justify-between h-full min-h-0 gap-6 overflow-hidden py-5 px-3', className)}
+    {...rest}
 >
     <div class="flex flex-col [&>*+*]:mt-5">
         <div class={twMerge('flex min-h-7 items-center gap-2.5 pt-1', narrow ? 'justify-center px-0' : 'px-2')}>
-            {#if icon}<iconify-icon {icon} width="24" height="24" class="block shrink-0 text-fc-fg"></iconify-icon>{/if}
+            {#if icon}<iconify-icon {icon} width="24" height="24" class="block shrink-0"></iconify-icon>{/if}
             {#if !narrow}
                 <span class="flex min-w-0 flex-1 items-center text-fc-xl font-semibold text-fc-fg overflow-hidden">
                     <TextElevate text={title} visible={!narrow} class="truncate" />
@@ -114,7 +118,7 @@
                 class="w-fc-nav-content shrink-0"
                 transition:slide={{ duration: prefersReducedMotion() ? 0 : 300 }}
             >
-                <SpaceSwitcher {spaces} {activeSpaceId} onSelect={onSpaceSelect} manageHref={manageSpacesHref} />
+                <SpaceSwitcher {spaces} activeId={activeSpaceId} onSelect={onSpaceSelect} manageHref={manageSpacesHref} />
             </div>
         {/if}
 
@@ -140,7 +144,7 @@
         {/if}
 
         <nav class="flex flex-col gap-1">
-            {#each pages as page, i (page.href)}
+            {#each pages as page (page.href)}
                 <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} collapsed={narrow}>
                     {#snippet right()}
                         {#if page.active}
@@ -182,7 +186,7 @@
             {#if !narrow}
                 <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
                     <TextElevate text={u.name} visible={!narrow} class="truncate" />
-                    <iconify-icon icon={icons.settings} width="18" height="18" class="block size-[18px] shrink-0 text-fc-fg-muted"></iconify-icon>
+                    <iconify-icon icon={icons.settings} width="18" height="18" class="block shrink-0"></iconify-icon>
                 </span>
             {/if}
         {/snippet}

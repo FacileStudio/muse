@@ -1,14 +1,16 @@
 <script lang="ts">
+    import type { HTMLAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
 
-    type Tone = 'success' | 'danger' | 'warning' | 'muted' | 'accent';
+    type Tone = 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger' | 'owner' | 'admin';
 
     let {
-        tone = 'muted',
+        tone = 'neutral',
         label,
         pulse = false,
-        class: className = ''
-    }: {
+        class: className = '',
+        ...rest
+    }: HTMLAttributes<HTMLSpanElement> & {
         tone?: Tone;
         label?: string;
         pulse?: boolean;
@@ -16,11 +18,14 @@
     } = $props();
 
     const dots: Record<Tone, string> = {
+        neutral: 'bg-fc-fg-muted',
+        accent: 'bg-fc-accent',
+        info: 'bg-fc-info',
         success: 'bg-fc-success',
-        danger: 'bg-fc-danger',
         warning: 'bg-fc-warning',
-        muted: 'bg-fc-fg-muted',
-        accent: 'bg-fc-accent'
+        danger: 'bg-fc-danger',
+        owner: 'bg-fc-owner',
+        admin: 'bg-fc-admin'
     };
 
     const classes = $derived(
@@ -28,7 +33,7 @@
     );
 </script>
 
-<span class={classes}>
+<span class={classes} {...rest}>
     <span class="relative inline-flex size-2 shrink-0">
         {#if pulse}
             <span

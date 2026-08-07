@@ -7,8 +7,7 @@
     import Pool from './settings/Pool.svelte';
     import Members from './settings/Members.svelte';
     import Advanced from './settings/Advanced.svelte';
-
-    let { route = '#/settings' }: { route?: string } = $props();
+    import { router, segment } from '../router.svelte.js';
 
     const sections = [
         { id: 'profile', label: 'Profile', icon: icons.userCircle, Panel: Profile },
@@ -25,10 +24,22 @@
      * #/settings/pool opens on Pool, reload keeps you there and browser-back walks the
      * sections. That is the whole reason Tabs accepts `href` items.
      */
-    const active = $derived(
-        sections.find((s) => s.id === route.split('/')[2])?.id ?? sections[0].id
-    );
+    const requested = $derived(segment(router.hash, 2));
+    const match = $derived(sections.find((s) => s.id === requested));
+    const active = $derived(match?.id ?? sections[0].id);
     const Panel = $derived(sections.find((s) => s.id === active)!.Panel);
+
+    /*
+     * #/settings/bogus used to render Profile and highlight the Profile tab while the address
+     * bar still said "bogus" — the UI contradicting the URL is worse than either being wrong
+     * alone. The bare #/settings is a legitimate entry point, so only a named section that
+     * matches nothing is rewritten.
+     */
+    $effect(() => {
+        if (!requested || match) return;
+        history.replaceState(null, '', `#/settings/${active}`);
+        router.hash = `#/settings/${active}`;
+    });
 
     const items = $derived(
         sections.map(({ id, label, icon }) => ({ id, label, icon, href: `#/settings/${id}` }))

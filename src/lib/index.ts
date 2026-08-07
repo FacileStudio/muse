@@ -4,7 +4,6 @@ export { default as Badge } from './components/atoms/Badge.svelte';
 export { default as Button } from './components/atoms/Button.svelte';
 export { default as Card } from './components/atoms/Card.svelte';
 export { default as Checkbox } from './components/atoms/Checkbox.svelte';
-export { default as Component } from './components/atoms/Component.svelte';
 export { default as Divider } from './components/atoms/Divider.svelte';
 export { default as IconButton } from './components/atoms/IconButton.svelte';
 export { default as Input } from './components/atoms/Input.svelte';
@@ -53,8 +52,27 @@ export { default as LineChart } from './components/charts/LineChart.svelte';
 export { default as Sparkline } from './components/charts/Sparkline.svelte';
 
 export { prefersReducedMotion, isMobile } from './utils/motion.js';
-export { chartColor, formatCompact, niceScale } from './utils/chart.js';
-export type { ChartSeries, ChartSlice, ChartScale } from './utils/chart.js';
+export { springPress } from './utils/press.js';
+export { getFieldContext } from './utils/field.js';
+export type { FieldContext } from './utils/field.js';
+export {
+    chartColor,
+    formatCompact,
+    niceScale,
+    linePath,
+    areaPath,
+    arcPath,
+    tickStride,
+    resize
+} from './utils/chart.js';
+export type {
+    ChartSeries,
+    ChartSlice,
+    ChartScale,
+    ChartLegendItem,
+    ChartTipRow,
+    ChartRow
+} from './utils/chart.js';
 export { cn, twMerge } from './utils/cn.js';
 export { REDACTED, isRedacted, maskSecret } from './utils/secret.js';
 export { icons } from './icons.js';

@@ -7,6 +7,7 @@
     type Size = 'sm' | 'md' | 'lg';
 
     let {
+        type = 'button',
         variant = 'primary',
         size = 'md',
         icon,
@@ -23,7 +24,7 @@
         children?: Snippet;
     } = $props();
 
-    const iconSizes: Record<Size, number> = { sm: 14, md: 16, lg: 16 };
+    const iconSizes: Record<Size, number> = { sm: 14, md: 16, lg: 18 };
     const glyph = $derived(iconSizes[size]);
 
     const variants: Record<Variant, string> = {
@@ -37,13 +38,13 @@
     const sizes: Record<Size, string> = {
         sm: 'h-8 px-3.5 text-fc-xs',
         md: 'h-9 px-4 text-fc-sm',
-        lg: 'h-11 px-6 text-fc-sm'
+        lg: 'h-11 px-6 text-fc-md'
     };
 
     const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc-pill justify-center gap-2 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring', variants[variant], sizes[size], className));
 </script>
 
-<button class={classes} {...rest}>
+<button {type} class={classes} {...rest}>
     {#if icon}
         <iconify-icon {icon} width={glyph} height={glyph} class="block shrink-0"></iconify-icon>
     {/if}

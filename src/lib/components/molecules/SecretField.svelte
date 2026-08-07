@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { HTMLAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
     import { icons } from '../../icons.js';
     import { isRedacted, maskSecret } from '../../utils/secret.js';
@@ -18,12 +19,13 @@
         visible = $bindable(false),
         autoHideMs = 15000,
         disabled = false,
-        id,
+        for: htmlFor,
         actions,
-        onreveal,
-        oncopy,
-        class: className = ''
-    }: {
+        onReveal,
+        onCopy,
+        class: className = '',
+        ...rest
+    }: HTMLAttributes<HTMLDivElement> & {
         value?: string;
         label?: string;
         helper?: string;
@@ -36,17 +38,20 @@
         visible?: boolean;
         autoHideMs?: number;
         disabled?: boolean;
-        id?: string;
+        for?: string;
         actions?: Snippet;
-        onreveal?: (visible: boolean) => void;
-        oncopy?: (ok: boolean) => void;
+        onReveal?: (visible: boolean) => void;
+        onCopy?: (ok: boolean) => void;
         class?: string;
     } = $props();
 
-    let status = $state('');
-    let copied = $state(false);
-    let copyTimer: ReturnType<typeof setTimeout> | undefined;
+    const uid = $props.id();
+    const id = $derived(htmlFor ?? `${uid}-secret`);
 
+    let status = $state('');
+    let copyTick = $state(0);
+
+    const copied = $derived(copyTick > 0);
     const empty = $derived(value.length === 0);
 
     /*
@@ -60,7 +65,7 @@
 
     function toggle() {
         visible = !visible;
-        onreveal?.(visible);
+        onReveal?.(visible);
         status = visible ? 'Secret revealed' : 'Secret hidden';
     }
 
@@ -79,24 +84,37 @@
     });
 
     async function copy() {
-        clearTimeout(copyTimer);
         try {
             await navigator.clipboard.writeText(value);
-            copied = true;
+            copyTick += 1;
             status = 'Copied to clipboard';
-            oncopy?.(true);
-            copyTimer = setTimeout(() => (copied = false), 2000);
+            onCopy?.(true);
         } catch {
             status = 'Could not copy — reveal it and copy by hand';
-            oncopy?.(false);
+            onCopy?.(false);
         }
     }
+
+    /*
+     * The tick is a 2s flash on the copy button, so the timer has to die with the component:
+     * unmounting mid-flash otherwise leaves a timeout writing to state nobody is rendering.
+     * Re-copying bumps the counter, which restarts the effect and therefore the countdown.
+     */
+    $effect(() => {
+        if (copyTick === 0) return;
+        const timer = setTimeout(() => (copyTick = 0), 2000);
+        return () => clearTimeout(timer);
+    });
+
+    const errorId = `${uid}-error`;
+    const helperId = `${uid}-helper`;
+    const describedBy = $derived(error ? errorId : helper ? helperId : undefined);
 
     const box =
         'flex h-11 min-w-0 flex-1 items-center rounded-fc-md border border-fc-border bg-fc-bg px-3 font-fc-mono text-fc-sm';
 </script>
 
-<div class={twMerge('flex flex-col gap-1.5', className)}>
+<div class={twMerge('flex flex-col gap-1.5', className)} {...rest}>
     {#if label}
         <label for={id} class="text-fc-sm text-fc-fg">{label}</label>
     {/if}
@@ -113,6 +131,8 @@
                 autocapitalize="off"
                 autocorrect="off"
                 spellcheck="false"
+                aria-invalid={error ? 'true' : undefined}
+                aria-describedby={describedBy}
                 class={twMerge(
                     box,
                     'text-fc-fg placeholder:font-sans placeholder:text-fc-fg-muted focus:outline-2 focus:outline-fc-ring disabled:opacity-50'
@@ -121,6 +141,7 @@
         {:else}
             <output
                 {id}
+                aria-describedby={describedBy}
                 class={twMerge(box, empty ? 'text-fc-fg-muted' : 'text-fc-fg')}
                 title={visible || !sensitive ? value : undefined}
             >
@@ -168,9 +189,9 @@
     </div>
 
     {#if error}
-        <span class="text-fc-xs text-fc-danger">{error}</span>
+        <span id={errorId} class="text-fc-xs text-fc-danger">{error}</span>
     {:else if helper}
-        <span class="text-fc-xs text-fc-fg-muted">{helper}</span>
+        <span id={helperId} class="text-fc-xs text-fc-fg-muted">{helper}</span>
     {/if}
 
     <span aria-live="polite" class="sr-only">{status}</span>

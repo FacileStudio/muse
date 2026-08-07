@@ -8,14 +8,13 @@
         SettingsSection,
         icons
     } from '@facile/lib';
+    import { wait } from '../../data.js';
 
     let exporting = $state(false);
     let exported = $state(false);
 
     let deleteOpen = $state(false);
     let deleteScheduled = $state(false);
-
-    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     async function exportData() {
         exporting = true;
@@ -50,11 +49,11 @@
     </SettingsSection>
 
     <SettingsSection title="Instance" description="Useful when you file a bug against a self-hosted install.">
-        <SettingsRow label="Version">
-            <code class="font-fc-mono text-fc-sm text-fc-fg">2026.8.1</code>
+        <SettingsRow label="Version" stacked>
+            <SecretField value="2026.8.1" sensitive={false} class="w-full" />
         </SettingsRow>
-        <SettingsRow label="Identity provider" description="Federated over OIDC.">
-            <code class="font-fc-mono text-fc-sm text-fc-fg-muted">porte.facile.studio</code>
+        <SettingsRow label="Identity provider" description="Federated over OIDC." stacked>
+            <SecretField value="porte.facile.studio" sensitive={false} class="w-full" />
         </SettingsRow>
         <SettingsRow label="Support bundle" description="Redacted config and the last 200 log lines." stacked>
             <SecretField
@@ -99,5 +98,5 @@
     description="Every space loses your entries, and your invoices go with them. This cannot be undone."
     confirmLabel="Delete account"
     cancelLabel="Keep my account"
-    onconfirm={deleteAccount}
+    onConfirm={deleteAccount}
 />

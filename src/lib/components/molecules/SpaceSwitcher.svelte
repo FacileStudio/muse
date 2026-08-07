@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { HTMLAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
     import { icons } from '../../icons.js';
 
@@ -11,8 +12,9 @@
         personalLabel = 'Personal',
         manageHref,
         manageLabel = 'Manage spaces',
-        class: className = ''
-    }: {
+        class: className = '',
+        ...rest
+    }: HTMLAttributes<HTMLDivElement> & {
         spaces?: SpaceItem[];
         activeId?: string | null;
         onSelect?: (id: string | null) => void;
@@ -51,6 +53,18 @@
         if (rootEl && !rootEl.contains(e.target as Node)) open = false;
     }
 
+    /*
+     * Escape has to put focus back on the trigger: dismissing the menu while focus sits on
+     * one of its buttons leaves a keyboard user on a node that just left the document, and
+     * the browser drops them back at the top of the page.
+     */
+    function handleKeydown(e: KeyboardEvent) {
+        if (e.key !== 'Escape') return;
+        e.stopPropagation();
+        open = false;
+        triggerEl?.focus();
+    }
+
     function toggle() {
         if (!open) place();
         open = !open;
@@ -60,21 +74,23 @@
         if (!open) return;
         place();
         document.addEventListener('click', handleClickOutside);
+        document.addEventListener('keydown', handleKeydown);
         window.addEventListener('resize', place);
         window.addEventListener('scroll', place, true);
         return () => {
             document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener('keydown', handleKeydown);
             window.removeEventListener('resize', place);
             window.removeEventListener('scroll', place, true);
         };
     });
 </script>
 
-<div bind:this={rootEl} class={twMerge('relative', className)}>
+<div bind:this={rootEl} class={twMerge('relative', className)} {...rest}>
     <button
         bind:this={triggerEl}
         type="button"
-        class="flex w-full items-center gap-2.5 min-h-11 rounded-fc-md border border-fc-border bg-fc-surface/50 px-3 py-2 text-left text-fc-sm transition-colors hover:bg-fc-surface"
+        class="flex w-full items-center gap-2.5 min-h-11 rounded-fc-md border border-fc-border bg-fc-surface/50 px-3 py-2 text-left text-fc-sm transition-colors hover:bg-fc-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
         onclick={toggle}
         aria-expanded={open}
     >
@@ -98,7 +114,7 @@
     {#if open}
         <div
             class={twMerge(
-                'absolute left-0 right-0 z-50 flex flex-col overflow-hidden rounded-fc-md border border-fc-border bg-fc-component shadow-lg shadow-black/20',
+                'absolute left-0 right-0 z-40 flex flex-col overflow-hidden rounded-fc-md border border-fc-border bg-fc-component shadow-lg',
                 dropUp ? 'bottom-full mb-1.5' : 'top-full mt-1.5'
             )}
             style:max-height="{maxHeight}px"

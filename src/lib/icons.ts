@@ -36,6 +36,8 @@ export const icons = {
   history:       'solar:history-linear',
   card:          'solar:card-linear',
   download:      'solar:download-linear',
+  filter:        'solar:filter-linear',
+  mail:          'solar:letter-linear',
   close:         'mdi:close',
   plus:          'mdi:plus',
   arrow:         'mdi:chevron-right',

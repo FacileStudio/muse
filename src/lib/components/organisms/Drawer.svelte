@@ -1,11 +1,9 @@
-<script module lang="ts">
-    let uid = 0;
-</script>
-
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { HTMLDialogAttributes } from 'svelte/elements';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
+    import { createDialog } from '../../utils/dialog.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import IconButton from '../atoms/IconButton.svelte';
 
@@ -18,9 +16,10 @@
         showHandle = true,
         showClose = false,
         dismissible = true,
-        onclose,
-        class: className = ''
-    }: {
+        onClose,
+        class: className = '',
+        ...rest
+    }: HTMLDialogAttributes & {
         open?: boolean;
         title?: string;
         description?: string;
@@ -29,17 +28,16 @@
         showHandle?: boolean;
         showClose?: boolean;
         dismissible?: boolean;
-        onclose?: () => void;
+        onClose?: () => void;
         class?: string;
     } = $props();
 
-    const titleId = `fc-drawer-title-${++uid}`;
+    const titleId = $props.id();
 
-    let dialog: HTMLDialogElement | null = $state(null);
+    let dialogEl: HTMLDialogElement | null = $state(null);
     let panel: HTMLDivElement | null = $state(null);
 
     let tween: ReturnType<typeof gsap.to> | null = null;
-    let closing = false;
     let dragging = false;
     let pointer = -1;
     let startY = 0;
@@ -48,77 +46,73 @@
     let prevTime = 0;
     let velocity = 0;
 
-    $effect(() => {
-        if (!dialog) return;
-        if (open) show();
-        else if (dialog.open) hide();
+    /*
+     * `dialog.handlers` is spread after `rest` in the markup, which is the one place this
+     * library lets the component win over the consumer. Those three handlers are what make
+     * the dialog dismissible and keep `open` in sync; a consumer passing `onclick` would
+     * otherwise silently break closing. Everything else still spreads consumer-last.
+     */
+    const dialog = createDialog({
+        element: () => dialogEl,
+        open: () => open,
+        setOpen: (value) => (open = value),
+        dismissible: () => dismissible,
+        surface: () => panel,
+        enter() {
+            tween?.kill();
+            tween = null;
+            if (!panel) return;
+            if (prefersReducedMotion()) {
+                gsap.set(panel, { y: 0 });
+                return;
+            }
+            tween = gsap.fromTo(panel, { y: '100%' }, { y: 0, duration: 0.35, ease: 'power3.out' });
+        },
+        exit(_el, done) {
+            tween?.kill();
+            tween = null;
+            if (!panel || prefersReducedMotion()) {
+                done();
+                return;
+            }
+            tween = gsap.to(panel, {
+                y: '100%',
+                duration: 0.25,
+                ease: 'power3.in',
+                onComplete: done
+            });
+        },
+        closed() {
+            dragging = false;
+            tween?.kill();
+            tween = null;
+            if (panel) gsap.set(panel, { y: 0 });
+            onClose?.();
+        }
     });
 
-    function show() {
-        if (!dialog) return;
-        closing = false;
-        tween?.kill();
-        tween = null;
-        if (!dialog.open) dialog.showModal();
-        if (!panel) return;
-        if (prefersReducedMotion()) {
-            gsap.set(panel, { y: 0 });
-            return;
-        }
-        tween = gsap.fromTo(panel, { y: '100%' }, { y: 0, duration: 0.35, ease: 'power3.out' });
-    }
-
-    function hide() {
-        if (!dialog?.open) return;
-        tween?.kill();
-        tween = null;
-        if (!panel || prefersReducedMotion()) {
-            dialog.close();
-            return;
-        }
-        closing = true;
-        tween = gsap.to(panel, {
-            y: '100%',
-            duration: 0.25,
-            ease: 'power3.in',
-            onComplete: () => {
-                if (!closing) return;
-                closing = false;
-                dialog?.close();
-            }
-        });
-    }
-
-    function onDialogClose() {
-        closing = false;
-        dragging = false;
-        tween?.kill();
-        tween = null;
-        if (panel) gsap.set(panel, { y: 0 });
-        open = false;
-        onclose?.();
-    }
-
-    function onCancel(e: Event) {
-        e.preventDefault();
-        dismiss();
-    }
-
-    function onBackdropClick(e: MouseEvent) {
-        if (!dismissible || !panel || e.detail === 0) return;
-        const r = panel.getBoundingClientRect();
-        const inside =
-            e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
-        if (!inside) dismiss();
-    }
+    $effect(() => dialog.sync());
 
     function dismiss() {
         if (!dismissible) return;
         open = false;
     }
 
+    /*
+     * Reduced motion asks for no *animation*, not for no interaction — the sheet still
+     * drags, only the spring back to rest snaps instead of tweening.
+     */
+    function settle(y: number) {
+        if (!panel) return;
+        if (prefersReducedMotion()) {
+            gsap.set(panel, { y });
+            return;
+        }
+        tween = gsap.to(panel, { y, duration: 0.3, ease: 'power3.out' });
+    }
+
     function onPointerDown(e: PointerEvent) {
-        if (!dismissible || !panel || dragging || e.button > 0 || prefersReducedMotion()) return;
+        if (!dismissible || !panel || dragging || e.button > 0) return;
         if ((e.target as HTMLElement | null)?.closest('button, a, input, select, textarea')) return;
         tween?.kill();
         tween = null;
@@ -157,7 +151,7 @@
             dismiss();
             return;
         }
-        tween = gsap.to(panel, { y: 0, duration: 0.3, ease: 'power3.out' });
+        settle(0);
     }
 
     const hasHeader = $derived(Boolean(title || description || showClose));
@@ -170,7 +164,7 @@
      */
     const dialogClasses = $derived(
         twMerge(
-            'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-none bg-transparent p-0 text-fc-fg sm:max-w-fc-sm backdrop:bg-black/50',
+            'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-none bg-transparent p-0 text-fc-fg sm:max-w-fc-sm backdrop:bg-fc-scrim',
             className
         )
     );
@@ -197,12 +191,11 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
 <dialog
-    bind:this={dialog}
+    bind:this={dialogEl}
     class={dialogClasses}
     aria-labelledby={title ? titleId : undefined}
-    onclose={onDialogClose}
-    oncancel={onCancel}
-    onclick={onBackdropClick}
+    {...rest}
+    {...dialog.handlers}
 >
     <div
         bind:this={panel}

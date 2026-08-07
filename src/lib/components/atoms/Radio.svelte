@@ -22,7 +22,7 @@
         type="radio"
         bind:group
         {value}
-        class="h-4 w-4 accent-fc-accent disabled:opacity-50"
+        class="h-4 w-4 accent-fc-accent disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
         {...rest}
     />
     {#if label}<span>{label}</span>{/if}

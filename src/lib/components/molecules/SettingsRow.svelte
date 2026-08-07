@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import type { HTMLAttributes } from 'svelte/elements';
     import { twMerge } from '../../utils/cn.js';
 
     let {
@@ -8,8 +9,9 @@
         for: htmlFor,
         stacked = false,
         class: className = '',
-        children
-    }: {
+        children,
+        ...rest
+    }: HTMLAttributes<HTMLDivElement> & {
         label?: string;
         description?: string;
         for?: string;
@@ -32,7 +34,7 @@
     );
 </script>
 
-<div class={classes}>
+<div class={classes} {...rest}>
     {#if label || description}
         <div class="flex min-w-0 flex-col gap-1">
             {#if label}
