@@ -18,6 +18,12 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile
 
+      # svelte-check reads demo/svelte.config.js, which imports
+      # @sveltejs/vite-plugin-svelte — a demo devDependency. Without this the
+      # type-check fails to resolve it and reports an error per demo file.
+      - name: Install demo
+        run: bun install --cwd demo
+
       - name: Type-check every component
         run: bunx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings
 
@@ -26,4 +32,4 @@ jobs:
 
       - name: Build the demo
         working-directory: demo
-        run: bun install && bun run build
+        run: bun run build
