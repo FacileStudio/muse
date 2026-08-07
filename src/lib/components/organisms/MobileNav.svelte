@@ -24,7 +24,7 @@
     class={twMerge('fixed inset-x-0 z-50 flex justify-center px-4 md:hidden', className)}
     style="bottom: max(0.75rem, env(safe-area-inset-bottom))"
 >
-    <div class="flex items-center gap-1 rounded-fc-pill border border-fc-border/40 bg-fc-bg/55 p-1.5 shadow-lg shadow-black/10 ring-1 ring-fc-fg/10 backdrop-blur-2xl backdrop-saturate-150">
+    <div class="flex items-center gap-1 rounded-fc-pill bg-fc-bg/70 p-1.5 shadow-lg shadow-black/10 backdrop-blur-2xl backdrop-saturate-150">
         {#each items as item (item.href)}
             <a
                 href={item.href}
@@ -51,7 +51,7 @@
                     profileActive ? 'bg-fc-accent shadow-sm' : 'hover:bg-fc-surface'
                 )}
             >
-                <Avatar name={user.name} src={user.avatar} size="sm" class="h-7 w-7 border border-fc-border" />
+                <Avatar name={user.name} src={user.avatar} size="sm" class="h-7 w-7" />
             </a>
         {/if}
     </div>

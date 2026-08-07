@@ -30,7 +30,7 @@
     const classes = $derived(twMerge(
         'flex items-center gap-2.5 rounded-fc-md text-fc-sm transition-colors overflow-hidden',
         collapsed
-            ? 'size-11 shrink-0 self-center justify-center px-0 py-0'
+            ? 'size-fc-nav-item shrink-0 self-center justify-center gap-0 p-0'
             : 'w-full min-h-11 px-3 py-2.5',
         active ? 'bg-fc-accent text-fc-accent-fg font-medium' : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
         className

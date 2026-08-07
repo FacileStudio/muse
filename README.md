@@ -2,17 +2,20 @@
 
 Svelte 5 component library and design system for Facile tools, published as `@facile/lib`.
 
-muse ships 30 components arranged as atoms, molecules, organisms and motion pieces, a
-Tailwind v4 token theme, the Iconify icon map, and the bundled Goga typeface. It is consumed
+muse ships 42 components arranged as atoms, molecules, organisms, charts and motion pieces,
+a Tailwind v4 token theme, the Iconify icon map, and the bundled Goga typeface. It is consumed
 directly from source — there is no build step and no `dist/`. An `install.sh` also registers
 muse as an AI skill for Claude Code and Codex so agents generate suite-shaped UI by default.
 
 The palette matches what the suite actually ships: chroma-zero OKLCH, inverted (never tinted)
-active states, 1px borders instead of shadows, Goga, and Solar `linear` icons.
+active states, borderless container surfaces, hidden scrollbars, Goga, and Solar `linear`
+icons — plus a CVD-validated six-slot chart palette derived from Sablier's identity colours.
 
 ## What it does
 
-- Exports 30 Svelte 5 components: 16 atoms, 4 molecules, 5 organisms, 5 GSAP motion pieces
+- Exports 42 Svelte 5 components: 16 atoms, 7 molecules, 8 organisms, 6 charts, 6 motion pieces
+- Ships dependency-free SVG charts (`LineChart`, `BarChart`, `DonutChart`, `Sparkline`) with
+  hover, empty states and a screen-reader data table — no charting library
 - Publishes a Tailwind v4 `@theme` block under the `fc-*` namespace — colors, radii, type
   scale, fonts, easing, container and nav widths
 - Merges consumer classes over component defaults with an `fc-*`-aware `tailwind-merge`
@@ -23,6 +26,7 @@ active states, 1px borders instead of shadows, Goga, and Solar `linear` icons.
 - Supports OS dark mode out of the box, plus a `.dark` / `.light` class override so apps can
   offer a theme toggle
 - Ships `prefersReducedMotion()` and `isMobile()` so every animation can degrade
+- Exports `USER_COLORS`, the identity palette shared with Sablier, plus its normalizers
 - Registers itself as an AI skill for Claude Code (`~/.claude/skills/muse/`) and Codex
   (`~/.codex/muse/`) through `install.sh`
 

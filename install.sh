@@ -68,6 +68,11 @@ fetch_skill() {
     "https://raw.githubusercontent.com/$REPO/$BRANCH/integrations/SKILL.md" ||
     die "cannot download the $NAME skill from $REPO"
   [ -s "$WORK/SKILL.md" ] || die "the downloaded skill is empty"
+
+  curl -fsSL -o "$WORK/CHARTE.md" \
+    "https://raw.githubusercontent.com/$REPO/$BRANCH/CHARTE.md" ||
+    die "cannot download the $NAME visual contract from $REPO"
+  [ -s "$WORK/CHARTE.md" ] || die "the downloaded visual contract is empty"
 }
 
 register_skill() {
@@ -76,12 +81,14 @@ register_skill() {
   if command -v claude >/dev/null 2>&1; then
     mkdir -p "$HOME/.claude/skills/$SKILL"
     cp "$WORK/SKILL.md" "$HOME/.claude/skills/$SKILL/SKILL.md"
+    cp "$WORK/CHARTE.md" "$HOME/.claude/skills/$SKILL/CHARTE.md"
     ok "Claude Code skill installed"
     INSTALLED=1
   fi
 
   if command -v codex >/dev/null 2>&1; then
-    mkdir -p "$HOME/.codex"
+    mkdir -p "$HOME/.codex/$SKILL"
+    cp "$WORK/CHARTE.md" "$HOME/.codex/$SKILL/CHARTE.md"
     inject_block "$HOME/.codex/AGENTS.md" "$WORK/SKILL.md"
     ok "Codex skill installed"
     INSTALLED=1

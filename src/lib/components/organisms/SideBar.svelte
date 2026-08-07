@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { slide } from 'svelte/transition';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
     import NavButton from '../molecules/NavButton.svelte';
@@ -39,22 +40,39 @@
 
     let navEl: HTMLElement | null = $state(null);
     let ready = false;
+    let tween: ReturnType<typeof gsap.to> | null = null;
 
-    const stagger = (i: number) => (collapsed ? 0 : 0.2) + i * 0.06;
+    /*
+     * `narrow` is the *visual* state the rows read, and it deliberately lags `collapsed`.
+     * Expanding switches the layout first so the growing rail reveals it; collapsing keeps
+     * the wide layout and lets the shrinking rail clip it away, switching only once the
+     * tween lands. Reading `collapsed` directly in the rows makes the icons jump to the
+     * centre of a still-full-width rail before it has moved a pixel.
+     */
+    let narrow = $state(false);
 
     $effect(() => {
+        const isCollapsed = collapsed;
         if (!navEl) return;
-        const w = collapsed ? 77 : 220;
-        if (!ready) {
+        const w = isCollapsed ? 68 : 220;
+        tween?.kill();
+        tween = null;
+        if (!ready || prefersReducedMotion()) {
             gsap.set(navEl, { width: w });
+            narrow = isCollapsed;
             ready = true;
             return;
         }
-        if (prefersReducedMotion()) {
-            gsap.set(navEl, { width: w });
-            return;
-        }
-        gsap.to(navEl, { width: w, duration: 0.5, delay: 0.1, ease: 'power2.inOut' });
+        if (!isCollapsed) narrow = false;
+        tween = gsap.to(navEl, {
+            width: w,
+            duration: 0.3,
+            ease: 'power3.inOut',
+            onComplete: () => {
+                narrow = isCollapsed;
+                tween = null;
+            }
+        });
     });
 
     function springPress(node: HTMLElement) {
@@ -62,10 +80,10 @@
             if (prefersReducedMotion()) return;
             gsap.killTweensOf(node, 'scale');
             gsap.to(node, {
-                scale: 0.9,
-                duration: 0.5,
-                ease: 'power2.inOut',
-                onComplete: () => gsap.to(node, { scale: 1, duration: 0.2, ease: 'power3.in' })
+                scale: 0.94,
+                duration: 0.08,
+                ease: 'power2.in',
+                onComplete: () => gsap.to(node, { scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
             });
         }
         node.addEventListener('pointerdown', down);
@@ -77,23 +95,28 @@
     bind:this={navEl}
     class={twMerge('relative bg-fc-component rounded-fc-lg flex flex-col justify-between h-full min-h-0 gap-6 overflow-hidden py-5 px-3', className)}
 >
-    <div class="flex flex-col gap-5">
-        <div class={twMerge('flex items-center gap-2.5 pt-1', collapsed ? 'justify-center px-0' : 'px-2')}>
+    <div class="flex flex-col [&>*+*]:mt-5">
+        <div class={twMerge('flex min-h-7 items-center gap-2.5 pt-1', narrow ? 'justify-center px-0' : 'px-2')}>
             {#if icon}<iconify-icon {icon} width="24" height="24" class="block shrink-0 text-fc-fg"></iconify-icon>{/if}
-            {#if !collapsed}
+            {#if !narrow}
                 <span class="flex flex-1 items-center text-fc-xl font-semibold text-fc-fg overflow-hidden">
-                    <TextElevate text={title} visible={!collapsed} delay={stagger(0)} />
+                    <TextElevate text={title} visible={!narrow} />
                 </span>
             {/if}
         </div>
 
         {#if spaces.length > 0 && !collapsed}
-            <SpaceSwitcher {spaces} {activeSpaceId} onSelect={onSpaceSelect} manageHref={manageSpacesHref} />
+            <div
+                class="w-fc-nav-content shrink-0"
+                transition:slide={{ duration: prefersReducedMotion() ? 0 : 300 }}
+            >
+                <SpaceSwitcher {spaces} {activeSpaceId} onSelect={onSpaceSelect} manageHref={manageSpacesHref} />
+            </div>
         {/if}
 
         {#if showSearch}
             <div class="flex flex-col gap-1">
-                <NavButton icon={icons.search} label="Search" {collapsed} textDelay={stagger(1)}>
+                <NavButton icon={icons.search} label="Search" collapsed={narrow}>
                     {#snippet right()}
                         <span class="text-fc-xs opacity-50 shrink-0">⌘K</span>
                     {/snippet}
@@ -101,8 +124,7 @@
                 <NavButton
                     icon={icons.collapse}
                     label="Collapse"
-                    {collapsed}
-                    textDelay={stagger(2)}
+                    collapsed={narrow}
                     onclick={() => (collapsed = !collapsed)}
                     aria-label={collapsed ? 'Expand' : 'Collapse'}
                 >
@@ -115,7 +137,7 @@
 
         <nav class="flex flex-col gap-1">
             {#each pages as page, i (page.href)}
-                <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} {collapsed} textDelay={stagger((showSearch ? 3 : 1) + i)}>
+                <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} collapsed={narrow}>
                     {#snippet right()}
                         {#if page.active}
                             <iconify-icon icon={icons.arrow} width="16" height="16" class="block shrink-0 opacity-70"></iconify-icon>
@@ -132,19 +154,19 @@
             use:springPress
             class={twMerge(
                 'flex items-center gap-2.5 rounded-fc-md text-fc-sm transition-colors hover:bg-fc-surface text-fc-fg overflow-hidden',
-                collapsed ? 'size-11 shrink-0 self-center justify-center px-0 py-0' : 'w-full min-h-11 px-2.5 py-2.5'
+                narrow ? 'size-fc-nav-item shrink-0 self-center justify-center gap-0 p-0' : 'w-full min-h-11 px-2.5 py-2'
             )}
         >
             {#if user.avatar}
-                <img src={user.avatar} alt={user.name} class="h-7 w-7 rounded-fc-pill border border-fc-border object-cover shrink-0" />
+                <img src={user.avatar} alt={user.name} class="h-7 w-7 rounded-fc-pill object-cover shrink-0" />
             {:else}
                 <span class="h-7 w-7 shrink-0 rounded-fc-pill bg-fc-accent text-fc-accent-fg flex items-center justify-center text-fc-xs font-semibold">
                     {user.name.charAt(0).toUpperCase()}
                 </span>
             {/if}
-            {#if !collapsed}
+            {#if !narrow}
                 <span class="flex flex-1 items-center justify-between gap-2 overflow-hidden">
-                    <TextElevate text={user.name} visible={!collapsed} delay={stagger((showSearch ? 3 : 1) + pages.length)} />
+                    <TextElevate text={user.name} visible={!narrow} />
                     <iconify-icon icon={icons.settings} width="18" height="18" class="block shrink-0 text-fc-fg-muted"></iconify-icon>
                 </span>
             {/if}
