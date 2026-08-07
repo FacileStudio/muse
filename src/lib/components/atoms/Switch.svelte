@@ -15,7 +15,15 @@
         class?: string;
     } = $props();
 
-    const classes = $derived(twMerge('inline-flex items-center gap-3 cursor-pointer text-fc-sm text-fc-fg', disabled ? 'opacity-50 cursor-not-allowed' : '', className));
+    /*
+        `relative` is load-bearing, not decoration: `sr-only` is `position: absolute`, and an
+        absolutely positioned box whose nearest *positioned* ancestor is the initial containing
+        block is laid out against the document — `overflow` on an unpositioned ancestor does not
+        clip it. Inside an app shell whose scroller is an inner `<main>`, that puts a 1px input
+        at its flow offset in *document* coordinates, several thousand pixels down, and hands
+        the page a second scrollbar into empty space. Positioning the label confines it.
+    */
+    const classes = $derived(twMerge('relative inline-flex items-center gap-3 cursor-pointer text-fc-sm text-fc-fg', disabled ? 'opacity-50 cursor-not-allowed' : '', className));
 </script>
 
 <label class={classes}>

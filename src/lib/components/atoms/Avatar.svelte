@@ -31,7 +31,8 @@
        decorative, which is only true when the caller gave us nothing to announce. */
     const label = $derived(alt ?? name);
     const initial = $derived(name ? name.trim().charAt(0).toUpperCase() : '?');
-    const classes = $derived(twMerge('inline-flex shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent text-fc-accent-fg font-semibold overflow-hidden', sizes[size], className));
+    /* `relative` contains the `sr-only` label — see the note in `Switch.svelte`. */
+    const classes = $derived(twMerge('relative inline-flex shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent text-fc-accent-fg font-semibold overflow-hidden', sizes[size], className));
 </script>
 
 <span class={classes} {...rest}>

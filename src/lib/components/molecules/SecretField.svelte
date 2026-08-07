@@ -114,7 +114,8 @@
         'flex h-11 min-w-0 flex-1 items-center rounded-fc-md border border-fc-border bg-fc-bg px-3 font-fc-mono text-fc-sm';
 </script>
 
-<div class={twMerge('flex flex-col gap-1.5', className)} {...rest}>
+<!-- `relative` contains the `sr-only` live region — see the note in `Switch.svelte`. -->
+<div class={twMerge('relative flex flex-col gap-1.5', className)} {...rest}>
     {#if label}
         <label for={id} class="text-fc-sm text-fc-fg">{label}</label>
     {/if}
