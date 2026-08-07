@@ -7,6 +7,7 @@
         ColorPicker,
         ConfirmModal,
         Drawer,
+        EmptyState,
         Field,
         Input,
         Modal,
@@ -168,12 +169,11 @@
             <h2 class="text-fc-lg font-semibold text-fc-fg">Members</h2>
 
             {#if visibleMembers.length === 0}
-                <Card class="flex flex-col items-center gap-3 py-12 text-center">
-                    <p class="text-fc-sm font-medium text-fc-fg">No one here yet</p>
-                    <p class="text-fc-sm text-fc-fg-muted">
-                        Invite a teammate below and they will see this space as soon as they accept.
-                    </p>
-                </Card>
+                <EmptyState
+                    icon={icons.usersGroup}
+                    title="No one here yet"
+                    description="Invite a teammate below and they will see this space as soon as they accept."
+                />
             {:else}
                 <!-- SettingsRow draws the rule on its own top edge and drops it on the first
                      child, so the list needs no manual Divider and no index. -->

@@ -17,6 +17,7 @@ export { default as Textarea } from './components/atoms/Textarea.svelte';
 
 export { default as ColorPicker } from './components/molecules/ColorPicker.svelte';
 export { default as Dropzone } from './components/molecules/Dropzone.svelte';
+export { default as EmptyState } from './components/molecules/EmptyState.svelte';
 export { default as UploadProgress } from './components/molecules/UploadProgress.svelte';
 export { default as Field } from './components/molecules/Field.svelte';
 export { default as NavButton } from './components/molecules/NavButton.svelte';

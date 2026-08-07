@@ -26,6 +26,18 @@ description = "Production build of the demo app — compiles every component"
 dir = "demo"
 run = "bun install && bun run build"
 
+[tasks.smoke]
+description = "Consumer contract: install the packed package into a SvelteKit app, dev + build + SSR"
+# The demo aliases the source, so it cannot see the exports map, the dependency optimizer,
+# SSR, or a real node_modules layout. This can. See scripts/smoke.sh.
+run = "sh ./scripts/smoke.sh"
+
 [tasks.verify]
-description = "Everything CI would run: types, tests, demo build"
-depends = ["check", "test", "demo:build"]
+description = "Everything CI would run: types, tests, demo build, consumer smoke"
+depends = ["check", "test", "demo:build", "smoke"]
+
+[tasks.release]
+description = "Cut a release: verify, bump, commit, tag, push — mise run release 0.4.0"
+# The git tag IS the distribution (consumers pin github:FacileStudio/muse#vX.Y.Z), so a
+# pushed tag cannot be taken back. See scripts/release.sh for the guards.
+run = "sh ./scripts/release.sh"

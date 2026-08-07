@@ -1,0 +1,25 @@
+{
+  "name": "muse-smoke",
+  "private": true,
+  "type": "module",
+  "description": "Consumer contract harness — installs the packed package the way a real app does. Not a demo.",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@facile/muse": "file:../muse-smoke.tgz",
+    "iconify-icon": "^3.0.2"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-node": "^5.5.4",
+    "@sveltejs/kit": "^2.50.2",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@tailwindcss/vite": "^4.2.2",
+    "svelte": "^5.51.0",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
+}

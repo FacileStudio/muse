@@ -250,3 +250,42 @@ that stay inert unless the consumer app has registered the custom element itself
 The `gsap` floor is `^3.13.0`, not `^3.12.0`. `WordReveal` imports `gsap/SplitText`, which was
 a paid Club GreenSock plugin until 3.13 — on 3.12.x the import does not resolve, and the
 failure lands in the consumer's build, not ours.
+
+## Releasing, and how a consumer picks it up
+
+muse is not published to a registry. Consumers pin `github:FacileStudio/muse#vX.Y.Z`, so
+**the git tag is the distribution** — a public repo means no auth in Docker builds, which is
+why Casier's image builds have always worked. It also means a pushed tag is not undoable, so
+the release is a script rather than a habit:
+
+```sh
+sh ./scripts/release.sh 0.4.0     # or: mise run release 0.4.0
+```
+
+It refuses to run unless you are on `main`, the tree is clean, `HEAD` matches `origin/main`
+and the tag is free; then it runs the full gate **before** touching `package.json`, so a
+failure leaves the tree exactly as it found it, and finally commits, tags and pushes.
+
+### Upgrading a consumer
+
+```sh
+sed -i '' 's|muse#v0.3.3|muse#v0.4.0|' apps/client/package.json
+cd apps/client && bun install
+```
+
+Two things about this that waste an hour if you do not know them:
+
+- **`bun add "github:FacileStudio/muse#v0.4.0"` does not work** on a dependency that is
+  already present. Bun refuses to re-resolve a git dep in place when the SHA changes and
+  fails with `error: Package "@facile/muse@github:…#<sha>" has a dependency loop` /
+  `DependencyLoop`. Editing `package.json` and running `bun install` is the way. Both Vision
+  and Jardin hit this on the same day.
+- **The lockfile records the annotated tag *object's* SHA, not the commit's.** `v0.3.1`
+  appears as `252d63c` while the commit is `117bb96`, and they reconcile with
+  `git rev-parse v0.3.1^{}`. Nothing is wrong; do not go looking for drift. Verify an upgrade
+  by grepping the installed tree for the symbol you expect —
+  `grep -r 'EmptyState' apps/client/node_modules/@facile/muse/src/lib/index.ts` — rather than
+  by reading the version string.
+
+Consumer repos carry a `mise run muse <version>` task that does both steps and re-runs their
+client gate, so in practice this is one command.

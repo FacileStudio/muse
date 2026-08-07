@@ -258,6 +258,25 @@ to neither.
 </div>
 ```
 
+### Empty states
+
+A list with nothing in it is `EmptyState`, not a paragraph. It is a `Card` (`bare` skips it,
+for use inside one) with `py-12` and centred content: an optional muted glyph, a `text-fc-sm
+font-medium` title, an optional muted description capped at `max-w-sm`, and whatever action
+resolves it. The height is the point — a two-line card where a list should be reads as a
+rendering failure, a tall quiet one reads as deliberate.
+
+```svelte
+<EmptyState icon={icons.folder} title="No projects yet" description="Create one to start tracking.">
+  <Button icon={icons.plus}>New project</Button>
+</EmptyState>
+```
+
+Title and description are one `gap-1` block inside the outer `gap-4`, for the reason above:
+as two siblings the description floats between title and action and belongs to neither. It
+was written three separate times — in this demo, in Vision and in Jardin — before it was
+extracted, which is the usual sign.
+
 A chart card in a grid row is as tall as its tallest neighbour. Give the chart `flex-1` so it
 centres in the height it was handed instead of hanging off the title — `DonutChart` is
 `justify-center` for exactly this.
@@ -1264,7 +1283,11 @@ Before exporting a component:
 - [ ] Mobile-first layout, checked at 360px; hit targets per §7
 - [ ] Keyboard + screen-reader accessible
 - [ ] Respects `prefers-reduced-motion`, and every gsap registration is reverted on destroy
-- [ ] Rendered somewhere in `demo/` — that is the only thing that proves it still works
+- [ ] Rendered somewhere in `demo/` **and reachable from `smoke/`** — the demo proves the
+      component renders; only `smoke/` proves the *package* does. The demo aliases
+      `src/lib/index.ts` directly, so it never exercises the `exports` map, a real
+      `node_modules` layout, SSR, or Vite's dep optimizer. Six of the seven defects found in
+      the first week of real consumer use were invisible to it for exactly that reason
 - [ ] Re-exported from `src/lib/index.ts`
 - [ ] `mise run verify` is green (types, tests, demo build)
 
