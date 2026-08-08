@@ -612,9 +612,10 @@ the browser's bookmark and search bindings do not fire underneath. They previous
 keys nothing listened for. ⌘K is bound only when `onSearch` is passed — `showSearch` alone
 renders a Search row that looks the part and does nothing, chip included.
 
-That listener is on `document`, so **mount exactly one `SideBar`.** Two of them both handle
-⌘D and toggle their own `collapsed` in opposite directions, which reads as the shortcut being
-broken. The desktop rail is the one; small screens get `MobileNav`.
+That listener is on `document`, so **mount exactly one `SideBar`.** Both instances answer the
+same ⌘D: bound to one `collapsed`, the second handler undoes the first and nothing moves;
+holding separate state, the two rails drift out of sync. Either way the key reads as broken.
+The desktop rail is the one; small screens get `MobileNav`.
 
 The rail reads its two widths out of the theme at runtime (`getComputedStyle` on
 `--width-fc-nav-collapsed` / `--width-fc-nav-expanded`), so the tokens below are the single
