@@ -49,6 +49,11 @@
     const body = $derived(twMerge('flex flex-col', GAP[gap], bodyClass));
 </script>
 
+<!--
+@component
+Un bloc titré dans une page. La carte est optionnelle : une section qui contient une grille de cartes n'en est pas une elle-même.
+-->
+
 <section class={twMerge('flex flex-col', GAP[gap], className)} {...rest}>
     {#if title || description || actions}
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

@@ -179,6 +179,11 @@
     }
 </script>
 
+<!--
+@component
+Le rail de navigation, une carte flottante et repliable. Il porte la navigation, le sélecteur d'espace et la carte utilisateur.
+-->
+
 <div
     bind:this={navEl}
     class={twMerge('relative bg-fc-component rounded-fc-lg flex flex-col justify-between h-full min-h-0 gap-6 overflow-hidden py-5 px-3', className)}

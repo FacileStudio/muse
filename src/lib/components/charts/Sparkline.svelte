@@ -104,6 +104,11 @@
     });
 </script>
 
+<!--
+@component
+Une tendance dans une ligne de tableau, sans axes ni légende.
+-->
+
 <div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div class="flex items-center justify-center text-fc-xs text-fc-fg-muted" style:min-height="{height}px">

@@ -40,6 +40,11 @@
     );
 </script>
 
+<!--
+@component
+Une ligne de réglage : libellé, description et contrôle. Le contrôle prend `aria-label`, jamais un libellé visible.
+-->
+
 <div class={classes} {...rest}>
     {#if label || description}
         <div class="flex min-w-0 flex-col gap-1">

@@ -43,6 +43,11 @@
     const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
 </script>
 
+<!--
+@component
+Une case à cocher qui adopte l'identifiant de son `Field`. La boîte fait 16px ; c'est le libellé qui porte la cible tactile.
+-->
+
 <label class={classes}>
     <input
         type="checkbox"

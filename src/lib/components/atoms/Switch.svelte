@@ -53,6 +53,11 @@
     const classes = $derived(twMerge('relative inline-flex items-center gap-3 cursor-pointer text-fc-sm text-fc-fg', disabled ? 'opacity-50 cursor-not-allowed' : '', className));
 </script>
 
+<!--
+@component
+Un interrupteur. Dans une `SettingsRow` il prend `aria-label` et jamais de libellé visible : la ligne le porte déjà.
+-->
+
 <label class={classes}>
     <input
         type="checkbox"

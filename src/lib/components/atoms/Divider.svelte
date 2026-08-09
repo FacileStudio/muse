@@ -17,4 +17,9 @@
     const classes = $derived(twMerge('border-0 border-t border-fc-border', className));
 </script>
 
+<!--
+@component
+Un filet de séparation. Il ne porte aucune marge : son air vient du `gap` de son parent.
+-->
+
 <hr class={classes} {...rest} />

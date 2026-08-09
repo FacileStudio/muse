@@ -121,6 +121,11 @@
         'flex h-11 min-w-0 flex-1 items-center rounded-fc-md border border-fc-border bg-fc-bg px-3 font-fc-mono text-fc-sm';
 </script>
 
+<!--
+@component
+L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, copie avec accusé, et `REDACTED` traité comme une absence de valeur.
+-->
+
 <!-- `relative` contains the `sr-only` live region — see the note in `Switch.svelte`. -->
 <div class={twMerge('relative flex flex-col gap-1.5', className)} {...rest}>
     {#if label}

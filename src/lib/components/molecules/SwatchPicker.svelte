@@ -94,6 +94,11 @@
     }
 </script>
 
+<!--
+@component
+Le choix dans une palette fixe — la couleur d'identité d'un membre, d'un calendrier. Pour une couleur quelconque, c'est `ColorPicker`.
+-->
+
 <div
     class={twMerge('flex flex-wrap items-start gap-1', className)}
     {...rest}

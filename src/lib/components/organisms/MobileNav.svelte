@@ -30,6 +30,11 @@
     }: MobileNavProps = $props();
 </script>
 
+<!--
+@component
+La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plancher de 360px.
+-->
+
 <!-- z-50 is deliberate: viewport-fixed chrome sits above every in-page layer. -->
 <nav
     class={twMerge('fixed inset-x-0 z-50 flex justify-center px-2 sm:px-4 md:hidden', className)}

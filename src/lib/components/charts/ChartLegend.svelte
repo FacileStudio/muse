@@ -21,6 +21,11 @@
     const classes = $derived(twMerge('flex flex-wrap items-center gap-x-4 gap-y-2 text-fc-xs', className));
 </script>
 
+<!--
+@component
+La légende d'un graphique. L'écart entre deux entrées bat toujours celui qui les compose.
+-->
+
 {#if items.length}
     <ul class={classes}>
         {#each items as item, i (item.name + i)}

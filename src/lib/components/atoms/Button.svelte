@@ -70,6 +70,11 @@
     const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc-pill justify-center gap-2 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring', variants[variant], sizes[size], className));
 </script>
 
+<!--
+@component
+L'action principale. Cinq variantes sur un axe d'emphase, trois tailles, et `size="lg"` dès qu'il partage une ligne avec un champ.
+-->
+
 {#snippet content()}
     {#if icon}
         <Icon {icon} size={glyph} />

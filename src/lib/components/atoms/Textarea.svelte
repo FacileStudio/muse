@@ -28,6 +28,11 @@
     const classes = $derived(twMerge('w-full rounded-fc-md border border-fc-border bg-fc-bg px-3 py-2 text-fc-md text-fc-fg placeholder:text-fc-fg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:opacity-50 resize-y', className));
 </script>
 
+<!--
+@component
+Une zone de texte multiligne, redimensionnable verticalement, qui adopte le contexte de son `Field`.
+-->
+
 <textarea
     bind:value
     {rows}

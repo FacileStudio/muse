@@ -135,6 +135,11 @@
     });
 </script>
 
+<!--
+@component
+Un graphique en barres, empilable. Chaque coin face à une gouttière est arrondi ; la ligne de base reste carrée.
+-->
+
 <div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div

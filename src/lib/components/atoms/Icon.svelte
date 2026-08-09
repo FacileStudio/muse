@@ -47,6 +47,11 @@
     );
 </script>
 
+<!--
+@component
+Une icône en SVG inline, rendue côté serveur et sans requête réseau. Le nom vient toujours de la map `icons`.
+-->
+
 {#if data}
     <svg
         xmlns="http://www.w3.org/2000/svg"

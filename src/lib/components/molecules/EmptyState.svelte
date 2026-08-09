@@ -34,6 +34,11 @@
     const classes = $derived(twMerge('flex flex-col items-center gap-4 py-12 text-center', className));
 </script>
 
+<!--
+@component
+Une liste sans contenu. La hauteur est le sujet : une carte de deux lignes se lit comme une panne, une carte haute et calme comme un choix.
+-->
+
 {#snippet body()}
     {#if icon}
         <Icon {icon} size={24} class="text-fc-fg-muted" />

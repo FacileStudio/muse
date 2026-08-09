@@ -34,6 +34,11 @@
     }: InlineProps = $props();
 </script>
 
+<!--
+@component
+Une ligne qui passe à la ligne par défaut, à l'un des quatre barreaux. Sans retour, une barre d'actions déborde ou écrase ses cibles tactiles.
+-->
+
 <div
     class={twMerge('flex', wrap && 'flex-wrap', ALIGN[align], GAP[gap], className)}
     {...rest}

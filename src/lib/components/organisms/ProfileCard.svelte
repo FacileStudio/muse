@@ -66,6 +66,11 @@
     );
 </script>
 
+<!--
+@component
+Le bloc d'identité d'un membre : avatar, nom et actions de session.
+-->
+
 <Card class={classes} {...rest}>
     <div class={identityClasses}>
         <span class="relative inline-flex shrink-0">
