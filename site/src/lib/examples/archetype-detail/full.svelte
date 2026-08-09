@@ -19,7 +19,7 @@
 
 <Page>
     <PageHeader
-        back={{ href: '/projets', label: 'Projets' }}
+        back={{ href: '#', label: 'Projets' }}
         title="Refonte Heranova"
         description="Site vitrine et espace client · démarré le 3 mars 2026."
     >

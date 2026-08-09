@@ -10,7 +10,7 @@
 
 <Page width="md">
     <PageHeader
-        back={{ href: '/projets', label: 'Projets' }}
+        back={{ href: '#', label: 'Projets' }}
         title="Nouveau projet"
         description="Il pourra être modifié à tout moment."
     />

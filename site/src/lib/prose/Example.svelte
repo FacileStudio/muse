@@ -51,6 +51,10 @@
         <!-- Not highlighted: shiki runs at build time through mdsvex, and these sources are
              read at runtime from the glob. Plain monospace is honest; a half-highlighted block
              would be worse than none. -->
+        <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+        <!-- The tabindex is deliberate and the rule is a false positive here: WCAG 2.1.1 wants
+             a scrollable region to be reachable by keyboard, and `role="region"` plus a label
+             is the documented pattern for one. Svelte's check only accepts interactive roles. -->
         <pre
             role="region"
             aria-label="Source de l'exemple"

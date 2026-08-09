@@ -5,7 +5,7 @@
 <PageHeader
     title="Refonte du site Heranova"
     description="Client : Heranova · échéance le 30 septembre 2026"
-    back={{ href: '#projets', label: 'Projets' }}
+    back={{ href: '#', label: 'Projets' }}
 >
     {#snippet actions()}
         <Button variant="outline" icon={icons.edit}>Modifier</Button>

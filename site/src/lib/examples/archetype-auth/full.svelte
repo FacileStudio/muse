@@ -20,7 +20,7 @@
         {/if}
 
         <Card class="flex flex-col gap-4">
-            <Button size="lg" class="w-full" icon={icons.shield} href="/auth/oidc">
+            <Button size="lg" class="w-full" icon={icons.shield} href="/auth/oidc" rel="external">
                 Continuer avec Porte
             </Button>
 

@@ -1,4 +1,6 @@
-import { expect, test } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
     arcCorner,
     arcPath,
@@ -228,4 +230,35 @@ test('label metrics size gutters and thin dense axes', () => {
     expect(axisPadLeft(['a'.repeat(100)])).toBe(96);
     expect(labelStride(4, 600, ['jan', 'feb', 'mar', 'apr'])).toBe(1);
     expect(labelStride(40, 300, ['2026-08-07'])).toBeGreaterThan(1);
+});
+
+describe('a stroke never lands on the viewBox edge', () => {
+    /*
+     * A 2px stroke with round caps paints 1px either side of the path. Padding of exactly 1
+     * put the outer edge of the first and last cap on the boundary, where antialiasing shaves
+     * it flat — the sparkline read as cut off at both ends, which is how it was reported.
+     *
+     * The rule generalises past this component: any chart padding has to clear half the stroke
+     * it is padding for, plus a hair, or the extremes are shaved.
+     */
+    const STROKE = 2;
+
+    test('the sparkline padding clears half its stroke', () => {
+        const source = readFileSync(
+            join(import.meta.dir, '../components/charts/Sparkline.svelte'),
+            'utf8'
+        );
+
+        const padX = /const padX = \$derived\(showLast \? DOT_R \+ STROKE \/ 2 : STROKE \/ 2 \+ (\d+)\)/.exec(source);
+        const padY = /const padY = STROKE \/ 2 \+ (\d+)/.exec(source);
+
+        expect(padX).not.toBeNull();
+        expect(padY).not.toBeNull();
+        expect(Number(padX![1])).toBeGreaterThan(0);
+        expect(Number(padY![1])).toBeGreaterThan(0);
+
+        /* And the stroke the padding is derived from is the stroke actually drawn. */
+        expect(source).toContain(`const STROKE = ${STROKE};`);
+        expect(source).toContain('stroke-width={STROKE}');
+    });
 });

@@ -55,7 +55,33 @@ export default {
          * pages are emitted as directories. Getting this wrong 404s every deep link in
          * production while `vite preview` stays perfectly green.
          */
-        prerender: { entries: ['*'] },
+        prerender: {
+            entries: ['*'],
+            /*
+             * A rendered example is app markup, so it links where an app links — `/projets`,
+             * `/equipe`, `/exports/temps.csv`. Those are not documentation links and this site
+             * does not serve them; failing the build on one would mean writing examples that
+             * link nowhere, which is worse documentation.
+             *
+             * The rule is the target, not the referrer: a link to a **docs** path that 404s is
+             * a genuine broken link and still fails. Anything outside the docs namespace is an
+             * example's own route and is let through.
+             */
+            handleHttpError: ({ path, message }) => {
+                const docs = [
+                    '/commencer',
+                    '/principes',
+                    '/fondations',
+                    '/structure',
+                    '/composants',
+                    '/archetypes'
+                ];
+                if (docs.some((d) => path.startsWith(d))) throw new Error(message);
+            },
+            /* Same reasoning for `href="#"` in an example: a placeholder anchor is markup a
+               reader copies, not a promise that the id exists on this page. */
+            handleMissingId: 'ignore'
+        },
         paths: { relative: false }
     }
     /*

@@ -32,6 +32,8 @@ qu'une chose à faire, et la mise en page doit le dire.
 - Un refus et un succès sont **tous les deux un 302**. Ce qui distingue les deux est le
   `Location`, pas le code : ne branchez pas l'affichage sur le statut.
 - Le bouton SSO est le primaire et il est au-dessus des champs. L'objectif de la suite est
-  `SSO_ONLY=true` partout ; l'ordre visuel doit précéder le basculement, pas le suivre.
+  `SSO_ONLY=true` partout ; l'ordre visuel doit précéder le basculement, pas le suivre. Il porte
+  `rel="external"` parce que `/auth/oidc` est une route serveur : une navigation côté client ne
+  la joindrait jamais.
 - Tous les boutons sont en `size="lg"` : un interstitiel se traverse aussi souvent au pouce
   qu'à la souris, et il n'y a ici aucune densité à préserver.

@@ -54,8 +54,17 @@
     const low = $derived(isEmpty ? 0 : Math.min(...values));
     const high = $derived(isEmpty ? 1 : Math.max(...values));
 
-    const padY = 3;
-    const padX = $derived(showLast ? 4 : 1);
+    /*
+     * Padding is derived from the stroke, not picked. `padX` was 1 against a 2px stroke with
+     * round caps: half the stroke sits outside the path, so the first and last cap landed
+     * exactly on the viewBox edge and antialiasing shaved them flat — the line read as cut off
+     * at both ends. A cap needs its full half-width plus a hair, and the end dot needs its
+     * radius. Same reasoning vertically, where 3 already cleared it.
+     */
+    const STROKE = 2;
+    const DOT_R = 3;
+    const padY = STROKE / 2 + 2;
+    const padX = $derived(showLast ? DOT_R + STROKE / 2 : STROKE / 2 + 1);
     const plotW = $derived(Math.max(0, w - padX * 2));
     const plotH = $derived(Math.max(0, height - padY * 2));
 
@@ -117,7 +126,7 @@
                 d={stroke}
                 fill="none"
                 stroke={color}
-                stroke-width="2"
+                stroke-width={STROKE}
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 data-line
@@ -126,7 +135,7 @@
                 <circle
                     cx={last[0]}
                     cy={last[1]}
-                    r="3"
+                    r={DOT_R}
                     fill={color}
                     stroke="var(--color-fc-component)"
                     stroke-width="2"
