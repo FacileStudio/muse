@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "dev": "bun run scripts/components.ts && vite dev --port 5184",
-        "build": "bun run scripts/components.ts && vite build && bun run scripts/llms.ts",
+        "build": "bun run scripts/components.ts && bun run scripts/favicon.ts && vite build && bun run scripts/llms.ts",
         "preview": "vite preview --port 5184",
         "check": "bun run scripts/components.ts && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
     },
