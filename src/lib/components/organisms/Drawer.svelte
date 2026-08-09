@@ -238,7 +238,7 @@
                             class="-mr-1 border-0 text-fc-fg-muted hover:text-fc-fg"
                             onclick={() => (open = false)}
                         >
-                            <iconify-icon icon="mdi:close" width="18" height="18" class="block"></iconify-icon>
+                            <iconify-icon icon="mdi:close" width="18" height="18" class="block size-4.5"></iconify-icon>
                         </IconButton>
                     {/if}
                 </div>

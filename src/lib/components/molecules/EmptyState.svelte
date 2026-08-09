@@ -35,7 +35,7 @@
 
 {#snippet body()}
     {#if icon}
-        <iconify-icon {icon} width="24" height="24" class="block text-fc-fg-muted"></iconify-icon>
+        <iconify-icon {icon} width="24" height="24" class="block text-fc-fg-muted size-6"></iconify-icon>
     {/if}
     <!-- Title and description are one block on `gap-1`, not two siblings of the outer
          `gap-4` — otherwise the description floats between the two and belongs to neither.

@@ -61,7 +61,7 @@
                         : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg'
                 )}
             >
-                <iconify-icon icon={item.icon} width="22" height="22" class="block"></iconify-icon>
+                <iconify-icon icon={item.icon} width="22" height="22" class="block size-5.5"></iconify-icon>
             </a>
         {/each}
 

@@ -117,7 +117,7 @@
     <div class="flex gap-3">
         {#if badgeIcon}
             <span class={badgeClasses} aria-hidden="true">
-                <iconify-icon icon={badgeIcon} width="18" height="18" class="block"></iconify-icon>
+                <iconify-icon icon={badgeIcon} width="18" height="18" class="block size-4.5"></iconify-icon>
             </span>
         {/if}
         <div class="flex min-w-0 flex-1 flex-col gap-1">

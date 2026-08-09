@@ -164,14 +164,14 @@
         {@render children()}
     {:else}
         <span class="text-fc-fg-muted">
-            <iconify-icon icon={icons.upload} width="28" height="28" class="block"></iconify-icon>
+            <iconify-icon icon={icons.upload} width="28" height="28" class="block size-7"></iconify-icon>
         </span>
         <span class="text-fc-sm font-medium">{label}</span>
         {#if hint}<span class="text-fc-xs text-fc-fg-muted">{hint}</span>{/if}
         <span
             class="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-fc-pill border border-fc-border px-4 text-fc-sm"
         >
-            <iconify-icon icon={icons.folder} width="16" height="16" class="block"></iconify-icon>
+            <iconify-icon icon={icons.folder} width="16" height="16" class="block size-4"></iconify-icon>
             Browse
         </span>
     {/if}

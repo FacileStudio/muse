@@ -138,7 +138,7 @@
                         onclick={() => (open = false)}
                         class="-mt-2 -mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-fc-pill text-fc-fg-muted transition-colors hover:bg-fc-surface hover:text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
                     >
-                        <iconify-icon icon="mdi:close" width="18" height="18" class="block"></iconify-icon>
+                        <iconify-icon icon="mdi:close" width="18" height="18" class="block size-4.5"></iconify-icon>
                     </button>
                 {/if}
             </div>

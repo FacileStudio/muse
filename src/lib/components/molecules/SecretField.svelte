@@ -170,7 +170,7 @@
                     icon={visible ? icons.eyeClosed : icons.eye}
                     width="18"
                     height="18"
-                    class="block"
+                    class="block size-4.5"
                 ></iconify-icon>
             </IconButton>
         {/if}
@@ -187,7 +187,7 @@
                     icon={copied ? icons.check : icons.copy}
                     width="18"
                     height="18"
-                    class="block"
+                    class="block size-4.5"
                 ></iconify-icon>
             </IconButton>
         {/if}

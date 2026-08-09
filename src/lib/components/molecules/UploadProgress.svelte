@@ -87,7 +87,7 @@
                                 <Spinner size="sm" />
                             {:else if item.status === 'done'}
                                 <span class="text-fc-success">
-                                    <iconify-icon icon={icons.check} width="18" height="18" class="block"
+                                    <iconify-icon icon={icons.check} width="18" height="18" class="block size-4.5"
                                     ></iconify-icon>
                                 </span>
                             {:else if item.status === 'error'}
@@ -96,7 +96,7 @@
                                         icon={icons.warning}
                                         width="18"
                                         height="18"
-                                        class="block"
+                                        class="block size-4.5"
                                     ></iconify-icon>
                                 </span>
                             {:else}
@@ -105,7 +105,7 @@
                                         icon={icons.clock}
                                         width="18"
                                         height="18"
-                                        class="block"
+                                        class="block size-4.5"
                                     ></iconify-icon>
                                 </span>
                             {/if}
@@ -123,7 +123,7 @@
                                 class="border-transparent text-fc-fg-muted hover:text-fc-fg"
                                 onclick={() => onRetry?.(item.id)}
                             >
-                                <iconify-icon icon={icons.refresh} width="18" height="18" class="block"
+                                <iconify-icon icon={icons.refresh} width="18" height="18" class="block size-4.5"
                                 ></iconify-icon>
                             </IconButton>
                         {/if}
@@ -135,7 +135,7 @@
                                 class="border-transparent text-fc-fg-muted hover:text-fc-fg"
                                 onclick={() => onCancel?.(item.id)}
                             >
-                                <iconify-icon icon={icons.close} width="18" height="18" class="block"></iconify-icon>
+                                <iconify-icon icon={icons.close} width="18" height="18" class="block size-4.5"></iconify-icon>
                             </IconButton>
                         {/if}
                     </div>

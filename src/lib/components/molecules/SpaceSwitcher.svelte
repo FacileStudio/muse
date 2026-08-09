@@ -104,7 +104,7 @@
             icon={activeSpace ? icons.usersGroup : icons.userCircle}
             width="18"
             height="18"
-            class="block shrink-0 text-fc-fg-muted"
+            class="block shrink-0 text-fc-fg-muted size-4.5"
         ></iconify-icon>
         <span class="min-w-0 flex-1 truncate font-medium text-fc-fg">
             {activeSpace?.name ?? personalLabel}
@@ -113,7 +113,10 @@
             icon={icons.chevronDown}
             width="16"
             height="16"
-            class={twMerge('block shrink-0 text-fc-fg-muted transition-transform', open && 'rotate-180')}
+            class={twMerge(
+                'block size-4 shrink-0 text-fc-fg-muted transition-transform',
+                open && 'rotate-180'
+            )}
         ></iconify-icon>
     </button>
 
@@ -134,7 +137,7 @@
                     )}
                     onclick={() => select(null)}
                 >
-                    <iconify-icon icon={icons.userCircle} width="16" height="16" class="block shrink-0"></iconify-icon>
+                    <iconify-icon icon={icons.userCircle} width="16" height="16" class="block shrink-0 size-4"></iconify-icon>
                     <span class="min-w-0 flex-1 truncate">{personalLabel}</span>
                 </button>
 
@@ -147,7 +150,7 @@
                         )}
                         onclick={() => select(space.id)}
                     >
-                        <iconify-icon icon={icons.usersGroup} width="16" height="16" class="block shrink-0"></iconify-icon>
+                        <iconify-icon icon={icons.usersGroup} width="16" height="16" class="block shrink-0 size-4"></iconify-icon>
                         <span class="min-w-0 flex-1 truncate">{space.name}</span>
                     </button>
                 {/each}
@@ -160,7 +163,7 @@
                         class="flex w-full items-center gap-2.5 rounded-fc-sm px-2.5 py-2 text-left text-fc-sm text-fc-fg-muted transition-colors hover:bg-fc-surface hover:text-fc-fg"
                         onclick={() => (open = false)}
                     >
-                        <iconify-icon icon={icons.settings} width="16" height="16" class="block shrink-0"></iconify-icon>
+                        <iconify-icon icon={icons.settings} width="16" height="16" class="block shrink-0 size-4"></iconify-icon>
                         {manageLabel}
                     </a>
                 </div>
