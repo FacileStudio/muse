@@ -275,3 +275,40 @@ form control, and give it `size="lg"`. muse's own invite form got this wrong unt
 
 A button *stacked under* a field keeps the default — the rule is about siblings on one line.
 CHARTE §7 now states it beside the touch-target exception it was hiding behind.
+
+## 14. Icons are bundled — no runtime fetch, no custom element
+
+**The change:** muse rendered `<iconify-icon>`, a custom element that fetches its glyph from
+`api.iconify.design` on first paint. It now renders an inline `<svg>` from paths frozen into the
+package. `icons` and every `icon` prop keep the same shape, so no call site changes.
+
+**Three things stop being your problem:**
+
+- **The registration step is gone.** `if (browser) void import('iconify-icon')` was one of the
+  three documented adoption traps, and forgetting it made every icon vanish with no error. You
+  can delete it, and drop `iconify-icon` from `package.json`.
+- **No external request.** A suite that promises "zéro dépendance cloud" was fetching its
+  chevrons from a CDN. It no longer does.
+- **No flash.** The element had no intrinsic size and its `width`/`height` attributes did
+  nothing until the fetch landed — measured at ~400ms, during which every icon was 0×0 and
+  buttons rendered narrow then jumped. An `<svg>` has its box from the first frame, and now
+  renders during SSR.
+
+**If you pass a name muse does not carry** — Sablier's transport controls, Agenda's calendar
+set — it still works: `Icon` falls back to `<iconify-icon>`, which needs the custom element and
+the network. Two ways out, best first:
+
+1. Add the key to muse's `icons` map and re-run `bun run scripts/build-icons.ts`. That is what
+   the map is for, and the whole suite gets it.
+2. Bundle your own, generated the same way, and register them once before first render:
+
+```ts
+import { registerIcons } from '@facile/muse';
+import data from './icons-data.json';
+registerIcons(data);
+```
+
+**Attribution travels with the artwork.** Solar is CC BY 4.0 and Material Design Icons is
+Apache 2.0; both are credited in muse's `LICENSE`, and a test fails the build if a bundled
+collection is not. If you bundle your own, do the same — the trial typeface this repo shipped
+through v0.5.0 is the reason that is a rule rather than a suggestion.

@@ -24,6 +24,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import Icon from '../atoms/Icon.svelte';
     import { icons } from '../../icons.js';
     import IconButton from '../atoms/IconButton.svelte';
     import Spinner from '../atoms/Spinner.svelte';
@@ -87,26 +88,15 @@
                                 <Spinner size="sm" />
                             {:else if item.status === 'done'}
                                 <span class="text-fc-success">
-                                    <iconify-icon icon={icons.check} width="18" height="18" class="block size-4.5"
-                                    ></iconify-icon>
+                                    <Icon icon={icons.check} size={18} />
                                 </span>
                             {:else if item.status === 'error'}
                                 <span class="text-fc-danger">
-                                    <iconify-icon
-                                        icon={icons.warning}
-                                        width="18"
-                                        height="18"
-                                        class="block size-4.5"
-                                    ></iconify-icon>
+                                    <Icon icon={icons.warning} size={18} />
                                 </span>
                             {:else}
                                 <span class="text-fc-fg-muted">
-                                    <iconify-icon
-                                        icon={icons.clock}
-                                        width="18"
-                                        height="18"
-                                        class="block size-4.5"
-                                    ></iconify-icon>
+                                    <Icon icon={icons.clock} size={18} />
                                 </span>
                             {/if}
                         </span>
@@ -123,8 +113,7 @@
                                 class="border-transparent text-fc-fg-muted hover:text-fc-fg"
                                 onclick={() => onRetry?.(item.id)}
                             >
-                                <iconify-icon icon={icons.refresh} width="18" height="18" class="block size-4.5"
-                                ></iconify-icon>
+                                <Icon icon={icons.refresh} size={18} />
                             </IconButton>
                         {/if}
 
@@ -135,7 +124,7 @@
                                 class="border-transparent text-fc-fg-muted hover:text-fc-fg"
                                 onclick={() => onCancel?.(item.id)}
                             >
-                                <iconify-icon icon={icons.close} width="18" height="18" class="block size-4.5"></iconify-icon>
+                                <Icon icon={icons.close} size={18} />
                             </IconButton>
                         {/if}
                     </div>

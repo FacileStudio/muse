@@ -24,6 +24,7 @@
 <script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
+    import Icon from '../atoms/Icon.svelte';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import { resize } from '../../utils/chart.js';
 
@@ -59,7 +60,7 @@
      * a blink. Position comes from offsetLeft inside the scrolling strip, so it stays put
      * when the strip is scrolled horizontally on a narrow screen.
      *
-     * Every tab is measured through a ResizeObserver, not just once on mount. `<iconify-icon>`
+     * Every tab is measured through a ResizeObserver, not just once on mount. Icons
      * is a custom element that upgrades asynchronously and the icon fetch lands after first
      * paint, so a tab measured at mount is one icon too narrow — the pill renders clipped
      * through the label and never corrects itself. Same story for the Goga swap.
@@ -128,14 +129,7 @@
 
     {#snippet content(item: Item, active: boolean)}
         {#if item.icon}
-            <!--
-                `size-4` on top of the width/height attributes is load-bearing. Those attributes
-                only take effect once the icon data has been fetched, so an <iconify-icon> is a
-                0×0 box until then — long enough for the tab to be measured one icon too narrow.
-                The CSS size reserves the box up front, so nothing reflows when the glyph lands.
-            -->
-            <iconify-icon icon={item.icon} width="16" height="16" class="block size-4 shrink-0"
-            ></iconify-icon>
+            <Icon icon={item.icon} size={16} />
         {/if}
         {item.label}
         {#if item.badge !== undefined}

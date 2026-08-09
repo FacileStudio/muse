@@ -26,6 +26,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import Icon from '../atoms/Icon.svelte';
     import { icons } from '../../icons.js';
     import { isRedacted, maskSecret } from '../../utils/secret.js';
     import IconButton from '../atoms/IconButton.svelte';
@@ -166,12 +167,7 @@
                 aria-pressed={visible}
                 title={visible ? 'Hide' : 'Reveal'}
             >
-                <iconify-icon
-                    icon={visible ? icons.eyeClosed : icons.eye}
-                    width="18"
-                    height="18"
-                    class="block size-4.5"
-                ></iconify-icon>
+                <Icon icon={visible ? icons.eyeClosed : icons.eye} size={18} />
             </IconButton>
         {/if}
 
@@ -183,12 +179,7 @@
                 title="Copy"
                 class={copied ? 'border-fc-success text-fc-success' : ''}
             >
-                <iconify-icon
-                    icon={copied ? icons.check : icons.copy}
-                    width="18"
-                    height="18"
-                    class="block size-4.5"
-                ></iconify-icon>
+                <Icon icon={copied ? icons.check : icons.copy} size={18} />
             </IconButton>
         {/if}
 

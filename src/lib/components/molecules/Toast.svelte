@@ -17,6 +17,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import Icon from '../atoms/Icon.svelte';
     import Button from '../atoms/Button.svelte';
     import IconButton from '../atoms/IconButton.svelte';
     import { icons } from '../../icons.js';
@@ -75,7 +76,7 @@
             class={twMerge('flex size-8 shrink-0 items-center justify-center rounded-fc-pill', badges[tone])}
             aria-hidden="true"
         >
-            <iconify-icon icon={glyph} width="18" height="18" class="block size-4.5"></iconify-icon>
+            <Icon icon={glyph} size={18} />
         </span>
     {/if}
 
@@ -101,7 +102,7 @@
             aria-label="Dismiss notification"
             onclick={onDismiss}
         >
-            <iconify-icon icon={icons.close} width="16" height="16" class="block size-4"></iconify-icon>
+            <Icon icon={icons.close} size={16} />
         </IconButton>
     {/if}
 </div>

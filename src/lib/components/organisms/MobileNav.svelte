@@ -17,6 +17,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import Icon from '../atoms/Icon.svelte';
     import Avatar from '../atoms/Avatar.svelte';
 
     let {
@@ -61,7 +62,7 @@
                         : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg'
                 )}
             >
-                <iconify-icon icon={item.icon} width="22" height="22" class="block size-5.5"></iconify-icon>
+                <Icon icon={item.icon} size={22} />
             </a>
         {/each}
 

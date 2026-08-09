@@ -31,7 +31,7 @@
     };
 
     const classes = $derived(twMerge(
-        'inline-flex size-11 shrink-0 items-center justify-center rounded-fc-pill [&_svg]:size-4.5 [&_iconify-icon]:block transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
+        'inline-flex size-11 shrink-0 items-center justify-center rounded-fc-pill [&_svg]:size-4.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
         variants[variant],
         className
     ));

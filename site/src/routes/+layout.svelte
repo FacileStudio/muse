@@ -3,20 +3,9 @@
     import type { Snippet } from 'svelte';
     import { browser } from '$app/environment';
     import { page } from '$app/state';
-    import { IconButton, Page, icons } from '@facile/muse';
+    import { Icon, IconButton, Page, icons } from '@facile/muse';
     import { NAV } from '$lib/nav.js';
 
-    /*
-     * Registering the custom element is not optional, and this site shipped without it — every
-     * `<iconify-icon>` was an unknown element with no box, so the mobile menu button and the
-     * theme switcher rendered as 44px buttons containing nothing. Invisible triggers, no error
-     * in the console, nothing in the build log. `/commencer/installer` documents this exact
-     * trap, which is a good reminder that writing a rule down is not the same as following it.
-     *
-     * Browser-side only: the element registers against `window.customElements`, so importing it
-     * at module scope breaks the prerender.
-     */
-    if (browser) void import('iconify-icon');
 
     let { children }: { children: Snippet } = $props();
 
@@ -62,8 +51,7 @@
     >
         <div class="flex flex-col gap-8">
             <a href="/" class="flex min-h-11 items-center gap-2.5 rounded-fc-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring">
-                <iconify-icon icon={icons.palette} width="22" height="22" class="block size-5.5 text-fc-fg"
-                ></iconify-icon>
+                <Icon icon={icons.palette} size={22} class="text-fc-fg" />
                 <span class="text-fc-lg font-semibold text-fc-fg">muse</span>
             </a>
 
@@ -114,8 +102,7 @@
                 aria-label="Ouvrir la navigation"
                 onclick={() => (open = true)}
             >
-                <iconify-icon icon={icons.collapse} width="20" height="20" class="block size-5"
-                ></iconify-icon>
+                <Icon icon={icons.collapse} size={20} />
             </IconButton>
 
             <div class="flex items-center gap-1">
@@ -126,7 +113,7 @@
                         aria-pressed={theme === mode}
                         onclick={() => (theme = mode as typeof theme)}
                     >
-                        <iconify-icon {icon} width="18" height="18" class="block size-4.5"></iconify-icon>
+                        <Icon {icon} size={18} />
                     </IconButton>
                 {/each}
             </div>
