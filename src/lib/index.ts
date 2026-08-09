@@ -46,12 +46,8 @@ export { default as Table } from './components/organisms/Table.svelte';
 export { default as Toaster } from './components/organisms/Toaster.svelte';
 export { default as Topbar } from './components/organisms/Topbar.svelte';
 
-export { default as Carousel } from './components/motion/Carousel.svelte';
-export { default as Mosaique } from './components/motion/Mosaique.svelte';
 export { default as PageTransition } from './components/motion/PageTransition.svelte';
-export { default as Rideau } from './components/motion/Rideau.svelte';
 export { default as TextElevate } from './components/motion/TextElevate.svelte';
-export { default as WordReveal } from './components/motion/WordReveal.svelte';
 
 export { default as BarChart } from './components/charts/BarChart.svelte';
 export { default as ChartLegend } from './components/charts/ChartLegend.svelte';

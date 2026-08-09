@@ -382,7 +382,7 @@ padding generous — the whitespace is doing the work the border used to. `Card`
 - **`--ease-fc` is the CSS spelling of that same curve** (`cubic-bezier(0.77, 0, 0.175, 1)`),
   so a CSS transition and a GSAP tween running side by side match. It used to hold
   easeInOutCubic — `power2.inOut` — which meant the two halves of the system eased differently.
-- Default duration: `0.4s` UI, `1.5s` full-page curtain (`Rideau`)
+- Default duration: `0.4s` UI
 - **All motion respects `prefers-reduced-motion: reduce`, on both sides.** Every JS animation
   checks `prefersReducedMotion()` before it tweens, *and* `tokens.css` collapses CSS animation
   and transition durations globally in the base layer. Neither alone is sufficient: the JS
@@ -412,8 +412,9 @@ Route-level motion for SPA navigation. Wrap the routed view and give it the curr
 | `distance` | `number` | `12` | Pixels of upward travel |
 
 It animates **in only** — there is no exit tween, because a true crossfade needs both routes
-mounted at once and that doubles every page's state. `Rideau` remains the tool for full-page
-curtain navigation; `PageTransition` is for client-side route swaps.
+mounted at once and that doubles every page's state. `PageTransition` is for client-side route
+swaps, and it is the only route-level motion the library ships — the full-page curtain
+(`Rideau`) was removed in v1.0 with no consumer in the suite.
 
 **A curtain belongs above the router, never inside the page it covers.** Mounted with the
 page, it exists only after the old view is gone, so it can play the reveal but not the cover
@@ -436,7 +437,7 @@ sideways the instant content passes one screen, and jumps back when a modal lock
 Scrolling itself is completely untouched — wheel, trackpad, touch, keyboard and
 `scrollIntoView` all behave normally. If something is unreachable, the container is the bug;
 never "fix" it by showing a scrollbar. Long content still needs its own affordances: keep a
-partial row visible at the fold, or pair the scroll area with arrows the way `Carousel` does.
+partial row visible at the fold, or pair the scroll area with its own arrows.
 
 **Anything carrying `sr-only` needs a positioned ancestor.** `sr-only` is `position: absolute`,
 and an absolutely positioned box whose nearest *positioned* ancestor is the initial containing

@@ -247,8 +247,9 @@ third — every dependency here lands in every consumer app's bundle. Note in pa
 `iconify-icon` is **not** a dependency: thirteen components render `<iconify-icon>` elements
 that stay inert unless the consumer app has registered the custom element itself.
 
-The `gsap` floor is `^3.13.0`, not `^3.12.0`. `WordReveal` imports `gsap/SplitText`, which was
-a paid Club GreenSock plugin until 3.13 — on 3.12.x the import does not resolve, and the
+The `gsap` floor is `^3.13.0`, inherited from when `WordReveal` imported `gsap/SplitText` (a
+paid Club GreenSock plugin until that release). That component is gone in v1.0 and no plugin is
+imported any more, but the floor stays — there is no reason to widen it.
 failure lands in the consumer's build, not ours.
 
 ## Releasing, and how a consumer picks it up

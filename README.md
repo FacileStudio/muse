@@ -2,7 +2,8 @@
 
 Svelte 5 component library and design system for Facile tools, published as `@facile/muse`.
 
-muse ships 48 components arranged as atoms, molecules, organisms, charts and motion pieces,
+muse ships 53 components arranged as layout primitives, atoms, molecules, organisms, charts and
+two motion pieces,
 a Tailwind v4 token theme and the Iconify icon map. It bundles no typeface. It is consumed
 directly from source — there is no build step and no `dist/`. An `install.sh` also registers
 muse as an AI skill for Claude Code and Codex so agents generate suite-shaped UI by default.
@@ -13,7 +14,8 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 
 ## What it does
 
-- Exports 51 Svelte 5 components: 16 atoms, 14 molecules, 9 organisms, 6 charts, 6 motion pieces
+- Exports 53 Svelte 5 components: 5 layout primitives, 16 atoms, 13 molecules, 9 organisms,
+  6 charts, 2 motion pieces
 - Standardises the settings page — `Tabs`, `SettingsSection`, `SettingsRow`, and a
   `SecretField` that masks, reveals-then-re-hides, and copies credentials the same way in
   every app
@@ -50,7 +52,7 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 ## Install
 
 ```sh
-bun add "github:FacileStudio/muse#v0.3.0"
+bun add "github:FacileStudio/muse#v0.5.0"
 ```
 
 Import the theme once in the root layout, then use components anywhere:

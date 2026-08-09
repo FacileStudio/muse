@@ -10,7 +10,7 @@ use to override it.
 |---|---|---|
 | `svelte` | `^5.0.0` | Peer dependency. Components use runes (`$props`, `$state`, `$bindable`, `$derived`, `$effect`, `$props.id()`) and snippets |
 | `tailwindcss` | `^4.0.0` | Peer dependency. The `@theme` block is Tailwind v4 syntax |
-| `gsap` | `^3.13.0` | Direct dependency. `WordReveal` imports `gsap/SplitText`, which only entered the public package in 3.13 — on 3.12 the import does not resolve |
+| `gsap` | `^3.13.0` | Direct dependency, core only. No plugin is imported any more — `WordReveal`, the one that pulled `ScrollTrigger` and `SplitText`, was removed in v1.0 |
 | `tailwind-merge` | `^3.5.0` | Direct dependency. Extended in `src/lib/utils/cn.ts` to understand the `fc-*` scales; every component merges its `class` prop through that |
 
 `iconify-icon` is **not** a dependency and is not registered by muse. Thirteen components
@@ -144,12 +144,12 @@ and resolved by DOM order.
 
 | Rung | What lives there |
 |---|---|
-| `z-0` | in-flow content, and anything establishing a local context (`Tabs`, `Mosaique`) |
+| `z-0` | in-flow content, and anything establishing a local context (`Tabs`) |
 | `z-10` | chart overlays that must clear their own svg (`ChartTooltip`) |
 | `z-30` | sticky page chrome (`Topbar`) |
 | `z-40` | surfaces floating out of a trigger (`SpaceSwitcher`'s dropdown) |
 | `z-50` | viewport-fixed chrome (`MobileNav`) |
-| `z-[100]` | full-page curtain (`Rideau`) |
+
 
 `Modal`, `ConfirmModal` and `Drawer` are absent by design: `<dialog>.showModal()` promotes them
 to the browser's top layer, above every z-index there is.

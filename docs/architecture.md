@@ -162,13 +162,13 @@ Chart and motion components take `class` only and spread nothing.
 
 ## Motion architecture
 
-Animation is GSAP everywhere except `Carousel`, which uses native scroll snapping and an
+Animation is GSAP throughout the motion tier, and
 `IntersectionObserver`, and `Skeleton` / `Spinner`, which are CSS animations behind the
 `motion-reduce:` variant.
 
 | Where | What animates |
 |---|---|
-| `motion/` | `Rideau` (curtain height), `TextElevate` (rise), `WordReveal` (ScrollTrigger + SplitText scrub), `Mosaique` (bloom out from centre), `PageTransition` (keyed fade + lift) |
+| `motion/` | `TextElevate` (rise), `PageTransition` (keyed fade + lift) |
 | `organisms/` | `SideBar` tweens its own width from an `$effect`; `Modal` scales, `Drawer` translates, each handing its tweens to the shared dialog controller |
 | `molecules/` | `Tabs` slides its indicator pill |
 | `charts/` | `entry.ts` — a 0→1 progress tween, a dash-offset draw-in for lines, opacity fades for areas |
@@ -189,9 +189,12 @@ scales the first time it was inlined. Same reasoning behind `utils/dialog.ts` �
 refcounted body scroll lock, but keep their own tweens, because a modal scaling and a sheet
 translating on different curves is not duplication.
 
-`WordReveal` registers the GSAP `ScrollTrigger` and `SplitText` plugins at mount and kills
-both on destroy. `SplitText` was a paid Club GreenSock plugin before GSAP 3.13; the
-dependency floor is `^3.13.0` for exactly that reason — on 3.12 the import does not resolve.
+**No GSAP plugin is imported any more.** `WordReveal` registered `ScrollTrigger` and
+`SplitText` at mount, and was the only reason the dependency floor sat at `^3.13.0` (`SplitText`
+was a paid Club GreenSock plugin before that release). It served one landing page in one app
+and was removed in v1.0 along with `Carousel`, `Mosaique` and `Rideau`, none of which had a
+consumer anywhere in the suite. What is left of the motion tier — `PageTransition` and
+`TextElevate` — uses core GSAP only.
 
 ## Theming model
 
