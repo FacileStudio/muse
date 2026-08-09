@@ -3,8 +3,8 @@
     import type { Snippet } from 'svelte';
     import { browser } from '$app/environment';
     import { page } from '$app/state';
-    import { Icon, IconButton, Page, icons } from '@facile/muse';
-    import { NAV } from '$lib/nav.js';
+    import { Icon, IconButton, Page, SideBar, icons } from '@facile/muse';
+    import { RAIL } from '$lib/nav.js';
 
 
     let { children }: { children: Snippet } = $props();
@@ -28,7 +28,9 @@
     }
 
     let open = $state(false);
+    let collapsed = $state(false);
     const here = $derived(page.url.pathname.replace(/\/$/, '') || '/');
+    const rail = $derived(RAIL.map((l) => ({ ...l, active: l.href === here })));
 </script>
 
 <svelte:head>
@@ -40,49 +42,23 @@
 </svelte:head>
 
 <div class="flex min-h-dvh w-full bg-fc-page">
-    <!-- The rail is a plain nav, not muse's SideBar: SideBar is an *app* shell with a space
-         switcher and a user card, and a documentation site has neither. Using it here would be
-         the demo dressed as a site. -->
-    <nav
-        class="fixed inset-y-0 left-0 z-50 w-72 shrink-0 overflow-y-auto border-r border-fc-border bg-fc-bg px-5 py-6 transition-transform md:sticky md:top-0 md:h-dvh md:translate-x-0 md:border-0 md:bg-transparent {open
-            ? 'translate-x-0'
-            : '-translate-x-full'}"
-        aria-label="Sections"
-    >
-        <div class="flex flex-col gap-8">
-            <a href="/" class="flex min-h-11 items-center gap-2.5 rounded-fc-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring">
-                <Icon icon={icons.palette} size={22} class="text-fc-fg" />
-                <span class="text-fc-lg font-semibold text-fc-fg">muse</span>
-            </a>
+    <!-- muse's own rail, not a hand-rolled nav. Building the design system's site out of
+         anything else would be an argument against the design system, and it is how the
+         grouped-navigation gap got found: `SideBar` took a flat `pages` array, so the section
+         headings that carry this site's argument had nowhere to go. It takes `group` now. -->
+    <div class="hidden h-dvh shrink-0 p-3 md:block md:sticky md:top-0">
+        <SideBar
+            icon={icons.paletteMark}
+            title="muse"
+            bind:collapsed
+            pages={rail}
+            class="h-full"
+        />
+    </div>
 
-            {#each NAV as group (group.title)}
-                <div class="flex flex-col gap-2">
-                    <p class="text-fc-xs font-semibold tracking-wide text-fc-fg uppercase">
-                        {group.title}
-                    </p>
-                    <p class="text-fc-xs text-fc-fg-muted">{group.intent}</p>
-                    <ul class="mt-1 flex flex-col gap-0.5">
-                        {#each group.links as link (link.href)}
-                            <li>
-                                <a
-                                    href={link.href}
-                                    onclick={() => (open = false)}
-                                    aria-current={here === link.href ? 'page' : undefined}
-                                    class="block rounded-fc-sm px-2 py-1.5 text-fc-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring {here ===
-                                    link.href
-                                        ? 'bg-fc-accent text-fc-accent-fg'
-                                        : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg'}"
-                                >
-                                    {link.label}
-                                </a>
-                            </li>
-                        {/each}
-                    </ul>
-                </div>
-            {/each}
-        </div>
-    </nav>
-
+    <!-- The rail is desktop-only, exactly as in a Facile app. On a phone the same array is a
+         sheet rather than `MobileNav`, which is a four-item pill bar — this site has twelve
+         links across five sections and would overflow it at the 360px floor. -->
     {#if open}
         <button
             type="button"
@@ -90,6 +66,15 @@
             aria-label="Fermer la navigation"
             onclick={() => (open = false)}
         ></button>
+        <div class="fixed inset-y-0 left-0 z-50 w-72 p-3 md:hidden">
+            <SideBar
+                icon={icons.paletteMark}
+                title="muse"
+                pages={rail}
+                showCollapse={false}
+                class="h-full"
+            />
+        </div>
     {/if}
 
     <div class="flex min-w-0 flex-1 flex-col">

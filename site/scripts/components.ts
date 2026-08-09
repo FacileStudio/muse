@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const LIB = join(HERE, '../../src/lib');
 
-export type PropDoc = { name: string; type: string; optional: boolean; doc?: string };
+export type PropDoc = { name: string; type: string; optional: boolean; doc: string };
 export type ComponentDoc = {
     name: string;
     tier: string;
@@ -45,9 +45,13 @@ function exported(): { name: string; path: string }[] {
 /* Balanced-brace scan: a prop whose type is an object literal contains semicolons and
    newlines, so splitting the interface body on either loses half of it. */
 function interfaceBody(source: string, name: string): { body: string; ext: string[] } | null {
-    const decl = new RegExp(`export (?:interface|type) ${name}Props([^{]*)\\{`).exec(source);
+    const suffixed = new RegExp(`export (?:interface|type) ${name}Props([^;{]*)\\{`).exec(source);
+    const bare = new RegExp(`export (?:interface|type) ${name}\\s*=?\\s*\\{`).exec(source);
+    const decl = suffixed ?? bare;
     if (!decl) return null;
-    const ext = (decl[1].match(/extends ([^{]+)/)?.[1] ?? decl[1].replace('=', ''))
+    /* The bare-name branch has no capture group; a local alias declares no extends. */
+    const head = decl[1] ?? '';
+    const ext = (head.match(/extends ([^{]+)/)?.[1] ?? head.replace('=', ''))
         .split(',')
         .map((s) => s.trim())
         .filter((s) => s && s !== '=');
@@ -67,36 +71,48 @@ function interfaceBody(source: string, name: string): { body: string; ext: strin
 
 function parseProps(body: string): PropDoc[] {
     const props: PropDoc[] = [];
-    let doc: string | undefined;
-    let buffer = '';
+
+    /*
+     * Split on `;` at depth zero, not on newlines. A component that declares two props on one
+     * line — `class?: string; value?: string`, which is how the props codemod left several —
+     * would otherwise parse as a single prop whose type is the rest of the line. And a prop
+     * whose type is an object or a function signature spans lines and contains its own
+     * semicolons, so neither split works on its own.
+     */
+    const parts: string[] = [];
     let depth = 0;
-
-    for (const raw of body.split('\n')) {
-        const line = raw.trim();
-        if (!line) continue;
-        if (line.startsWith('/**')) {
-            doc = line.replace(/^\/\*+\s*/, '').replace(/\s*\*+\/$/, '');
-            continue;
+    let buf = '';
+    for (const ch of body) {
+        if ('{(<['.includes(ch)) depth++;
+        if ('})>]'.includes(ch)) depth--;
+        if (ch === ';' && depth === 0) {
+            parts.push(buf);
+            buf = '';
+        } else {
+            buf += ch;
         }
-        if (line.startsWith('*') || line.startsWith('/*')) continue;
+    }
+    parts.push(buf);
 
-        buffer = buffer ? `${buffer} ${line}` : line;
-        for (const ch of line) {
-            if ('{(<['.includes(ch)) depth++;
-            if ('})>]'.includes(ch)) depth--;
-        }
-        if (depth > 0) continue;
+    for (const part of parts) {
+        /* The JSDoc that precedes a prop, if it has one. */
+        const doc = /\/\*\*([\s\S]*?)\*\//.exec(part)?.[1];
+        const code = part.replace(/\/\*[\s\S]*?\*\//g, '').trim();
+        if (!code) continue;
 
-        const m = /^'?([\w-]+)'?(\?)?:\s*(.+?);?$/.exec(buffer);
-        buffer = '';
+        const m = /^'?([\w-]+)'?(\?)?:\s*([\s\S]+)$/.exec(code);
         if (!m) continue;
         props.push({
             name: m[1],
             optional: Boolean(m[2]),
-            type: m[3].replace(/;$/, '').trim(),
-            doc
+            type: m[3].replace(/\s+/g, ' ').trim(),
+            doc: (doc ?? '')
+                .split('\n')
+                .map((l) => l.replace(/^\s*\*?\s?/, '').trim())
+                .join(' ')
+                .replace(/\s+/g, ' ')
+                .trim()
         });
-        doc = undefined;
     }
     return props;
 }
@@ -122,7 +138,31 @@ export function collect(): ComponentDoc[] {
         .map(({ name, path }) => {
             const file = join(LIB, `${path}`);
             const source = readFileSync(file, 'utf8');
-            const parsed = interfaceBody(source, name);
+            /*
+             * `export type XProps = A & B;` has no body of its own — an interface cannot extend
+             * a union, so `NavButton`'s props live in a local `Own` alias. Match the alias form
+             * first: scanning for the next `{` walks straight past it into the instance script
+             * and returns whatever object literal it finds there.
+             */
+            const alias = new RegExp(`export type ${name}Props\\s*=\\s*([^;]+);`).exec(source);
+            let parsed = alias ? null : interfaceBody(source, name);
+
+            if (alias) {
+                const parts = alias[1].split('&').map((x) => x.trim().replace(/^\(|\)$/g, ''));
+                const ext: string[] = [];
+                let body = '';
+                for (const part of parts) {
+                    if (part.startsWith('{')) {
+                        body += part.slice(1, -1);
+                        continue;
+                    }
+                    const local = /^\w+$/.test(part) ? interfaceBody(source, part) : null;
+                    if (local?.body.trim()) body += local.body;
+                    else ext.push(part);
+                }
+                parsed = { body, ext };
+            }
+
             return {
                 name,
                 tier: TIERS[path.split('/')[1]] ?? path.split('/')[1],

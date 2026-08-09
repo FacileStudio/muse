@@ -1,7 +1,18 @@
 <script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
 
-    export type Page = { label: string; href: string; icon?: string; active?: boolean };
+    export type Page = {
+        label: string;
+        href: string;
+        icon?: string;
+        active?: boolean;
+        /**
+         * Optional section heading. A run of consecutive pages sharing a group renders under
+         * one label; the heading is hidden while the rail is collapsed, because a 68px column
+         * has no room for it and the icons still read as a list.
+         */
+        group?: string;
+    };
 
     export type User = { name: string; avatar?: string };
 
@@ -238,7 +249,20 @@
         {/if}
 
         <nav class="flex flex-col gap-1">
-            {#each pages as page (page.href)}
+            {#each pages as page, i (page.href)}
+                <!-- The heading prints when the group changes, so grouping is expressed by the
+                     order of the array rather than by a second nesting level in the prop. A
+                     flat list with no `group` behaves exactly as before. -->
+                {#if page.group && page.group !== pages[i - 1]?.group}
+                    <p
+                        class={twMerge(
+                            'px-3 pt-4 pb-1 text-fc-xs font-semibold tracking-wide text-fc-fg-muted uppercase',
+                            narrow && 'sr-only'
+                        )}
+                    >
+                        {page.group}
+                    </p>
+                {/if}
                 <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} collapsed={narrow}>
                     {#snippet right()}
                         {#if page.active}
