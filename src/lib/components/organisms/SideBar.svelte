@@ -184,7 +184,18 @@
     class={twMerge('relative bg-fc-component rounded-fc-lg flex flex-col justify-between h-full min-h-0 gap-6 overflow-hidden py-5 px-3', className)}
     {...rest}
 >
-    <div class="flex flex-col [&>*+*]:mt-5">
+    <!--
+        The nav column scrolls, the rail does not. The root keeps `overflow-hidden` because the
+        width tween would otherwise show content spilling past a shrinking rail, so a list
+        taller than the viewport was simply clipped with no way to reach the rest of it.
+
+        `min-h-0` is load-bearing: a flex child will not shrink below its content without it, so
+        `overflow-y-auto` would never engage and the column would just push the user card off
+        the bottom. `overscroll-contain` is the other half — without it a flick past either end
+        chains into the document, which on a phone reads as "the page scrolls instead of the
+        menu". The scrollbar stays hidden, as everywhere else in the suite.
+    -->
+    <div class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain [&>*+*]:mt-5">
         <div class={twMerge('flex min-h-7 items-center gap-2.5 pt-1', narrow ? 'justify-center px-0' : 'px-2')}>
             {#if icon}<Icon {icon} size={24} />{/if}
             {#if !narrow}
