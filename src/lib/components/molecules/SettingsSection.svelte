@@ -1,16 +1,18 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
-    import Card from '../atoms/Card.svelte';
+    import Section from '../layout/Section.svelte';
 
+    /*
+     * The settings preset of `Section`: same anatomy, card on by default, because a settings
+     * block is a surface holding `SettingsRow`s. Everything structural lives in `Section` — this
+     * exists so the nine repos already importing it keep working, and so CHARTE §14's settings
+     * shape has a name that says what it is for.
+     *
+     * Reach for `Section` for anything that is not a settings block.
+     */
     let {
-        title,
-        description,
-        actions,
         bare = false,
-        bodyClass = '',
-        class: className = '',
         children,
         ...rest
     }: HTMLAttributes<HTMLElement> & {
@@ -22,28 +24,9 @@
         class?: string;
         children?: Snippet;
     } = $props();
-
-    const body = $derived(twMerge('flex flex-col gap-4', bodyClass));
 </script>
 
-<section class={twMerge('flex flex-col gap-4', className)} {...rest}>
-    {#if title || description || actions}
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div class="flex min-w-0 flex-col gap-1">
-                {#if title}<h2 class="text-fc-lg font-semibold text-fc-fg">{title}</h2>{/if}
-                {#if description}<p class="text-fc-sm text-fc-fg-muted">{description}</p>{/if}
-            </div>
-            {#if actions}
-                <div class="flex shrink-0 flex-wrap items-center gap-2">{@render actions()}</div>
-            {/if}
-        </div>
-    {/if}
-
-    {#if children}
-        {#if bare}
-            <div class={body}>{@render children()}</div>
-        {:else}
-            <Card class={body}>{@render children()}</Card>
-        {/if}
-    {/if}
-</section>
+<!-- `children` is forwarded as a prop, not as slot content: wrapping it in a snippet here would
+     hand `Section` a defined-but-empty one, and a titles-only section would grow an empty body
+     div it never had. -->
+<Section card={!bare} {children} {...rest} />

@@ -1,5 +1,13 @@
 <script lang="ts">
-    import { OptionCards, Select, SettingsRow, SettingsSection, Switch, icons } from '@facile/muse';
+    import {
+        icons,
+        OptionCards,
+        Select,
+        SettingsRow,
+        SettingsSection,
+        Stack,
+        Switch
+    } from '@facile/muse';
     import { setTheme, theme, type ThemeMode } from '../../theme.svelte.js';
 
     let compactMode = $state(true);
@@ -20,7 +28,7 @@
     });
 </script>
 
-<div class="flex flex-col gap-10">
+<Stack gap="section">
     <SettingsSection
         title="Theme"
         description="Applied to this browser. Every device you sign in from keeps its own choice."
@@ -77,4 +85,4 @@
             </Select>
         </SettingsRow>
     </SettingsSection>
-</div>
+</Stack>

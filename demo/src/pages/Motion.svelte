@@ -6,11 +6,12 @@
         Button,
         Card,
         Carousel,
+        icons,
         Mosaique,
+        Page,
         Switch,
         TextElevate,
-        WordReveal,
-        icons
+        WordReveal
     } from '@facile/muse';
     import { curtain } from '../curtain.svelte.js';
 
@@ -68,8 +69,8 @@
     });
 </script>
 
-<div class="flex flex-col gap-10">
-    <div class="flex flex-col gap-2">
+<Page>
+    <div class="flex flex-col gap-1">
         <h1 class="text-fc-2xl font-semibold text-fc-fg">Motion</h1>
         <p class="text-fc-sm text-fc-fg-muted">
             The animated tier. Everything here honours <code class="font-fc-mono text-fc-xs"
@@ -165,4 +166,4 @@
             </Mosaique>
         </div>
     </section>
-</div>
+</Page>

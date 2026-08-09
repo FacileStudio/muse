@@ -1,5 +1,12 @@
 <script lang="ts">
-    import { Alert, Select, SettingsRow, SettingsSection, Switch } from '@facile/muse';
+    import {
+        Alert,
+        Select,
+        SettingsRow,
+        SettingsSection,
+        Stack,
+        Switch
+    } from '@facile/muse';
 
     let emailNotifications = $state(true);
     let mentions = $state(true);
@@ -9,7 +16,7 @@
     let poolAlerts = $state(true);
 </script>
 
-<div class="flex flex-col gap-10">
+<Stack gap="section">
     <SettingsSection
         title="Email"
         description="Nothing here is marketing — turn it all off and the app still works."
@@ -77,4 +84,4 @@
             <Switch bind:checked={poolAlerts} aria-label="Pool disconnections" />
         </SettingsRow>
     </SettingsSection>
-</div>
+</Stack>

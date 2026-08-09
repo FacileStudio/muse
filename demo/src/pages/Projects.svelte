@@ -9,16 +9,17 @@
         Drawer,
         EmptyState,
         Field,
+        icons,
         Input,
         Modal,
+        Page,
         Select,
         Skeleton,
         Sparkline,
         StatCard,
         Switch,
         Table,
-        USER_COLORS,
-        icons
+        USER_COLORS
     } from '@facile/muse';
 
     type Status = 'active' | 'paused' | 'done';
@@ -108,7 +109,7 @@
     }
 </script>
 
-<div class="flex flex-col gap-10">
+<Page width="xl">
     <div class="flex flex-wrap items-start justify-between gap-4">
         <div class="flex min-w-0 flex-col gap-2">
             <h1 class="text-fc-2xl font-semibold text-fc-fg">Projects</h1>
@@ -148,7 +149,7 @@
         </div>
 
         {#if loading}
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-1">
                 {#each [0, 1, 2, 3] as row (row)}
                     <Skeleton class="h-14 w-full" />
                 {/each}
@@ -260,7 +261,7 @@
             />
         </Card>
     </section>
-</div>
+</Page>
 
 <Modal bind:open={createOpen} title="New project" showClose>
     <div class="flex flex-col gap-4">

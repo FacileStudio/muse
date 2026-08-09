@@ -1,5 +1,12 @@
 <script lang="ts">
-    import { Divider, PageTransition, Tabs, icons } from '@facile/muse';
+    import {
+        Divider,
+        icons,
+        Page,
+        PageHeader,
+        PageTransition,
+        Tabs
+    } from '@facile/muse';
     import Profile from './settings/Profile.svelte';
     import Appearance from './settings/Appearance.svelte';
     import Notifications from './settings/Notifications.svelte';
@@ -46,13 +53,11 @@
     );
 </script>
 
-<div class="flex flex-col gap-8">
-    <div class="flex flex-col gap-2">
-        <h1 class="text-fc-2xl font-semibold text-fc-fg">Settings</h1>
-        <p class="text-fc-sm text-fc-fg-muted">
-            Your identity, this workspace, and everything wired to it.
-        </p>
-    </div>
+<Page>
+    <PageHeader
+        title="Settings"
+        description="Your identity, this workspace, and everything wired to it."
+    />
 
     <!--
         The rule needs air. At a 4px gap it reads as an underline welded to the active pill and
@@ -66,4 +71,4 @@
     <PageTransition key={active} distance={8} duration={0.25}>
         <Panel />
     </PageTransition>
-</div>
+</Page>
