@@ -4,9 +4,12 @@ Written as the breaking changes land, not reconstructed afterwards. Every entry 
 broke, how it shows up, and what to do about it.
 
 Thirteen apps consume muse: Journal, Plume, Capsule, Antenne, Nuage, Vision, Casier, Sablier,
-Agenda, Perception, Boutique, Courrier, Jardin. Nine are on `#v0.5.0`, three on `#v0.4.0`
-(Journal, Capsule, Perception), and Boutique floats on the default branch with no tag at all —
-fix that pin first, whatever else you do.
+Agenda, Perception, Boutique, Courrier, Jardin. Ten are on `#v0.5.0` and three on `#v0.4.0`
+(Journal, Capsule, Perception). ~~Boutique floats on the default branch with no tag~~ — pinned
+to `#v0.5.0` on 2026-08-09, and note how that pin landed: changing `package.json` without
+regenerating `bun.lock` fails the consumer's Docker build outright, because the client stage
+runs `bun install --frozen-lockfile`. The deploy errors and production silently keeps serving
+the previous image. **Bump the pin and the lockfile in the same commit.**
 
 Nothing here breaks an app that stays on its current tag. Read this when you bump.
 
@@ -145,3 +148,80 @@ compatibility and reported it immediately.
 **Do:** nothing required — `getFieldContext()` still works and stays the right call for a
 control muse does not own. For your own markup inside a `Field`, the snippet parameters are now
 usable and are the shorter path.
+
+## 9. `ColorPicker` is now the free-choice one; the palette one is `SwatchPicker`
+
+**Symptom:** `import { ColorPicker } from '@facile/muse'` still resolves, still type-checks,
+and renders something else — a hex field with an OS picker instead of your six identity
+swatches. `colors`, `showLabels`, `size` and `onSelect` are gone from it, so the type check
+does fail at the call site. It is a rename, not a silent behaviour swap.
+
+**Why:** the name was on the wrong component. What shipped as `ColorPicker` never picked a
+colour — it picked one of six, from a closed palette that is a persisted data contract with
+Sablier. Meanwhile the thing everyone reached for `Input` to do, because muse had nothing
+else, was picking an *arbitrary* colour. Boutique's back office was asking shop owners to
+hand-type a hex into a text box. The obvious name has to belong to the general component, or
+every consumer imports the wrong one first and finds out at review.
+
+**Who this touches:** three call sites, all on the identity palette, all a pure rename —
+Sablier `apps/client/src/routes/(app)/settings/profile/+page.svelte`, and Agenda's
+`CreateCalendarModal.svelte` and `ManageCalendarModal.svelte`.
+
+**Do:**
+
+```sh
+grep -rl 'ColorPicker' src | xargs sed -i '' 's/ColorPicker/SwatchPicker/g'
+```
+
+Then, and only then, reach for the new `ColorPicker` anywhere you are currently asking a human
+to type a hex into an `Input`. Props in [docs/api.md](docs/api.md#colorpicker); the two
+components' swatches differ on purpose — `SwatchPicker`'s *are* the input (a `radiogroup`
+with roving tabindex), `ColorPicker`'s are shortcuts into a field that accepts anything.
+
+## 10. Binding to a key that does not exist yet freezes the screen
+
+Not a change in this release. A trap this library hands you, which reached production, and
+which nothing in the type system will warn you about.
+
+**Symptom:** a spinner that never stops, over a request the network tab shows returning **200**
+with the right body. Or a screen stuck mid-update, ignoring clicks. The console has a Svelte
+`effect_update_depth_exceeded` in it, and nothing else. It reads exactly like a hung fetch, so
+that is where you will look first, and the fetch is fine.
+
+**Why:** most muse controls declare `value = $bindable('')` — a default. Svelte applies a
+`$bindable` default by **writing it back into the parent** when the component is created, if
+the bound expression is `undefined`. So:
+
+```svelte
+{#each rows as row}
+  <Input bind:value={draft[row.id]} />   <!-- draft[row.id] does not exist yet -->
+{/each}
+```
+
+...writes `''` into `draft[row.id]` as each `Input` mounts. If `draft` is `$state` that the
+`{#each}` (or anything upstream of it) reads, that write schedules another render, which
+recreates the inputs, which write again. Svelte stops the loop at the update-depth limit and
+**abandons the flush** — so the DOM keeps whatever it last committed, forever. Every loading
+flag set before the flush stays on screen no matter what the API returns.
+
+An empty-string default makes this cheap to hit and hard to see; a non-empty one (`'#000000'`,
+`'md'`, `0`) makes it certain, because the value written back is never what the parent had.
+
+**Do:** seed the keys before rendering, and empty them rather than deleting them.
+
+```ts
+let draft = $state<Record<string, string>>(
+  Object.fromEntries(rows.map((r) => [r.id, '']))   // every key exists up front
+);
+
+draft[id] = '';        // yes
+delete draft[id];      // no — the next render re-creates the write-back
+```
+
+If the shape is dynamic, derive the record from the rows in one place so a row and its key are
+created together, and never let a component's mount be the thing that creates a key.
+
+**In muse itself:** new components take an empty `$bindable` default and derive their
+"nothing chosen yet" rendering from it, rather than defaulting to a real value. `ColorPicker`
+is the worked example — it defaults to `''` and shows the picker black, instead of defaulting
+to `'#000000'` and writing black into your record.

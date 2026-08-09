@@ -1,12 +1,15 @@
 <script lang="ts">
     import {
+        ColorPicker,
         icons,
         OptionCards,
         Select,
         SettingsRow,
         SettingsSection,
         Stack,
-        Switch
+        Switch,
+        USER_COLOR_LABELS,
+        USER_COLORS
     } from '@facile/muse';
     import { setTheme, theme, type ThemeMode } from '../../theme.svelte.js';
 
@@ -14,6 +17,7 @@
     let sidebarCollapsed = $state(false);
     let language = $state('en');
     let timezone = $state('Europe/Paris');
+    let brandColor = $state('#7eeedb');
 
     const modes = [
         { value: 'system', label: 'System', icon: icons.monitor },
@@ -58,6 +62,25 @@
             description="The rail opens on hover either way; this only sets how it loads."
         >
             <Switch bind:checked={sidebarCollapsed} aria-label="Start with the sidebar collapsed" />
+        </SettingsRow>
+    </SettingsSection>
+
+    <SettingsSection
+        title="Brand"
+        description="Applied to public pages — the client portal, invoices and shared reports."
+    >
+        <SettingsRow
+            label="Brand colour"
+            description="Any colour. Pick it, or paste a hex from wherever the brand book lives."
+            stacked
+        >
+            <ColorPicker
+                bind:value={brandColor}
+                swatches={USER_COLORS}
+                labels={USER_COLOR_LABELS}
+                aria-label="Brand colour"
+                class="max-w-xs"
+            />
         </SettingsRow>
     </SettingsSection>
 

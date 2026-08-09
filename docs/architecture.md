@@ -154,7 +154,7 @@ cases where the component's own behaviour depends on winning:
 - `Modal` and `Drawer` spread the dialog controller's `onclose` / `oncancel` / `onclick`
   after `rest`. Those three are what keep `open` in sync and make the dialog dismissible; a
   consumer `onclick` would otherwise silently break closing.
-- `Tabs`, `ColorPicker` and `OptionCards` keep their `role`, `aria-*` and `onkeydown` after
+- `Tabs`, `SwatchPicker` and `OptionCards` keep their `role`, `aria-*` and `onkeydown` after
   `rest` — the roving-tabindex keyboard model is the component.
 - `Dropzone` keeps its five drag handlers after `rest`.
 

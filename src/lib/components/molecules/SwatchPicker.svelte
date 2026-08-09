@@ -3,7 +3,7 @@
 
     export type Size = 'sm' | 'md';
 
-    export interface ColorPickerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onselect'> {
+    export interface SwatchPickerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onselect'> {
         colors?: readonly string[];
         value?: string;
         labels?: Record<string, string>;
@@ -32,7 +32,7 @@
         onSelect,
         class: className = '',
         ...rest
-    }: ColorPickerProps = $props();
+    }: SwatchPickerProps = $props();
 
     const dots: Record<Size, string> = {
         sm: 'h-5 w-5',

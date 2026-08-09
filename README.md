@@ -2,7 +2,7 @@
 
 Svelte 5 component library and design system for Facile tools, published as `@facile/muse`.
 
-muse ships 53 components arranged as layout primitives, atoms, molecules, organisms, charts and
+muse ships 54 components arranged as layout primitives, atoms, molecules, organisms, charts and
 two motion pieces,
 a Tailwind v4 token theme and the Iconify icon map. It bundles no typeface. It is consumed
 directly from source — there is no build step and no `dist/`. An `install.sh` also registers
@@ -14,7 +14,7 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 
 ## What it does
 
-- Exports 53 Svelte 5 components: 5 layout primitives, 16 atoms, 13 molecules, 9 organisms,
+- Exports 54 Svelte 5 components: 5 layout primitives, 17 atoms, 13 molecules, 9 organisms,
   6 charts, 2 motion pieces
 - Standardises the settings page — `Tabs`, `SettingsSection`, `SettingsRow`, and a
   `SecretField` that masks, reveals-then-re-hides, and copies credentials the same way in
@@ -27,8 +27,8 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 - Merges consumer classes over component defaults with an `fc-*`-aware `tailwind-merge`
   (`cn`), so `class` always wins **and** sizes stop colliding with colours
 - Labels forms correctly by default: `Field` renders a real `<label for>` and muse's own
-  `Input` / `Select` / `Textarea` adopt its id, `aria-describedby` and `aria-invalid`
-  through context
+  `Input` / `Select` / `Textarea` / `ColorPicker` adopt its id, `aria-describedby` and
+  `aria-invalid` through context
 - Exports `icons`, a keyed map of 45 Iconify names — Solar `linear` for chrome, MDI for
   plus/close/chevrons — with an `IconKey` type
 - Bundles no typeface — the platform sans stack renders every accented character the suite types
@@ -36,6 +36,8 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
   offer a theme toggle
 - Ships `prefersReducedMotion()`, `isMobile()` and the `springPress` action so every
   animation can degrade
+- Asks for a colour with a real picker: `ColorPicker` pairs `<input type="color">` with a hex
+  field that accepts `fff`, `#FFF` or `#ffffff` and never clobbers a half-typed one
 - Exports `USER_COLORS`, the identity palette shared with Sablier, plus its normalizers, and
   the chart maths (`niceScale`, `linePath`, `areaPath`, `arcPath`, `tickStride`, `resize`)
 - Registers itself as an AI skill for Claude Code (`~/.claude/skills/muse/`) and Codex
@@ -52,7 +54,7 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 ## Install
 
 ```sh
-bun add "github:FacileStudio/muse#v0.5.0"
+bun add "github:FacileStudio/muse#v0.6.0"
 ```
 
 Import the theme once in the root layout, then use components anywhere:

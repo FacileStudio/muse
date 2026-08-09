@@ -4,7 +4,7 @@
         BarChart,
         Button,
         Card,
-        ColorPicker,
+        SwatchPicker,
         ConfirmModal,
         Drawer,
         EmptyState,
@@ -278,7 +278,7 @@
             </Select>
         </Field>
         <Field label="Colour">
-            <ColorPicker bind:value={draftColor} />
+            <SwatchPicker bind:value={draftColor} />
         </Field>
     </div>
     {#snippet footer()}

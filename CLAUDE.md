@@ -25,7 +25,7 @@ muse/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map (47 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
-    components/               51 Svelte components (atoms/ molecules/ organisms/ charts/ motion/)
+    components/               52 Svelte components (atoms/ molecules/ organisms/ charts/ motion/)
     fonts/                    Bundled Goga font files (.otf)
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
     utils/cn.ts               fc-*-aware tailwind-merge — every component uses it
@@ -38,7 +38,7 @@ muse/
     utils/toast.svelte.ts     Module-scope toast queue behind Toaster — toast, toasts
 ```
 
-Tier counts: 16 atoms, 14 molecules, 9 organisms, 6 charts, 6 motion. `ChartTable.svelte` and
+Tier counts: 17 atoms, 14 molecules, 9 organisms, 6 charts, 6 motion. `ChartTable.svelte` and
 `components/charts/entry.ts` are internal to the charts and not exported.
 
 ## Key commands
@@ -138,7 +138,7 @@ byte-identical duplicates on purpose — **edit both or neither**.
   `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring`.
 - `...rest` goes on the root element, **last**, so a consumer attribute wins. The exceptions
   are deliberate: `Modal`/`Drawer` spread the dialog controller's handlers after `rest`
-  (they are what keeps `open` in sync), and `Tabs`, `Dropzone`, `ColorPicker`, `OptionCards`
+  (they are what keeps `open` in sync), and `Tabs`, `Dropzone`, `SwatchPicker`, `OptionCards`
   and `SpaceSwitcher` keep their own role/keyboard wiring after it. Motion and chart
   components take `class` only and spread nothing.
 - Icons: Solar **`linear`** for chrome, MDI for plus/close/chevrons, `bold-duotone` for brand
