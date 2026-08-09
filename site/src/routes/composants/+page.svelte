@@ -73,7 +73,7 @@
                     {#if c.props.length}
                         <details class="group">
                             <summary
-                                class="cursor-pointer rounded-fc-sm text-fc-xs text-fc-fg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+                                class="inline-flex min-h-11 cursor-pointer items-center rounded-fc-sm text-fc-xs text-fc-fg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
                             >
                                 Voir les props
                             </summary>

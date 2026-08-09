@@ -42,6 +42,15 @@
     const iconSizes: Record<Size, number> = { sm: 14, md: 16, lg: 18 };
     const glyph = $derived(iconSizes[size]);
 
+    /*
+     * The CSS twin of `glyph`. `<iconify-icon>` has no box until its data arrives from the
+     * network, and the `width`/`height` *attributes* only take effect once it does — so a
+     * button with an icon renders at label width and then jumps wider when the glyph lands.
+     * A real class reserves the space up front. `Tabs` and `OptionCards` already did this and
+     * say why; the rest of the library did not.
+     */
+    const glyphClass: Record<Size, string> = { sm: 'size-3.5', md: 'size-4', lg: 'size-4.5' };
+
     const variants: Record<Variant, string> = {
         primary: 'bg-fc-accent text-fc-accent-fg hover:opacity-90',
         ghost: 'bg-transparent text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
@@ -70,11 +79,11 @@
 
 {#snippet content()}
     {#if icon}
-        <iconify-icon {icon} width={glyph} height={glyph} class="block shrink-0"></iconify-icon>
+        <iconify-icon {icon} width={glyph} height={glyph} class="block shrink-0 {glyphClass[size]}"></iconify-icon>
     {/if}
     {#if children}{@render children()}{/if}
     {#if iconRight}
-        <iconify-icon icon={iconRight} width={glyph} height={glyph} class="block shrink-0"></iconify-icon>
+        <iconify-icon icon={iconRight} width={glyph} height={glyph} class="block shrink-0 {glyphClass[size]}"></iconify-icon>
     {/if}
 {/snippet}
 

@@ -103,10 +103,21 @@
         }
     }
 
+    /* `display: block` is what lets a table scroll instead of pushing the page sideways.
+       A markdown table with a long code cell has no wrap point, so at 360px it would otherwise
+       widen the document and give every page a horizontal scrollbar. */
     .fc-prose :global(table) {
+        display: block;
         width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
         border-collapse: collapse;
         font-size: var(--text-fc-sm);
+    }
+
+    .fc-prose :global(th),
+    .fc-prose :global(td) {
+        min-width: max-content;
     }
 
     .fc-prose :global(th) {

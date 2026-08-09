@@ -174,7 +174,7 @@
 >
     <div class="flex flex-col [&>*+*]:mt-5">
         <div class={twMerge('flex min-h-7 items-center gap-2.5 pt-1', narrow ? 'justify-center px-0' : 'px-2')}>
-            {#if icon}<iconify-icon {icon} width="24" height="24" class="block shrink-0"></iconify-icon>{/if}
+            {#if icon}<iconify-icon {icon} width="24" height="24" class="block shrink-0 size-6"></iconify-icon>{/if}
             {#if !narrow}
                 <!--
                   This lockup used to carry `translate-y-[0.04em]`, an optical correction
@@ -241,7 +241,7 @@
                 <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} collapsed={narrow}>
                     {#snippet right()}
                         {#if page.active}
-                            <iconify-icon icon={icons.arrow} width="16" height="16" class="block shrink-0 opacity-70"></iconify-icon>
+                            <iconify-icon icon={icons.arrow} width="16" height="16" class="block shrink-0 opacity-70 size-4"></iconify-icon>
                         {/if}
                     {/snippet}
                 </NavButton>
@@ -279,7 +279,7 @@
             {#if !narrow}
                 <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
                     <TextElevate text={u.name} visible={!narrow} class="truncate" />
-                    <iconify-icon icon={icons.settings} width="18" height="18" class="block shrink-0"></iconify-icon>
+                    <iconify-icon icon={icons.settings} width="18" height="18" class="block shrink-0 size-4.5"></iconify-icon>
                 </span>
             {/if}
         {/snippet}
