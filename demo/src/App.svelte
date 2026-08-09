@@ -2,7 +2,6 @@
     import {
         MobileNav,
         PageTransition,
-        Rideau,
         SideBar,
         SpaceSwitcher,
         Toaster,
@@ -16,7 +15,6 @@
     import Spaces from './pages/Spaces.svelte';
     import Settings from './pages/Settings.svelte';
     import { spaces } from './data.js';
-    import { CURTAIN_ROUTE, curtain } from './curtain.svelte.js';
     import { HOME, router, segment } from './router.svelte.js';
     import { setTheme, theme } from './theme.svelte.js';
 
@@ -66,27 +64,7 @@
         if (router.hash) scroller?.scrollTo({ top: 0 });
     });
 
-    /*
-     * Motion is the page that demos the curtain, so it is the page you arrive at behind one.
-     * The link is caught here rather than special-cased in the nav data: SideBar and MobileNav
-     * both render plain anchors, so one delegated listener covers every route into the page,
-     * including whatever a future nav adds. Modified clicks and middle-clicks fall through to
-     * the browser — the href is real, and a curtain has no business hijacking a new tab.
-     */
-    function curtainNav(e: MouseEvent) {
-        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-        const href = (e.target as Element | null)?.closest?.('a')?.getAttribute('href');
-        if (href !== CURTAIN_ROUTE || root === CURTAIN_ROUTE) return;
-        e.preventDefault();
-        curtain.el?.close(href);
-    }
 
-    /* The other half: `close()` navigates once it has covered the screen, and the route change
-       that follows is what asks for the reveal. Arriving by typed URL is a no-op — the curtain
-       is already open, so this tweens 0 to 0. */
-    $effect(() => {
-        if (root === CURTAIN_ROUTE) curtain.el?.open();
-    });
 
     /* Apply the stored preference to <html> on boot; the store already read it. */
     setTheme(theme.mode);
@@ -107,10 +85,6 @@
     const onSettings = $derived(root === '#/settings');
     const user = { name: 'Camille' };
 </script>
-
-<svelte:window onclickcapture={curtainNav} />
-
-<Rideau bind:this={curtain.el} duration={0.6} start="open" />
 
 <div class="flex h-dvh w-full overflow-hidden bg-fc-page">
     <div class="hidden h-full shrink-0 p-3 md:block">

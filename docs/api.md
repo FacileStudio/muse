@@ -1,13 +1,16 @@
 # muse — API
 
-The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 50 components
-(16 atoms, 14 molecules, 9 organisms, 6 charts, 6 motion pieces), the `cn` class merger, the
+The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 53 components
+(5 layout primitives, 16 atoms, 13 molecules, 9 organisms, 6 charts, 2 motion pieces), the
+`GAP` / `PAGE_WIDTH` / `ALIGN` maps, the `cn` class merger, the
 motion, press, field, secret, toast and chart helpers, the `icons` map and the exported types.
 Nothing else in the repo is importable — `ChartTable.svelte`, `components/charts/entry.ts`
 and `utils/dialog.ts` are internal.
 
 ```ts
 import {
+  // layout
+  Page, PageHeader, Section, Stack, Inline,
   // atoms
   Alert, Avatar, Badge, Button, Card, Checkbox, Divider, IconButton,
   Input, Radio, Select, Skeleton, Spinner, StatusDot, Switch, Textarea,
@@ -19,16 +22,17 @@ import {
   // charts
   BarChart, ChartLegend, ChartTooltip, DonutChart, LineChart, Sparkline,
   // motion
-  Carousel, Mosaique, PageTransition, Rideau, TextElevate, WordReveal,
+  PageTransition, TextElevate,
   // helpers
   cn, twMerge, prefersReducedMotion, isMobile, springPress, getFieldContext,
   icons, USER_COLORS, USER_COLOR_LABELS, normalizeUserColor, userColorLabel,
   REDACTED, isRedacted, maskSecret, toast, toasts,
-  chartColor, formatCompact, niceScale, linePath, areaPath, arcPath, arcCorner, tickStride, resize
+  chartColor, formatCompact, niceScale, linePath, areaPath, arcPath, arcCorner, tickStride, resize,
+  GAP, PAGE_WIDTH, ALIGN
 } from '@facile/muse';
 
 import type {
-  IconKey, UserColor, FieldContext, ToastTone, ToastOptions, ToastItem, ToastAction,
+  Gap, PageWidth, Align, IconKey, UserColor, FieldContext, ToastTone, ToastOptions, ToastItem, ToastAction,
   ChartSeries, ChartSlice, ChartScale, ChartLegendItem, ChartTipRow, ChartRow
 } from '@facile/muse';
 ```
@@ -44,6 +48,9 @@ Conventions across the library:
   controller's `onclose` / `oncancel` / `onclick`, which are what keep `open` in sync),
   `Tabs`, `ColorPicker`, `OptionCards` (role and keyboard handling) and `Dropzone` (the drag
   handlers). Chart and motion components take `class` only and spread nothing.
+- Layout primitives (`Page`, `PageHeader`, `Section`, `Stack`, `Inline`) take a `gap` of
+  `bound | tight | content | section` and never emit an outer margin — enforced by
+  `src/lib/components/no-outer-margin.test.ts`.
 - Props marked **bindable** use `$bindable()` and support `bind:`.
 - Callback props are camelCase `onX`. Lowercase `on*` names are native DOM handlers arriving
   through `...rest`.
@@ -945,45 +952,6 @@ Fades and lifts its children whenever `key` changes — key it on the route.
 
 Under reduced motion the content is set to its final state with no tween.
 
-### `Rideau`
-
-Full-page transition curtain. Raises on mount; call `close(href)` to drop it and then
-navigate. Renders a fixed, `pointer-events-none` overlay at `z-[100]` sized `h-dvh`.
-
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| `duration` | `number` | `1.5` | GSAP duration in seconds, all three directions |
-| `color` | `string` | `'var(--color-fc-bg)'` | Any CSS colour; applied as inline `background` |
-| `start` | `'covered' \| 'open'` | `'covered'` | `'open'` mounts at zero height and skips the entrance wipe |
-
-Exports two functions, reachable via `bind:this`:
-
-```svelte
-<script lang="ts">
-  import { Rideau } from '@facile/muse';
-
-  let curtain = $state<{ close: (href?: string) => void; open: () => void } | null>(null);
-</script>
-
-<Rideau bind:this={curtain} duration={1.2} />
-<a href="/about" onclick={(e) => { e.preventDefault(); curtain?.close('/about'); }}>About</a>
-```
-
-`close(href)` navigates with `window.location.href` once it has covered the screen — a full
-page load, not a SvelteKit client-side transition, unless `href` is a hash. Called with no
-argument it just covers and stays there, which is what a client-side router wants: cover,
-swap the view yourself, then `open()`.
-
-**A curtain that mounts with the page it covers can only ever play half the effect.** By the
-time it exists the old page is already gone, so arriving reads as a jump cut to a blank panel
-that then wipes away. For route transitions, mount **one** `Rideau` above the router with
-`start="open"` and drive it — `close(href)` on the way out, `open()` on arrival. Being outside
-the routed view also keeps it out of any transform: an ancestor with a `transform` (such as
-`PageTransition`'s wrapper) makes `position: fixed` resolve against that ancestor, and the
-curtain covers a column instead of the viewport. `demo/src/curtain.svelte.ts` is the pattern.
-
-Under reduced motion both directions snap to their end state; `close(href)` still navigates.
-
 ### `TextElevate`
 
 Text that rises into view, animated with `power3.out`. This is what `NavButton` and `SideBar`
@@ -999,61 +967,6 @@ use to reveal and hide labels on collapse.
 
 Pass `truncate` through `class` for an ellipsis. Under reduced motion the text is set to its
 final position with no tween.
-
-### `WordReveal`
-
-Word-by-word colour reveal scrubbed by scroll position. Registers the GSAP `ScrollTrigger`
-and `SplitText` plugins on mount and splits `text` into words. Renders a `<p>` capped at
-`60ch` with `text-fc-lg`.
-
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| `text` | `string` | — | Required |
-| `dimColor` | `string` | `color-mix(in oklab, var(--color-fc-fg) 25%, transparent)` | Starting colour — token-derived, so it works in both schemes |
-| `revealColor` | `string` | `'var(--color-fc-fg)'` | Final colour |
-
-The scroll trigger runs from `top center` to `bottom center` with `scrub: true`, and is
-killed on destroy together with the `SplitText` revert — a surviving ScrollTrigger recomputes
-on every scroll event and holds the detached spans alive. Under reduced motion the paragraph
-is painted at `revealColor` and no plugin work happens. `SplitText` entered the public gsap
-package in 3.13, which is why the dependency floor is `^3.13.0`.
-
-### `Carousel`
-
-Touch and keyboard carousel using native scroll snapping. Slides are full width; arrow buttons
-appear from the `md` breakpoint up. Dots track the active slide via an `IntersectionObserver`
-at threshold `0.6`.
-
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| `slides` | `{ id: string \| number }[]` | — | Required |
-| `children` | `Snippet<[Slide, number]>` | — | Required. Rendered inside each snap cell |
-| `ariaLabel` | `string` | `'Carousel'` | Label on the wrapping `<section>` |
-
-No GSAP: movement is `scrollIntoView`, with `behavior` dropped to `'auto'` under reduced
-motion.
-
-### `Mosaique`
-
-Scattered card mosaic. Cards start stacked at the centre and bloom out to random,
-non-overlapping positions, staggered `from: 'random'`. Handles loading, error and empty states
-itself.
-
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| `items` | `{ id: string \| number }[]` | — | Required. `id` keys the `{#each}` |
-| `children` | `Snippet<[Item, number, (el: HTMLButtonElement) => void]>` | — | Required. Call the third argument with your card element |
-| `minDistance` | `number` | `110` mobile / `200` desktop | Minimum pixel gap between card centres |
-| `paddingX` | `number` | `20` mobile / `80` desktop | Horizontal inset from the container edge |
-| `paddingY` | `number` | `60` mobile / `140` desktop | Vertical inset |
-| `isLoading` | `boolean` | `false` | Renders a `Spinner` instead of the mosaic |
-| `loadError` | `string` | `''` | Renders the message instead of the mosaic |
-
-The `ref` callback must receive an `HTMLButtonElement` — the component types its card array
-that way and calls `getBoundingClientRect()` on each entry. Placement tries 50 random positions
-per card before giving up and using the centre. Under reduced motion cards are set to their
-computed positions instantly. `isMobile()` is sampled once during placement, so a resize past
-768px does not re-derive the defaults.
 
 ## Icons
 
