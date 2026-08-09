@@ -46,6 +46,12 @@ export const icons = {
   chevronDown:   'mdi:chevron-down',
   chevronUp:     'mdi:chevron-up',
   chevronLeft:   'mdi:chevron-left',
+  paletteMark:   'solar:pallete-2-bold-duotone',
+  compass:       'solar:compass-linear',
+  ruler:         'solar:ruler-linear',
+  text:          'solar:text-linear',
+  widget:        'solar:widget-linear',
+  layers:        'solar:layers-linear',
 } as const;
 
 export type IconKey = keyof typeof icons;

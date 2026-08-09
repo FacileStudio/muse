@@ -26,6 +26,16 @@ description = "Production build of the demo app — compiles every component"
 dir = "demo"
 run = "bun install && bun run build"
 
+[tasks."check:site"]
+description = "Type-check the docs site (its own tsconfig — it needs SvelteKit's $app and $lib aliases)"
+dir = "site"
+run = ["bun install", "bun run check"]
+
+[tasks."site:build"]
+description = "Production build of muse.facile.studio"
+dir = "site"
+run = ["bun install", "bun run build"]
+
 [tasks.smoke]
 description = "Consumer contract: install the packed package into a SvelteKit app, dev + build + SSR"
 # The demo aliases the source, so it cannot see the exports map, the dependency optimizer,
@@ -33,8 +43,8 @@ description = "Consumer contract: install the packed package into a SvelteKit ap
 run = "sh ./scripts/smoke.sh"
 
 [tasks.verify]
-description = "Everything CI would run: types, tests, demo build, consumer smoke"
-depends = ["check", "test", "demo:build", "smoke"]
+description = "Everything CI would run: types (lib + site), tests, demo and site builds, consumer smoke"
+depends = ["check", "check:site", "test", "demo:build", "site:build", "smoke"]
 
 [tasks.release]
 description = "Cut a release: verify, bump, commit, tag, push — mise run release 0.4.0"

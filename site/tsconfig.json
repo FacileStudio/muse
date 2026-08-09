@@ -1,0 +1,25 @@
+{
+    "extends": "./.svelte-kit/tsconfig.json",
+    "compilerOptions": {
+        "strict": true,
+        "noUnusedLocals": true,
+        "allowJs": true,
+        "checkJs": false,
+        "resolveJsonModule": true,
+        "moduleResolution": "bundler",
+        "verbatimModuleSyntax": true,
+        "paths": {
+            "@facile/muse": [
+                "../src/lib/index.ts"
+            ],
+            "$lib": [
+                "./src/lib"
+            ],
+            "$lib/*": [
+                "./src/lib/*"
+            ]
+        },
+        "skipLibCheck": true,
+        "baseUrl": "."
+    }
+}
