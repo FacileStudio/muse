@@ -252,3 +252,25 @@ of them points at an id no labelable element carries.
   sit above toasts, it no longer does.
 - **`LineChart`, `BarChart`, `DonutChart`, `Sparkline` and `Toaster` spread `...rest`.** They
   took `class` alone, so `id`, `data-*` and `aria-label` had nowhere to go.
+
+## 11. A button on the same row as a form control takes `size="lg"`
+
+Not a code change — a rule the charter was missing, and one **36 places across the suite**
+currently break.
+
+`Input`, `Select`, `Textarea` and `SecretField` are all `h-11` (44px). `Button` defaults to
+`h-9` (36px), which is deliberate desktop density and stays. But a default button standing
+*beside* one of those controls on a single row sits 8px short, and the row reads as a mistake.
+
+**Do:** grep your `sm:flex-row` and `flex-row` blocks for a `<Button>` sharing a line with a
+form control, and give it `size="lg"`. muse's own invite form got this wrong until v1.0.
+
+```svelte
+<form class="flex flex-col gap-3 sm:flex-row">
+  <Input class="flex-1" />
+  <Button size="lg">Send invite</Button>
+</form>
+```
+
+A button *stacked under* a field keeps the default — the rule is about siblings on one line.
+CHARTE §7 now states it beside the touch-target exception it was hiding behind.
