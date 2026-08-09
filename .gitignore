@@ -8,6 +8,11 @@ dist/
 # is genuinely re-extracted rather than served from a cached resolution.
 muse-smoke.tgz
 smoke/bun.lock
+
+# The docs site reads the library's own barrel and Props interfaces at build time. Committing
+# the result would be a second source of truth for the component list, which is how the README
+# ended up shipping three different component counts at once.
+site/src/lib/generated
 .env
 .env.*
 !.env.example
