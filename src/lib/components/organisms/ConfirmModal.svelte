@@ -1,13 +1,31 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import type { HTMLDialogAttributes } from 'svelte/elements';
+
+    export type Tone = 'neutral' | 'danger';
+
+    export interface ConfirmModalProps extends HTMLDialogAttributes {
+        open?: boolean;
+        title: string;
+        description?: string;
+        confirmLabel?: string;
+        cancelLabel?: string;
+        tone?: Tone;
+        icon?: string;
+        onConfirm?: () => void | Promise<void>;
+        onCancel?: () => void;
+        children?: Snippet;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import Button from '../atoms/Button.svelte';
     import Spinner from '../atoms/Spinner.svelte';
     import Modal from './Modal.svelte';
-
-    type Tone = 'neutral' | 'danger';
 
     let {
         open = $bindable(false),
@@ -22,19 +40,7 @@
         children,
         class: className = '',
         ...rest
-    }: HTMLDialogAttributes & {
-        open?: boolean;
-        title: string;
-        description?: string;
-        confirmLabel?: string;
-        cancelLabel?: string;
-        tone?: Tone;
-        icon?: string;
-        onConfirm?: () => void | Promise<void>;
-        onCancel?: () => void;
-        children?: Snippet;
-        class?: string;
-    } = $props();
+    }: ConfirmModalProps = $props();
 
     let pending = $state(false);
     let confirmed = false;

@@ -1,23 +1,12 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
 
-    type Variant = 'primary' | 'ghost' | 'outline' | 'danger' | 'ghost-danger';
-    type Size = 'sm' | 'md' | 'lg';
+    export type Variant = 'primary' | 'ghost' | 'outline' | 'danger' | 'ghost-danger';
 
-    let {
-        href,
-        type = 'button',
-        variant = 'primary',
-        size = 'md',
-        disabled = false,
-        icon,
-        iconRight,
-        class: className = '',
-        children,
-        ...rest
-    }: Omit<HTMLButtonAttributes, 'type'> & {
+    export type Size = 'sm' | 'md' | 'lg';
+
+    export interface ButtonProps extends Omit<HTMLButtonAttributes, 'type'> {
         href?: string;
         target?: HTMLAnchorAttributes['target'];
         rel?: HTMLAnchorAttributes['rel'];
@@ -30,7 +19,25 @@
         iconRight?: string;
         class?: string;
         children?: Snippet;
-    } = $props();
+
+    }
+</script>
+
+<script lang="ts">
+    import { twMerge } from '../../utils/cn.js';
+
+    let {
+        href,
+        type = 'button',
+        variant = 'primary',
+        size = 'md',
+        disabled = false,
+        icon,
+        iconRight,
+        class: className = '',
+        children,
+        ...rest
+    }: ButtonProps = $props();
 
     const iconSizes: Record<Size, number> = { sm: 14, md: 16, lg: 18 };
     const glyph = $derived(iconSizes[size]);

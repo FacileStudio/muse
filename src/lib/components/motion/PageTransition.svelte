@@ -1,5 +1,17 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
+
+    export interface PageTransitionProps {
+        key: string | number;
+        duration?: number;
+        distance?: number;
+        children: Snippet;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
@@ -10,13 +22,7 @@
         distance = 12,
         children,
         class: className = ''
-    }: {
-        key: string | number;
-        duration?: number;
-        distance?: number;
-        children: Snippet;
-        class?: string;
-    } = $props();
+    }: PageTransitionProps = $props();
 
     let el: HTMLDivElement | null = $state(null);
 

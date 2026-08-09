@@ -1,10 +1,23 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export type NavItem = { href: string; label: string; icon: string; active?: boolean };
+
+    export type User = { name: string; avatar?: string };
+
+    export interface MobileNavProps extends HTMLAttributes<HTMLElement> {
+        items?: NavItem[];
+        user?: User;
+        profileHref?: string;
+        profileActive?: boolean;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import Avatar from '../atoms/Avatar.svelte';
-
-    type NavItem = { href: string; label: string; icon: string; active?: boolean };
-    type User = { name: string; avatar?: string };
 
     let {
         items = [],
@@ -13,13 +26,7 @@
         profileActive = false,
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLElement> & {
-        items?: NavItem[];
-        user?: User;
-        profileHref?: string;
-        profileActive?: boolean;
-        class?: string;
-    } = $props();
+    }: MobileNavProps = $props();
 </script>
 
 <!-- z-50 is deliberate: viewport-fixed chrome sits above every in-page layer. -->

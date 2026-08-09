@@ -1,13 +1,20 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export interface TableProps extends HTMLAttributes<HTMLDivElement> {
+        children: Snippet; class?: string 
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
 
     let {
         children,
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & { children: Snippet; class?: string } = $props();
+    }: TableProps = $props();
 
     const classes = $derived(twMerge('w-full overflow-x-auto rounded-fc-md bg-fc-component', className));
 </script>

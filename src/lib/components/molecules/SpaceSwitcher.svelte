@@ -1,9 +1,23 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export type SpaceItem = { id: string; name: string };
+
+    export interface SpaceSwitcherProps extends HTMLAttributes<HTMLDivElement> {
+        spaces?: SpaceItem[];
+        activeId?: string | null;
+        onSelect?: (id: string | null) => void;
+        personalLabel?: string;
+        manageHref?: string;
+        manageLabel?: string;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { icons } from '../../icons.js';
-
-    type SpaceItem = { id: string; name: string };
 
     let {
         spaces = [],
@@ -14,15 +28,7 @@
         manageLabel = 'Manage spaces',
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        spaces?: SpaceItem[];
-        activeId?: string | null;
-        onSelect?: (id: string | null) => void;
-        personalLabel?: string;
-        manageHref?: string;
-        manageLabel?: string;
-        class?: string;
-    } = $props();
+    }: SpaceSwitcherProps = $props();
 
     let open = $state(false);
     let rootEl: HTMLElement | null = $state(null);

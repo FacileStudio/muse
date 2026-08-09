@@ -1,3 +1,15 @@
+<script module lang="ts">
+    export interface TextElevateProps {
+        text: string;
+        visible?: boolean;
+        delay?: number;
+        stagger?: number;
+        duration?: number;
+        class?: string;
+
+    }
+</script>
+
 <script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
@@ -10,14 +22,7 @@
         stagger = 0.1,
         duration = 1,
         class: className = ''
-    }: {
-        text: string;
-        visible?: boolean;
-        delay?: number;
-        stagger?: number;
-        duration?: number;
-        class?: string;
-    } = $props();
+    }: TextElevateProps = $props();
 
     let inner: HTMLSpanElement | null = $state(null);
     let mounted = false;

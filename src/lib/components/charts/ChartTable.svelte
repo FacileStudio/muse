@@ -1,17 +1,22 @@
-<script lang="ts">
+<script module lang="ts">
     import type { ChartRow } from '../../utils/chart.js';
 
+    export interface ChartTableProps {
+        caption: string;
+        head: string;
+        columns: string[];
+        rows: ChartRow[];
+
+    }
+</script>
+
+<script lang="ts">
     let {
         caption,
         head,
         columns,
         rows
-    }: {
-        caption: string;
-        head: string;
-        columns: string[];
-        rows: ChartRow[];
-    } = $props();
+    }: ChartTableProps = $props();
 </script>
 
 <!--

@@ -1,5 +1,35 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export type Page = { label: string; href: string; icon?: string; active?: boolean };
+
+    export type User = { name: string; avatar?: string };
+
+    export type SpaceItem = { id: string; name: string };
+
+    export interface SideBarProps extends HTMLAttributes<HTMLDivElement> {
+        icon?: string;
+        title?: string;
+        pages?: Page[];
+        user?: User;
+        userHref?: string;
+        userActive?: boolean;
+        collapsed?: boolean;
+        showSearch?: boolean;
+        showCollapse?: boolean;
+        onSearch?: () => void;
+        spaces?: SpaceItem[];
+        activeSpaceId?: string | null;
+        onSpaceSelect?: (id: string | null) => void;
+        manageSpacesHref?: string;
+        personalSpaceLabel?: string;
+        manageSpacesLabel?: string;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { cubicInOut } from 'svelte/easing';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
@@ -9,10 +39,6 @@
     import { icons } from '../../icons.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import { springPress } from '../../utils/press.js';
-
-    type Page = { label: string; href: string; icon?: string; active?: boolean };
-    type User = { name: string; avatar?: string };
-    type SpaceItem = { id: string; name: string };
 
     let {
         icon,
@@ -33,25 +59,7 @@
         manageSpacesLabel,
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        icon?: string;
-        title?: string;
-        pages?: Page[];
-        user?: User;
-        userHref?: string;
-        userActive?: boolean;
-        collapsed?: boolean;
-        showSearch?: boolean;
-        showCollapse?: boolean;
-        onSearch?: () => void;
-        spaces?: SpaceItem[];
-        activeSpaceId?: string | null;
-        onSpaceSelect?: (id: string | null) => void;
-        manageSpacesHref?: string;
-        personalSpaceLabel?: string;
-        manageSpacesLabel?: string;
-        class?: string;
-    } = $props();
+    }: SideBarProps = $props();
 
     let navEl: HTMLElement | null = $state(null);
     let ready = false;

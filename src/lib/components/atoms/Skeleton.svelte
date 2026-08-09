@@ -1,11 +1,18 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
+        class?: string 
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
 
     let {
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & { class?: string } = $props();
+    }: SkeletonProps = $props();
 
     const classes = $derived(twMerge('animate-pulse motion-reduce:animate-none rounded-fc-sm bg-fc-surface/60', className));
 </script>

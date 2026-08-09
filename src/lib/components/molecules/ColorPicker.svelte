@@ -1,9 +1,25 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export type Size = 'sm' | 'md';
+
+    export interface ColorPickerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onselect'> {
+        colors?: readonly string[];
+        value?: string;
+        labels?: Record<string, string>;
+        showLabels?: boolean;
+        size?: Size;
+        name?: string;
+        label?: string;
+        onSelect?: (color: string) => void;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { USER_COLORS, USER_COLOR_LABELS } from '../../colors.js';
-
-    type Size = 'sm' | 'md';
 
     let {
         colors = USER_COLORS,
@@ -16,17 +32,7 @@
         onSelect,
         class: className = '',
         ...rest
-    }: Omit<HTMLAttributes<HTMLDivElement>, 'onselect'> & {
-        colors?: readonly string[];
-        value?: string;
-        labels?: Record<string, string>;
-        showLabels?: boolean;
-        size?: Size;
-        name?: string;
-        label?: string;
-        onSelect?: (color: string) => void;
-        class?: string;
-    } = $props();
+    }: ColorPickerProps = $props();
 
     const dots: Record<Size, string> = {
         sm: 'h-5 w-5',

@@ -1,8 +1,20 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+    import type { Gap, PageWidth } from '../../utils/layout.js';
+
+    export interface PageProps extends HTMLAttributes<HTMLDivElement> {
+        width?: PageWidth;
+        gap?: Gap;
+        class?: string;
+        children: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { GAP, PAGE_WIDTH, type Gap, type PageWidth } from '../../utils/layout.js';
+    import { GAP, PAGE_WIDTH } from '../../utils/layout.js';
 
     /*
      * The page column: centring, the width cap, the outer padding, and the rhythm between
@@ -15,18 +27,14 @@
      * rail, the mobile nav and the single scroller; this owns everything from the content edge
      * inwards.
      */
+
     let {
         width = 'lg',
         gap = 'section',
         class: className = '',
         children,
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        width?: PageWidth;
-        gap?: Gap;
-        class?: string;
-        children: Snippet;
-    } = $props();
+    }: PageProps = $props();
 
     /*
      * A responsive ladder rather than one padding: at the documented 360px floor `px-4` leaves

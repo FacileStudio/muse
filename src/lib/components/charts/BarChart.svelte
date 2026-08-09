@@ -1,22 +1,26 @@
+<script module lang="ts">
+    import type { ChartSeries } from '../../utils/chart.js';
+
+    export interface BarChartProps {
+        series: ChartSeries[];
+        labels: string[];
+        height?: number;
+        stacked?: boolean;
+        horizontal?: boolean;
+        showGrid?: boolean;
+        showLegend?: boolean;
+        yFormat?: (n: number) => string;
+        yTicks?: number;
+        animate?: boolean;
+        emptyLabel?: string;
+        class?: string;
+
+    }
+</script>
+
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import {
-        barGeometry,
-        barPath,
-        categoryLabels,
-        formatCompact,
-        niceScale,
-        resize,
-        seriesCount,
-        seriesEmpty,
-        seriesLegend,
-        seriesRows,
-        seriesSummary,
-        seriesTipRows,
-        seriesValues,
-        type ChartBox,
-        type ChartSeries
-    } from '../../utils/chart.js';
+    import { barGeometry, barPath, categoryLabels, formatCompact, niceScale, resize, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesSummary, seriesTipRows, seriesValues, type ChartBox } from '../../utils/chart.js';
     import { tweenProgress } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
     import ChartTable from './ChartTable.svelte';
@@ -35,20 +39,7 @@
         animate = true,
         emptyLabel = 'No data',
         class: className = ''
-    }: {
-        series: ChartSeries[];
-        labels: string[];
-        height?: number;
-        stacked?: boolean;
-        horizontal?: boolean;
-        showGrid?: boolean;
-        showLegend?: boolean;
-        yFormat?: (n: number) => string;
-        yTicks?: number;
-        animate?: boolean;
-        emptyLabel?: string;
-        class?: string;
-    } = $props();
+    }: BarChartProps = $props();
 
     let w = $state(0);
     let hover = $state(-1);

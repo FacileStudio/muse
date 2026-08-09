@@ -1,11 +1,31 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLLabelAttributes } from 'svelte/elements';
+
+    export type Rejection = { file: File; reason: Reason };
+
+    export type Reason = 'type' | 'size' | 'count';
+
+    export interface DropzoneProps extends HTMLLabelAttributes {
+        files?: File[];
+        accept?: string;
+        multiple?: boolean;
+        maxSize?: number;
+        maxFiles?: number;
+        disabled?: boolean;
+        label?: string;
+        hint?: string;
+        onFiles?: (files: File[]) => void;
+        onReject?: (rejections: Rejection[]) => void;
+        children?: Snippet;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { icons } from '../../icons.js';
-
-    type Reason = 'type' | 'size' | 'count';
-    type Rejection = { file: File; reason: Reason };
 
     let {
         files = $bindable<File[]>([]),
@@ -21,20 +41,7 @@
         children,
         class: className = '',
         ...rest
-    }: HTMLLabelAttributes & {
-        files?: File[];
-        accept?: string;
-        multiple?: boolean;
-        maxSize?: number;
-        maxFiles?: number;
-        disabled?: boolean;
-        label?: string;
-        hint?: string;
-        onFiles?: (files: File[]) => void;
-        onReject?: (rejections: Rejection[]) => void;
-        children?: Snippet;
-        class?: string;
-    } = $props();
+    }: DropzoneProps = $props();
 
     let depth = $state(0);
     const dragging = $derived(depth > 0 && !disabled);

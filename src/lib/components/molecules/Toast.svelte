@@ -1,11 +1,25 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+    import type { ToastAction, ToastTone } from '../../utils/toast.svelte.js';
+
+    export interface ToastProps extends HTMLAttributes<HTMLDivElement> {
+        tone?: ToastTone;
+        title?: string;
+        icon?: string | null;
+        action?: ToastAction;
+        onDismiss?: () => void;
+        class?: string;
+        children?: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import Button from '../atoms/Button.svelte';
     import IconButton from '../atoms/IconButton.svelte';
     import { icons } from '../../icons.js';
-    import type { ToastAction, ToastTone } from '../../utils/toast.svelte.js';
 
     let {
         tone = 'neutral',
@@ -16,15 +30,7 @@
         class: className = '',
         children,
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        tone?: ToastTone;
-        title?: string;
-        icon?: string | null;
-        action?: ToastAction;
-        onDismiss?: () => void;
-        class?: string;
-        children?: Snippet;
-    } = $props();
+    }: ToastProps = $props();
 
     /*
         A toast floats over content it does not own, so it takes the floating-surface

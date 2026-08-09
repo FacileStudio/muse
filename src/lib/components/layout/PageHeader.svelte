@@ -1,6 +1,18 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export interface PageHeaderProps extends HTMLAttributes<HTMLElement> {
+        title: string;
+        description?: string;
+        actions?: Snippet;
+        back?: { href: string; label?: string };
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { icons } from '../../icons.js';
     import Button from '../atoms/Button.svelte';
@@ -11,6 +23,7 @@
      * a border-bottom the others do not have. The title block is `gap-1` — a heading and its
      * description are two parts of one thing, not two siblings of the header's own gap.
      */
+
     let {
         title,
         description,
@@ -18,13 +31,7 @@
         back,
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLElement> & {
-        title: string;
-        description?: string;
-        actions?: Snippet;
-        back?: { href: string; label?: string };
-        class?: string;
-    } = $props();
+    }: PageHeaderProps = $props();
 </script>
 
 <header class={twMerge('flex flex-col gap-4', className)} {...rest}>

@@ -1,12 +1,7 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
-    import { icons } from '../../icons.js';
-    import IconButton from '../atoms/IconButton.svelte';
-    import Spinner from '../atoms/Spinner.svelte';
 
-    type Status = 'pending' | 'uploading' | 'done' | 'error';
-    type Item = {
+    export type Item = {
         id: string;
         name: string;
         size?: number;
@@ -15,6 +10,24 @@
         error?: string;
     };
 
+    export type Status = 'pending' | 'uploading' | 'done' | 'error';
+
+    export interface UploadProgressProps extends HTMLAttributes<HTMLDivElement> {
+        items: Item[];
+        onCancel?: (id: string) => void;
+        onRetry?: (id: string) => void;
+        showTotal?: boolean;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
+    import { twMerge } from '../../utils/cn.js';
+    import { icons } from '../../icons.js';
+    import IconButton from '../atoms/IconButton.svelte';
+    import Spinner from '../atoms/Spinner.svelte';
+
     let {
         items,
         onCancel,
@@ -22,13 +35,7 @@
         showTotal = true,
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        items: Item[];
-        onCancel?: (id: string) => void;
-        onRetry?: (id: string) => void;
-        showTotal?: boolean;
-        class?: string;
-    } = $props();
+    }: UploadProgressProps = $props();
 
     const clamp = (value: number): number =>
         Number.isFinite(value) ? Math.min(100, Math.max(0, Math.round(value))) : 0;

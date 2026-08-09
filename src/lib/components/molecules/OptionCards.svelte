@@ -1,13 +1,26 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
 
-    type Option = {
+    export type Option = {
         value: string;
         label: string;
         icon?: string;
         disabled?: boolean;
     };
+
+    export interface OptionCardsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onselect'> {
+        options?: Option[];
+        value?: string;
+        name?: string;
+        label?: string;
+        onSelect?: (value: string) => void;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
+    import { twMerge } from '../../utils/cn.js';
 
     let {
         options = [],
@@ -17,14 +30,7 @@
         onSelect,
         class: className = '',
         ...rest
-    }: Omit<HTMLAttributes<HTMLDivElement>, 'onselect'> & {
-        options?: Option[];
-        value?: string;
-        name?: string;
-        label?: string;
-        onSelect?: (value: string) => void;
-        class?: string;
-    } = $props();
+    }: OptionCardsProps = $props();
 
     let cards: HTMLButtonElement[] = [];
 

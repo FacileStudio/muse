@@ -1,11 +1,7 @@
-<script lang="ts">
-    import { gsap } from 'gsap';
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
-    import { resize } from '../../utils/chart.js';
 
-    type Item = {
+    export type Item = {
         id: string;
         label: string;
         icon?: string;
@@ -13,6 +9,23 @@
         href?: string;
         disabled?: boolean;
     };
+
+    export interface TabsProps extends HTMLAttributes<HTMLDivElement> {
+        items?: Item[];
+        value?: string;
+        onChange?: (id: string) => void;
+        panelId?: string;
+        label?: string;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
+    import { gsap } from 'gsap';
+    import { twMerge } from '../../utils/cn.js';
+    import { prefersReducedMotion } from '../../utils/motion.js';
+    import { resize } from '../../utils/chart.js';
 
     let {
         items = [],
@@ -22,14 +35,7 @@
         label = 'Sections',
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        items?: Item[];
-        value?: string;
-        onChange?: (id: string) => void;
-        panelId?: string;
-        label?: string;
-        class?: string;
-    } = $props();
+    }: TabsProps = $props();
 
     const uid = $props.id();
 

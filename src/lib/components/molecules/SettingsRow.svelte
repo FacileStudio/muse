@@ -1,6 +1,19 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export interface SettingsRowProps extends HTMLAttributes<HTMLDivElement> {
+        label?: string;
+        description?: string;
+        for?: string;
+        stacked?: boolean;
+        class?: string;
+        children?: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
 
     let {
@@ -11,14 +24,7 @@
         class: className = '',
         children,
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        label?: string;
-        description?: string;
-        for?: string;
-        stacked?: boolean;
-        class?: string;
-        children?: Snippet;
-    } = $props();
+    }: SettingsRowProps = $props();
 
     /*
      * Rows are separated by a rule they draw on their own top edge, so a section can hold any

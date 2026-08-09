@@ -109,3 +109,39 @@ all three citing CHARTE §4 in a comment. Delete them.
 **A component owns its padding and never its margin** — enforced by
 `src/lib/components/no-outer-margin.test.ts`. If you were separating muse components with
 `class="mt-4"`, that is the pattern to drop: wrap them in a `Stack`.
+
+## 7. Every component exports a `Props` type
+
+Additive, and the reason the bump is worth doing even if nothing else in this file applies.
+
+**Before:** `types` pointed at source, but each component annotated its props with an anonymous
+intersection on the `$props()` destructure. Nothing was importable, so a prop rename in muse
+could not fail `svelte-check` in any of the thirteen apps.
+
+**Now:** each component declares `export interface <Name>Props` in `<script module>` and the
+barrel re-exports it.
+
+```ts
+import type { ButtonProps, SectionProps } from '@facile/muse';
+
+type Props = Omit<ButtonProps, 'variant'> & { intent: 'save' | 'discard' };
+```
+
+Three components export a `type` alias rather than an interface, because their props are a
+union an interface cannot extend (`NavButton`) or already an `Omit` intersection. Same import
+either way.
+
+## 8. `Field`'s snippet parameters work now
+
+**Symptom before:** `{#snippet children({ id, describedBy })}` failed with *"Expected 1 or
+more, but got 0"*, so consumers reached for `getFieldContext()` instead — the workaround the
+wiki recorded and several apps carry.
+
+**Why:** `FieldProps` intersected `HTMLAttributes<HTMLDivElement>`, which declares its own
+`children?: Snippet<[]>`. The intersection of that with `Snippet<[{ id, describedBy }]>` accepts
+neither arity. An intersection swallows the contradiction; the `interface extends` form checks
+compatibility and reported it immediately.
+
+**Do:** nothing required — `getFieldContext()` still works and stays the right call for a
+control muse does not own. For your own markup inside a `Field`, the snippet parameters are now
+usable and are the shorter path.

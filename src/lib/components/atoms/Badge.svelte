@@ -1,20 +1,26 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
 
-    type Tone = 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger' | 'owner' | 'admin';
+    export type Tone = 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger' | 'owner' | 'admin';
+
+    export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
+        tone?: Tone;
+        class?: string;
+        children: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
+    import { twMerge } from '../../utils/cn.js';
 
     let {
         tone = 'neutral',
         class: className = '',
         children,
         ...rest
-    }: HTMLAttributes<HTMLSpanElement> & {
-        tone?: Tone;
-        class?: string;
-        children: Snippet;
-    } = $props();
+    }: BadgeProps = $props();
 
     const tones: Record<Tone, string> = {
         neutral: 'bg-fc-surface text-fc-fg-muted border-transparent',

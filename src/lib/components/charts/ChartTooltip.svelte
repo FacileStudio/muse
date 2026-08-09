@@ -1,6 +1,19 @@
+<script module lang="ts">
+    import type { ChartTipRow } from '../../utils/chart.js';
+
+    export interface ChartTooltipProps {
+        x: number;
+        y: number;
+        title?: string;
+        rows: ChartTipRow[];
+        visible: boolean;
+        class?: string;
+
+    }
+</script>
+
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import type { ChartTipRow } from '../../utils/chart.js';
 
     let {
         x,
@@ -9,14 +22,7 @@
         rows = [],
         visible = false,
         class: className = ''
-    }: {
-        x: number;
-        y: number;
-        title?: string;
-        rows: ChartTipRow[];
-        visible: boolean;
-        class?: string;
-    } = $props();
+    }: ChartTooltipProps = $props();
 
     const OFFSET = 12;
 

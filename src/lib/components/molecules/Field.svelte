@@ -1,6 +1,27 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+
+    /*
+     * `children` is Omitted rather than intersected. `HTMLAttributes` declares its own
+     * `children?: Snippet<[]>`, and an intersection with a parameterised snippet produces a
+     * type that accepts neither arity — which is why `{#snippet children({ id })}` failed with
+     * "Expected 1 or more, but got 0" and consumers had to reach for `getFieldContext` instead.
+     * The intersection swallowed it silently; `interface extends` checks compatibility and
+     * surfaced it.
+     */
+    export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+        label?: string;
+        helper?: string;
+        error?: string;
+        for?: string;
+        children: Snippet<[{ id: string; describedBy: string | undefined }]>;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { setFieldContext } from '../../utils/field.js';
 
@@ -12,14 +33,7 @@
         children,
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        label?: string;
-        helper?: string;
-        error?: string;
-        for?: string;
-        children: Snippet<[{ id: string; describedBy: string | undefined }]>;
-        class?: string;
-    } = $props();
+    }: FieldProps = $props();
 
     const uid = $props.id();
 

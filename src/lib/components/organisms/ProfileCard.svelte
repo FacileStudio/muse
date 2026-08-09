@@ -1,18 +1,37 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export type Orientation = 'vertical' | 'horizontal';
+
+    export type Meta = { label: string; value: string };
+
+    export interface ProfileCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'role'> {
+        name: string;
+        email?: string;
+        avatar?: string;
+        color?: string;
+        role?: string;
+        meta?: Meta[];
+        actions?: Snippet;
+        children?: Snippet;
+        orientation?: Orientation;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import Avatar from '../atoms/Avatar.svelte';
     import Badge from '../atoms/Badge.svelte';
     import Card from '../atoms/Card.svelte';
     import Divider from '../atoms/Divider.svelte';
 
-    type Orientation = 'vertical' | 'horizontal';
-    type Meta = { label: string; value: string };
-
     /* `role` is the member's role in the workspace, not an ARIA role — the DOM attribute of
        the same name is dropped from the passthrough so the two cannot collide into an
        intersection type no caller can satisfy. */
+
     let {
         name,
         email,
@@ -25,18 +44,7 @@
         orientation = 'horizontal',
         class: className = '',
         ...rest
-    }: Omit<HTMLAttributes<HTMLDivElement>, 'role'> & {
-        name: string;
-        email?: string;
-        avatar?: string;
-        color?: string;
-        role?: string;
-        meta?: Meta[];
-        actions?: Snippet;
-        children?: Snippet;
-        orientation?: Orientation;
-        class?: string;
-    } = $props();
+    }: ProfileCardProps = $props();
 
     const vertical = $derived(orientation === 'vertical');
     const roleTone = $derived(role === 'owner' ? 'owner' : role === 'admin' ? 'admin' : 'neutral');

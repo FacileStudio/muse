@@ -1,3 +1,11 @@
+<script module lang="ts">
+    export interface ToasterProps {
+        position?: 'top' | 'bottom';
+        class?: string;
+
+    }
+</script>
+
 <script lang="ts">
     import { flip } from 'svelte/animate';
     import { quartIn, quartInOut, quartOut } from 'svelte/easing';
@@ -9,10 +17,7 @@
     let {
         position = 'bottom',
         class: className = ''
-    }: {
-        position?: 'top' | 'bottom';
-        class?: string;
-    } = $props();
+    }: ToasterProps = $props();
 
     const ENTER = 300;
     const EXIT = 200;

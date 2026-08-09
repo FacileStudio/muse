@@ -1,6 +1,16 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLSelectAttributes } from 'svelte/elements';
+
+    export interface SelectProps extends HTMLSelectAttributes {
+        class?: string;
+        value?: string;
+        children: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getFieldContext } from '../../utils/field.js';
 
@@ -12,11 +22,7 @@
         class: className = '',
         children,
         ...rest
-    }: HTMLSelectAttributes & {
-        class?: string;
-        value?: string;
-        children: Snippet;
-    } = $props();
+    }: SelectProps = $props();
 
     const field = getFieldContext();
     const controlId = $derived(id ?? field?.().id);

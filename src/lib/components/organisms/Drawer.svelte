@@ -1,6 +1,23 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLDialogAttributes } from 'svelte/elements';
+
+    export interface DrawerProps extends HTMLDialogAttributes {
+        open?: boolean;
+        title?: string;
+        description?: string;
+        children: Snippet;
+        footer?: Snippet;
+        showHandle?: boolean;
+        showClose?: boolean;
+        dismissible?: boolean;
+        onClose?: () => void;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
     import { createDialog } from '../../utils/dialog.js';
@@ -19,18 +36,7 @@
         onClose,
         class: className = '',
         ...rest
-    }: HTMLDialogAttributes & {
-        open?: boolean;
-        title?: string;
-        description?: string;
-        children: Snippet;
-        footer?: Snippet;
-        showHandle?: boolean;
-        showClose?: boolean;
-        dismissible?: boolean;
-        onClose?: () => void;
-        class?: string;
-    } = $props();
+    }: DrawerProps = $props();
 
     const titleId = $props.id();
 
