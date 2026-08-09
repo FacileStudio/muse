@@ -38,11 +38,11 @@
     ];
 
     const tiles = [
-        { id: 't1', label: 'Goga', note: 'Medium 500 · Semibold 600' },
-        { id: 't2', label: 'OKLCH', note: 'Chroma-zero palette' },
-        { id: 't3', label: 'Solar', note: 'Linear icons' },
-        { id: 't4', label: 'Runes', note: 'Svelte 5 only' },
-        { id: 't5', label: 'Tailwind', note: 'v4 @theme tokens' },
+        { id: 't1', label: 'Système', note: 'Accents à 100 % — « déjà réglé »' },
+        { id: 't2', label: 'OKLCH', note: 'Palette chroma zéro' },
+        { id: 't3', label: 'Solar', note: 'Icônes linear' },
+        { id: 't4', label: 'Runes', note: 'Svelte 5 uniquement' },
+        { id: 't5', label: 'Tailwind', note: 'Tokens @theme v4' },
         { id: 't6', label: 'GSAP', note: 'power3.inOut' }
     ];
 

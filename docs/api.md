@@ -276,7 +276,11 @@ pulsing dot is just noise.
 
 ### `Divider`
 
-`<hr>` with `border-0 border-t border-fc-border my-4`. Spreads to `<hr>`.
+`<hr>` with `border-0 border-t border-fc-border`. Spreads to `<hr>`.
+
+Carries **no margin**. Its breathing room comes from the parent's `gap`, like every other
+sibling relationship in the system — put it inside a `flex flex-col gap-4` (or wider) rather
+than reaching for `my-*` on the rule itself.
 
 ## Molecules
 

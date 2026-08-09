@@ -172,9 +172,13 @@ for needle in '--color-fc-page' '--color-fc-chart-6' 'color-scheme:dark' 'color-
     grep -q -- "$needle" "$CSS" || fail "the compiled CSS is missing '$needle'" "stylesheet: $CSS"
 done
 
-# The bundled font has to survive the package hop as a real emitted asset, not a dead url().
-ls "$SMOKE/build/client/_app/immutable/assets/" 2>/dev/null | grep -qi 'goga.*\.otf' ||
-    fail 'the bundled Goga faces were not emitted — the @font-face url() did not resolve from node_modules'
+# muse bundles no face any more (the trial cut it used to ship covered 68 glyphs and no
+# accented Latin). If one is reintroduced, restore an emitted-asset assertion here: the
+# @font-face url() resolving from node_modules is a real failure mode that only shows in a
+# packed install. `src/lib/styles/fonts.test.ts` guards the glyph coverage side of it.
+if ls "$SMOKE/build/client/_app/immutable/assets/" 2>/dev/null | grep -qi '\.\(otf\|ttf\|woff2\?\)$'; then
+    fail 'a font asset was emitted, but muse ships no face — add back the coverage assertion'
+fi
 
 echo ''
 echo 'SMOKE PASSED — packed install, dev server, build, SSR render and token contract all green.'

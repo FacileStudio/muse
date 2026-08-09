@@ -91,7 +91,7 @@
     </div>
 
     {#if meta.length > 0}
-        <Divider class="my-0" />
+        <Divider />
         <dl class="flex flex-col">
             {#each meta as row (row.label)}
                 <div
@@ -105,7 +105,7 @@
     {/if}
 
     {#if children}
-        <Divider class="my-0" />
+        <Divider />
         {@render children()}
     {/if}
 </Card>

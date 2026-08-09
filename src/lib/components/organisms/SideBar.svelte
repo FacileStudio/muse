@@ -169,22 +169,15 @@
             {#if icon}<iconify-icon {icon} width="24" height="24" class="block shrink-0"></iconify-icon>{/if}
             {#if !narrow}
                 <!--
-                  `translate-y-[0.04em]` is optical alignment, and the number is derived from
-                  Goga rather than nudged by eye. The font sets USE_TYPO_METRICS, so browsers
-                  lay it out on typoAscender 810 / typoDescender 190 against a capHeight of
-                  700 (per 1000 upm). A line box is therefore centred on the *em*, while what
-                  the eye centres on is the cap: ((810 − 190) − 700) / 2 = −0.04em, i.e. the
-                  capitals sit 0.04em above the box centre. `items-center` aligns the boxes,
-                  so a 24px brand mark lands 0.04em below the letters — 0.9px at this size,
-                  invisible to describe and obvious to look at. Pushing the text back down by
-                  the same amount aligns cap centre with mark centre.
-
-                  It is applied here and not library-wide on purpose: the offset scales with
-                  font size, so at the 14px of a nav row or a button it is 0.5px and not worth
-                  a transform on every label. Any *large* icon/label lockup added later wants
-                  the same correction.
+                  This lockup used to carry `translate-y-[0.04em]`, an optical correction
+                  computed from the bundled face's own metrics (typoAscender 810 /
+                  typoDescender 190 against capHeight 700 per 1000 upm). That face is gone and
+                  the platform stack resolves to a different font per OS, so there is no single
+                  number left to derive. A hardcoded nudge would now be guesswork on two
+                  platforms out of three; alignment falls back to the line box until a licensed
+                  face with known metrics comes back.
                 -->
-                <span class="flex min-w-0 flex-1 translate-y-[0.04em] items-center text-fc-xl font-semibold text-fc-fg overflow-hidden">
+                <span class="flex min-w-0 flex-1 items-center text-fc-xl font-semibold text-fc-fg overflow-hidden">
                     <TextElevate text={title} visible={!narrow} class="truncate" />
                 </span>
             {/if}

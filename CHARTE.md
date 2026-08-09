@@ -191,14 +191,22 @@ those two tokens is the fix; it has not been done because the tokens are shared 
 
 ## 3. Typography
 
-- **Sans**: Goga (`'Goga'`, `Helvetica`, `Arial`, `sans-serif`) — `--font-fc-body`
-- **Display**: Goga — `--font-fc-title`. Same family as body; the display/body split is
-  intentional-in-name-only so consumers can diverge without touching components.
-- **Mono**: the platform stack — `--font-fc-mono`, used via `font-fc-mono`. Goga has no mono
-  cut, so this deliberately downloads nothing. It is for **machine strings only**: secrets,
-  API keys, IDs, endpoints, event channel names. Prose never wears it.
-- Only **Medium (500)** and **Semibold (600)** are bundled. Any other weight synthesizes —
-  do not reach for `font-bold`, use `font-semibold`.
+- **Sans**: the platform stack (`ui-sans-serif`, `system-ui`, `-apple-system`, `'Segoe UI'`,
+  `Roboto`, `'Helvetica Neue'`, `Arial`, `sans-serif`) — `--font-fc-body`
+- **Display**: same stack — `--font-fc-title`. The display/body split is
+  intentional-in-name-only so consumers can diverge without touching components. It is also
+  the seam a licensed display face would come back through: headings only, body untouched.
+- **Mono**: the platform stack — `--font-fc-mono`, used via `font-fc-mono`. It is for
+  **machine strings only**: secrets, API keys, IDs, endpoints, event channel names. Prose
+  never wears it.
+- **muse bundles no typeface, and re-adding one is a gated decision.** Through v0.5.0 it
+  shipped the Goga *trial* cut: 68 glyphs, no accented Latin, no apostrophe, no colon, no
+  percent sign. In a French-language suite every `é` fell back to Helvetica mid-word, and the
+  files were redistributed to thirteen apps under a test licence with no LICENSE in the repo.
+  `src/lib/styles/fonts.test.ts` now fails the build on any face in `src/lib/fonts/` that does
+  not cover the character set the suite actually types. A new face needs a real licence
+  recorded in `LICENSE` and a full Latin-1 cut. Weights: use `font-medium` and
+  `font-semibold`; do not reach for `font-bold`.
 
 Scale — `text-fc-*`, each with a paired line-height:
 
@@ -1166,13 +1174,18 @@ sections. Local `$state` tabs break all three.
 ```svelte
 <div class="flex flex-col gap-4">
   <Tabs items={sections.map(s => ({ ...s, href: `/settings/${s.id}` }))} value={active} />
-  <Divider class="my-0" />
+  <Divider />
 </div>
 ```
 
-That `gap-4` is not arbitrary. The rule is separating a page header from its body, so it
-needs air — pulled tight under the strip it reads as an underline welded to the active pill
-and fights the pill's shape.
+That `gap-4` is not arbitrary, and it is **load-bearing** — `Divider` carries no margin of its
+own, so the parent's `gap` is the only thing giving the rule air. Dropped into plain block flow
+with nothing above it, the same markup welds the rule to whatever precedes it. That is the
+whole reason `Divider` has no `my-*` default: through v0.5.0 it shipped `my-4`, and all
+twenty-four call sites across the suite — plus both usages inside muse itself — cancelled it
+with `class="my-0"`. A default with a zero percent hit rate is not a default, and the `my-0`
+idiom it taught is exactly what produced buttons glued to separators. Space between siblings
+belongs to the parent. See §4.
 
 The active tab is an inverted pill that **slides** between tabs on a 0.3s `power3.inOut`
 tween. Pass an `icon` per item; the strip scrolls horizontally on narrow screens and the

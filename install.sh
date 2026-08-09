@@ -38,6 +38,7 @@ Usage:
   install.sh [options]
 
 Options:
+  -l, --local       Install from this checkout instead of $BRANCH on GitHub
   -h, --help        Show this help
 
 Environment:
@@ -48,8 +49,10 @@ USAGE
 # --- steps ------------------------------------------------------------------
 
 parse_args() {
+  LOCAL=0
   while [ $# -gt 0 ]; do
     case "$1" in
+      -l|--local) LOCAL=1; shift ;;
       -h|--help) usage; exit 0 ;;
       *) die "unknown option: $1 — run install.sh --help" ;;
     esac
@@ -62,6 +65,17 @@ make_workdir() {
 }
 
 fetch_skill() {
+  if [ "$LOCAL" -eq 1 ]; then
+    local here
+    here="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)"
+    [ -f "$here/integrations/SKILL.md" ] && [ -f "$here/CHARTE.md" ] ||
+      die "--local needs a muse checkout — $here has no integrations/SKILL.md"
+    info "Installing from $here"
+    cp "$here/integrations/SKILL.md" "$WORK/SKILL.md"
+    cp "$here/CHARTE.md" "$WORK/CHARTE.md"
+    return
+  fi
+
   command -v curl >/dev/null 2>&1 || die "curl not found — install curl first"
   info "Fetching skill"
   curl -fsSL -o "$WORK/SKILL.md" \
@@ -75,11 +89,30 @@ fetch_skill() {
   [ -s "$WORK/CHARTE.md" ] || die "the downloaded visual contract is empty"
 }
 
+# An installed skill is a plain file on disk, so anything — a person, an agent "tidying up" —
+# can rewrite it in place, and nothing announces that it happened. It did: the skill installed
+# on one machine had been cut from 274 lines to 56, losing every spacing rule, and matched no
+# revision this repo ever published. Say out loud what is being replaced.
+report_drift() {
+  local installed="$1" incoming="$2"
+  [ -f "$installed" ] || return 0
+  cmp -s "$installed" "$incoming" && return 0
+
+  local had want
+  had="$(wc -l <"$installed" | tr -d ' ')"
+  want="$(wc -l <"$incoming" | tr -d ' ')"
+  warn "replacing a modified skill at $installed ($had lines → $want)"
+  [ "$had" -lt "$want" ] &&
+    hint "the installed copy was shorter than the published one — local edits are being discarded"
+  return 0
+}
+
 register_skill() {
   INSTALLED=0
 
   if command -v claude >/dev/null 2>&1; then
     mkdir -p "$HOME/.claude/skills/$SKILL"
+    report_drift "$HOME/.claude/skills/$SKILL/SKILL.md" "$WORK/SKILL.md"
     cp "$WORK/SKILL.md" "$HOME/.claude/skills/$SKILL/SKILL.md"
     cp "$WORK/CHARTE.md" "$HOME/.claude/skills/$SKILL/CHARTE.md"
     ok "Claude Code skill installed"
