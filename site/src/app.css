@@ -1,0 +1,11 @@
+/* tokens.css imports tailwind itself, so importing tailwind here again would duplicate
+   preflight and every utility. `@source` is what makes Tailwind scan muse's own components —
+   without it every muse class is purged and the page renders structurally correct and
+   completely unstyled. */
+@import '../../src/lib/styles/tokens.css';
+@source '../../src/lib';
+@source './src';
+
+body {
+    margin: 0;
+}
