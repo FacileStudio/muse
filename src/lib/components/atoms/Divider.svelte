@@ -7,7 +7,7 @@
         ...rest
     }: HTMLAttributes<HTMLHRElement> & { class?: string } = $props();
 
-    const classes = $derived(twMerge('border-0 border-t border-fc-border my-4', className));
+    const classes = $derived(twMerge('border-0 border-t border-fc-border', className));
 </script>
 
 <hr class={classes} {...rest} />

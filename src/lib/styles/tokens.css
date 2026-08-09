@@ -3,21 +3,11 @@
 
 @import 'tailwindcss';
 
-@font-face {
-  font-family: 'Goga';
-  src: url('../fonts/Goga Medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Goga';
-  src: url('../fonts/Goga Semibold.otf') format('opentype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
+/* No bundled display face. The Goga files shipped here through v0.5.0 were the trial cut:
+   68 glyphs, no accented Latin, no apostrophe, no colon, no percent. Every French string in
+   the suite fell back to Helvetica mid-word, and the files were redistributed under a test
+   licence. Re-adding a face means a full Latin-1 cut and a licence — `fonts.test.ts` fails
+   the build on any font in `src/lib/fonts/` that does not cover the required set. */
 
 @theme {
   /* colors → bg-fc-*, text-fc-*, -fc-* — chroma-zero OKLCH, matches shipped suite apps.
@@ -79,14 +69,15 @@
   --text-fc-3xl: 2.25rem;
   --text-fc-3xl--line-height: 2.5rem;
 
-  /* fonts → font-fc-* / font-sans */
-  --font-fc-body: 'Goga', Helvetica, Arial, sans-serif;
-  --font-fc-title: 'Goga', Helvetica, Arial, sans-serif;
-  --font-sans: 'Goga', Helvetica, Arial, sans-serif;
+  /* fonts → font-fc-* / font-sans. The platform stack renders every accented character the
+     suite actually types, which the bundled face did not. `title` stays a separate token so a
+     licensed display cut can be reintroduced on headings alone without touching body copy. */
+  --font-fc-body: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-fc-title: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-  /* Mono is for machine strings only — secrets, keys, IDs, endpoints. Goga has no mono cut,
-     so this is the platform stack: nothing extra to download, and it lands on the font the
-     user already reads code in. */
+  /* Mono is for machine strings only — secrets, keys, IDs, endpoints. This is the platform
+     stack: nothing extra to download, and it lands on the font the user already reads code in. */
   --font-fc-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
 
   /* motion → ease-fc. This is the CSS spelling of GSAP's `power3.inOut`, the library's

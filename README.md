@@ -3,12 +3,12 @@
 Svelte 5 component library and design system for Facile tools, published as `@facile/muse`.
 
 muse ships 48 components arranged as atoms, molecules, organisms, charts and motion pieces,
-a Tailwind v4 token theme, the Iconify icon map, and the bundled Goga typeface. It is consumed
+a Tailwind v4 token theme and the Iconify icon map. It bundles no typeface. It is consumed
 directly from source — there is no build step and no `dist/`. An `install.sh` also registers
 muse as an AI skill for Claude Code and Codex so agents generate suite-shaped UI by default.
 
 The palette matches what the suite actually ships: chroma-zero OKLCH, inverted (never tinted)
-active states, borderless container surfaces, hidden scrollbars, Goga, and Solar `linear`
+active states, borderless container surfaces, hidden scrollbars, and Solar `linear`
 icons — plus a six-slot chart palette derived from Sablier's identity colours.
 
 ## What it does
@@ -29,7 +29,7 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
   through context
 - Exports `icons`, a keyed map of 45 Iconify names — Solar `linear` for chrome, MDI for
   plus/close/chevrons — with an `IconKey` type
-- Bundles the Goga typeface (Medium and Semibold) as `@font-face` rules
+- Bundles no typeface — the platform sans stack renders every accented character the suite types
 - Supports OS dark mode out of the box, plus a `.dark` / `.light` class override so apps can
   offer a theme toggle
 - Ships `prefersReducedMotion()`, `isMobile()` and the `springPress` action so every
@@ -91,8 +91,7 @@ src/lib/
   icons.ts                 Iconify name map and the IconKey type
   colors.ts                USER_COLORS identity palette and its normalizers
   components/              atoms/ molecules/ organisms/ charts/ motion/
-  fonts/                   Goga Medium and Goga Semibold (.otf)
-  styles/tokens.css        Tailwind v4 @theme block, @font-face rules, dark mode, base layer
+  styles/tokens.css        Tailwind v4 @theme block, dark mode, base layer
   utils/cn.ts              fc-*-aware tailwind-merge — every component uses it
   utils/motion.ts          prefersReducedMotion(), isMobile()
   utils/press.ts           springPress — the shared gsap press action
