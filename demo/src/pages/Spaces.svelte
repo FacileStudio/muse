@@ -4,7 +4,7 @@
         Badge,
         Button,
         Card,
-        ColorPicker,
+        SwatchPicker,
         ConfirmModal,
         Drawer,
         EmptyState,
@@ -230,7 +230,7 @@
             <Textarea bind:value={draftDescription} rows={3} placeholder="Client work and shared assets." />
         </Field>
         <Field label="Colour">
-            <ColorPicker bind:value={draftColor} />
+            <SwatchPicker bind:value={draftColor} />
         </Field>
     </div>
     {#snippet footer()}

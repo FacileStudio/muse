@@ -596,7 +596,7 @@ MDI (plus, close, chevrons — Solar's read muddy at small sizes):
   as buttons; `:focus-visible` always matches for text inputs, so there is no reason to weaken
   it to `:focus`.
 - **All interactive elements reachable by keyboard**, and every composite widget
-  (`ColorPicker`, `OptionCards`, `Tabs`) is a real roving-tabindex radiogroup/tablist with one
+  (`SwatchPicker`, `OptionCards`, `Tabs`) is a real roving-tabindex radiogroup/tablist with one
   tab stop, arrows to move, Home/End to jump.
 - **`<iconify-icon>` is decorative unless it is the only content.** A standalone icon button
   needs an `aria-label`; an icon beside a text label must not repeat it.
@@ -1106,7 +1106,7 @@ a truncated baseline makes bar lengths lie.
 
 ## 13. Identity & files
 
-### ColorPicker + `src/lib/colors.ts`
+### SwatchPicker + `src/lib/colors.ts`
 
 `USER_COLORS` is **Sablier's identity palette, byte-identical** — `#AD9EF0` Purple,
 `#F09ED6` Pink, `#EE7E89` Red, `#EEB47E` Orange, `#A9EE7E` Green, `#7EEEDB` Aqua. These are
@@ -1140,6 +1140,45 @@ theme-invariant, and `text-fc-fg` would paint a white check on a light pastel fo
 OS-dark user whose app doesn't set `.dark`. Any component drawing ink onto a caller-supplied
 colour has this problem and needs the same treatment.
 
+### ColorPicker
+
+`SwatchPicker`'s opposite number: `SwatchPicker` is for a **closed** set of colours the
+product already decided on, `ColorPicker` (an atom) is for an **open** one the user decides.
+An app that asks a shop owner for a product colour, a brand accent or a calendar colour wants
+this; an app assigning an identity colour wants `SwatchPicker`.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | `''` | Bindable, normalised `#rrggbb` lowercase. Empty means unset |
+| `swatches` | `readonly string[]` | `[]` | Optional presets — the brand palette, as shortcuts |
+| `labels` | `Record<string, string>` | — | Accessible name per swatch, falling back to the hex |
+| `placeholder` | `string` | `'#rrggbb'` | |
+| `disabled` | `boolean` | `false` | |
+| `name` | `string` | — | Hidden input carrying the parsed value |
+| `onChange` | `(hex: string) => void` | — | Fires on a settled colour only |
+
+Three rules it exists to enforce:
+
+**The picker is `<input type="color">`.** It is the platform's, so it brings the eyedropper,
+the recent-colours row, the system palette and full keyboard and assistive-technology support,
+and it costs nothing. A canvas HSV wheel is a picker that has none of that and has to
+reimplement every one of them badly. If a design ever calls for a custom wheel, the design is
+wrong.
+
+**A text field beside it, because a colour usually arrives as a string.** Nobody eyeballs
+`#AD9EF0` out of a gradient square — they paste it out of Figma or a brand book. The native
+control cannot be pasted into, so the pair is the component, not the picker alone.
+
+**Typing is not committing.** The field holds the draft as keyed and only writes to the bound
+value when the draft parses to a whole colour, so a half-typed `#ab` neither writes garbage
+outward nor gets overwritten inward mid-keystroke. Blur drops an unparseable draft. `parseHex`
+(exported) is the one place that decides, and it takes `fff`, `#fff`, `FFF`, `#FFFFFF`, hash
+or no hash.
+
+The user's colour is the **only** chromatic thing the component renders — the chrome is
+`fc-*` like everything else, and the swatch fill goes on inline `style:background-color` under
+the same exception §13 grants `SwatchPicker`.
+
 ### ProfileCard
 
 The normalised identity block, extracted from Sablier's profile route so every app renders
@@ -1154,7 +1193,7 @@ the same thing. Display only — the consumer owns saving.
 | `role` | `string` | — | `Badge`; `owner`/`admin` map to those tones, else `neutral` |
 | `meta` | `{ label, value }[]` | `[]` | Generic key/value rows — rates, member-since, … |
 | `actions` | `Snippet` | — | Right-aligned button area |
-| `children` | `Snippet` | — | Below a divider — where a `ColorPicker` or form goes |
+| `children` | `Snippet` | — | Below a divider — where a `SwatchPicker` or form goes |
 | `orientation` | `'vertical' \| 'horizontal'` | `'horizontal'` | Horizontal stacks below `sm:` |
 
 ### Dropzone + UploadProgress

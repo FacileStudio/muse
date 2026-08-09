@@ -1,7 +1,7 @@
 # muse — API
 
-The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 53 components
-(5 layout primitives, 16 atoms, 13 molecules, 9 organisms, 6 charts, 2 motion pieces), the
+The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 54 components
+(5 layout primitives, 17 atoms, 13 molecules, 9 organisms, 6 charts, 2 motion pieces), the
 `GAP` / `PAGE_WIDTH` / `ALIGN` maps, the `cn` class merger, the
 motion, press, field, secret, toast and chart helpers, the `icons` map and the exported types.
 Nothing else in the repo is importable — `ChartTable.svelte`, `components/charts/entry.ts`
@@ -12,11 +12,11 @@ import {
   // layout
   Page, PageHeader, Section, Stack, Inline,
   // atoms
-  Alert, Avatar, Badge, Button, Card, Checkbox, Divider, IconButton,
+  Alert, Avatar, Badge, Button, Card, Checkbox, ColorPicker, Divider, IconButton,
   Input, Radio, Select, Skeleton, Spinner, StatusDot, Switch, Textarea,
   // molecules
-  ColorPicker, Dropzone, Field, NavButton, OptionCards, SecretField,
-  SettingsRow, SettingsSection, SpaceSwitcher, StatCard, Tabs, Toast, UploadProgress,
+  Dropzone, Field, NavButton, OptionCards, SecretField, SettingsRow,
+  SettingsSection, SpaceSwitcher, StatCard, SwatchPicker, Tabs, Toast, UploadProgress,
   // organisms
   ConfirmModal, Drawer, MobileNav, Modal, ProfileCard, SideBar, Table, Toaster, Topbar,
   // charts
@@ -25,7 +25,7 @@ import {
   PageTransition, TextElevate,
   // helpers
   cn, twMerge, prefersReducedMotion, isMobile, springPress, getFieldContext,
-  icons, USER_COLORS, USER_COLOR_LABELS, normalizeUserColor, userColorLabel,
+  icons, USER_COLORS, USER_COLOR_LABELS, normalizeUserColor, parseHex, userColorLabel,
   REDACTED, isRedacted, maskSecret, toast, toasts,
   chartColor, formatCompact, niceScale, linePath, areaPath, arcPath, arcCorner, tickStride, resize,
   GAP, PAGE_WIDTH, ALIGN
@@ -46,7 +46,7 @@ Conventions across the library:
   attribute or `on*` handler passes through. The spread comes **last**, so the consumer wins.
   Four groups deliberately keep their own wiring after it: `Modal` and `Drawer` (the dialog
   controller's `onclose` / `oncancel` / `onclick`, which are what keep `open` in sync),
-  `Tabs`, `ColorPicker`, `OptionCards` (role and keyboard handling) and `Dropzone` (the drag
+  `Tabs`, `SwatchPicker`, `OptionCards` (role and keyboard handling) and `Dropzone` (the drag
   handlers). Chart and motion components take `class` only and spread nothing.
 - Layout primitives (`Page`, `PageHeader`, `Section`, `Stack`, `Inline`) take a `gap` of
   `bound | tight | content | section` and never emit an outer margin — enforced by
@@ -289,6 +289,46 @@ Carries **no margin**. Its breathing room comes from the parent's `gap`, like ev
 sibling relationship in the system — put it inside a `flex flex-col gap-4` (or wider) rather
 than reaching for `my-*` on the rule itself.
 
+### `ColorPicker`
+
+An arbitrary colour: the OS picker (`<input type="color">`) beside a monospace hex field, with
+optional preset chips under both. For a fixed brand or identity palette with no free choice,
+use `SwatchPicker` instead. Spreads to the root `<div>` (`HTMLAttributes<HTMLDivElement>` minus
+`onchange`).
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `value` | `string` | `''` | **bindable**. Normalised `#rrggbb`, lowercase. Empty means *unset* — see below |
+| `swatches` | `readonly string[]` | `[]` | Preset chips. Each is parsed, so `fff` and `#FFFFFF` both work |
+| `labels` | `Record<string, string>` | — | Accessible name per swatch; falls back to the hex |
+| `placeholder` | `string` | `'#rrggbb'` | Placeholder for the text field |
+| `disabled` | `boolean` | `false` | Disables the picker, the field and every chip |
+| `name` | `string` | — | Emits a hidden input carrying the *parsed* value, so a plain form posts a real hex |
+| `onChange` | `(hex: string) => void` | — | Fires once per settled colour, never on a partial one |
+
+`<input type="color">` is the picker because it is the only one that is a *real* picker —
+eyedropper, recent colours, the system palette, full keyboard and screen-reader support, on
+every platform, for zero bytes. A hand-rolled HSV wheel is a canvas with none of that. The
+text field is there because the native control cannot be pasted into and a designer's colour
+arrives as a string.
+
+**Typing is not committing.** The text field keeps the draft exactly as keyed; `parseHex`
+decides when it is a colour. `#ab` writes nothing and — more importantly — nothing is written
+back over those two characters. Blur discards an unparseable draft and snaps the field to the
+canonical spelling, so `fff` becomes `#ffffff` when you leave it.
+
+`value` defaults to `''`, **not** `'#000000'`, and that is load-bearing rather than fussy:
+a `$bindable` with a non-empty default writes itself into the parent on creation, which is a
+production incident when the bound key does not exist yet. The native picker still needs a
+colour to show, so an unset value displays black without claiming anyone chose it. See
+[MIGRATION §9](../MIGRATION.md).
+
+```svelte
+<Field label="Product colour" helper="Shown on the shop card and the size chips.">
+  <ColorPicker bind:value={product.color} swatches={brand.palette} />
+</Field>
+```
+
 ## Molecules
 
 ### `Field`
@@ -482,9 +522,12 @@ options. With nothing selected, a forward key opens on the first card and a back
 the last. There is no description slot on purpose: the explanation belongs in the
 `SettingsRow` above, not repeated in every card.
 
-### `ColorPicker`
+### `SwatchPicker`
 
-Swatch radiogroup over the shared identity palette. Spreads to the group `<div>`
+Swatch radiogroup over a **fixed** palette — named `ColorPicker` up to v0.5.0, renamed when the
+free-choice `ColorPicker` atom landed (see [MIGRATION §9](../MIGRATION.md)). Use this when the
+set of legal colours is closed, and `ColorPicker` when any colour is allowed. Spreads to the
+group `<div>`
 (`HTMLAttributes<HTMLDivElement>` minus `onselect`).
 
 | Prop | Type | Default | Notes |
@@ -499,6 +542,10 @@ Swatch radiogroup over the shared identity palette. Spreads to the group `<div>`
 | `onSelect` | `(color: string) => void` | — | |
 
 The six hexes are a persisted data contract shared with Sablier — do not restyle them.
+
+Note the different jobs the two components' swatches do: here a swatch *is* the input, so the
+group is a `radiogroup` with roving tabindex. In `ColorPicker` the swatches are shortcuts into
+a field that accepts anything, so they are plain toggle buttons in a `group`.
 
 ### `EmptyState`
 

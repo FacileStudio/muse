@@ -23,3 +23,21 @@ export function normalizeUserColor(color: string | null | undefined): UserColor 
 export function userColorLabel(color: string | null | undefined): string {
     return USER_COLOR_LABELS[normalizeUserColor(color)];
 }
+
+/**
+ * Parses any reasonable spelling of a hex colour to `#rrggbb`, or `null` if it is not one.
+ *
+ * Accepts `fff`, `#fff`, `FFF`, `#FFFFFF` — with or without the hash, in either case, and
+ * with surrounding whitespace, because those are what a paste from a design tool actually
+ * contains. Returns `null` rather than throwing or guessing: the caller is usually watching
+ * someone type, and half a hex is not an error, it is an unfinished one.
+ *
+ * Output is lowercase to match what `<input type="color">` reports, so round-tripping a
+ * colour through the OS picker does not churn the bound value.
+ */
+export function parseHex(input: string | null | undefined): string | null {
+    const raw = input?.trim().replace(/^#/, '') ?? '';
+    if (!/^(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(raw)) return null;
+    const full = raw.length === 3 ? raw.replace(/./g, (c) => c + c) : raw;
+    return `#${full.toLowerCase()}`;
+}

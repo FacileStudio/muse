@@ -2,7 +2,7 @@
     import {
         Alert,
         Button,
-        ColorPicker,
+        SwatchPicker,
         Dropzone,
         Field,
         icons,
@@ -102,7 +102,7 @@
             <p class="text-fc-xs text-fc-fg-muted">
                 Used for your avatar dot and your entries across the suite.
             </p>
-            <ColorPicker bind:value={identityColor} showLabels class="mt-1" />
+            <SwatchPicker bind:value={identityColor} showLabels class="mt-1" />
         </div>
     </ProfileCard>
 

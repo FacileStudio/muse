@@ -43,12 +43,12 @@ Import everything flat from `@facile/muse`; the tier directories are import path
 | Tier | Components |
 |---|---|
 | **Layout** | `Page` `PageHeader` `Section` `Stack` `Inline` |
-| Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `StatusDot` `Switch` `Textarea` |
-| Molecules | `ColorPicker` `Dropzone` `Field` `NavButton` `OptionCards` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `Tabs` `Toast` `UploadProgress` |
+| Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `ColorPicker` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `StatusDot` `Switch` `Textarea` |
+| Molecules | `Dropzone` `EmptyState` `Field` `NavButton` `OptionCards` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `SwatchPicker` `Tabs` `Toast` `UploadProgress` |
 | Organisms | `ConfirmModal` `Drawer` `MobileNav` `Modal` `ProfileCard` `SideBar` `Table` `Toaster` `Topbar` |
 | Charts | `BarChart` `ChartLegend` `ChartTooltip` `DonutChart` `LineChart` `Sparkline` |
 | Motion | `PageTransition` `TextElevate` |
-| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `springPress` `getFieldContext` `toast` `toasts` `chartColor` `formatCompact` `niceScale` `linePath` `areaPath` `arcPath` `arcCorner` `tickStride` `resize` `USER_COLORS` `USER_COLOR_LABELS` `normalizeUserColor` `userColorLabel` `REDACTED` `isRedacted` `maskSecret` |
+| Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `springPress` `getFieldContext` `toast` `toasts` `chartColor` `formatCompact` `niceScale` `linePath` `areaPath` `arcPath` `arcCorner` `tickStride` `resize` `USER_COLORS` `USER_COLOR_LABELS` `normalizeUserColor` `userColorLabel` `parseHex` `REDACTED` `isRedacted` `maskSecret` |
 
 Types: `IconKey` `UserColor` `FieldContext` `ToastTone` `ToastOptions` `ToastItem`
 `ToastAction` `ChartSeries` `ChartSlice` `ChartScale` `ChartLegendItem` `ChartTipRow`
@@ -64,8 +64,11 @@ Reach for these before hand-rolling — they are the ones agents most often rebu
 - **Bottom sheet / mobile filters** → `Drawer` (drag-to-dismiss, safe-area aware).
 - **Any chart** → `LineChart` `BarChart` `DonutChart` `Sparkline`. Dependency-free SVG; do
   not add a charting library, and do not pass your own series colours.
-- **Identity colour** → `ColorPicker` + `USER_COLORS` (Sablier's palette, a persisted data
-  contract — do not restyle the six hexes).
+- **Identity colour** → `SwatchPicker` + `USER_COLORS` (Sablier's palette, a persisted data
+  contract — do not restyle the six hexes). A **closed** set of colours, chosen from.
+- **Any other colour** (brand, product, label, calendar) → `ColorPicker`, the atom: the OS
+  picker plus a hex field, with optional `swatches`. Never a bare `Input` asking for a hex,
+  and never a hand-rolled wheel — `<input type="color">` is the picker.
 - **File upload** → `Dropzone` + `UploadProgress` (the consumer owns the actual upload).
 - **Profile / identity block** → `ProfileCard`.
 - **Route changes** → `PageTransition` keyed on the route.
