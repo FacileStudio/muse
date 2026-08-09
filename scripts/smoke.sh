@@ -180,5 +180,18 @@ if ls "$SMOKE/build/client/_app/immutable/assets/" 2>/dev/null | grep -qi '\.\(o
     fail 'a font asset was emitted, but muse ships no face — add back the coverage assertion'
 fi
 
+# A `for` that points at no element is the failure mode `Field` exists to prevent, and it is
+# invisible to every other gate: it type-checks, it renders, and it looks right. Pull each
+# label's target out of the SSR html and prove an input carries that id.
+MUSE_HTML="$HTML" python3 - <<'PROBE' || fail 'a Field label points at an id no control carries'
+import os, re, sys
+html = os.environ['MUSE_HTML']
+ids = set(re.findall(r'<input[^>]*\sid="([^"]+)"', html))
+targets = re.findall(r'<label[^>]*\sfor="([^"]+)"', html)
+orphans = [t for t in targets if t not in ids]
+print(f'  {len(targets)} label(s) with a for=, {len(orphans)} orphaned')
+sys.exit(1 if orphans or not targets else 0)
+PROBE
+
 echo ''
 echo 'SMOKE PASSED — packed install, dev server, build, SSR render and token contract all green.'

@@ -12,6 +12,7 @@
 		BarChart,
 		Button,
 		Card,
+		Checkbox,
 		DonutChart,
 		Field,
 		Input,
@@ -28,6 +29,7 @@
 	} from '@facile/muse';
 
 	let collapsed = $state(false);
+	let digest = $state(true);
 	let section = $state('overview');
 	let name = $state('');
 
@@ -120,6 +122,15 @@
 							<Field label="Name" helper="Wired through Field's context.">
 								{#snippet children()}
 									<Input bind:value={name} placeholder="Camille" />
+								{/snippet}
+							</Field>
+
+							<!-- The self-labelling controls. Through v0.5.0 these ignored Field's
+							     context, so the label rendered `for` pointing at nothing and the
+							     control had no accessible name. smoke.sh checks the two ids match. -->
+							<Field label="Send me a digest" helper="Checkbox adopting the field id.">
+								{#snippet children()}
+									<Checkbox bind:checked={digest} />
 								{/snippet}
 							</Field>
 							<SecretField value="fc_rw_9f3c2ab1d4e5" label="API key" />

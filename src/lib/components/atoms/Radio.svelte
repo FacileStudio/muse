@@ -17,7 +17,6 @@
         label,
         id,
         'aria-describedby': describedBy,
-        'aria-invalid': invalid,
         group = $bindable(''),
         value,
         class: className = '',
@@ -35,11 +34,13 @@
      * accessible name, and it is what makes clicking the visible control toggle it — dropping
      * it would leave the input with an inert graphic beside it. An explicit prop always wins,
      * and outside a Field the lookup is a no-op.
+     *
+     * No `aria-invalid` here, unlike the other two: validity is a property of the radio *group*,
+     * not of one button in it, and `role="radio"` does not support the attribute.
      */
     const field = getFieldContext();
     const controlId = $derived(id ?? field?.().id);
     const describes = $derived(describedBy ?? field?.().describedBy);
-    const isInvalid = $derived(invalid ?? (field?.().invalid ? 'true' : undefined));
 
     const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
 </script>
@@ -49,7 +50,6 @@
         type="radio"
         id={controlId}
         aria-describedby={describes}
-        aria-invalid={isInvalid}
         bind:group
         {value}
         class="h-4 w-4 accent-fc-accent disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
