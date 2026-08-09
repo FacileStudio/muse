@@ -141,6 +141,7 @@
  *   z-30  sticky page chrome (Topbar)
  *   z-40  surfaces floating out of a trigger (SpaceSwitcher's dropdown)
  *   z-50  viewport-fixed chrome (MobileNav)
+ *   z-60  transient feedback over that chrome (Toaster)
  *   z-[100] full-page curtain (Rideau)
  *
  * `Modal`, `ConfirmModal` and `Drawer` are absent by design: `<dialog>.showModal()`

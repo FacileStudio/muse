@@ -1,5 +1,6 @@
 <script module lang="ts">
-    export interface SparklineProps {
+    import type { HTMLAttributes } from 'svelte/elements';
+    export interface SparklineProps extends HTMLAttributes<HTMLDivElement> {
         data: number[];
         height?: number;
         area?: boolean;
@@ -37,7 +38,8 @@
         valueFormat = formatCompact,
         animate = true,
         emptyLabel = 'No data',
-        class: className = ''
+        class: className = '',
+        ...rest
     }: SparklineProps = $props();
 
     let w = $state(0);
@@ -93,7 +95,7 @@
     });
 </script>
 
-<div class={classes} use:resize={(width) => (w = width)}>
+<div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div class="flex items-center justify-center text-fc-xs text-fc-fg-muted" style:min-height="{height}px">
             {emptyLabel}

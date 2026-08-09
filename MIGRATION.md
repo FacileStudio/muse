@@ -225,3 +225,30 @@ created together, and never let a component's mount be the thing that creates a 
 "nothing chosen yet" rendering from it, rather than defaulting to a real value. `ColorPicker`
 is the worked example — it defaults to `''` and shows the picker black, instead of defaulting
 to `'#000000'` and writing black into your record.
+
+## 9. `Checkbox`, `Radio` and `Switch` adopt `Field`'s ids
+
+**Symptom before:** `<Field label="Notify me"><Checkbox /></Field>` type-checked, rendered, and
+looked correct — while emitting `<label for="…-control">` pointing at nothing and a checkbox
+with no accessible name. `Input`, `Select` and `Textarea` were wired to the field context; the
+three controls that wrap themselves in their own `<label>` were not.
+
+**Do:** nothing required, it is a fix. One thing to check while you are there: a control with
+its own visible `label` **inside** a `Field` is now labelled twice. In a `SettingsRow` the row
+owns the label, so the control takes `aria-label`, never `label` — CHARTE §14 already said so
+and it is now the difference between one accessible name and two.
+
+`scripts/smoke.sh` pulls every `<label for>` out of the server-rendered HTML and fails if any
+of them points at an id no labelable element carries.
+
+## 10. Smaller corrections
+
+- **`Spinner` under reduced motion slows instead of stopping.** `motion-reduce:animate-none`
+  froze it into a static ring — a busy indicator indicating nothing. It now turns once every
+  three seconds. `Skeleton` and `StatusDot` still hide outright; their absence reads correctly.
+- **`Toaster` moves from `z-50` to `z-60`.** It shared a rung with `MobileNav`, so on a phone
+  the toast strip and the bottom bar were tied and resolved by DOM order — the exact collision
+  the documented z-scale exists to prevent. If your app pins something at `z-50` expecting to
+  sit above toasts, it no longer does.
+- **`LineChart`, `BarChart`, `DonutChart`, `Sparkline` and `Toaster` spread `...rest`.** They
+  took `class` alone, so `id`, `data-*` and `aria-label` had nowhere to go.

@@ -47,7 +47,10 @@ Conventions across the library:
   Four groups deliberately keep their own wiring after it: `Modal` and `Drawer` (the dialog
   controller's `onclose` / `oncancel` / `onclick`, which are what keep `open` in sync),
   `Tabs`, `SwatchPicker`, `OptionCards` (role and keyboard handling) and `Dropzone` (the drag
-  handlers). Chart and motion components take `class` only and spread nothing.
+  handlers). `LineChart`, `BarChart`, `DonutChart`, `Sparkline` and `Toaster` spread too, as of v1.0 — they
+took `class` alone, so `id`, `data-*` and `aria-label` had nowhere to go and `Carousel` had
+invented a bespoke `ariaLabel` prop to work around it. `ChartLegend`, `ChartTooltip` and the
+motion pieces still take `class` only.
 - Layout primitives (`Page`, `PageHeader`, `Section`, `Stack`, `Inline`) take a `gap` of
   `bound | tight | content | section` and never emit an outer margin — enforced by
   `src/lib/components/no-outer-margin.test.ts`.

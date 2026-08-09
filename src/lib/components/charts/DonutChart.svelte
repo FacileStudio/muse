@@ -1,7 +1,8 @@
 <script module lang="ts">
+    import type { HTMLAttributes } from 'svelte/elements';
     import type { ChartSlice } from '../../utils/chart.js';
 
-    export interface DonutChartProps {
+    export interface DonutChartProps extends HTMLAttributes<HTMLDivElement> {
         data: ChartSlice[];
         size?: number;
         thickness?: number;
@@ -36,7 +37,8 @@
         valueFormat = formatCompact,
         animate = true,
         emptyLabel = 'No data',
-        class: className = ''
+        class: className = '',
+        ...rest
     }: DonutChartProps = $props();
 
     const LIFT = 4;
@@ -130,7 +132,7 @@
     });
 </script>
 
-<div class={classes} use:resize={(width) => (w = width)}>
+<div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div
             class="flex w-full items-center justify-center text-fc-sm text-fc-fg-muted"
