@@ -84,3 +84,28 @@ describe('token surface', () => {
         expect(chromatic.sort()).toEqual(['admin', 'danger', 'info', 'owner', 'success', 'warning']);
     });
 });
+
+describe('the stock palette is deleted', () => {
+    const light = block('@theme {');
+
+    /*
+     * `--color-*: initial` is what makes an off-system colour impossible rather than merely
+     * discouraged, so it is worth a test: someone adding a token block above it, or reordering
+     * the file, would silently hand every consumer `bg-red-500` back.
+     */
+    test('the namespace reset is declared before any colour', () => {
+        const reset = css.indexOf('--color-*: initial');
+        const firstColor = css.indexOf('--color-fc-');
+        expect(reset).toBeGreaterThan(-1);
+        expect(reset).toBeLessThan(firstColor);
+    });
+
+    test('only the four theme-neutral primitives survive the reset', () => {
+        const kept = Object.keys(light)
+            .filter((key) => key.startsWith('--color-') && !key.startsWith('--color-fc-'))
+            .filter((key) => key !== '--color-*')
+            .map((key) => key.replace('--color-', ''));
+
+        expect(kept.sort()).toEqual(['black', 'current', 'transparent', 'white']);
+    });
+});

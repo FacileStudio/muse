@@ -42,6 +42,7 @@ Import everything flat from `@facile/muse`; the tier directories are import path
 
 | Tier | Components |
 |---|---|
+| **Layout** | `Page` `PageHeader` `Section` `Stack` `Inline` |
 | Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `StatusDot` `Switch` `Textarea` |
 | Molecules | `ColorPicker` `Dropzone` `Field` `NavButton` `OptionCards` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `Tabs` `Toast` `UploadProgress` |
 | Organisms | `ConfirmModal` `Drawer` `MobileNav` `Modal` `ProfileCard` `SideBar` `Table` `Toaster` `Topbar` |
@@ -92,7 +93,8 @@ Read CHARTE §14 before building one. The three rules agents break most:
    rail is the only way in — `SideBar` `userHref` / `userActive`, and `MobileNav`
    `profileHref`. Log out lives inside settings, not in the rail.
 2. **Sections are `Tabs` across the top with `href` items**, so `/settings/api` is a real
-   route that survives reload and browser-back. Then a `Divider`, with `gap-4` above it.
+   route that survives reload and browser-back. Then a `Divider`, both inside a
+   `<Stack gap="content">` — the rule carries no margin, so that gap is what gives it air.
    Canonical order: Profile · Appearance · Notifications · API · Pool · Members · Advanced.
 3. **Danger Zone is never its own tab** — it sits at the bottom of Advanced.
 
@@ -103,6 +105,11 @@ as "the server kept it" rather than as a value. A freshly created token is shown
 
 ## Token vocabulary
 
+**Tailwind's stock palette does not exist here.** `tokens.css` resets the `--color-*`
+namespace, so `bg-red-500` and `text-slate-700` generate nothing at all — only `white`,
+`black`, `transparent`, `current` and the `fc-*` tokens survive. A colour outside the system is
+not a rule to remember; it is a class that silently produces no CSS.
+
 Colours are **chroma-zero OKLCH** — the palette is greyscale except `fc-danger`,
 `fc-success`, `fc-info`, `fc-warning`, `fc-owner`, `fc-admin`, and the six chart series slots.
 
@@ -110,12 +117,46 @@ Colours are **chroma-zero OKLCH** — the palette is greyscale except `fc-danger
 `bg-fc-accent` / `text-fc-accent-fg` · `border-fc-border` · `outline-fc-ring` ·
 `text-fc-danger` `text-fc-success` `text-fc-info` `text-fc-warning` · `bg-fc-scrim`
 
-There are **no spacing tokens** — spacing is Tailwind's stock scale. On a dashboard the
-steps are ranked: `gap-4` inside a card, `p-5` of card padding (`Card`'s default), `gap-4`
-between cards, `gap-10` between sections. **A gutter is never tighter than the padding of the
-cards it separates** — `gap-3` around `p-4` cards is what makes three stat tiles read as one
-panel with seams. A section heading and its description are `gap-1` inside one block, not two
-siblings of the section's own gap.
+### Spacing — do not type it by hand
+
+**A component owns its padding and never its margin.** Space between two elements belongs to
+whatever contains both. This is enforced by a test that parses every component and fails on a
+root-element margin, so writing `class="mt-4"` on a muse component to separate it from
+something is the wrong instinct — wrap both in a `Stack`.
+
+Use the layout components rather than reconstructing them. `Page` (centring + width cap +
+outer padding + section rhythm), `PageHeader`, `Section` (`card` opt-in), `Stack`, `Inline`.
+Every one of them takes `gap` as one of four named rungs:
+
+| Rung | Value | Two things that are… |
+|---|---|---|
+| `bound` | 4px | two parts of **one** thing — a heading and its description |
+| `tight` | 8px | used together — the buttons of an action row |
+| `content` | 16px | siblings in a block — items in a card, cards in a grid |
+| `section` | 40px | separate topics — one section and the next |
+
+```svelte
+<Page width="xl">
+  <PageHeader title="Storage" description="Across every space you own." />
+  <Section title="Usage">
+    <div class="grid gap-4 lg:grid-cols-2"> … </div>
+  </Section>
+</Page>
+```
+
+`Page` goes **inside** the shell's scroll container: the shell owns the rail, the mobile nav
+and the single scroller; `Page` owns everything from the content edge inwards. `width` is
+`sm | md | lg | xl | full`, default `lg` — `xl` for dashboards, `lg` for reading pages. Never
+reach for `max-w-4xl` and friends; four apps did and the page column stopped matching the rest
+of the suite.
+
+There are **no spacing tokens** — the rungs are names for values already on Tailwind's stock
+scale. Padding is not a rung, because it is a container's own inset rather than a relationship:
+`Card` is `p-5`. **A gutter is never tighter than the padding of the cards it separates** —
+`gap-3` around `p-4` cards is what makes three stat tiles read as one panel with seams.
+
+`Divider` carries **no margin**; its air comes from the parent's `gap`. If you find yourself
+writing `<Divider class="my-4" />`, the parent is missing a `Stack`.
 
 One tone vocabulary: `neutral | accent | info | success | warning | danger | owner | admin`.
 `Badge` and `StatusDot` take all eight, `Alert` the status subset (no `accent`, no roles),
