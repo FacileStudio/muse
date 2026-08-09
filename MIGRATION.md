@@ -312,3 +312,17 @@ registerIcons(data);
 Apache 2.0; both are credited in muse's `LICENSE`, and a test fails the build if a bundled
 collection is not. If you bundle your own, do the same — the trial typeface this repo shipped
 through v0.5.0 is the reason that is a rule rather than a suggestion.
+
+## 15. `SideBar`'s nav column scrolls
+
+**Symptom before:** a rail with more entries than a short viewport could hold was clipped, with
+no way to reach the rest. On a phone the gesture chained into the document, so the page moved
+behind the menu instead.
+
+**Why:** the rail's root is `overflow-hidden` — it has to be, or the collapse tween shows
+content spilling past a shrinking rail — and the column inside it had no scroll of its own.
+
+**Do:** nothing. If you were working around it by capping your `pages` array or overriding the
+rail's overflow, you can stop. A sheet or drawer holding a `SideBar` on mobile should still
+lock the document while it is open: `overscroll-contain` stops a gesture that starts *inside*
+the rail from chaining, but one that starts on the scrim is the host's problem.
