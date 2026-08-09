@@ -9,16 +9,17 @@
         Drawer,
         EmptyState,
         Field,
+        icons,
         Input,
         Modal,
         NavButton,
+        Page,
         Select,
         SettingsRow,
         SpaceSwitcher,
         StatCard,
         Textarea,
-        USER_COLORS,
-        icons
+        USER_COLORS
     } from '@facile/muse';
     import {
         createWorkspaces,
@@ -99,7 +100,7 @@
     }
 </script>
 
-<div class="flex flex-col gap-10">
+<Page>
     <div class="flex flex-wrap items-start justify-between gap-4">
         <div class="flex min-w-0 flex-col gap-2">
             <h1 class="text-fc-2xl font-semibold text-fc-fg">Spaces</h1>
@@ -218,7 +219,7 @@
             </div>
         </section>
     {/if}
-</div>
+</Page>
 
 <Modal bind:open={createOpen} title="New space" showClose>
     <div class="flex flex-col gap-4">

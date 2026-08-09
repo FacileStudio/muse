@@ -4,12 +4,13 @@
         Badge,
         Button,
         ConfirmModal,
+        icons,
         Input,
         Select,
         SettingsRow,
         SettingsSection,
-        Table,
-        icons
+        Stack,
+        Table
     } from '@facile/muse';
     import { currentUser, roleLabel, roleTone, wait, type Member, type Role } from '../../data.js';
 
@@ -44,7 +45,7 @@
     }
 </script>
 
-<div class="flex flex-col gap-10">
+<Stack gap="section">
     <SettingsSection
         title="Members"
         description="Everyone with access to Acme Studio. Owners cannot be removed."
@@ -130,7 +131,7 @@
             {/each}
         </SettingsSection>
     {/if}
-</div>
+</Stack>
 
 <ConfirmModal
     bind:open={removeOpen}

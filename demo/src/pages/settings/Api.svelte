@@ -6,13 +6,14 @@
         ConfirmModal,
         Drawer,
         Field,
+        icons,
         Input,
         SecretField,
         Select,
         SettingsSection,
         Spinner,
-        Table,
-        icons
+        Stack,
+        Table
     } from '@facile/muse';
     import { wait } from '../../data.js';
 
@@ -104,7 +105,7 @@
     }
 </script>
 
-<div class="flex flex-col gap-10">
+<Stack gap="section">
     <SettingsSection
         title="Endpoint"
         description="Point the CLI or any HTTP client here. Not a secret — the token is."
@@ -170,7 +171,7 @@
             </Table>
         {/if}
     </SettingsSection>
-</div>
+</Stack>
 
 <Drawer bind:open={createOpen} title="New API token">
     {#if createdToken}

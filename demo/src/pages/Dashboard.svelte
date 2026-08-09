@@ -5,6 +5,7 @@
         BarChart,
         Button,
         Card,
+        chartColor,
         ChartLegend,
         ChartTooltip,
         Checkbox,
@@ -13,20 +14,21 @@
         Drawer,
         Field,
         IconButton,
+        icons,
         Input,
         LineChart,
         Modal,
+        Page,
+        PageHeader,
         Radio,
-        Sparkline,
         SpaceSwitcher,
+        Sparkline,
         Spinner,
         StatCard,
         StatusDot,
         Switch,
-        Toast,
-        chartColor,
-        icons,
-        toast
+        toast,
+        Toast
     } from '@facile/muse';
     import { spaces, wait } from '../data.js';
 
@@ -90,13 +92,11 @@
     }
 </script>
 
-<div class="flex flex-col gap-10">
-    <div class="flex flex-col gap-2">
-        <h1 class="text-fc-2xl font-semibold text-fc-fg">Dashboard</h1>
-        <p class="text-fc-sm text-fc-fg-muted">
-            Overview of the current space, and a gallery of the primitives every Facile tool shares.
-        </p>
-    </div>
+<Page width="xl">
+    <PageHeader
+        title="Dashboard"
+        description="Overview of the current space, and a gallery of the primitives every Facile tool shares."
+    />
 
     <!-- One rhythm for the whole page: 40px between sections, 16px between the cards of a
          section, 20px of card padding, and a section's heading bound to its body by the
@@ -414,7 +414,7 @@
             />
         </div>
     </section>
-</div>
+</Page>
 
 <Modal bind:open={modalOpen} title="Invite a teammate" showClose>
     <p class="text-fc-sm text-fc-fg-muted">

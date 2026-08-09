@@ -1,3 +1,9 @@
+export { default as Page } from './components/layout/Page.svelte';
+export { default as PageHeader } from './components/layout/PageHeader.svelte';
+export { default as Section } from './components/layout/Section.svelte';
+export { default as Stack } from './components/layout/Stack.svelte';
+export { default as Inline } from './components/layout/Inline.svelte';
+
 export { default as Alert } from './components/atoms/Alert.svelte';
 export { default as Avatar } from './components/atoms/Avatar.svelte';
 export { default as Badge } from './components/atoms/Badge.svelte';
@@ -79,6 +85,8 @@ export type {
 } from './utils/chart.js';
 export { toast, toasts } from './utils/toast.svelte.js';
 export type { ToastAction, ToastItem, ToastOptions, ToastTone } from './utils/toast.svelte.js';
+export { GAP, PAGE_WIDTH, ALIGN } from './utils/layout.js';
+export type { Gap, PageWidth, Align } from './utils/layout.js';
 export { cn, twMerge } from './utils/cn.js';
 export { REDACTED, isRedacted, maskSecret } from './utils/secret.js';
 export { icons } from './icons.js';

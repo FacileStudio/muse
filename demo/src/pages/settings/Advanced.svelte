@@ -3,10 +3,11 @@
         Alert,
         Button,
         ConfirmModal,
+        icons,
         SecretField,
         SettingsRow,
         SettingsSection,
-        icons
+        Stack
     } from '@facile/muse';
     import { wait } from '../../data.js';
 
@@ -29,7 +30,7 @@
     }
 </script>
 
-<div class="flex flex-col gap-10">
+<Stack gap="section">
     <SettingsSection
         title="Your data"
         description="Everything this workspace holds about you, as JSON, in one archive."
@@ -89,7 +90,7 @@
             </Alert>
         {/if}
     </SettingsSection>
-</div>
+</Stack>
 
 <ConfirmModal
     bind:open={deleteOpen}

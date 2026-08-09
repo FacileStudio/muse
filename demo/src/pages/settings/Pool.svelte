@@ -3,14 +3,15 @@
         Alert,
         Badge,
         Button,
+        icons,
         Input,
         REDACTED,
         SecretField,
         SettingsRow,
         SettingsSection,
+        Stack,
         StatusDot,
-        Switch,
-        icons
+        Switch
     } from '@facile/muse';
     import { wait } from '../../data.js';
 
@@ -70,7 +71,7 @@
     }
 </script>
 
-<div class="flex flex-col gap-10">
+<Stack gap="section">
     <SettingsSection
         title="Nook Pool"
         description="One socket to Nook carries every event this app emits. Apps never talk to each other directly."
@@ -166,4 +167,4 @@
             </SettingsRow>
         {/each}
     </SettingsSection>
-</div>
+</Stack>

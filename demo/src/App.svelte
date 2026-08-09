@@ -11,6 +11,7 @@
     } from '@facile/muse';
     import Dashboard from './pages/Dashboard.svelte';
     import Motion from './pages/Motion.svelte';
+    import Rhythm from './pages/Rhythm.svelte';
     import Projects from './pages/Projects.svelte';
     import Spaces from './pages/Spaces.svelte';
     import Settings from './pages/Settings.svelte';
@@ -23,6 +24,7 @@
         '#/dashboard': Dashboard,
         '#/projects': Projects,
         '#/spaces': Spaces,
+        '#/rythme': Rhythm,
         '#/motion': Motion,
         '#/settings': Settings
     };
@@ -38,7 +40,7 @@
      */
     const root = $derived('#/' + segment(router.hash, 1));
     const known = $derived(root in routes);
-    const Page = $derived(routes[known ? root : HOME]);
+    const Route = $derived(routes[known ? root : HOME]);
 
     $effect(() => {
         const onHash = () => (router.hash = window.location.hash || HOME);
@@ -97,6 +99,7 @@
         { href: '#/dashboard', label: 'Dashboard', icon: icons.dashboard },
         { href: '#/projects', label: 'Projects', icon: icons.folder },
         { href: '#/spaces', label: 'Spaces', icon: icons.usersGroup },
+        { href: '#/rythme', label: 'Rythme', icon: icons.palette },
         { href: '#/motion', label: 'Motion', icon: icons.bolt }
     ];
 
@@ -148,14 +151,17 @@
             </div>
         </Topbar>
 
-        <div class="mx-auto flex max-w-fc-lg flex-col gap-8 px-6 py-10 md:px-10">
-            <!-- No theme toggle here: the colour scheme lives in Settings › Appearance, like
-                 every other preference. A control floating over every page is one more thing
-                 competing with the page's own actions. -->
-            <PageTransition key={root}>
-                <Page />
-            </PageTransition>
-        </div>
+        <!-- The page column is not here any more: each route renders its own `<Page>`, so a
+             dashboard can take the wide container and a settings page the reading one. The
+             shell owns the rail, the mobile chrome and the single scroller, nothing inside the
+             content edge.
+
+             No theme toggle here either: the colour scheme lives in Settings › Appearance, like
+             every other preference. A control floating over every page is one more thing
+             competing with the page's own actions. -->
+        <PageTransition key={root}>
+            <Route />
+        </PageTransition>
     </main>
 
     <MobileNav

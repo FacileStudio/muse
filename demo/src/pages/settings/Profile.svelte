@@ -5,13 +5,14 @@
         ColorPicker,
         Dropzone,
         Field,
+        icons,
         Input,
         OptionCards,
         ProfileCard,
         SettingsRow,
         SettingsSection,
-        UploadProgress,
-        icons
+        Stack,
+        UploadProgress
     } from '@facile/muse';
 
     type Upload = {
@@ -85,7 +86,7 @@
     }
 </script>
 
-<div class="flex flex-col gap-10">
+<Stack gap="section">
     <ProfileCard
         name={displayName}
         email={accountEmail}
@@ -211,4 +212,4 @@
             <Button variant="outline" icon={icons.logout}>Log out</Button>
         </SettingsRow>
     </SettingsSection>
-</div>
+</Stack>

@@ -29,6 +29,13 @@ const colors = [
 ];
 const radii = ['fc-xs', 'fc-sm', 'fc-md', 'fc-lg', 'fc-pill', 'fc-full'];
 
+/* Container and nav tokens are not on any scale tailwind-merge knows, so without these it
+   cannot tell that a consumer's `max-w-4xl` conflicts with `Page`'s `max-w-fc-lg` — both
+   survive the merge and the cascade decides, which is the silent-override failure this whole
+   module exists to prevent. */
+const containers = ['fc-sm', 'fc-md', 'fc-lg', 'fc-xl'];
+const navWidths = ['fc-nav-collapsed', 'fc-nav-expanded', 'fc-nav-content', 'fc-nav-item'];
+
 export const twMerge = extendTailwindMerge({
     extend: {
         classGroups: {
@@ -37,7 +44,10 @@ export const twMerge = extendTailwindMerge({
             'text-color': [{ text: colors }],
             'bg-color': [{ bg: colors }],
             'border-color': [{ border: colors }],
-            rounded: [{ rounded: radii }]
+            rounded: [{ rounded: radii }],
+            'max-w': [{ 'max-w': containers }],
+            w: [{ w: navWidths }],
+            size: [{ size: navWidths }]
         }
     }
 });
