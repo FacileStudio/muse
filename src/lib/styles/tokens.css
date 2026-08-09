@@ -10,6 +10,28 @@
    the build on any font in `src/lib/fonts/` that does not cover the required set. */
 
 @theme {
+  /*
+   * Delete Tailwind's stock palette. This is the system's strongest enforcement mechanism and
+   * it costs one line: with the namespace reset, `bg-red-500` and `text-slate-700` do not
+   * exist, so an off-system colour is not a rule someone can skip — it is a class that
+   * generates nothing. Documentation asks; a missing utility refuses.
+   *
+   * Measured before switching it on: twelve of the thirteen consumer apps already use **zero**
+   * stock palette utilities, and muse itself uses none. Only Agenda has any (13, all shadcn
+   * leftovers sitting beside its parallel `ui/` directory), which is precisely the drift worth
+   * failing on.
+   *
+   * `white`, `black`, `transparent` and `current` are put back: they are theme-neutral
+   * primitives rather than palette choices — a scrim, an overlay, `border-transparent` on a
+   * badge, `border-current` following the ink. The suite uses them about six times per app,
+   * always for exactly that.
+   */
+  --color-*: initial;
+  --color-white: #fff;
+  --color-black: #000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
   /* colors → bg-fc-*, text-fc-*, -fc-* — chroma-zero OKLCH, matches shipped suite apps.
      `page` and `bg` carry the same value today and are kept separate on purpose: `page` is
      the document canvas, `bg` is a component's own default fill, and an app that wants a

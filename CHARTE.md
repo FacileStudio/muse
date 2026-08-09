@@ -227,9 +227,70 @@ Scale — `text-fc-*`, each with a paired line-height:
 
 ## 4. Spacing & layout
 
+**The rule, before anything else: a component owns its padding and never its margin.** Space
+between two elements is a property of the relationship between them, so it belongs to whatever
+contains both. This is enforced, not asked for — `src/lib/components/no-outer-margin.test.ts`
+parses every component and fails the build on a margin utility at a root element (`auto` and
+zero exempt).
+
+muse shipped one component that broke it. `Divider` carried `my-4`; all twenty-four call sites
+across the suite cancelled it with `class="my-0"`, muse cancelled it twice in its own
+`ProfileCard`, and this document taught the workaround as the idiom. Copied out of its flex
+parent, that snippet welds the rule to whatever sits above it — which is exactly the "buttons
+stuck to separators" every agent-written page kept producing. A default no call site wants is
+not a default.
+
+### Use the layout components
+
+Nothing below needs to be typed by hand. The rhythm is four named rungs on a `gap` prop, and
+the reason they are named is that the question on a page is never "how many pixels" but "are
+these two things the same thing":
+
+| Rung | Value | Two things that are… |
+|---|---|---|
+| `bound` | 4px | two parts of **one** thing — a heading and its description |
+| `tight` | 8px | used together — the buttons of an action row |
+| `content` | 16px | siblings in a block — items in a card, cards in a grid |
+| `section` | 40px | separate topics — one section of a page and the next |
+
+There is deliberately **no rung between `content` and `section`**. "Related, but a bit less" is
+a distinction nobody applies consistently, and it is where the suite's three different page
+column gaps came from. A layout that genuinely needs 24px still takes `class="gap-6"`, and it
+reads as the exception it is.
+
+| Component | Owns |
+|---|---|
+| `Page` | centring, the width cap, outer padding, and the gap between sections |
+| `PageHeader` | the `h1` lockup, description, optional actions, optional back link |
+| `Section` | a `h2` lockup and its body, with `card` opt-in |
+| `Stack` | a vertical run at one rung |
+| `Inline` | a horizontal run that wraps, at one rung |
+
+```svelte
+<Page width="xl">
+  <PageHeader title="Storage" description="Across every space you own." />
+
+  <Section title="Usage" description="Updated every five minutes.">
+    <div class="grid gap-4 lg:grid-cols-2"> … </div>
+  </Section>
+</Page>
+```
+
+`Page` goes **inside** the app shell's scroll container, not around it: the shell owns the
+rail, the mobile nav and the single scroller, and `Page` owns everything from the content edge
+inwards. That split is why each route picks its own width — a dashboard takes `xl`, a settings
+or detail page the default `lg`.
+
+`Section` is the general component; `SettingsSection` is its settings preset (card on by
+default) and delegates to it. Reach for `Section` anywhere that is not a settings block —
+nine repos used `SettingsSection` only under `/settings` because of its name and hand-rolled
+the identical markup everywhere else.
+
+### The underlying scale
+
 4-pt grid, supplied by **Tailwind's own spacing scale** — `p-1` is 4px, `p-2` 8px, `p-3` 12px,
 `p-4` 16px, `p-6` 24px, `p-8` 32px, `p-12` 48px. muse defines **no `--fc-space-*` tokens** and
-does not need to; use the stock utilities.
+does not need to; the rungs above are names for values already on that scale.
 
 The only spacing values the theme adds are the two the nav geometry depends on, because they
 are interlocked with the sidebar's width tween and cannot be picked freely:
@@ -237,34 +298,18 @@ are interlocked with the sidebar's width tween and cannot be picked freely:
 
 ### Dashboard rhythm
 
-A page of cards has four spacings and they are ranked, not picked per component. Bottom to
-top, each step is bigger than the one it contains:
+Padding is the one thing the rungs do not cover, because it is not a relationship — it is a
+container's own inset. `Card` is `p-5` (20px), and that interacts with the gutters around it:
 
-| Step | Value | Where |
-|---|---|---|
-| Inside a card | `gap-4` (16px) | title → chart, label → value |
-| Card padding | `p-5` (20px) | `Card`, and therefore `StatCard` and `SettingsSection` |
-| Between cards | `gap-4` (16px) | grid gutters, and stacked rows of cards |
-| Between sections | `gap-10` (40px) | the page's own column |
+**A gutter must not be tighter than the padding of the cards it separates.** Dashboards here
+ran `gap-3` gutters around `p-4` cards, so three stat cards read as one panel with seams. With
+`Card` at `p-5` and `content` at 16px the two are close, and that is the floor — go below it
+and the row fuses. `/rythme` in the demo renders both versions side by side.
 
-The rule that was being broken: **a gutter must not be tighter than the padding of the cards
-it separates.** Dashboards here ran `gap-3` gutters around `p-4` cards, so three stat cards
-read as one panel with seams. And a section's heading binds to its body with the same 16px
-the body uses internally — heading and description are `gap-1` *inside* one block, never two
-siblings of the section's own `gap-4`, or the description floats between the two and belongs
-to neither.
-
-```svelte
-<div class="flex flex-col gap-10">
-  <section class="flex flex-col gap-4">
-    <div class="flex flex-col gap-1">
-      <h2 class="text-fc-lg font-semibold text-fc-fg">Storage</h2>
-      <p class="text-fc-sm text-fc-fg-muted">Across every space you own.</p>
-    </div>
-    <div class="grid gap-4 lg:grid-cols-2"> … </div>
-  </section>
-</div>
-```
+A section's heading binds to its body with the same 16px the body uses internally, and heading
+and description are `bound` **inside** one block, never two siblings of the section's own gap,
+or the description floats between the two and belongs to neither. `PageHeader` and `Section`
+both do this for you.
 
 ### Empty states
 
