@@ -15,5 +15,5 @@
     description="Les 42 tâches et les 128 h pointées sur ce projet seront définitivement perdues."
     confirmLabel="Supprimer"
     cancelLabel="Annuler"
-    onConfirm={() => toast.success('Projet « Refonte Sablier » supprimé.')}
+    onConfirm={() => { toast.success('Projet « Refonte Sablier » supprimé.'); }}
 />

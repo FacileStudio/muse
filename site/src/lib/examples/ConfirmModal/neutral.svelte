@@ -15,6 +15,6 @@
     description="Elle partira à compta@heranova.fr pour un montant de 4 250 € HT."
     confirmLabel="Envoyer"
     cancelLabel="Relire"
-    onConfirm={() => toast.success('Facture envoyée à compta@heranova.fr.')}
+    onConfirm={() => { toast.success('Facture envoyée à compta@heranova.fr.'); }}
     onCancel={() => toast.info('Envoi annulé, la facture reste en brouillon.')}
 />

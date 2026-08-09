@@ -46,6 +46,11 @@ export const NAV: NavGroup[] = [
         intent: 'La grammaire : comment une page tient debout.',
         links: [
             { href: '/structure/anatomie', label: 'Anatomie d’une app', icon: icons.widget },
+            { href: '/archetypes/tableau-de-bord', label: 'Archétype : tableau de bord', icon: icons.dashboard },
+            { href: '/archetypes/index', label: 'Archétype : index', icon: icons.folder },
+            { href: '/archetypes/detail', label: 'Archétype : détail', icon: icons.eye },
+            { href: '/archetypes/formulaire', label: 'Archétype : formulaire', icon: icons.edit },
+            { href: '/archetypes/auth', label: 'Archétype : authentification', icon: icons.key },
             { href: '/structure/reglages', label: 'Archétype : réglages', icon: icons.settings }
         ]
     },

@@ -14,6 +14,10 @@
         maxFiles?: number;
         disabled?: boolean;
         label?: string;
+        /** Text of the browse affordance. @default 'Parcourir' */
+        browseLabel?: string;
+        /** Announced to assistive tech while a drag is over the zone. @default 'Relâchez pour ajouter les fichiers' */
+        dropAnnouncement?: string;
         hint?: string;
         onFiles?: (files: File[]) => void;
         onReject?: (rejections: Rejection[]) => void;
@@ -35,8 +39,10 @@
         maxSize,
         maxFiles,
         disabled = false,
-        label = 'Drop files here',
+        label = 'Déposez vos fichiers ici',
         hint,
+        browseLabel = 'Parcourir',
+        dropAnnouncement = 'Relâchez pour ajouter les fichiers',
         onFiles,
         onReject,
         children,
@@ -173,9 +179,9 @@
             class="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-fc-pill border border-fc-border px-4 text-fc-sm"
         >
             <Icon icon={icons.folder} size={16} />
-            Browse
+            {browseLabel}
         </span>
     {/if}
 
-    <span class="sr-only" aria-live="polite">{dragging ? 'Release to add files' : ''}</span>
+    <span class="sr-only" aria-live="polite">{dragging ? dropAnnouncement : ''}</span>
 </label>
