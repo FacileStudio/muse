@@ -28,6 +28,22 @@
     }
 
     let open = $state(false);
+
+    /*
+     * Lock the document while the sheet is open. The rail's own column carries
+     * `overscroll-contain`, so a gesture that starts inside it no longer chains — but one that
+     * starts on the scrim still would, and the page moving behind an open menu is the same bug
+     * from the user's side. Restored on close, and on unmount, so a route change cannot leave
+     * the document frozen.
+     */
+    $effect(() => {
+        if (!browser || !open) return;
+        const previous = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = previous;
+        };
+    });
     let collapsed = $state(false);
     const here = $derived(page.url.pathname.replace(/\/$/, '') || '/');
     const rail = $derived(RAIL.map((l) => ({ ...l, active: l.href === here })));
@@ -66,7 +82,7 @@
             aria-label="Fermer la navigation"
             onclick={() => (open = false)}
         ></button>
-        <div class="fixed inset-y-0 left-0 z-50 w-72 p-3 md:hidden">
+        <div class="fixed inset-y-0 left-0 z-50 flex w-72 p-3 md:hidden">
             <SideBar
                 icon={icons.paletteMark}
                 title="muse"
