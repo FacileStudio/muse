@@ -20,6 +20,7 @@
 <script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
+    import Icon from '../atoms/Icon.svelte';
     import { createDialog } from '../../utils/dialog.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import IconButton from '../atoms/IconButton.svelte';
@@ -238,7 +239,7 @@
                             class="-mr-1 border-0 text-fc-fg-muted hover:text-fc-fg"
                             onclick={() => (open = false)}
                         >
-                            <iconify-icon icon="mdi:close" width="18" height="18" class="block size-4.5"></iconify-icon>
+                            <Icon icon="mdi:close" size={18} />
                         </IconButton>
                     {/if}
                 </div>

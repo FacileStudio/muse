@@ -21,6 +21,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import Icon from '../atoms/Icon.svelte';
 
     let {
         options = [],
@@ -109,14 +110,7 @@
             )}
         >
             {#if option.icon}
-                <!-- `size-4` alongside the attributes: an <iconify-icon> has no box until its
-                     data arrives, so without it the card visibly reflows when the glyph lands. -->
-                <iconify-icon
-                    icon={option.icon}
-                    width="16"
-                    height="16"
-                    class="block size-4 shrink-0"
-                ></iconify-icon>
+                <Icon icon={option.icon} size={16} />
             {/if}
             {option.label}
         </button>

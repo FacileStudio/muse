@@ -49,3 +49,25 @@ export const icons = {
 } as const;
 
 export type IconKey = keyof typeof icons;
+
+/*
+ * Icons a consuming app bundles for itself.
+ *
+ * muse ships the paths for every name above, so nothing it draws touches the network. An app
+ * that needs a glyph muse does not carry — Sablier's transport controls, Agenda's calendar
+ * set — bundles its own rather than falling back to api.iconify.design:
+ *
+ *   import { registerIcons } from '@facile/muse';
+ *   import data from './icons-data.json';   // generated the same way muse generates its own
+ *   registerIcons(data);
+ *
+ * Call it once, before the first render. Adding the key upstream to `icons` is still the
+ * better answer when the glyph is one the whole suite will want.
+ */
+export type IconData = { body: string; width: number; height: number };
+
+export const extraIcons: Record<string, IconData> = {};
+
+export function registerIcons(data: Record<string, IconData>): void {
+    Object.assign(extraIcons, data);
+}
