@@ -1,7 +1,8 @@
 <script module lang="ts">
+    import type { HTMLAttributes } from 'svelte/elements';
     import type { ChartSeries } from '../../utils/chart.js';
 
-    export interface BarChartProps {
+    export interface BarChartProps extends HTMLAttributes<HTMLDivElement> {
         series: ChartSeries[];
         labels: string[];
         height?: number;
@@ -38,7 +39,8 @@
         yTicks = 4,
         animate = true,
         emptyLabel = 'No data',
-        class: className = ''
+        class: className = '',
+        ...rest
     }: BarChartProps = $props();
 
     let w = $state(0);
@@ -133,7 +135,7 @@
     });
 </script>
 
-<div class={classes} use:resize={(width) => (w = width)}>
+<div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div
             class="flex items-center justify-center text-fc-sm text-fc-fg-muted"

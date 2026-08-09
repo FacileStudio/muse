@@ -27,7 +27,14 @@
         lg: 'h-10 w-10 border-[3px]'
     };
 
-    const classes = $derived(twMerge('inline-block rounded-fc-pill border-fc-border border-t-fc-fg animate-spin motion-reduce:animate-none', sizes[size], className));
+    /*
+     * Under reduced motion the spin slows, it does not stop. `motion-reduce:animate-none` froze
+     * it into a static ring — a busy indicator that indicates nothing, which is worse than the
+     * motion it was avoiding. Vestibular guidance is about large, fast or parallax movement; a
+     * 24px ring turning once every three seconds is a legible status, and `Skeleton` and
+     * `StatusDot` can keep hiding outright because their absence still reads correctly.
+     */
+    const classes = $derived(twMerge('inline-block rounded-fc-pill border-fc-border border-t-fc-fg animate-spin motion-reduce:[animation-duration:3s]', sizes[size], className));
 </script>
 
 <span role="status" aria-label={label} class={classes} {...rest}></span>

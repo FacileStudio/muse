@@ -186,10 +186,16 @@ fi
 MUSE_HTML="$HTML" python3 - <<'PROBE' || fail 'a Field label points at an id no control carries'
 import os, re, sys
 html = os.environ['MUSE_HTML']
-ids = set(re.findall(r'<input[^>]*\sid="([^"]+)"', html))
+# The labelable elements, per the HTML spec. `output` is in the list and SecretField's
+# read-only branch renders one — narrowing this to `input` reports that as an orphan.
+LABELABLE = 'button|input|meter|output|progress|select|textarea'
+ids = set(re.findall(rf'<(?:{LABELABLE})[^>]*\sid="([^"]+)"', html))
 targets = re.findall(r'<label[^>]*\sfor="([^"]+)"', html)
 orphans = [t for t in targets if t not in ids]
 print(f'  {len(targets)} label(s) with a for=, {len(orphans)} orphaned')
+for o in orphans:
+    m = re.search(r'<label[^>]*\sfor="' + re.escape(o) + r'"[^>]*>(.{0,60})', html, re.S)
+    print(f'    orphan {o!r}: {(m.group(1).strip()[:60] if m else "?")!r}')
 sys.exit(1 if orphans or not targets else 0)
 PROBE
 

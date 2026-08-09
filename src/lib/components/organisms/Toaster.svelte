@@ -1,5 +1,6 @@
 <script module lang="ts">
-    export interface ToasterProps {
+    import type { HTMLAttributes } from 'svelte/elements';
+    export interface ToasterProps extends HTMLAttributes<HTMLDivElement> {
         position?: 'top' | 'bottom';
         class?: string;
 
@@ -16,7 +17,8 @@
 
     let {
         position = 'bottom',
-        class: className = ''
+        class: className = '',
+        ...rest
     }: ToasterProps = $props();
 
     const ENTER = 300;
@@ -55,7 +57,7 @@
      */
     const classes = $derived(
         twMerge(
-            'pointer-events-none fixed inset-x-0 z-50 flex flex-col gap-3 px-4 sm:inset-x-auto sm:right-6 sm:w-full sm:max-w-sm sm:px-0',
+            'pointer-events-none fixed inset-x-0 z-60 flex flex-col gap-3 px-4 sm:inset-x-auto sm:right-6 sm:w-full sm:max-w-sm sm:px-0',
             /* One padding utility per edge, no `sm:` variant: an app clearing a fixed bottom
                nav passes `pb-28 md:pb-6` and needs its own breakpoints to win. */
             position === 'top'
@@ -68,7 +70,7 @@
 
 <!-- The region exists from first paint, empty or not: a live region injected at the same
      moment as its content is announced unreliably. -->
-<div class={classes} aria-live="polite" aria-atomic="false">
+<div class={classes} aria-live="polite" aria-atomic="false" {...rest}>
     {#each toasts.items as item (item.id)}
         <div
             in:enter
