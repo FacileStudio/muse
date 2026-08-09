@@ -465,6 +465,13 @@ gesture reaches the document and rubber-bands the shell.
   (32px), matching the density the suite actually ships. Use `size="lg"` (`h-11`) for anything
   touch-primary — a mobile action bar, a `Drawer` footer, a full-width form submit. A row of
   36px buttons in a desktop table is fine; the same row as the only control on a phone is not.
+
+  **And `size="lg"` for a button standing on the same row as a form control**, which is an
+  alignment requirement rather than a density one: `Input`, `Select`, `Textarea` and
+  `SecretField` are all `h-11`, so a default button beside one sits 8px short and the row reads
+  as a mistake. This is the case the exception above does not cover, and muse's own invite form
+  got it wrong until v1.0. The rule is only about *siblings on one line* — a button under a
+  stacked field keeps the default.
   `Checkbox` and `Radio` are 16px boxes by design and must be wrapped in a `<label>` with
   padding so the *label* carries the target.
 - No fixed pixel heights for content areas; use `min-h-*` instead.

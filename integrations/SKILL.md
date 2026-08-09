@@ -34,6 +34,9 @@ Opt-out triggers: "no muse", "skip lib", "raw svelte" → dormant for the sessio
 - Style with Tailwind v4 token utilities only. Token source: `node_modules/@facile/muse/src/lib/styles/tokens.css`
 - GSAP for animations; always respect `prefers-reduced-motion`
 - Mobile-first: min width 360px, hit targets ≥ 44px, use `100dvh` not `100vh`
+- `Button` defaults to `h-9`, every form control is `h-11`. A button **on the same row as an
+  `Input`/`Select`/`Textarea`/`SecretField` takes `size="lg"`** or the row is 8px out of
+  alignment. Also `lg` for anything touch-primary. Stacked under a field, the default is right
 - Never hardcode hex — use tokens or ask before adding a new one
 
 ## What is in the box

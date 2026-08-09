@@ -111,7 +111,9 @@
                 <option value="member">Member</option>
                 <option value="admin">Admin</option>
             </Select>
-            <Button type="submit" icon={icons.plus} class="sm:shrink-0">Send invite</Button>
+            <!-- `lg` is the alignment rule, not a size preference: Input and Select are h-11, so a
+                 default h-9 button on the same row sits 8px short. See CHARTE §7. -->
+            <Button type="submit" size="lg" icon={icons.plus} class="sm:shrink-0">Envoyer l’invitation</Button>
         </form>
     </SettingsSection>
 
