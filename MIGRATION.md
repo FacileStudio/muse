@@ -4,9 +4,10 @@ Written as the breaking changes land, not reconstructed afterwards. Every entry 
 broke, how it shows up, and what to do about it.
 
 Thirteen apps consume muse: Journal, Plume, Capsule, Antenne, Nuage, Vision, Casier, Sablier,
-Agenda, Perception, Boutique, Courrier, Jardin. Ten are on `#v0.5.0` and three on `#v0.4.0`
-(Journal, Capsule, Perception). ~~Boutique floats on the default branch with no tag~~ — pinned
-to `#v0.5.0` on 2026-08-09, and note how that pin landed: changing `package.json` without
+Agenda, Perception, Boutique, Courrier, Jardin. Nine are on `#v0.5.0`, three on `#v0.4.0`
+(Journal, Capsule, Perception), and Boutique is the first on `#v0.6.0`.
+~~Boutique floats on the default branch with no tag~~ — pinned on 2026-08-09, and note how that
+pin landed: changing `package.json` without
 regenerating `bun.lock` fails the consumer's Docker build outright, because the client stage
 runs `bun install --frozen-lockfile`. The deploy errors and production silently keeps serving
 the previous image. **Bump the pin and the lockfile in the same commit.**
@@ -226,7 +227,7 @@ created together, and never let a component's mount be the thing that creates a 
 is the worked example — it defaults to `''` and shows the picker black, instead of defaulting
 to `'#000000'` and writing black into your record.
 
-## 9. `Checkbox`, `Radio` and `Switch` adopt `Field`'s ids
+## 11. `Checkbox`, `Radio` and `Switch` adopt `Field`'s ids
 
 **Symptom before:** `<Field label="Notify me"><Checkbox /></Field>` type-checked, rendered, and
 looked correct — while emitting `<label for="…-control">` pointing at nothing and a checkbox
@@ -241,7 +242,7 @@ and it is now the difference between one accessible name and two.
 `scripts/smoke.sh` pulls every `<label for>` out of the server-rendered HTML and fails if any
 of them points at an id no labelable element carries.
 
-## 10. Smaller corrections
+## 12. Smaller corrections
 
 - **`Spinner` under reduced motion slows instead of stopping.** `motion-reduce:animate-none`
   froze it into a static ring — a busy indicator indicating nothing. It now turns once every
@@ -253,7 +254,7 @@ of them points at an id no labelable element carries.
 - **`LineChart`, `BarChart`, `DonutChart`, `Sparkline` and `Toaster` spread `...rest`.** They
   took `class` alone, so `id`, `data-*` and `aria-label` had nowhere to go.
 
-## 11. A button on the same row as a form control takes `size="lg"`
+## 13. A button on the same row as a form control takes `size="lg"`
 
 Not a code change — a rule the charter was missing, and one **36 places across the suite**
 currently break.
