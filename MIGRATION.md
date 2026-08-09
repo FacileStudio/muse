@@ -326,3 +326,18 @@ content spilling past a shrinking rail — and the column inside it had no scrol
 rail's overflow, you can stop. A sheet or drawer holding a `SideBar` on mobile should still
 lock the document while it is open: `overscroll-contain` stops a gesture that starts *inside*
 the rail from chaining, but one that starts on the scrim is the host's problem.
+
+## 16. Every visible string is reachable, and the defaults are French
+
+**Symptom before:** `Dropzone` rendered a hardcoded "Browse" and announced "Release to add
+files" to assistive technology. No prop reached either, so a French app could not translate
+them. `Spinner`'s `label` defaulted to "Loading".
+
+**Now:** `Dropzone` takes `browseLabel` and `dropAnnouncement`, and the defaults across these
+are French — the suite ships in French, and a library default that assumes otherwise is the
+same mistake as the trial typeface: something in the library assumed an audience the products
+do not have, and nothing in the build disagreed.
+
+**Do:** if your app renders muse in another language, you now have props for all of it. If you
+were relying on the English defaults, pass them explicitly. `no-orphan-strings.test.ts` fails
+the build on literal prose baked into markup, so this cannot come back.

@@ -15,7 +15,7 @@
 
     const relancer = (id: string) => {
         fichiers = fichiers.map((f) =>
-            f.id === id ? { ...f, status: 'uploading', error: undefined } : f
+            f.id === id ? { ...f, status: 'uploading' as const, error: undefined } : f
         );
     };
 </script>

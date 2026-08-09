@@ -11,7 +11,7 @@
         <p class="text-fc-sm text-fc-fg-muted">
             1 248 fichiers sur 3 100 transférés. Ne fermez pas cette fenêtre.
         </p>
-        <UploadProgress name="archive-2026.zip" progress={40} />
+        <UploadProgress items={[{ id: 'archive', name: 'archive-2026.zip', progress: 40, status: 'uploading' }]} />
     </Stack>
 
     {#snippet footer()}

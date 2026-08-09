@@ -16,7 +16,7 @@
 
     let {
         size = 'md',
-        label = 'Loading',
+        label = 'Chargement',
         class: className = '',
         ...rest
     }: SpinnerProps = $props();

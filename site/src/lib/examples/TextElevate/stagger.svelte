@@ -1,15 +1,14 @@
 <script lang="ts">
     import { Button, Stack, TextElevate } from '@facile/muse';
 
-    let visible = $state(true);
+    let run = $state(0);
 </script>
 
 <Stack gap="tight">
-    <Button variant="outline" size="sm" onclick={() => (visible = !visible)}>Rejouer</Button>
-    {#key visible}
+    <Button variant="outline" size="sm" onclick={() => run++}>Rejouer</Button>
+    {#key run}
         <TextElevate
             text="164 heures pointées ce mois"
-            {visible}
             delay={0.1}
             stagger={0.06}
             duration={0.5}

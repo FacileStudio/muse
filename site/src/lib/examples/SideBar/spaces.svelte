@@ -23,7 +23,8 @@
         icon={icons.card}
         {pages}
         {spaces}
-        bind:activeSpaceId
+        {activeSpaceId}
+        onSpaceSelect={(id) => (activeSpaceId = id)}
         personalSpaceLabel="Espace personnel"
         manageSpacesLabel="Gérer les espaces"
         manageSpacesHref="/espaces"
