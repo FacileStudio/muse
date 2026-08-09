@@ -1,5 +1,12 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLInputAttributes } from 'svelte/elements';
+
+    export interface InputProps extends HTMLInputAttributes {
+        class?: string; value?: string | number 
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getFieldContext } from '../../utils/field.js';
 
@@ -10,7 +17,7 @@
         'aria-invalid': invalid,
         class: className = '',
         ...rest
-    }: HTMLInputAttributes & { class?: string; value?: string | number } = $props();
+    }: InputProps = $props();
 
     /* Inside a `Field`, adopt the ids it generated so the label actually points here.
        An explicit prop always wins, and outside a Field this is a no-op. */

@@ -1,3 +1,19 @@
+<script module lang="ts">
+    export interface SparklineProps {
+        data: number[];
+        height?: number;
+        area?: boolean;
+        smooth?: boolean;
+        color?: string;
+        showLast?: boolean;
+        valueFormat?: (n: number) => string;
+        animate?: boolean;
+        emptyLabel?: string;
+        class?: string;
+
+    }
+</script>
+
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import {
@@ -22,18 +38,7 @@
         animate = true,
         emptyLabel = 'No data',
         class: className = ''
-    }: {
-        data: number[];
-        height?: number;
-        area?: boolean;
-        smooth?: boolean;
-        color?: string;
-        showLast?: boolean;
-        valueFormat?: (n: number) => string;
-        animate?: boolean;
-        emptyLabel?: string;
-        class?: string;
-    } = $props();
+    }: SparklineProps = $props();
 
     let w = $state(0);
     let svgEl: SVGSVGElement | null = $state(null);

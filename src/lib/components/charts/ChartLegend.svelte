@@ -1,14 +1,20 @@
+<script module lang="ts">
+    import type { ChartLegendItem } from '../../utils/chart.js';
+
+    export interface ChartLegendProps {
+        items: ChartLegendItem[];
+        class?: string;
+
+    }
+</script>
+
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import type { ChartLegendItem } from '../../utils/chart.js';
 
     let {
         items = [],
         class: className = ''
-    }: {
-        items: ChartLegendItem[];
-        class?: string;
-    } = $props();
+    }: ChartLegendProps = $props();
 
     /* The gap between two entries has to beat the 6px inside one, or "412 GB · 46%" and the
        swatch of the next series read as a single run of text. */

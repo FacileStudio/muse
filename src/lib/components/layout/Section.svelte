@@ -1,8 +1,24 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+    import type { Gap } from '../../utils/layout.js';
+
+    export interface SectionProps extends HTMLAttributes<HTMLElement> {
+        title?: string;
+        description?: string;
+        actions?: Snippet;
+        card?: boolean;
+        gap?: Gap;
+        bodyClass?: string;
+        class?: string;
+        children?: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { GAP, type Gap } from '../../utils/layout.js';
+    import { GAP } from '../../utils/layout.js';
     import Card from '../atoms/Card.svelte';
 
     /*
@@ -17,6 +33,7 @@
      * A settings block is a surface holding rows, so it wants one; a dashboard section holding a
      * grid of cards must not be a card itself, or the page grows a container inside a container.
      */
+
     let {
         title,
         description,
@@ -27,16 +44,7 @@
         class: className = '',
         children,
         ...rest
-    }: HTMLAttributes<HTMLElement> & {
-        title?: string;
-        description?: string;
-        actions?: Snippet;
-        card?: boolean;
-        gap?: Gap;
-        bodyClass?: string;
-        class?: string;
-        children?: Snippet;
-    } = $props();
+    }: SectionProps = $props();
 
     const body = $derived(twMerge('flex flex-col', GAP[gap], bodyClass));
 </script>

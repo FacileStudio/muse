@@ -1,5 +1,15 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLInputAttributes } from 'svelte/elements';
+
+    export interface CheckboxProps extends Omit<HTMLInputAttributes, 'type' | 'checked'> {
+        label?: string;
+        checked?: boolean;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
 
     let {
@@ -7,11 +17,7 @@
         checked = $bindable(false),
         class: className = '',
         ...rest
-    }: Omit<HTMLInputAttributes, 'type' | 'checked'> & {
-        label?: string;
-        checked?: boolean;
-        class?: string;
-    } = $props();
+    }: CheckboxProps = $props();
 
     const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
 </script>

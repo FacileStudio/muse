@@ -1,11 +1,8 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
-    import { springPress } from '../../utils/press.js';
-    import TextElevate from '../motion/TextElevate.svelte';
 
-    type Own = {
+    export type Own = {
         href?: string;
         icon?: string;
         label?: string;
@@ -15,6 +12,14 @@
         class?: string;
         right?: Snippet;
     };
+
+    export type NavButtonProps = Own & (HTMLAnchorAttributes | HTMLButtonAttributes);
+</script>
+
+<script lang="ts">
+    import { twMerge } from '../../utils/cn.js';
+    import { springPress } from '../../utils/press.js';
+    import TextElevate from '../motion/TextElevate.svelte';
 
     let {
         href,
@@ -26,7 +31,7 @@
         class: className = '',
         right,
         ...rest
-    }: Own & (HTMLAnchorAttributes | HTMLButtonAttributes) = $props();
+    }: NavButtonProps = $props();
 
     const anchorRest = $derived(rest as HTMLAnchorAttributes);
     const buttonRest = $derived(rest as HTMLButtonAttributes);

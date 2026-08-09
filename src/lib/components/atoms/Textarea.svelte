@@ -1,5 +1,12 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLTextareaAttributes } from 'svelte/elements';
+
+    export interface TextareaProps extends HTMLTextareaAttributes {
+        class?: string; value?: string 
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getFieldContext } from '../../utils/field.js';
 
@@ -11,7 +18,7 @@
         'aria-invalid': invalid,
         class: className = '',
         ...rest
-    }: HTMLTextareaAttributes & { class?: string; value?: string } = $props();
+    }: TextareaProps = $props();
 
     const field = getFieldContext();
     const controlId = $derived(id ?? field?.().id);

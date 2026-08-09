@@ -1,6 +1,18 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export interface StatCardProps extends HTMLAttributes<HTMLDivElement> {
+        label: string;
+        value: string | number;
+        delta?: string;
+        children?: Snippet;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import Card from '../atoms/Card.svelte';
 
@@ -11,13 +23,7 @@
         children,
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        label: string;
-        value: string | number;
-        delta?: string;
-        children?: Snippet;
-        class?: string;
-    } = $props();
+    }: StatCardProps = $props();
 
     const classes = $derived(twMerge('flex flex-col gap-1', className));
 </script>

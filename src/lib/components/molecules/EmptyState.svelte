@@ -1,6 +1,19 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export interface EmptyStateProps extends HTMLAttributes<HTMLDivElement> {
+        icon?: string;
+        title: string;
+        description?: string;
+        bare?: boolean;
+        class?: string;
+        children?: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import Card from '../atoms/Card.svelte';
 
@@ -12,14 +25,7 @@
         class: className = '',
         children,
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        icon?: string;
-        title: string;
-        description?: string;
-        bare?: boolean;
-        class?: string;
-        children?: Snippet;
-    } = $props();
+    }: EmptyStateProps = $props();
 
     /* `py-12` rather than the card's own `p-5`: an empty state is mostly air by design, and
        the height is what stops a list that has nothing in it from reading as a broken layout

@@ -1,8 +1,19 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
 
-    type Tone = 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger' | 'owner' | 'admin';
+    export type Tone = 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger' | 'owner' | 'admin';
+
+    export interface StatusDotProps extends HTMLAttributes<HTMLSpanElement> {
+        tone?: Tone;
+        label?: string;
+        pulse?: boolean;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
+    import { twMerge } from '../../utils/cn.js';
 
     let {
         tone = 'neutral',
@@ -10,12 +21,7 @@
         pulse = false,
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLSpanElement> & {
-        tone?: Tone;
-        label?: string;
-        pulse?: boolean;
-        class?: string;
-    } = $props();
+    }: StatusDotProps = $props();
 
     const dots: Record<Tone, string> = {
         neutral: 'bg-fc-fg-muted',

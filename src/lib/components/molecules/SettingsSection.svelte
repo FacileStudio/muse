@@ -1,6 +1,20 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export interface SettingsSectionProps extends HTMLAttributes<HTMLElement> {
+        title?: string;
+        description?: string;
+        actions?: Snippet;
+        bare?: boolean;
+        bodyClass?: string;
+        class?: string;
+        children?: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
     import Section from '../layout/Section.svelte';
 
     /*
@@ -11,19 +25,12 @@
      *
      * Reach for `Section` for anything that is not a settings block.
      */
+
     let {
         bare = false,
         children,
         ...rest
-    }: HTMLAttributes<HTMLElement> & {
-        title?: string;
-        description?: string;
-        actions?: Snippet;
-        bare?: boolean;
-        bodyClass?: string;
-        class?: string;
-        children?: Snippet;
-    } = $props();
+    }: SettingsSectionProps = $props();
 </script>
 
 <!-- `children` is forwarded as a prop, not as slot content: wrapping it in a snippet here would

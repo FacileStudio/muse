@@ -1,8 +1,20 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
 
-    type Size = 'sm' | 'md' | 'lg';
+    export type Size = 'sm' | 'md' | 'lg';
+
+    export interface AvatarProps extends HTMLAttributes<HTMLSpanElement> {
+        src?: string;
+        alt?: string;
+        name?: string;
+        size?: Size;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
+    import { twMerge } from '../../utils/cn.js';
 
     let {
         src,
@@ -11,13 +23,7 @@
         size = 'md',
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLSpanElement> & {
-        src?: string;
-        alt?: string;
-        name?: string;
-        size?: Size;
-        class?: string;
-    } = $props();
+    }: AvatarProps = $props();
 
     const sizes: Record<Size, string> = {
         sm: 'h-8 w-8 text-fc-xs',

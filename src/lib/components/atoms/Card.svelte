@@ -1,6 +1,18 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAnchorAttributes, HTMLAttributes } from 'svelte/elements';
+
+    export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+        href?: string;
+        target?: HTMLAnchorAttributes['target'];
+        rel?: HTMLAnchorAttributes['rel'];
+        class?: string;
+        children: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
 
     /*
@@ -11,18 +23,13 @@
      * rather than this file. Widening to `HTMLAttributes<HTMLElement>` fails the same way,
      * because handler props are invariant in their element.
      */
+
     let {
         href,
         class: className = '',
         children,
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        href?: string;
-        target?: HTMLAnchorAttributes['target'];
-        rel?: HTMLAnchorAttributes['rel'];
-        class?: string;
-        children: Snippet;
-    } = $props();
+    }: CardProps = $props();
 
     /* The cast is the price of one component rendering two elements: `rest` is div-shaped by
        declaration and the anchor branch will not take it otherwise. It is a lie about the

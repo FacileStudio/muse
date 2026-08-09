@@ -1,9 +1,20 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
 
-    type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+    export type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+
+    export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
+        tone?: Tone;
+        title?: string;
+        class?: string;
+        children?: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
+    import { twMerge } from '../../utils/cn.js';
 
     let {
         tone = 'info',
@@ -11,12 +22,7 @@
         class: className = '',
         children,
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        tone?: Tone;
-        title?: string;
-        class?: string;
-        children?: Snippet;
-    } = $props();
+    }: AlertProps = $props();
 
     /*
         Same pairing as `Badge`: the tint carries the tone and the text is the tone itself.

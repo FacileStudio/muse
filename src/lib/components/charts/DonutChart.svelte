@@ -1,6 +1,25 @@
+<script module lang="ts">
+    import type { ChartSlice } from '../../utils/chart.js';
+
+    export interface DonutChartProps {
+        data: ChartSlice[];
+        size?: number;
+        thickness?: number;
+        corner?: number;
+        showLegend?: boolean;
+        centerLabel?: string;
+        centerValue?: string | number;
+        valueFormat?: (n: number) => string;
+        animate?: boolean;
+        emptyLabel?: string;
+        class?: string;
+
+    }
+</script>
+
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { TAU, arcPath, donutSegments, formatCompact, resize, type ChartSlice } from '../../utils/chart.js';
+    import { TAU, arcPath, donutSegments, formatCompact, resize } from '../../utils/chart.js';
     import { tweenProgress } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
     import ChartTable from './ChartTable.svelte';
@@ -18,19 +37,7 @@
         animate = true,
         emptyLabel = 'No data',
         class: className = ''
-    }: {
-        data: ChartSlice[];
-        size?: number;
-        thickness?: number;
-        corner?: number;
-        showLegend?: boolean;
-        centerLabel?: string;
-        centerValue?: string | number;
-        valueFormat?: (n: number) => string;
-        animate?: boolean;
-        emptyLabel?: string;
-        class?: string;
-    } = $props();
+    }: DonutChartProps = $props();
 
     const LIFT = 4;
 

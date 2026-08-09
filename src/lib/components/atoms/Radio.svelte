@@ -1,5 +1,15 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLInputAttributes } from 'svelte/elements';
+
+    export interface RadioProps extends HTMLInputAttributes {
+        label?: string;
+        group?: string;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
 
     let {
@@ -8,11 +18,7 @@
         value,
         class: className = '',
         ...rest
-    }: HTMLInputAttributes & {
-        label?: string;
-        group?: string;
-        class?: string;
-    } = $props();
+    }: RadioProps = $props();
 
     const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
 </script>

@@ -1,10 +1,20 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLButtonAttributes } from 'svelte/elements';
+
+    export type Variant = 'default' | 'ghost' | 'danger';
+
+    export interface IconButtonProps extends HTMLButtonAttributes {
+        variant?: Variant;
+        class?: string;
+        children: Snippet;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { springPress } from '../../utils/press.js';
-
-    type Variant = 'default' | 'ghost' | 'danger';
 
     let {
         type = 'button',
@@ -12,11 +22,7 @@
         class: className = '',
         children,
         ...rest
-    }: HTMLButtonAttributes & {
-        variant?: Variant;
-        class?: string;
-        children: Snippet;
-    } = $props();
+    }: IconButtonProps = $props();
 
     const variants: Record<Variant, string> = {
         default: 'border border-fc-border text-fc-fg hover:bg-fc-surface',

@@ -1,6 +1,30 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+
+    export interface SecretFieldProps extends HTMLAttributes<HTMLDivElement> {
+        value?: string;
+        label?: string;
+        helper?: string;
+        error?: string;
+        placeholder?: string;
+        editable?: boolean;
+        sensitive?: boolean;
+        copyable?: boolean;
+        mask?: 'ends' | 'full';
+        visible?: boolean;
+        autoHideMs?: number;
+        disabled?: boolean;
+        for?: string;
+        actions?: Snippet;
+        onReveal?: (visible: boolean) => void;
+        onCopy?: (ok: boolean) => void;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { icons } from '../../icons.js';
     import { isRedacted, maskSecret } from '../../utils/secret.js';
@@ -25,25 +49,7 @@
         onCopy,
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLDivElement> & {
-        value?: string;
-        label?: string;
-        helper?: string;
-        error?: string;
-        placeholder?: string;
-        editable?: boolean;
-        sensitive?: boolean;
-        copyable?: boolean;
-        mask?: 'ends' | 'full';
-        visible?: boolean;
-        autoHideMs?: number;
-        disabled?: boolean;
-        for?: string;
-        actions?: Snippet;
-        onReveal?: (visible: boolean) => void;
-        onCopy?: (ok: boolean) => void;
-        class?: string;
-    } = $props();
+    }: SecretFieldProps = $props();
 
     const uid = $props.id();
     const id = $derived(htmlFor ?? `${uid}-secret`);

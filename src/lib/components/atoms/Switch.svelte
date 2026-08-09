@@ -1,5 +1,16 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLInputAttributes } from 'svelte/elements';
+
+    export interface SwitchProps extends Omit<HTMLInputAttributes, 'type' | 'checked'> {
+        label?: string;
+        checked?: boolean;
+        disabled?: boolean;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { twMerge } from '../../utils/cn.js';
 
     let {
@@ -8,12 +19,7 @@
         disabled = false,
         class: className = '',
         ...rest
-    }: Omit<HTMLInputAttributes, 'type' | 'checked'> & {
-        label?: string;
-        checked?: boolean;
-        disabled?: boolean;
-        class?: string;
-    } = $props();
+    }: SwitchProps = $props();
 
     /*
         `relative` is load-bearing, not decoration: `sr-only` is `position: absolute`, and an

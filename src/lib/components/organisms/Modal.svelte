@@ -1,12 +1,29 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLDialogAttributes } from 'svelte/elements';
+
+    export type Size = 'sm' | 'md' | 'lg';
+
+    export interface ModalProps extends HTMLDialogAttributes {
+        open?: boolean;
+        title?: string;
+        dismissible?: boolean;
+        showClose?: boolean;
+        size?: Size;
+        onClose?: () => void;
+        header?: Snippet;
+        footer?: Snippet;
+        children: Snippet;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
     import { createDialog } from '../../utils/dialog.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
-
-    type Size = 'sm' | 'md' | 'lg';
 
     let {
         open = $bindable(false),
@@ -20,18 +37,7 @@
         children,
         class: className = '',
         ...rest
-    }: HTMLDialogAttributes & {
-        open?: boolean;
-        title?: string;
-        dismissible?: boolean;
-        showClose?: boolean;
-        size?: Size;
-        onClose?: () => void;
-        header?: Snippet;
-        footer?: Snippet;
-        children: Snippet;
-        class?: string;
-    } = $props();
+    }: ModalProps = $props();
 
     const sizes: Record<Size, string> = {
         sm: 'max-w-sm',

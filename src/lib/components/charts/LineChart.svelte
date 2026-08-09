@@ -1,27 +1,27 @@
+<script module lang="ts">
+    import type { ChartSeries } from '../../utils/chart.js';
+
+    export interface LineChartProps {
+        series: ChartSeries[];
+        labels: string[];
+        height?: number;
+        area?: boolean;
+        smooth?: boolean;
+        showGrid?: boolean;
+        showLegend?: boolean;
+        yFormat?: (n: number) => string;
+        xFormat?: (label: string, i: number) => string;
+        yTicks?: number;
+        animate?: boolean;
+        emptyLabel?: string;
+        class?: string;
+
+    }
+</script>
+
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import {
-        AREA_OPACITY,
-        CHAR_W,
-        PAD_BOTTOM,
-        PAD_TOP,
-        areaPath,
-        axisPadLeft,
-        formatCompact,
-        labelStride,
-        linePath,
-        niceScale,
-        resize,
-        seriesColor,
-        seriesCount,
-        seriesEmpty,
-        seriesLegend,
-        seriesRows,
-        seriesSummary,
-        seriesTipRows,
-        seriesValues,
-        type ChartSeries
-    } from '../../utils/chart.js';
+    import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelStride, linePath, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesSummary, seriesTipRows, seriesValues } from '../../utils/chart.js';
     import { drawIn } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
     import ChartTable from './ChartTable.svelte';
@@ -41,21 +41,7 @@
         animate = true,
         emptyLabel = 'No data',
         class: className = ''
-    }: {
-        series: ChartSeries[];
-        labels: string[];
-        height?: number;
-        area?: boolean;
-        smooth?: boolean;
-        showGrid?: boolean;
-        showLegend?: boolean;
-        yFormat?: (n: number) => string;
-        xFormat?: (label: string, i: number) => string;
-        yTicks?: number;
-        animate?: boolean;
-        emptyLabel?: string;
-        class?: string;
-    } = $props();
+    }: LineChartProps = $props();
 
     let w = $state(0);
     let svgEl: SVGSVGElement | null = $state(null);

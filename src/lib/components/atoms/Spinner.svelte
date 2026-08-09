@@ -1,19 +1,25 @@
-<script lang="ts">
+<script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import { twMerge } from '../../utils/cn.js';
 
-    type Size = 'sm' | 'md' | 'lg';
+    export type Size = 'sm' | 'md' | 'lg';
+
+    export interface SpinnerProps extends HTMLAttributes<HTMLSpanElement> {
+        size?: Size;
+        label?: string;
+        class?: string;
+
+    }
+</script>
+
+<script lang="ts">
+    import { twMerge } from '../../utils/cn.js';
 
     let {
         size = 'md',
         label = 'Loading',
         class: className = '',
         ...rest
-    }: HTMLAttributes<HTMLSpanElement> & {
-        size?: Size;
-        label?: string;
-        class?: string;
-    } = $props();
+    }: SpinnerProps = $props();
 
     const sizes: Record<Size, string> = {
         sm: 'h-4 w-4 border-2',
