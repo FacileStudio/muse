@@ -115,6 +115,11 @@
     const classes = $derived(twMerge('m-auto rounded-fc-lg border border-fc-border bg-fc-component text-fc-fg p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto backdrop:bg-fc-scrim', sizes[size], className));
 </script>
 
+<!--
+@component
+Un dialogue natif : le navigateur le place dans sa couche supérieure, au-dessus de tout z-index.
+-->
+
 <dialog
     bind:this={dialogEl}
     aria-labelledby={labelledBy}

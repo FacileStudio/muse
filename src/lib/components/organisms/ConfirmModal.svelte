@@ -106,6 +106,11 @@
     }
 </script>
 
+<!--
+@component
+La confirmation d'une action destructive. Jamais une `Modal` nue avec deux boutons : elle gère l'attente et reste ouverte en cas d'échec.
+-->
+
 <Modal
     bind:open
     size="sm"

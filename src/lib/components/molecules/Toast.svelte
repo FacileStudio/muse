@@ -70,6 +70,11 @@
     );
 </script>
 
+<!--
+@component
+La présentation d'un message éphémère. La file et l'auto-fermeture appartiennent à `Toaster`.
+-->
+
 <div class={classes} {role} {...rest}>
     {#if glyph}
         <span

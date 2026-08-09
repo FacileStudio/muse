@@ -141,6 +141,11 @@
     });
 </script>
 
+<!--
+@component
+Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette est validée pour le contraste et le daltonisme.
+-->
+
 <div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div

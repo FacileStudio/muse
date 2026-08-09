@@ -28,6 +28,11 @@
     const classes = $derived(twMerge('flex flex-col gap-1', className));
 </script>
 
+<!--
+@component
+Un chiffre et son libellé. La gouttière entre les cartes ne descend jamais sous leur propre padding.
+-->
+
 <Card class={classes} {...rest}>
     <span class="text-fc-xs text-fc-fg-muted uppercase tracking-wide">{label}</span>
     <span class="text-fc-2xl text-fc-fg font-semibold">{value}</span>

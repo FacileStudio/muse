@@ -57,6 +57,11 @@
     const classes = $derived(twMerge('relative inline-flex shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent text-fc-accent-fg font-semibold overflow-hidden', sizes[size], className));
 </script>
 
+<!--
+@component
+L'image d'un membre, avec repli sur l'initiale quand elle échoue à charger — pas sur son texte alternatif.
+-->
+
 <span class={classes} {...rest}>
     {#if src && !failed}
         <img

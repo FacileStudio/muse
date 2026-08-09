@@ -117,20 +117,19 @@ function parseProps(body: string): PropDoc[] {
     return props;
 }
 
-/* The first sentence of the component's own leading block comment. These comments are the
-   most reliable prose in the repo — they were written to explain a decision to the next
-   reader, which is exactly what a docs blurb is. */
+/*
+ * The component's own `<!-- @component -->` block — Svelte's standard place for "what is this",
+ * shown on hover in every editor across the thirteen consuming apps.
+ *
+ * This used to read the first block comment in the instance script instead, on the theory that
+ * those comments are the most reliable prose in the repo. They are — but they explain a
+ * *decision*, not a purpose, so every page opened on an implementation note in English.
+ * Interesting content, wrong slot. No block means no lead, rather than a guess.
+ */
 function lead(source: string): string | undefined {
-    const m = /<script lang="ts">[\s\S]*?\/\*\s*\n?([\s\S]*?)\*\//.exec(source);
+    const m = /<!--\s*\n?@component\s*\n([\s\S]*?)-->/.exec(source);
     if (!m) return undefined;
-    const text = m[1]
-        .split('\n')
-        .map((l) => l.replace(/^\s*\*?\s?/, '').trim())
-        .join(' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-    const first = text.split(/(?<=\.)\s/)[0];
-    return first && first.length > 25 && first.length < 320 ? first : undefined;
+    return m[1].split('\n').map((l) => l.trim()).filter(Boolean).join(' ').trim() || undefined;
 }
 
 export function collect(): ComponentDoc[] {

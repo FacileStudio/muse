@@ -45,6 +45,11 @@
     const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
 </script>
 
+<!--
+@component
+Un bouton radio. La validité appartient au groupe, pas au bouton, donc il ne porte pas `aria-invalid`.
+-->
+
 <label class={classes}>
     <input
         type="radio"

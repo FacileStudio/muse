@@ -52,6 +52,11 @@
     );
 </script>
 
+<!--
+@component
+La colonne de page : centrage, largeur maximale, padding extérieur et rythme entre les sections. Se place à l'intérieur du conteneur de défilement de la coquille.
+-->
+
 <div class={classes} {...rest}>
     {@render children()}
 </div>

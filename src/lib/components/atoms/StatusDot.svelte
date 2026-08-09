@@ -39,6 +39,11 @@
     );
 </script>
 
+<!--
+@component
+Un état de connexion ou de santé, en une pastille et son libellé.
+-->
+
 <span class={classes} {...rest}>
     <span class="relative inline-flex size-2 shrink-0">
         {#if pulse}

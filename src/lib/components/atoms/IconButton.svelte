@@ -37,6 +37,11 @@
     ));
 </script>
 
+<!--
+@component
+Un bouton rond de 44px pour une action sans libellé. Il prend l'icône en enfant, et toujours un `aria-label`.
+-->
+
 <button {type} class={classes} use:springPress {...rest}>
     {@render children()}
 </button>

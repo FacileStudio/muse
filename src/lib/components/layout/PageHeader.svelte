@@ -34,6 +34,11 @@
     }: PageHeaderProps = $props();
 </script>
 
+<!--
+@component
+Le bloc de titre d'une page : h1, description, actions et lien retour, avec le titre et sa description liés par le barreau `bound`.
+-->
+
 <header class={twMerge('flex flex-col gap-4', className)} {...rest}>
     {#if back}
         <!--

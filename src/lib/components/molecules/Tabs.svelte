@@ -112,6 +112,11 @@
     }
 </script>
 
+<!--
+@component
+Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec des `href`, l'URL devient la source de vérité.
+-->
+
 <div
     use:resize={() => place(false)}
     class={twMerge('relative flex w-full items-center gap-1 overflow-x-auto', className)}

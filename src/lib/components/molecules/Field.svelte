@@ -54,6 +54,11 @@
     const classes = $derived(twMerge('flex flex-col gap-1.5', className));
 </script>
 
+<!--
+@component
+L'étiquetage d'un contrôle. Il rend un vrai `label for`, et les contrôles muse adoptent son identifiant par contexte, sans câblage.
+-->
+
 <div class={classes} {...rest}>
     {#if label}<label for={id} class="text-fc-sm text-fc-fg">{label}</label>{/if}
     {@render children({ id, describedBy })}

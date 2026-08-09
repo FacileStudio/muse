@@ -132,6 +132,11 @@
     });
 </script>
 
+<!--
+@component
+Un anneau de proportions. Jamais arrondi au `stroke-linecap` : ça pousse chaque part au-delà de l'angle qu'elle représente.
+-->
+
 <div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div

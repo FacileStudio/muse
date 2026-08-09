@@ -42,6 +42,11 @@
     const classes = $derived(twMerge('inline-flex w-fit items-center gap-1 rounded-fc-pill border px-2.5 py-0.5 text-fc-xs font-medium', tones[tone], className));
 </script>
 
+<!--
+@component
+Une pastille d'état ou de rôle, dimensionnée sur son texte. Huit tons, un seul vocabulaire.
+-->
+
 <span class={classes} {...rest}>
     {@render children()}
 </span>

@@ -68,6 +68,11 @@
     );
 </script>
 
+<!--
+@component
+La file de messages éphémères, montée une seule fois par application, à la racine.
+-->
+
 <!-- The region exists from first paint, empty or not: a live region injected at the same
      moment as its content is announced unreliably. -->
 <div class={classes} aria-live="polite" aria-atomic="false" {...rest}>

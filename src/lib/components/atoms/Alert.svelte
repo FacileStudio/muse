@@ -45,6 +45,11 @@
     const classes = $derived(twMerge('rounded-fc-md p-3 text-fc-sm', tones[tone], className));
 </script>
 
+<!--
+@component
+Un message qui reste à l'écran. Pour un retour qui passe, c'est un toast.
+-->
+
 <div class={classes} {role} {...rest}>
     {#if title}<p class="font-medium mb-1">{title}</p>{/if}
     {#if children}{@render children()}{/if}

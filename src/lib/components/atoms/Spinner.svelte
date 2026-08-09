@@ -37,4 +37,9 @@
     const classes = $derived(twMerge('inline-block rounded-fc-pill border-fc-border border-t-fc-fg animate-spin motion-reduce:[animation-duration:3s]', sizes[size], className));
 </script>
 
+<!--
+@component
+Une attente courte. Sous mouvement réduit il ralentit au lieu de se figer — un indicateur d'activité figé n'indique rien.
+-->
+
 <span role="status" aria-label={label} class={classes} {...rest}></span>

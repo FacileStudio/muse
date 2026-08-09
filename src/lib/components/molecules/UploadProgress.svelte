@@ -77,6 +77,11 @@
     const classes = $derived(twMerge('flex w-full flex-col gap-2', className));
 </script>
 
+<!--
+@component
+L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise et d'échec.
+-->
+
 {#if items.length > 0}
     <div class={classes} {...rest}>
         <ul class="flex flex-col gap-2">

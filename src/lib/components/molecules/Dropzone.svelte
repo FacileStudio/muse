@@ -146,6 +146,11 @@
     );
 </script>
 
+<!--
+@component
+Le dépôt de fichiers. Il valide aussi le chemin du glisser-déposer, pas seulement celui du sélecteur — le navigateur ne filtre que le second.
+-->
+
 <label
     class={classes}
     data-dragging={dragging ? 'true' : undefined}

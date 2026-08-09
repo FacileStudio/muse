@@ -23,6 +23,11 @@
     }: StackProps = $props();
 </script>
 
+<!--
+@component
+Une colonne à l'un des quatre barreaux nommés. C'est le parent qui possède l'espace entre ses enfants, jamais l'enfant.
+-->
+
 <div class={twMerge('flex flex-col', GAP[gap], className)} {...rest}>
     {@render children()}
 </div>

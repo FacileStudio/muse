@@ -56,6 +56,11 @@
     );
 </script>
 
+<!--
+@component
+La surface conteneur du système : remplissage sans bordure, `p-5`. Avec `href`, elle devient un lien et gagne le survol et l'anneau de focus.
+-->
+
 {#if href}
     <a {href} class={classes} {...anchorRest}>
         {@render children()}

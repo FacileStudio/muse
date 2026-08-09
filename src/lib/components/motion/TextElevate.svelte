@@ -64,6 +64,11 @@
 </script>
 
 <!--
+@component
+Une ligne de texte qui monte en place. Utilisée pour le titre du rail et ses libellés.
+-->
+
+<!--
     `max-w-full` is what makes `class="truncate"` usable from the outside. The outer span is
     inline-block, so it shrink-wraps its text and would happily run past a narrow parent —
     capping it at the parent's width is what gives the inner span an edge to put an ellipsis

@@ -62,6 +62,11 @@
     });
 </script>
 
+<!--
+@component
+L'animation d'un changement de route, cadencée sur la route. Entrée seule : un vrai fondu croisé demanderait de monter les deux pages.
+-->
+
 {#key key}
     <div bind:this={el} class={twMerge('min-w-0', className)}>
         {@render children()}

@@ -47,6 +47,11 @@
     ));
 </script>
 
+<!--
+@component
+Une ligne de navigation. Elle se réduit à un carré de 44px quand le rail se replie.
+-->
+
 {#snippet inner()}
     {#if icon}<Icon {icon} size={18} />{/if}
     {#if !collapsed}

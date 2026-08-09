@@ -85,6 +85,11 @@
     }
 </script>
 
+<!--
+@component
+Le choix d'une option parmi N — thème, mode d'affichage, base de facturation — en cartes à icône plutôt qu'en liste.
+-->
+
 <div
     class={twMerge('flex flex-wrap gap-2', className)}
     {...rest}

@@ -32,6 +32,11 @@
     const classes = $derived(twMerge('h-11 w-full rounded-fc-md border border-fc-border bg-fc-bg px-3 text-fc-md text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:opacity-50', className));
 </script>
 
+<!--
+@component
+Une liste déroulante native, alignée sur la hauteur des autres champs.
+-->
+
 <select
     bind:value
     id={controlId}

@@ -93,6 +93,11 @@
     });
 </script>
 
+<!--
+@component
+Le sélecteur d'espace du rail. Il se retourne vers le haut quand il manque de place sous lui.
+-->
+
 <div bind:this={rootEl} class={twMerge('relative', className)} {...rest}>
     <button
         bind:this={triggerEl}

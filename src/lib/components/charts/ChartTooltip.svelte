@@ -86,6 +86,11 @@
     });
 </script>
 
+<!--
+@component
+L'infobulle d'un graphique, ramenée dans les bornes de son conteneur et du viewport.
+-->
+
 {#if visible && rows.length}
     <div
         bind:this={el}

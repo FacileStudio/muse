@@ -80,6 +80,11 @@
         'h-11 rounded-fc-md border border-fc-border bg-fc-bg text-fc-md text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:opacity-50';
 </script>
 
+<!--
+@component
+Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour choisir dans une palette fixe, c'est `SwatchPicker`.
+-->
+
 <div class={twMerge('flex flex-col gap-2', className)} {...rest}>
     <div class="flex items-center gap-2">
         <!--
