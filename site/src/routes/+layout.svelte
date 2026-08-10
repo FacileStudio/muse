@@ -49,14 +49,6 @@
     const rail = $derived(RAIL.map((l) => ({ ...l, active: l.href === here })));
 </script>
 
-<svelte:head>
-    <title>muse — le système de design de Facile Studio</title>
-    <meta
-        name="description"
-        content="Pas seulement une bibliothèque de composants : comment concevoir et structurer une app Facile."
-    />
-</svelte:head>
-
 <div class="flex min-h-dvh w-full bg-fc-page">
     <!-- muse's own rail, not a hand-rolled nav. Building the design system's site out of
          anything else would be an argument against the design system, and it is how the
