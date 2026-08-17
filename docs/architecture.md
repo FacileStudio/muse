@@ -168,7 +168,7 @@ Animation is GSAP throughout the motion tier, and
 
 | Where | What animates |
 |---|---|
-| `motion/` | `TextElevate` (rise), `PageTransition` (keyed fade + lift) |
+| `motion/` | `TextElevate` (rise), `BlockReveal` (panel wipe), `PageTransition` (keyed fade + lift) |
 | `organisms/` | `SideBar` tweens its own width from an `$effect`; `Modal` scales, `Drawer` translates, each handing its tweens to the shared dialog controller |
 | `molecules/` | `Tabs` slides its indicator pill |
 | `charts/` | `entry.ts` — a 0→1 progress tween, a dash-offset draw-in for lines, opacity fades for areas |
@@ -193,8 +193,9 @@ translating on different curves is not duplication.
 `SplitText` at mount, and was the only reason the dependency floor sat at `^3.13.0` (`SplitText`
 was a paid Club GreenSock plugin before that release). It served one landing page in one app
 and was removed in v1.0 along with `Carousel`, `Mosaique` and `Rideau`, none of which had a
-consumer anywhere in the suite. What is left of the motion tier — `PageTransition` and
-`TextElevate` — uses core GSAP only.
+consumer anywhere in the suite. What is left of the motion tier — `PageTransition`,
+`TextElevate` and `BlockReveal` — uses core GSAP only: `BlockReveal` measures nothing, so a
+panel wipe needs neither `SplitText` nor `ScrollTrigger`, just an `IntersectionObserver`.
 
 ## Theming model
 

@@ -1,7 +1,19 @@
 <script lang="ts">
-    import { Card, Page, PageHeader, Section, Stack, Switch, TextElevate } from '@facile/muse';
+    import {
+        BlockReveal,
+        Card,
+        Page,
+        PageHeader,
+        Section,
+        Stack,
+        Switch,
+        TextElevate
+    } from '@facile/muse';
 
     let heading = $state(true);
+    let sweeping = $state(true);
+
+    const manifesto = ['Un seul login,', 'zéro dépendance cloud.'];
 </script>
 
 <Page>
@@ -22,6 +34,26 @@
             />
         </Card>
         <Switch bind:checked={heading} label="Afficher la ligne" class="text-fc-sm" />
+    </Section>
+
+    <Section
+        title="BlockReveal"
+        description="Un panneau plein balaie la copie et ne la découvre qu'avec son bord de fuite. Une ligne par panneau : un paragraphe qui se replie arriverait d'un seul bloc."
+    >
+        <Card class="flex min-h-32 items-center">
+            <Stack gap="bound">
+                {#each manifesto as line, i (line)}
+                    <BlockReveal
+                        open={sweeping}
+                        delay={i * 0.12}
+                        class="text-fc-xl font-semibold text-fc-fg"
+                    >
+                        {line}
+                    </BlockReveal>
+                {/each}
+            </Stack>
+        </Card>
+        <Switch bind:checked={sweeping} label="Balayer les lignes" class="text-fc-sm" />
     </Section>
 
     <Section

@@ -94,6 +94,8 @@ export type { ToasterProps } from './components/organisms/Toaster.svelte';
 export { default as Topbar } from './components/organisms/Topbar.svelte';
 export type { TopbarProps } from './components/organisms/Topbar.svelte';
 
+export { default as BlockReveal } from './components/motion/BlockReveal.svelte';
+export type { BlockRevealProps } from './components/motion/BlockReveal.svelte';
 export { default as PageTransition } from './components/motion/PageTransition.svelte';
 export type { PageTransitionProps } from './components/motion/PageTransition.svelte';
 export { default as TextElevate } from './components/motion/TextElevate.svelte';
