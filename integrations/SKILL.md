@@ -50,7 +50,7 @@ Import everything flat from `@facile/muse`; the tier directories are import path
 | Molecules | `Dropzone` `EmptyState` `Field` `NavButton` `OptionCards` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `SwatchPicker` `Tabs` `Toast` `UploadProgress` |
 | Organisms | `ConfirmModal` `Drawer` `MobileNav` `Modal` `ProfileCard` `SideBar` `Table` `Toaster` `Topbar` |
 | Charts | `BarChart` `ChartLegend` `ChartTooltip` `DonutChart` `LineChart` `Sparkline` |
-| Motion | `PageTransition` `TextElevate` |
+| Motion | `BlockReveal` `PageTransition` `TextElevate` |
 | Utils | `icons` `cn` / `twMerge` `prefersReducedMotion` `isMobile` `springPress` `getFieldContext` `toast` `toasts` `chartColor` `formatCompact` `niceScale` `linePath` `areaPath` `arcPath` `arcCorner` `tickStride` `resize` `USER_COLORS` `USER_COLOR_LABELS` `normalizeUserColor` `userColorLabel` `parseHex` `REDACTED` `isRedacted` `maskSecret` |
 
 Types: `IconKey` `UserColor` `FieldContext` `ToastTone` `ToastOptions` `ToastItem`

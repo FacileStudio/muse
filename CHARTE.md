@@ -394,6 +394,30 @@ padding generous — the whitespace is doing the work the border used to. `Card`
   created in `onMount` and never reverted keeps a detached node alive and recomputes on every
   scroll for the life of the page. Wrap it in `gsap.context()` and revert it from the teardown.
 
+### BlockReveal
+
+A solid panel wipes across the copy: in from the left, out to the right, uncovering the text
+with its trailing edge.
+
+```svelte
+<BlockReveal open={arrived} delay={0.1}>Nos derniers projets</BlockReveal>
+```
+
+**The panel is the whole reveal.** The copy starts invisible and is only ever handed over
+while the panel covers it — it never slides or fades in on its own, or the effect reads as two
+animations fighting. Two rules follow from that:
+
+- **The panel bleeds past the line box**, `0.14em` vertically and `0.08em` horizontally,
+  because descenders and tall ascenders hang out of it. In em so it tracks the font size, and
+  vertically only far enough to overlap the next line rather than leave a seam.
+- **Leaving is not the sweep reversed.** Sending the panel back across reads as a second
+  arrival, so the copy lifts out of its own line instead. Copy the panel never got round to
+  uncovering is parked, not animated away.
+
+One panel covers one element, so a paragraph that wraps arrives as a single slab — give it one
+`BlockReveal` per line, staggered by `delay`. `panel="page"` is the light panel for dark
+surfaces; the default `accent` is the inverted slab the rest of the system already uses.
+
 ### PageTransition
 
 Route-level motion for SPA navigation. Wrap the routed view and give it the current route as

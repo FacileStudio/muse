@@ -1,7 +1,7 @@
 # muse — API
 
-The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 54 components
-(5 layout primitives, 17 atoms, 13 molecules, 9 organisms, 6 charts, 2 motion pieces), the
+The complete exported surface of `@facile/muse`, read from `src/lib/index.ts`: 55 components
+(5 layout primitives, 17 atoms, 13 molecules, 9 organisms, 6 charts, 3 motion pieces), the
 `GAP` / `PAGE_WIDTH` / `ALIGN` maps, the `cn` class merger, the
 motion, press, field, secret, toast and chart helpers, the `icons` map and the exported types.
 Nothing else in the repo is importable — `ChartTable.svelte`, `components/charts/entry.ts`
@@ -22,7 +22,7 @@ import {
   // charts
   BarChart, ChartLegend, ChartTooltip, DonutChart, LineChart, Sparkline,
   // motion
-  PageTransition, TextElevate,
+  BlockReveal, PageTransition, TextElevate,
   // helpers
   cn, twMerge, prefersReducedMotion, isMobile, springPress, getFieldContext,
   icons, USER_COLORS, USER_COLOR_LABELS, normalizeUserColor, parseHex, userColorLabel,
@@ -988,6 +988,26 @@ with the viewport, so a chart flush against a card edge flips the tooltip inward
 spilling out.
 
 ## Motion
+
+### `BlockReveal`
+
+A solid panel wipes across the copy — in from the left, out to the right — and the text is
+only ever uncovered by its trailing edge. Nothing slides and nothing fades in on its own.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `children` | `Snippet` | — | Required |
+| `open` | `boolean` | — | Parent-driven. Left out, the element observes its own box |
+| `panel` | `'accent' \| 'page'` | `'accent'` | The inverted slab, or the light one for dark surfaces |
+| `duration` | `number` | `0.8` | Seconds — 55% covering, 45% uncovering |
+| `delay` | `number` | `0` | Stagger a group by handing each one a bigger delay |
+| `rootMargin` | `string` | `'0px 0px -12% 0px'` | The band it watches while self-observing |
+
+One panel covers one element, so a paragraph that wraps arrives as a single slab — give it one
+`BlockReveal` per line. Leaving is not the sweep reversed: the copy lifts out of its own line,
+because sending the panel back across reads as a second arrival. Copy the panel never got round
+to uncovering is parked rather than animated away. Under reduced motion the text is simply
+shown or hidden and the panel never moves.
 
 ### `PageTransition`
 
