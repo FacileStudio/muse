@@ -23,6 +23,7 @@ export const icons = {
   copy:          'solar:copy-linear',
   check:         'solar:check-circle-linear',
   key:           'solar:key-linear',
+  notebook:      'solar:notebook-bold-duotone',
   revoke:        'solar:forbidden-circle-linear',
   shield:        'solar:shield-check-linear',
   palette:       'solar:pallete-2-linear',
