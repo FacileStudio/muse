@@ -3,14 +3,26 @@
 Written as the breaking changes land, not reconstructed afterwards. Every entry says what
 broke, how it shows up, and what to do about it.
 
-Thirteen apps consume muse: Journal, Plume, Capsule, Antenne, Nuage, Vision, Casier, Sablier,
-Agenda, Perception, Boutique, Courrier, Jardin. Nine are on `#v0.5.0`, three on `#v0.4.0`
-(Journal, Capsule, Perception), and Boutique is the first on `#v0.6.0`.
+Fifteen repos consume muse. Census on 2026-08-18:
+
+| Pin | Repos |
+|---|---|
+| `#v0.4.0` | Capsule, Perception |
+| `#v0.5.0` | Agenda, Antenne, Atelier, Casier, Courrier, Jardin, Nuage, Plume, Sablier, Vision |
+| `#v0.6.0` | Boutique |
+| `#v0.6.3` | Journal |
+| a raw commit | GFConseil (`f0fc56c`) — pin it to a tag |
+
 ~~Boutique floats on the default branch with no tag~~ — pinned on 2026-08-09, and note how that
-pin landed: changing `package.json` without
-regenerating `bun.lock` fails the consumer's Docker build outright, because the client stage
-runs `bun install --frozen-lockfile`. The deploy errors and production silently keeps serving
-the previous image. **Bump the pin and the lockfile in the same commit.**
+pin landed: changing `package.json` without regenerating `bun.lock` fails the consumer's Docker
+build outright, because the client stage runs `bun install --frozen-lockfile`. The deploy errors
+and production silently keeps serving the previous image. **Bump the pin and the lockfile in the
+same commit.**
+
+**v0.6.1 fixed a phone bug every settings page had**: `SecretField` sized to max-content as a flex
+item, so the row pushed the document sideways. Measured at 540px in a 390px frame, 388px after.
+Only Journal has it. Everything on v0.5.0 or below still overflows, and the ten repos in that row
+are the rollout list.
 
 Nothing here breaks an app that stays on its current tag. Read this when you bump.
 
