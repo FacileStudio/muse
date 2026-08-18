@@ -127,7 +127,7 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
 -->
 
 <!-- `relative` contains the `sr-only` live region — see the note in `Switch.svelte`. -->
-<div class={twMerge('relative flex flex-col gap-1.5', className)} {...rest}>
+<div class={twMerge('relative flex w-full min-w-0 flex-col gap-1.5', className)} {...rest}>
     {#if label}
         <label for={id} class="text-fc-sm text-fc-fg">{label}</label>
     {/if}
