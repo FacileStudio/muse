@@ -46,14 +46,27 @@ for (const [prefix, list] of byPrefix) {
         `${info.name} by ${info.author?.name ?? 'unknown'} — ${info.license.title} (${info.license.spdx})\n    ${info.license.url ?? ''}`
     );
 
-    for (const name of list) {
+    /* A name the set has renamed comes back under `aliases` pointing at its new parent, not
+       under `icons` — Solar did this to `magnifer-linear` (now `magnifier-linear`) and
+       `text-linear` (now `text-format-linear`). Reading only `icons` reported them as missing
+       from the collection, which is a confusing thing to be told about a name the search
+       endpoint still answers for, and it blocked every regeneration until it was understood.
+       An alias that carries a transform is refused rather than silently drawn unrotated. */
+    const resolve = (name: string, seen: string[] = []): Entry => {
         const icon = data.icons?.[name];
-        if (!icon) throw new Error(`${prefix}:${name} is not in the ${prefix} collection`);
-        out[`${prefix}:${name}`] = {
-            body: icon.body,
-            width: icon.width ?? w,
-            height: icon.height ?? h
-        };
+        if (icon) return { body: icon.body, width: icon.width ?? w, height: icon.height ?? h };
+
+        const alias = data.aliases?.[name];
+        if (!alias) throw new Error(`${prefix}:${name} is not in the ${prefix} collection`);
+        for (const key of ['rotate', 'hFlip', 'vFlip']) {
+            if (key in alias) throw new Error(`${prefix}:${name} is an alias with a ${key} transform, which this script does not apply`);
+        }
+        if (seen.includes(name)) throw new Error(`${prefix}:${name} aliases itself in a cycle`);
+        return resolve(alias.parent, [...seen, name]);
+    };
+
+    for (const name of list) {
+        out[`${prefix}:${name}`] = resolve(name);
     }
 }
 
