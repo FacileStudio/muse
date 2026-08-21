@@ -18,7 +18,11 @@ wearing the clothes of a record.
 
 ## [Unreleased]
 
-Nothing here changes a component. An app on `#v0.6.3` gains nothing by moving to the branch.
+Nothing yet.
+
+## [0.6.4] — 2026-08-22
+
+Nothing here changes a component. An app on `#v0.6.3` gains nothing by moving to `#v0.6.4`.
 
 ### Changed
 
@@ -327,7 +331,8 @@ Nothing here changes a component. An app on `#v0.6.3` gains nothing by moving to
   Note the two-rail case, since the chip invites it: two `SideBar`s bound to one `collapsed` value
   cancel each other and nothing moves; with separate state the rails drift apart.
 
-[Unreleased]: https://github.com/FacileStudio/muse/compare/v0.6.3...HEAD
+[Unreleased]: https://github.com/FacileStudio/muse/compare/v0.6.4...HEAD
+[0.6.4]: https://github.com/FacileStudio/muse/releases/tag/v0.6.4
 [0.6.3]: https://github.com/FacileStudio/muse/releases/tag/v0.6.3
 [0.6.2]: https://github.com/FacileStudio/muse/releases/tag/v0.6.2
 [0.6.1]: https://github.com/FacileStudio/muse/releases/tag/v0.6.1
