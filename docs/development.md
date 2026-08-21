@@ -257,15 +257,19 @@ failure lands in the consumer's build, not ours.
 muse is not published to a registry. Consumers pin `github:FacileStudio/muse#vX.Y.Z`, so
 **the git tag is the distribution** — a public repo means no auth in Docker builds, which is
 why Casier's image builds have always worked. It also means a pushed tag is not undoable, so
-the release is a script rather than a habit:
+check before you cut one:
 
 ```sh
-sh ./scripts/release.sh 0.4.0     # or: mise run release 0.4.0
+jardin flow run release-preflight   # on main, clean, in step with origin, no drifted version
+mise run verify                     # the full gate
 ```
 
-It refuses to run unless you are on `main`, the tree is clean, `HEAD` matches `origin/main`
-and the tag is free; then it runs the full gate **before** touching `package.json`, so a
-failure leaves the tree exactly as it found it, and finally commits, tags and pushes.
+Then bump `package.json` to the new version, commit it, tag `vX.Y.Z` and push both.
+
+`package.json`'s version is a copy — consumers resolve the **tag**, not the field — so it is the
+thing that drifts when a release is cut by hand. It has: the tags reached v0.6.3 while the file
+sat at 0.6.0 for three releases. `release-preflight` compares the two, which is why that is now
+caught before the next release rather than found by accident later.
 
 ### Upgrading a consumer
 

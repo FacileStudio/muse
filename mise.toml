@@ -45,9 +45,3 @@ run = "sh ./scripts/smoke.sh"
 [tasks.verify]
 description = "Everything CI would run: types (lib + site), tests, demo and site builds, consumer smoke"
 depends = ["check", "check:site", "test", "demo:build", "site:build", "smoke"]
-
-[tasks.release]
-description = "Cut a release: verify, bump, commit, tag, push — mise run release 0.4.0"
-# The git tag IS the distribution (consumers pin github:FacileStudio/muse#vX.Y.Z), so a
-# pushed tag cannot be taken back. See scripts/release.sh for the guards.
-run = "sh ./scripts/release.sh"
