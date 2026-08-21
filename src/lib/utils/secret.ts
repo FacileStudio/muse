@@ -1,7 +1,7 @@
 /**
  * The placeholder a stored secret wears when the server refuses to send it back.
  *
- * Several suite APIs (Nook, Perception) return this string *as the field's value* and treat
+ * Several suite APIs (Antenne, Perception) return this string *as the field's value* and treat
  * receiving it unchanged as "keep what you have". So it is a wire contract, not decoration —
  * a form that posts these eight dots back is asking to keep the stored secret, and one that
  * posts them as a new value has just overwritten a live credential with punctuation.
