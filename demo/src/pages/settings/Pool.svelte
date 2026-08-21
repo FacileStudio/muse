@@ -18,7 +18,7 @@
     type State = 'off' | 'connecting' | 'connected' | 'reconnecting' | 'failed';
 
     let enabled = $state(true);
-    let instance = $state('https://nook.facile.studio');
+    let instance = $state('https://antenne.facile.studio');
     let secret = $state(REDACTED);
     let connection = $state<State>('connected');
     let attempt = $state(0);
@@ -73,8 +73,8 @@
 
 <Stack gap="section">
     <SettingsSection
-        title="Nook Pool"
-        description="One socket to Nook carries every event this app emits. Apps never talk to each other directly."
+        title="Antenne Pool"
+        description="One socket to Antenne carries every event this app emits. Apps never talk to each other directly."
     >
         {#snippet actions()}
             <Button
@@ -101,7 +101,7 @@
 
         <SettingsRow
             label="Epoch"
-            description="Changes when Nook restarts and replays are re-anchored."
+            description="Changes when Antenne restarts and replays are re-anchored."
             stacked
         >
             <SecretField value="7f3a9c21" sensitive={false} class="w-full" />
@@ -114,14 +114,14 @@
         {#if connection === 'failed'}
             <Alert tone="danger" title="Connection abandoned">
                 The client stops retrying after twenty attempts and stays down until something
-                wakes it. Check that Nook is reachable, then reconnect.
+                wakes it. Check that Antenne is reachable, then reconnect.
             </Alert>
         {/if}
     </SettingsSection>
 
     <SettingsSection
         title="Connection"
-        description="Where Nook lives and the shared secret that registers this app with it."
+        description="Where Antenne lives and the shared secret that registers this app with it."
     >
         <SettingsRow
             label="Instance URL"
@@ -129,7 +129,7 @@
             for="pool-url"
             stacked
         >
-            <Input bind:value={instance} id="pool-url" placeholder="https://nook.example.com" />
+            <Input bind:value={instance} id="pool-url" placeholder="https://antenne.example.com" />
         </SettingsRow>
 
         <SettingsRow

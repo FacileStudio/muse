@@ -1315,7 +1315,7 @@ The canonical section order, take what the app has:
 | **Appearance** | every app | theme (system/light/dark), density, language, timezone |
 | **Notifications** | anything that emails | a master switch, per-event rows, digest cadence |
 | **API** | anything with a CLI or public API | base URL, token list, create/revoke |
-| **Pool** | anything wired to Nook | enable, instance URL, shared secret, connection status, channels |
+| **Pool** | anything wired to Antenne | enable, instance URL, shared secret, connection status, channels |
 | **Members** | anything space-scoped | member table with role pills, invites |
 | **Advanced** | every app | export, instance/version facts, **danger zone last** |
 
@@ -1399,7 +1399,7 @@ Machine strings — secrets, keys, IDs, endpoints, event channels — are set in
 
 ### Connections and integrations
 
-Anything that holds an outbound connection (Nook Pool, a webhook target, an SMTP relay)
+Anything that holds an outbound connection (Antenne Pool, a webhook target, an SMTP relay)
 reports state with `StatusDot`, and **the state is not a boolean**. "Not connected" hides
 three different situations with three different fixes, so distinguish at least: disabled,
 connecting, connected, reconnecting (with the attempt count), and gave-up. Only the

@@ -79,7 +79,7 @@
     >
         <SettingsRow
             label="Pool disconnections"
-            description="Tell me when this app stops talking to Nook for more than five minutes."
+            description="Tell me when this app stops talking to Antenne for more than five minutes."
         >
             <Switch bind:checked={poolAlerts} aria-label="Pool disconnections" />
         </SettingsRow>

@@ -7,7 +7,7 @@
 <SecretField
     editable
     bind:value={secret}
-    label="Secret partagé Nook Pool"
+    label="Secret partagé Antenne Pool"
     placeholder="Collez le secret de l'instance"
     helper="Il doit correspondre à celui configuré sur pool.facile.studio."
 >
