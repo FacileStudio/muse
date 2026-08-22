@@ -1,5 +1,12 @@
+[settings]
+lockfile = true
+
 [tools]
+lefthook = "latest"
 bun = "latest"
+
+[hooks]
+postinstall = "lefthook install"
 
 [tasks.check]
 description = "Type-check every component and util (svelte-check)"
