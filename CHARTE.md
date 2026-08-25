@@ -327,7 +327,7 @@ rendering failure, a tall quiet one reads as deliberate.
 
 Title and description are one `gap-1` block inside the outer `gap-4`, for the reason above:
 as two siblings the description floats between title and action and belongs to neither. It
-was written three separate times — in this demo, in Vision and in Jardin — before it was
+was written three separate times — in this demo, in Vision and in Mycelium — before it was
 extracted, which is the usual sign.
 
 A chart card in a grid row is as tall as its tallest neighbour. Give the chart `flex-1` so it

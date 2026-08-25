@@ -8,7 +8,7 @@ Fifteen repos consume muse. Census on 2026-08-18:
 | Pin | Repos |
 |---|---|
 | `#v0.4.0` | Capsule, Perception |
-| `#v0.5.0` | Agenda, Antenne, Atelier, Casier, Courrier, Jardin, Nuage, Plume, Sablier, Vision |
+| `#v0.5.0` | Agenda, Antenne, Atelier, Casier, Courrier, Mycelium, Nuage, Plume, Sablier, Vision |
 | `#v0.6.0` | Boutique |
 | `#v0.6.3` | Journal |
 | a raw commit | GFConseil (`f0fc56c`) — pin it to a tag |
@@ -78,12 +78,12 @@ semantic (`red` → `fc-danger`, `green` → `fc-success`).
 `Carousel`, `Mosaique`, `Rideau` and `WordReveal` are gone. `PageTransition` and `TextElevate`
 stay.
 
-**Who this touches:** only **Jardin**, which uses `WordReveal` three times on its landing page
+**Who this touches:** only **Mycelium**, which uses `WordReveal` three times on its landing page
 (`apps/client/src/routes/+page.svelte`). The other three had no consumer anywhere in the suite.
 
-**Do, for Jardin only:** vendor the component before bumping. The last version is at
+**Do, for Mycelium only:** vendor the component before bumping. The last version is at
 `git show v0.5.0:src/lib/components/motion/WordReveal.svelte`. It needs `gsap` plus
-`gsap/ScrollTrigger` and `gsap/SplitText` as **direct** dependencies — Jardin currently gets
+`gsap/ScrollTrigger` and `gsap/SplitText` as **direct** dependencies — Mycelium currently gets
 gsap transitively through muse, and that stops being reliable once muse demotes it. Two traps
 that come with it, both already solved in the file: the ScrollTrigger must be built inside a
 `gsap.context()` and reverted on teardown or it recomputes on every scroll for the life of the

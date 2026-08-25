@@ -260,7 +260,7 @@ why Casier's image builds have always worked. It also means a pushed tag is not 
 check before you cut one:
 
 ```sh
-jardin flow run release-preflight   # on main, clean, in step with origin, no drifted version
+mycelium flow run release-preflight   # on main, clean, in step with origin, no drifted version
 mise run verify                     # the full gate
 ```
 
@@ -284,7 +284,7 @@ Two things about this that waste an hour if you do not know them:
   already present. Bun refuses to re-resolve a git dep in place when the SHA changes and
   fails with `error: Package "@facile/muse@github:…#<sha>" has a dependency loop` /
   `DependencyLoop`. Editing `package.json` and running `bun install` is the way. Both Vision
-  and Jardin hit this on the same day.
+  and Mycelium hit this on the same day.
 - **The lockfile records the annotated tag *object's* SHA, not the commit's.** `v0.3.1`
   appears as `252d63c` while the commit is `117bb96`, and they reconcile with
   `git rev-parse v0.3.1^{}`. Nothing is wrong; do not go looking for drift. Verify an upgrade

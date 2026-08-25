@@ -250,7 +250,7 @@ or every muse component renders structurally correct and completely unstyled:
 
 Same install, second half: `vite dev` fails to start unless the consumer sets
 `optimizeDeps: { exclude: ['@facile/muse'] }`, because the package ships Svelte source and
-the dependency optimizer tries to prebundle it. Proven on Vision, Jardin and Antenne.
+the dependency optimizer tries to prebundle it. Proven on Vision, Mycelium and Antenne.
 
 **3. `iconify-icon` is not a muse dependency.** `Button`, `NavButton`, `Tabs`, `OptionCards`,
 `Dropzone`, `UploadProgress`, `SecretField`, `SpaceSwitcher`, `SideBar`, `MobileNav`, `Modal`,

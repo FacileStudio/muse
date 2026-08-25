@@ -6,7 +6,7 @@ export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
 	/*
 	 * This is the documented consumer requirement, not a workaround for the harness — every
-	 * app that installs muse needs the same three lines, and both Vision and Jardin carry
+	 * app that installs muse needs the same three lines, and both Vision and Mycelium carry
 	 * them.
 	 *
 	 * muse ships uncompiled source, including `.svelte.ts` rune modules. Vite's dev-only
