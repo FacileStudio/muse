@@ -621,9 +621,18 @@ framework-agnostic — no router import, no backend types. Spreads to the wrappi
 | `spaces` | `{ id, name }[]` | `[]` | Team spaces |
 | `activeId` | `string \| null` | `null` | `null` selects the personal entry |
 | `onSelect` | `(id: string \| null) => void` | — | Called with the chosen id, or `null` |
-| `personalLabel` | `string` | `'Personal'` | Label for the no-space entry |
+| `personalLabel` | `string \| null` | `'Personal'` | Label for the no-space entry. `null` removes the entry entirely |
 | `manageHref` | `string` | — | Renders a bordered footer link when set |
 | `manageLabel` | `string` | `'Manage spaces'` | Footer link text |
+
+**The component renders nothing when `spaces` is empty.** One option is not a choice, so a
+solo user never meets the concept — and the rule lives here rather than at each call site,
+which is why the copies mounted in a mobile `Topbar` get it too.
+
+`personalLabel={null}` says the app has no personal scope, so `onSelect` is never called with
+`null`. Note that `undefined` does **not** do this: Svelte 5 resolves an explicitly-passed
+`undefined` to the prop default, so `admin ? 'Personal' : undefined` still renders the row.
+Pass `null`.
 
 The menu flips above the trigger when there is not at least 160px below it, and caps its own
 height to the space available. Outside click closes it; Escape closes it **and returns focus
@@ -653,7 +662,7 @@ Collapsible vertical navigation panel on `bg-fc-component`, built from `NavButto
 | `activeSpaceId` | `string \| null` | `null` | Forwarded to `SpaceSwitcher` |
 | `onSpaceSelect` | `(id: string \| null) => void` | — | Forwarded to `SpaceSwitcher` |
 | `manageSpacesHref` | `string` | — | Forwarded as the switcher's footer link |
-| `personalSpaceLabel` | `string` | — | Forwarded as the switcher's `personalLabel` (default `'Personal'`) |
+| `personalSpaceLabel` | `string \| null` | — | Forwarded as the switcher's `personalLabel` (default `'Personal'`; `null` removes the personal row) |
 | `manageSpacesLabel` | `string` | — | Forwarded as the switcher's `manageLabel` (default `'Manage spaces'`) |
 
 The width tween **reads the tokens** — `getComputedStyle` for `--width-fc-nav-collapsed` and

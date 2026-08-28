@@ -33,7 +33,8 @@
         activeSpaceId?: string | null;
         onSpaceSelect?: (id: string | null) => void;
         manageSpacesHref?: string;
-        personalSpaceLabel?: string;
+        /** Forwarded as the switcher's `personalLabel`. `null` removes the personal row. */
+        personalSpaceLabel?: string | null;
         manageSpacesLabel?: string;
         class?: string;
 
