@@ -36,6 +36,7 @@
 
     let selectedId = $state('acme');
     let activeSpaceId = $state<string | null>('acme');
+    let scopedSpaceId = $state('acme');
 
     let createOpen = $state(false);
     let filtersOpen = $state(false);
@@ -117,16 +118,35 @@
     </div>
 
     <section class="flex flex-col gap-4">
-        <div class="max-w-xs">
-            <SpaceSwitcher
-                spaces={switcherSpaces}
-                activeId={activeSpaceId}
-                onSelect={(id) => {
-                    activeSpaceId = id;
-                    if (id) selectedId = id;
-                }}
-                manageHref="#/spaces"
-            />
+        <div class="flex flex-wrap gap-4">
+            <div class="flex w-full max-w-xs flex-col gap-2">
+                <p class="text-fc-xs text-fc-fg-muted">With a personal scope</p>
+                <SpaceSwitcher
+                    spaces={switcherSpaces}
+                    activeId={activeSpaceId}
+                    onSelect={(id) => {
+                        activeSpaceId = id;
+                        if (id) selectedId = id;
+                    }}
+                    manageHref="#/spaces"
+                />
+            </div>
+
+            <div class="flex w-full max-w-xs flex-col gap-2">
+                <p class="text-fc-xs text-fc-fg-muted">personalLabel = null — every row is a space</p>
+                <SpaceSwitcher
+                    spaces={switcherSpaces}
+                    activeId={scopedSpaceId}
+                    onSelect={(id) => id && (scopedSpaceId = id)}
+                    personalLabel={null}
+                    manageHref="#/spaces"
+                />
+            </div>
+
+            <div class="flex w-full max-w-xs flex-col gap-2">
+                <p class="text-fc-xs text-fc-fg-muted">No spaces — the switcher renders nothing</p>
+                <SpaceSwitcher spaces={[]} activeId={null} manageHref="#/spaces" />
+            </div>
         </div>
 
         <Card class="flex flex-col gap-1 p-2">
