@@ -63,7 +63,7 @@
      */
     const titleId = $props.id();
 
-    const badgeIcon = $derived(icon ?? (tone === 'danger' ? 'solar:danger-triangle-linear' : undefined));
+    const badgeIcon = $derived(icon ?? (tone === 'danger' ? 'iconoir:warning-triangle' : undefined));
     const badgeClasses = $derived(twMerge('flex size-10 shrink-0 items-center justify-center rounded-fc-pill', tone === 'danger' ? 'bg-fc-danger/10 text-fc-danger' : 'bg-fc-surface text-fc-fg-muted'));
 
     /*

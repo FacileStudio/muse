@@ -841,7 +841,7 @@ buttons. Spreads to the underlying `<dialog>`.
 | `confirmLabel` | `string` | `'Confirm'` | |
 | `cancelLabel` | `string` | `'Cancel'` | |
 | `tone` | `'neutral' \| 'danger'` | `'neutral'` | `danger` tints the badge and makes the confirm button `variant="danger"` |
-| `icon` | `string` | — | Badge glyph; `danger` defaults to `solar:danger-triangle-linear` |
+| `icon` | `string` | — | Badge glyph; `danger` defaults to `iconoir:warning-triangle` |
 | `onConfirm` | `() => void \| Promise<void>` | — | |
 | `onCancel` | `() => void` | — | Fires on any dismissal that is not a completed confirm |
 | `children` | `Snippet` | — | Extra body content below the description |
@@ -1049,8 +1049,8 @@ final position with no tween.
 
 ## Icons
 
-`icons` maps 46 stable keys to Iconify names — Solar `linear` for chrome, MDI for
-plus/close/chevrons — and `IconKey` is the union of those keys. Full table in
+`icons` maps 53 stable keys to Iconoir names, bundled at stroke width 2, and `IconKey` is
+the union of those keys. Full table in
 [configuration.md](configuration.md).
 
 ```svelte

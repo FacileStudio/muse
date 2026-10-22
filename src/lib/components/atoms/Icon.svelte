@@ -2,7 +2,7 @@
     import type { SVGAttributes } from 'svelte/elements';
 
     export interface IconProps extends SVGAttributes<SVGSVGElement> {
-        /** An iconify name (`solar:settings-linear`) — usually from the `icons` map. */
+        /** An iconify name (`iconoir:settings`) — usually from the `icons` map. */
         icon: string;
         /** Rendered size in pixels, applied as width, height and a matching CSS box. @default 16 */
         size?: number;
@@ -25,7 +25,7 @@
      *
      * The paths are bundled instead. Icons now render during SSR, cost no request, and have
      * their box from the first frame. `<iconify-icon>` remains the fallback for a name muse
-     * does not carry, so an app passing its own `solar:*` string keeps working.
+     * does not carry, so an app passing a name muse does not bundle keeps working.
      */
     let { icon, size = 16, class: className = '', ...rest }: IconProps = $props();
 

@@ -13,6 +13,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const LIB = join(import.meta.dir, '../src/lib');
+// Iconoir ships at 1.5, which reads thin next to the suite's type at 16px
+const STROKE = '2';
 
 const source = readFileSync(join(LIB, 'icons.ts'), 'utf8');
 const names = [...source.matchAll(/'([a-z-]+:[a-z0-9-]+)'/g)].map((m) => m[1]);
@@ -50,7 +52,7 @@ for (const [prefix, list] of byPrefix) {
         const icon = data.icons?.[name];
         if (!icon) throw new Error(`${prefix}:${name} is not in the ${prefix} collection`);
         out[`${prefix}:${name}`] = {
-            body: icon.body,
+            body: icon.body.replace(/stroke-width="[\d.]+"/g, `stroke-width="${STROKE}"`),
             width: icon.width ?? w,
             height: icon.height ?? h
         };
@@ -66,7 +68,7 @@ const file = `/*
  * The glyph data for every name in \`icons.ts\`, frozen into the package so nothing is fetched
  * from api.iconify.design at runtime. Re-run the script after adding a key.
  *
- * Attribution for the bundled artwork is in LICENSE, and is not optional: Solar is CC BY 4.0.
+ * Attribution for the bundled artwork is in LICENSE. Strokes are rewritten to width ${STROKE}.
  */
 export type IconData = { body: string; width: number; height: number };
 

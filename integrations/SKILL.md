@@ -222,12 +222,9 @@ destructive row actions** (delete in a table or member list) — muted at rest, 
 
 ## Icons
 
-- **Solar `linear`** for all UI chrome — `solar:settings-linear`, `solar:folder-linear`, …
-- **`bold-duotone` is for an app's brand mark only** (what you pass to `SideBar`'s `icon` prop). Never for nav or action icons.
-- **MDI for plus, close and chevrons** — `mdi:plus` `mdi:close` `mdi:chevron-right|left|up|down`. Solar's versions of those read muddy at 16px.
+- **Iconoir, stroke width 2**, for all icons, chevrons, plus and close included — `iconoir:settings`, `iconoir:nav-arrow-right`, …
 - Prefer a key from `@facile/muse`'s `icons` map over inlining a name; add a key there if missing.
 - Icons inherit `currentColor` — do not give them their own colour class, or inverted active states will not flip them.
-- Always pass `width` **and** `height` plus `class="block"`. `<iconify-icon>` is inline by default and its baseline descender knocks icon/label pairs out of alignment.
 - Sizes: 16 inline · 18 nav rows · 24 brand mark.
 
 ## Traps that produce silently broken UI

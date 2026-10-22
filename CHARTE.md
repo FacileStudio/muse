@@ -505,27 +505,19 @@ gesture reaches the document and rubber-bands the shell.
 
 ## 8. Icons
 
-- **Pack**: [Solar](https://icon-sets.iconify.design/solar/) via Iconify (`<iconify-icon>`)
-- **Style**: **`linear`** — always `solar:*-linear` for UI chrome. This matches the shipped
-  suite (Sablier, Nuage, Plume all use `solar:chart-2-linear`, `solar:folder-linear`, …).
-  Reserve `bold-duotone` for **brand marks only** (an app's own logo glyph), never nav or
-  action icons.
+- **Pack**: [Iconoir](https://iconoir.com) for everything, chrome, actions, plus, close and chevrons.
+- **Stroke**: width **2**. Iconoir ships at 1.5; `scripts/build-icons.ts` rewrites every
+  bundled body to 2, so a 16px glyph holds its weight next to body text.
 - **Color**: inherit `currentColor`. Do not tint icons with their own class — let the parent's
   `text-fc-fg-muted` / `text-fc-accent-fg` cascade, so inverted active states flip the icon too.
-- **Size**: `width="16"` inline, `width="18"` nav rows, `width="24"` brand mark. Always pass
-  `height` alongside `width` and add `class="block"` — `<iconify-icon>` is inline by default
-  and its baseline descender knocks icon/label pairs out of vertical alignment.
-- **Exception — plus, close, and chevrons (left/right/up/down)**: never Solar for these.
-  Use [MDI](https://icon-sets.iconify.design/mdi/) instead — `mdi:plus`, `mdi:close`,
-  `mdi:chevron-left/right/up/down`. Solar's plus/close/arrow glyphs read muddy at small
-  sizes; MDI's are a single clean stroke.
+- **Size**: `size={16}` inline, `size={18}` nav rows, `size={24}` brand mark.
 
 Example:
 ```svelte
-<iconify-icon icon="solar:settings-linear" width="18" height="18" class="block shrink-0"></iconify-icon>
+<Icon icon={icons.settings} size={18} />
 ```
 
-Never default to Lucide or other packs without an explicit request.
+Never default to Lucide, Solar or other packs without an explicit request.
 
 ### Pass icons as props, not as markup
 
@@ -574,43 +566,39 @@ icon stays inert unless the consumer registers the custom element.
 
 Import via `import { icons } from '@facile/muse'`.
 
-**47 keys — 40 Solar, 7 MDI.** If a glyph you need is missing, add a key rather than inlining
-the string at the call site; that is what keeps the pack and style rules above from being
+**53 keys, all Iconoir.** If a glyph you need is missing, add a key rather than inlining
+the string at the call site; that is what keeps the pack and stroke rules above from being
 re-litigated in every component.
 
-Solar (`linear`, UI chrome):
-
 | Key | Icon | Key | Icon |
-|-----|------|-----|------|
-| `icons.collapse` | `solar:sidebar-minimalistic-linear` | `icons.search` | `solar:magnifer-linear` |
-| `icons.settings` | `solar:settings-linear` | `icons.edit` | `solar:pen-new-square-linear` |
-| `icons.remove` | `solar:trash-bin-2-linear` | `icons.calendar` | `solar:calendar-linear` |
-| `icons.home` | `solar:home-2-linear` | `icons.notification` | `solar:bell-linear` |
-| `icons.dashboard` | `solar:chart-2-linear` | `icons.folder` | `solar:folder-linear` |
-| `icons.usersGroup` | `solar:users-group-rounded-linear` | `icons.userCircle` | `solar:user-circle-linear` |
-| `icons.logout` | `solar:logout-2-linear` | `icons.warning` | `solar:danger-triangle-linear` |
-| `icons.info` | `solar:info-circle-linear` | `icons.upload` | `solar:cloud-upload-linear` |
-| `icons.clock` | `solar:clock-circle-linear` | `icons.refresh` | `solar:refresh-linear` |
-| `icons.eye` | `solar:eye-linear` | `icons.eyeClosed` | `solar:eye-closed-linear` |
-| `icons.copy` | `solar:copy-linear` | `icons.check` | `solar:check-circle-linear` |
-| `icons.key` | `solar:key-linear` | `icons.revoke` | `solar:forbidden-circle-linear` |
-| `icons.shield` | `solar:shield-check-linear` | `icons.palette` | `solar:pallete-2-linear` |
-| `icons.sun` | `solar:sun-linear` | `icons.moon` | `solar:moon-linear` |
-| `icons.monitor` | `solar:monitor-linear` | `icons.globe` | `solar:global-linear` |
-| `icons.plug` | `solar:plug-circle-linear` | `icons.bolt` | `solar:bolt-linear` |
-| `icons.server` | `solar:server-linear` | `icons.code` | `solar:code-linear` |
-| `icons.history` | `solar:history-linear` | `icons.card` | `solar:card-linear` |
-| `icons.download` | `solar:download-linear` | `icons.filter` | `solar:filter-linear` |
-| `icons.mail` | `solar:letter-linear` | `icons.error` | `solar:close-circle-linear` |
-
-MDI (plus, close, chevrons — Solar's read muddy at small sizes):
-
-| Key | Icon | Key | Icon |
-|-----|------|-----|------|
-| `icons.close` | `mdi:close` | `icons.plus` | `mdi:plus` |
-| `icons.minus` | `mdi:minus` | `icons.arrow` | `mdi:chevron-right` |
-| `icons.chevronDown` | `mdi:chevron-down` | `icons.chevronUp` | `mdi:chevron-up` |
-| `icons.chevronLeft` | `mdi:chevron-left` | | |
+|---|---|---|---|
+| `icons.collapse` | `iconoir:sidebar-collapse` | `icons.search` | `iconoir:search` |
+| `icons.settings` | `iconoir:settings` | `icons.edit` | `iconoir:edit-pencil` |
+| `icons.remove` | `iconoir:trash` | `icons.calendar` | `iconoir:calendar` |
+| `icons.home` | `iconoir:home-simple` | `icons.notification` | `iconoir:bell` |
+| `icons.dashboard` | `iconoir:stats-report` | `icons.folder` | `iconoir:folder` |
+| `icons.usersGroup` | `iconoir:group` | `icons.userCircle` | `iconoir:user-circle` |
+| `icons.logout` | `iconoir:log-out` | `icons.warning` | `iconoir:warning-triangle` |
+| `icons.error` | `iconoir:xmark-circle` | `icons.info` | `iconoir:info-circle` |
+| `icons.upload` | `iconoir:cloud-upload` | `icons.clock` | `iconoir:clock` |
+| `icons.refresh` | `iconoir:refresh` | `icons.eye` | `iconoir:eye` |
+| `icons.eyeClosed` | `iconoir:eye-closed` | `icons.copy` | `iconoir:copy` |
+| `icons.check` | `iconoir:check-circle` | `icons.key` | `iconoir:key` |
+| `icons.revoke` | `iconoir:prohibition` | `icons.shield` | `iconoir:shield-check` |
+| `icons.palette` | `iconoir:palette` | `icons.sun` | `iconoir:sun-light` |
+| `icons.moon` | `iconoir:half-moon` | `icons.monitor` | `iconoir:computer` |
+| `icons.globe` | `iconoir:globe` | `icons.plug` | `iconoir:ev-plug` |
+| `icons.bolt` | `iconoir:flash` | `icons.server` | `iconoir:server` |
+| `icons.code` | `iconoir:code` | `icons.history` | `iconoir:clock-rotate-right` |
+| `icons.card` | `iconoir:credit-card` | `icons.download` | `iconoir:download` |
+| `icons.filter` | `iconoir:filter` | `icons.mail` | `iconoir:mail` |
+| `icons.close` | `iconoir:xmark` | `icons.plus` | `iconoir:plus` |
+| `icons.minus` | `iconoir:minus` | `icons.arrow` | `iconoir:nav-arrow-right` |
+| `icons.chevronDown` | `iconoir:nav-arrow-down` | `icons.chevronUp` | `iconoir:nav-arrow-up` |
+| `icons.chevronLeft` | `iconoir:nav-arrow-left` | `icons.paletteMark` | `iconoir:palette` |
+| `icons.compass` | `iconoir:compass` | `icons.ruler` | `iconoir:ruler` |
+| `icons.text` | `iconoir:text` | `icons.widget` | `iconoir:view-grid` |
+| `icons.layers` | `iconoir:multiple-pages-empty` | | |
 
 ---
 
@@ -649,7 +637,7 @@ called `NavBar`; there is no `NavBar` export and has not been for some time.)
 
 ```svelte
 <SideBar
-  icon="solar:pallete-2-bold-duotone"
+  icon={icons.paletteMark}
   title="Facile"
   bind:collapsed
   showSearch
@@ -768,10 +756,8 @@ into a giant black square for a few frames. Any fixed dimension is immune; a der
 not. (The geometry is the `68 = 44 + 12 + 12` above. An earlier revision of this document also
 claimed `77px = 53px + 12 + 12` a few paragraphs later; that was never the shipped value.)
 
-**The `icon` prop is the brand mark — it is the one icon that stays `bold-duotone.`**
-Everything else in the sidebar (nav rows, search, collapse, the footer settings gear) is
-`solar:*-linear`. Pass `solar:<glyph>-bold-duotone` at `width="24"`; the duotone weight is
-what makes the app's identity read against a column of hairline chrome icons.
+**The `icon` prop is the brand mark.** Everything in the sidebar (nav rows, search, collapse,
+the footer settings gear) is Iconoir at stroke 2, and so is the mark, passed at `size={24}`.
 
 ### NavButton
 
@@ -890,7 +876,7 @@ Ported from Sablier's `MobileNav.svelte`.
 
 ```svelte
 <MobileNav
-  items={[{ href: '/dashboard', label: 'Dashboard', icon: 'solar:chart-2-linear', active: true }]}
+  items={[{ href: '/dashboard', label: 'Dashboard', icon: icons.dashboard, active: true }]}
   user={{ name: 'Gian', avatar: '/pfp.jpg' }}
   profileHref="/settings"
 />
@@ -983,7 +969,7 @@ springing back. The backdrop is instant, not faded — `::backdrop` is not a twe
 | `open` | `boolean` | `false` | Bindable |
 | `title` | `string` | — | Renders an `h2`; ignored when `header` is passed |
 | `dismissible` | `boolean` | `true` | `false` blocks Escape and backdrop clicks |
-| `showClose` | `boolean` | `false` | 44px `mdi:close` button, only when `dismissible` |
+| `showClose` | `boolean` | `false` | 44px `icons.close` button, only when `dismissible` |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | `max-w-sm` / `max-w-md` / `max-w-lg` |
 | `onClose` | `() => void` | — | Fires once, after the exit tween |
 | `header` / `footer` | `Snippet` | — | Replace the heading / append below the body |
@@ -1049,7 +1035,7 @@ Bottom sheet, the mobile counterpart to `Modal`. Full-bleed under `sm:`, capped 
 | `title` / `description` | `string` | — | Header text, `title` wired to `aria-labelledby` |
 | `footer` | `Snippet` | — | Pinned below the scroll area, carries the safe-area padding |
 | `showHandle` | `boolean` | `true` | Drag grabber in a 44px touch strip |
-| `showClose` | `boolean` | `false` | 44px `mdi:close` button |
+| `showClose` | `boolean` | `false` | 44px `icons.close` button |
 | `dismissible` | `boolean` | `true` | `false` disables Escape, backdrop **and** drag |
 | `onClose` | `() => void` | — | Fires on the dialog's `close` event |
 

@@ -181,37 +181,37 @@ The shipped files are labeled "GogaTest" (test license).
 ## Icons
 
 `icons` is a `const` map from a stable key to an Iconify name, exported alongside the
-`IconKey` type. 47 keys. UI chrome is Solar **`linear`**; plus, close and the chevrons are
-**MDI**, because Solar's versions of those read muddy at 16px.
+`IconKey` type. 53 keys, all [Iconoir](https://iconoir.com) with the stroke rewritten to width 2.
 
 | Key | Icon | Key | Icon |
 |---|---|---|---|
-| `home` | `solar:home-2-linear` | `settings` | `solar:settings-linear` |
-| `dashboard` | `solar:chart-2-linear` | `edit` | `solar:pen-new-square-linear` |
-| `folder` | `solar:folder-linear` | `remove` | `solar:trash-bin-2-linear` |
-| `search` | `solar:magnifer-linear` | `calendar` | `solar:calendar-linear` |
-| `collapse` | `solar:sidebar-minimalistic-linear` | `notification` | `solar:bell-linear` |
-| `usersGroup` | `solar:users-group-rounded-linear` | `userCircle` | `solar:user-circle-linear` |
-| `logout` | `solar:logout-2-linear` | `warning` | `solar:danger-triangle-linear` |
-| `info` | `solar:info-circle-linear` | `upload` | `solar:cloud-upload-linear` |
-| `clock` | `solar:clock-circle-linear` | `refresh` | `solar:refresh-linear` |
-| `eye` | `solar:eye-linear` | `eyeClosed` | `solar:eye-closed-linear` |
-| `copy` | `solar:copy-linear` | `check` | `solar:check-circle-linear` |
-| `key` | `solar:key-linear` | `revoke` | `solar:forbidden-circle-linear` |
-| `shield` | `solar:shield-check-linear` | `palette` | `solar:pallete-2-linear` |
-| `sun` | `solar:sun-linear` | `moon` | `solar:moon-linear` |
-| `monitor` | `solar:monitor-linear` | `globe` | `solar:global-linear` |
-| `plug` | `solar:plug-circle-linear` | `bolt` | `solar:bolt-linear` |
-| `server` | `solar:server-linear` | `code` | `solar:code-linear` |
-| `history` | `solar:history-linear` | `card` | `solar:card-linear` |
-| `download` | `solar:download-linear` | `filter` | `solar:filter-linear` |
-| `mail` | `solar:letter-linear` | `error` | `solar:close-circle-linear` |
-| `plus` | `mdi:plus` | `close` | `mdi:close` |
-| `arrow` | `mdi:chevron-right` | `chevronDown` | `mdi:chevron-down` |
-| `chevronUp` | `mdi:chevron-up` | `chevronLeft` | `mdi:chevron-left` |
-
-`bold-duotone` appears nowhere in this map by design — it is reserved for an app's own brand
-mark, which the consumer passes to `SideBar`'s `icon` prop.
+| `collapse` | `iconoir:sidebar-collapse` | `search` | `iconoir:search` |
+| `settings` | `iconoir:settings` | `edit` | `iconoir:edit-pencil` |
+| `remove` | `iconoir:trash` | `calendar` | `iconoir:calendar` |
+| `home` | `iconoir:home-simple` | `notification` | `iconoir:bell` |
+| `dashboard` | `iconoir:stats-report` | `folder` | `iconoir:folder` |
+| `usersGroup` | `iconoir:group` | `userCircle` | `iconoir:user-circle` |
+| `logout` | `iconoir:log-out` | `warning` | `iconoir:warning-triangle` |
+| `error` | `iconoir:xmark-circle` | `info` | `iconoir:info-circle` |
+| `upload` | `iconoir:cloud-upload` | `clock` | `iconoir:clock` |
+| `refresh` | `iconoir:refresh` | `eye` | `iconoir:eye` |
+| `eyeClosed` | `iconoir:eye-closed` | `copy` | `iconoir:copy` |
+| `check` | `iconoir:check-circle` | `key` | `iconoir:key` |
+| `revoke` | `iconoir:prohibition` | `shield` | `iconoir:shield-check` |
+| `palette` | `iconoir:palette` | `sun` | `iconoir:sun-light` |
+| `moon` | `iconoir:half-moon` | `monitor` | `iconoir:computer` |
+| `globe` | `iconoir:globe` | `plug` | `iconoir:ev-plug` |
+| `bolt` | `iconoir:flash` | `server` | `iconoir:server` |
+| `code` | `iconoir:code` | `history` | `iconoir:clock-rotate-right` |
+| `card` | `iconoir:credit-card` | `download` | `iconoir:download` |
+| `filter` | `iconoir:filter` | `mail` | `iconoir:mail` |
+| `close` | `iconoir:xmark` | `plus` | `iconoir:plus` |
+| `minus` | `iconoir:minus` | `arrow` | `iconoir:nav-arrow-right` |
+| `chevronDown` | `iconoir:nav-arrow-down` | `chevronUp` | `iconoir:nav-arrow-up` |
+| `chevronLeft` | `iconoir:nav-arrow-left` | `paletteMark` | `iconoir:palette` |
+| `compass` | `iconoir:compass` | `ruler` | `iconoir:ruler` |
+| `text` | `iconoir:text` | `widget` | `iconoir:view-grid` |
+| `layers` | `iconoir:multiple-pages-empty` | | |
 
 The map holds names only. Rendering goes through the `<iconify-icon>` custom element, which
 muse neither imports nor declares as a dependency — the consumer app must register it, or the
@@ -262,7 +262,7 @@ Aliasing is only *needed* when an app wants muse primitives to track its own loc
 Casier's case, so hand-written `bg-background` markup and muse components stay in lockstep.
 The published defaults already match the shipped suite look: chroma-zero OKLCH on a
 `0.145 / 0.985` inverted accent, `--radius-fc-md: 8px` (the suite's `--radius: 0.5rem`), a
-12–36px scale anchored on 14px, Goga, and Solar `linear` icons. `--destructive`'s suite value
+12–36px scale anchored on 14px, Goga, and Iconoir icons at stroke 2. `--destructive`'s suite value
 is `--color-fc-danger` verbatim.
 
 Forking the library is still not the supported route.

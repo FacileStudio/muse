@@ -30,15 +30,19 @@ describe('the bundled icon data covers the map', () => {
         expect(empty).toEqual([]);
     });
 
+    test('every bundled stroke is width 2', () => {
+        const thin = Object.entries(ICON_DATA).filter(([, d]) => /stroke-width="(?!2")/.test(d.body));
+        expect(thin.map(([n]) => n)).toEqual([]);
+    });
+
     /* Bundling artwork means redistributing it. The shipped trial font already cost this repo
        a licence problem once; the attribution for these collections is not optional. */
     test('the collections are credited in LICENSE', () => {
         const licence = readFileSync(join(import.meta.dir, '../../../../LICENSE'), 'utf8');
         const prefixes = new Set(Object.keys(ICON_DATA).map((n) => n.split(':')[0]));
         for (const prefix of prefixes) {
-            expect(licence.toLowerCase()).toContain(prefix === 'mdi' ? 'material design icons' : prefix);
+            expect(licence.toLowerCase()).toContain(prefix);
         }
-        expect(licence).toContain('CC-BY-4.0');
-        expect(licence).toContain('Apache-2.0');
+        expect(licence).toContain('iconoir-icons/iconoir/blob/main/LICENSE');
     });
 });

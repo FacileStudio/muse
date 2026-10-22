@@ -21,7 +21,7 @@ consumer/node_modules/@facile/muse/src/lib/
         │                                 ▼
         │                          @sveltejs/vite-plugin-svelte ──▶ app bundle
         │                                                              ▲
-        ├── icons.ts ──▶ solar:*-linear / mdi:* names ──▶ <iconify-icon>│
+        ├── icons.ts ──▶ iconoir:* names ──▶ inline <svg>               │
         │                                                              │
         └── styles/tokens.css ──▶ @tailwindcss/vite ───────────────────┘
                     │                     ▲
@@ -55,7 +55,7 @@ raw.githubusercontent.com/FacileStudio/muse/main
 | Organisms | `src/lib/components/organisms/` | 8 page-level structures — dialogs, nav, header, table, profile |
 | Charts | `src/lib/components/charts/` | 6 exported SVG charts and chart parts, plus internal `ChartTable.svelte` and `entry.ts` |
 | Motion | `src/lib/components/motion/` | 6 pieces that exist for the animation, not the markup |
-| Icons | `src/lib/icons.ts` | 45 Iconify names behind stable keys — Solar `linear` for chrome, MDI for plus/close/chevrons |
+| Icons | `src/lib/icons.ts` | 53 Iconoir names behind stable keys, bundled at stroke width 2 |
 | Theme | `src/lib/styles/tokens.css` | `@import 'tailwindcss'`, `@font-face` rules, an `@theme` block, an `@theme static` block for the chart slots, a media-query dark override, a `.dark` class override, and an `@layer base` |
 | Fonts | `src/lib/fonts/` | Goga Medium (500) and Goga Semibold (600) |
 | Class merge | `src/lib/utils/cn.ts` | `fc-*`-aware `tailwind-merge`. Every component imports `twMerge` from here |

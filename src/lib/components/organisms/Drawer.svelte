@@ -244,7 +244,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
                             class="-mr-1 border-0 text-fc-fg-muted hover:text-fc-fg"
                             onclick={() => (open = false)}
                         >
-                            <Icon icon="mdi:close" size={18} />
+                            <Icon icon="iconoir:xmark" size={18} />
                         </IconButton>
                     {/if}
                 </div>
