@@ -341,3 +341,14 @@ do not have, and nothing in the build disagreed.
 **Do:** if your app renders muse in another language, you now have props for all of it. If you
 were relying on the English defaults, pass them explicitly. `no-orphan-strings.test.ts` fails
 the build on literal prose baked into markup, so this cannot come back.
+
+## 17. `Select` draws its own chevron
+
+**Symptom before:** the dropdown arrow sat about 3px from the right border. Chrome paints the
+native `<select>` arrow at a fixed offset, so no `padding-right` could move it.
+
+**Now:** `Select` is `appearance-none` and paints `--fc-select-chevron` 12px inside the border,
+with `pr-10` keeping the label clear of it. The stroke follows `fc-fg` in light and dark.
+
+**Do:** nothing, unless you pass a horizontal padding to `Select`. `class="px-2"` now replaces
+the `pr-10` too and the label runs under the chevron, so pass `pl-*` instead.

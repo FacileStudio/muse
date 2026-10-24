@@ -164,6 +164,11 @@
   --color-fc-chart-4: oklch(0.68 0.15 15);
   --color-fc-chart-5: oklch(0.76 0.16 135);
   --color-fc-chart-6: oklch(0.73 0.14 339);
+
+  /* Select's chevron. Chrome draws the native <select> arrow at a fixed offset that
+     padding cannot move, so Select hides it and paints this one 12px inside the border.
+     A data URI cannot read currentColor, so the dark blocks swap in a light stroke. */
+  --fc-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23252525' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 
 /*
@@ -213,6 +218,7 @@
     --color-fc-chart-4: oklch(0.55 0.16 15);
     --color-fc-chart-5: oklch(0.64 0.15 135);
     --color-fc-chart-6: oklch(0.62 0.14 339);
+    --fc-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fbfbfb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   }
 }
 
@@ -242,6 +248,7 @@
   --color-fc-chart-4: oklch(0.55 0.16 15);
   --color-fc-chart-5: oklch(0.64 0.15 135);
   --color-fc-chart-6: oklch(0.62 0.14 339);
+  --fc-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fbfbfb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 
 @layer base {
