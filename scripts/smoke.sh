@@ -146,7 +146,7 @@ HTML=$(curl -s "http://127.0.0.1:$SSR_PORT/")
 SSR_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$SSR_PORT/")
 [ "$SSR_STATUS" = '200' ] || fail "SSR answered $SSR_STATUS, expected 200" "$(cat "$SSR_LOG")"
 
-for marker in 'data-smoke="ready"' 'bg-fc-component' 'rounded-fc-pill' '<table'; do
+for marker in 'data-smoke="ready"' 'bg-fc-surface' 'rounded-fc' '<table'; do
     case "$HTML" in
         *"$marker"*) ;;
         *) fail "the server-rendered HTML is missing '$marker' — the page returned 200 but did not render" \
@@ -164,11 +164,11 @@ step 'Checking the compiled stylesheet'
 CSS=$(find "$SMOKE/build/client/_app/immutable/assets" -name '*.css' 2>/dev/null | head -1)
 [ -n "$CSS" ] || fail 'no compiled stylesheet under smoke/build/client/_app/immutable/assets'
 
-# --color-fc-page       the theme block survived the package import
+# --color-fc-bg         the theme block survived the package import
 # --color-fc-chart-6    the `@theme static` slot — a plain @theme drops it and SVG fills render black
-# color-scheme          the half of dark mode a token cannot reach; needed in BOTH modes
-# bg-fc-component       a utility that only exists because @source scanned node_modules
-for needle in '--color-fc-page' '--color-fc-chart-6' 'color-scheme:dark' 'color-scheme:light' 'bg-fc-component'; do
+# color-scheme          the half of dark mode a token cannot reach
+# bg-fc-surface         a utility that only exists because @source scanned node_modules
+for needle in '--color-fc-bg' '--color-fc-chart-6' 'color-scheme:dark' 'bg-fc-surface'; do
     grep -q -- "$needle" "$CSS" || fail "the compiled CSS is missing '$needle'" "stylesheet: $CSS"
 done
 

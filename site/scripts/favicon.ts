@@ -11,8 +11,9 @@
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ICON_DATA } from '../../src/lib/icons-data.js';
+import { icons } from '../../src/lib/icons.js';
 
-const MARK = 'solar:pallete-2-bold-duotone';
+const MARK = icons.paletteMark;
 const d = ICON_DATA[MARK];
 if (!d) throw new Error(`${MARK} is not in the bundle — run scripts/build-icons.ts`);
 
