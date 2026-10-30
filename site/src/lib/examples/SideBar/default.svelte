@@ -10,7 +10,7 @@
     ];
 </script>
 
-<div class="h-[420px] overflow-hidden rounded-fc-md border border-fc-border">
+<div class="h-[420px] overflow-hidden rounded-fc border border-fc-border">
     <SideBar
         class="h-full"
         title="Sablier"

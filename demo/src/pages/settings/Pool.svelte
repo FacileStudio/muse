@@ -71,7 +71,7 @@
     }
 </script>
 
-<Stack gap="section">
+<Stack>
     <SettingsSection
         title="Nook Pool"
         description="One socket to Nook carries every event this app emits. Apps never talk to each other directly."
@@ -147,7 +147,7 @@
             />
         </SettingsRow>
 
-        <div class="flex flex-wrap gap-2 pt-2">
+        <div class="flex flex-wrap gap-1 pt-2">
             <Button icon={icons.plug} disabled={saving} onclick={connect}>
                 {saving ? 'Connecting…' : 'Save and connect'}
             </Button>

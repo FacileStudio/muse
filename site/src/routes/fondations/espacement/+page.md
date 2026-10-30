@@ -27,21 +27,21 @@ en boucle. **Un défaut qu'aucun appel ne veut n'est pas un défaut : c'est un b
 Les deux panneaux ci-dessous rendent le même contenu. Celui de gauche est ce que produit un
 flux de blocs sans conteneur qui possède l'espace.
 
-<div class="grid gap-4 lg:grid-cols-2">
+<div class="grid gap-1 lg:grid-cols-2">
 <Preview verdict="bad" label="Aucun parent ne possède l'espace">
   <div>
-    <h3 class="text-fc-md font-semibold text-fc-fg">Zone de danger</h3>
-    <p class="text-fc-sm text-fc-fg-muted">Supprimer cet espace est définitif.</p>
+    <h3 class="text-fc-lead font-semibold text-fc-ink">Zone de danger</h3>
+    <p class="text-fc-p text-fc-muted">Supprimer cet espace est définitif.</p>
     <Divider />
     <Button variant="danger" size="sm">Supprimer l'espace</Button>
   </div>
 </Preview>
 
-<Preview verdict="good" label={'Stack gap="content"'}>
-  <Stack gap="content">
-    <Stack gap="bound">
-      <h3 class="text-fc-md font-semibold text-fc-fg">Zone de danger</h3>
-      <p class="text-fc-sm text-fc-fg-muted">Supprimer cet espace est définitif.</p>
+<Preview verdict="good" label={'Stack'}>
+  <Stack>
+    <Stack>
+      <h3 class="text-fc-lead font-semibold text-fc-ink">Zone de danger</h3>
+      <p class="text-fc-p text-fc-muted">Supprimer cet espace est définitif.</p>
     </Stack>
     <Divider />
     <Button variant="danger" size="sm" class="w-fit">Supprimer l'espace</Button>
@@ -54,20 +54,20 @@ morceaux d'une même chose, pas deux frères.
 
 ### La gouttière trop serrée
 
-<div class="grid gap-4 lg:grid-cols-2">
-<Preview verdict="bad" label="gap-3 autour de cartes p-5">
-  <div class="grid grid-cols-3 gap-3">
-    <Card class="flex flex-col gap-1"><span class="text-fc-xs text-fc-fg-muted">Actives</span><span class="text-fc-xl font-semibold text-fc-fg">12</span></Card>
-    <Card class="flex flex-col gap-1"><span class="text-fc-xs text-fc-fg-muted">En pause</span><span class="text-fc-xl font-semibold text-fc-fg">3</span></Card>
-    <Card class="flex flex-col gap-1"><span class="text-fc-xs text-fc-fg-muted">Archivées</span><span class="text-fc-xl font-semibold text-fc-fg">27</span></Card>
+<div class="grid gap-1 lg:grid-cols-2">
+<Preview verdict="bad" label="gap-1 autour de cartes p-5">
+  <div class="grid grid-cols-3 gap-1">
+    <Card class="flex flex-col gap-1"><span class="text-fc-subtext text-fc-muted">Actives</span><span class="text-fc-subtitle font-semibold text-fc-ink">12</span></Card>
+    <Card class="flex flex-col gap-1"><span class="text-fc-subtext text-fc-muted">En pause</span><span class="text-fc-subtitle font-semibold text-fc-ink">3</span></Card>
+    <Card class="flex flex-col gap-1"><span class="text-fc-subtext text-fc-muted">Archivées</span><span class="text-fc-subtitle font-semibold text-fc-ink">27</span></Card>
   </div>
 </Preview>
 
-<Preview verdict="good" label="gap-4 — content">
-  <div class="grid grid-cols-3 gap-4">
-    <Card class="flex flex-col gap-1"><span class="text-fc-xs text-fc-fg-muted">Actives</span><span class="text-fc-xl font-semibold text-fc-fg">12</span></Card>
-    <Card class="flex flex-col gap-1"><span class="text-fc-xs text-fc-fg-muted">En pause</span><span class="text-fc-xl font-semibold text-fc-fg">3</span></Card>
-    <Card class="flex flex-col gap-1"><span class="text-fc-xs text-fc-fg-muted">Archivées</span><span class="text-fc-xl font-semibold text-fc-fg">27</span></Card>
+<Preview verdict="good" label="gap-1 — content">
+  <div class="grid grid-cols-3 gap-1">
+    <Card class="flex flex-col gap-1"><span class="text-fc-subtext text-fc-muted">Actives</span><span class="text-fc-subtitle font-semibold text-fc-ink">12</span></Card>
+    <Card class="flex flex-col gap-1"><span class="text-fc-subtext text-fc-muted">En pause</span><span class="text-fc-subtitle font-semibold text-fc-ink">3</span></Card>
+    <Card class="flex flex-col gap-1"><span class="text-fc-subtext text-fc-muted">Archivées</span><span class="text-fc-subtitle font-semibold text-fc-ink">27</span></Card>
   </div>
 </Preview>
 </div>
@@ -87,7 +87,7 @@ n'est jamais « combien de pixels » mais « est-ce que ces deux choses sont la 
 Il n'y a **délibérément rien** entre `content` et `section`. « Lié, mais un peu moins » est la
 distinction que personne n'applique deux fois de la même façon, et c'est d'où venaient les trois
 gaps de colonne différents de la suite. Une mise en page qui a vraiment besoin de 24px écrit
-`class="gap-6"`, et ça se lit comme l'exception que c'est.
+`class="gap-1"`, et ça se lit comme l'exception que c'est.
 
 ## Les composants qui portent le rythme
 
@@ -96,7 +96,7 @@ gaps de colonne différents de la suite. Une mise en page qui a vraiment besoin 
   <PageHeader title="Stockage" description="Sur tous vos espaces." />
 
   <Section title="Usage">
-    <div class="grid gap-4 lg:grid-cols-2">…</div>
+    <div class="grid gap-1 lg:grid-cols-2">…</div>
   </Section>
 </Page>
 ```
@@ -120,7 +120,7 @@ Le padding n'est pas un barreau : ce n'est pas une relation, c'est le retrait in
 conteneur. `Card` est à `p-5` (20px), et ça interagit avec les gouttières autour.
 
 **Une gouttière ne peut jamais être plus serrée que le padding des cartes qu'elle sépare.** Des
-tableaux de bord tournaient ici avec des gouttières `gap-3` autour de cartes `p-4` : trois
+tableaux de bord tournaient ici avec des gouttières `gap-1` autour de cartes `p-4` : trois
 cartes statistiques se lisaient comme un seul panneau à coutures.
 
 ## Le cas que la charte avait oublié
@@ -133,7 +133,7 @@ se lit comme une erreur. C'est de l'alignement, pas de la densité, et la répon
 `size="lg"` sur le bouton :
 
 ```svelte
-<form class="flex flex-col gap-3 sm:flex-row">
+<form class="flex flex-col gap-1 sm:flex-row">
   <Input class="flex-1" />
   <Button size="lg">Envoyer l'invitation</Button>
 </form>

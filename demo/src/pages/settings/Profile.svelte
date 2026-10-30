@@ -86,7 +86,7 @@
     }
 </script>
 
-<Stack gap="section">
+<Stack>
     <ProfileCard
         name={displayName}
         email={accountEmail}
@@ -97,9 +97,9 @@
             { label: 'Member since', value: 'March 2024' }
         ]}
     >
-        <div class="flex flex-col gap-2">
-            <span class="text-fc-sm font-medium text-fc-fg">Identity colour</span>
-            <p class="text-fc-xs text-fc-fg-muted">
+        <div class="flex flex-col gap-1">
+            <span class="text-fc-p font-medium text-fc-ink">Identity colour</span>
+            <p class="text-fc-subtext text-fc-muted">
                 Used for your avatar dot and your entries across the suite.
             </p>
             <SwatchPicker bind:value={identityColor} showLabels class="mt-1" />
@@ -110,7 +110,7 @@
         title="Account"
         description="How you appear to everyone else in Acme Studio."
     >
-        <div class="grid gap-4 sm:grid-cols-2">
+        <div class="grid gap-1 sm:grid-cols-2">
             <Field label="Display name" helper="Shown on entries, comments and invoices.">
                 <Input bind:value={displayName} maxlength={80} placeholder="Camille" />
             </Field>
@@ -153,7 +153,7 @@
         />
 
         {#if avatarError}
-            <p class="text-fc-xs text-fc-danger">Not uploaded — {avatarError}.</p>
+            <p class="text-fc-subtext text-fc-danger">Not uploaded — {avatarError}.</p>
         {/if}
 
         {#if avatarUploads.length > 0}

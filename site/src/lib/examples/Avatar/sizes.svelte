@@ -2,7 +2,7 @@
     import { Avatar } from '@facile/muse';
 </script>
 
-<div class="flex items-center gap-4">
+<div class="flex items-center gap-1">
     <Avatar name="Yann Ravenel" size="sm" />
     <Avatar name="Marion Masson" size="md" />
     <Avatar name="Laura Hervé" size="lg" />

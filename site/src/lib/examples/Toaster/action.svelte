@@ -9,7 +9,7 @@
     }
 </script>
 
-<Inline gap="tight">
+<Inline>
     <Button variant="outline" onclick={archive}>Archiver le projet</Button>
     <Button variant="ghost" onclick={() => toast.clear()}>Tout masquer</Button>
 </Inline>

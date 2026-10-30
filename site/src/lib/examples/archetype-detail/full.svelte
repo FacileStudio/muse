@@ -29,21 +29,21 @@
         {/snippet}
     </PageHeader>
 
-    <div class="grid gap-4 lg:grid-cols-3">
-        <Stack gap="content" class="lg:col-span-2">
+    <div class="grid gap-1 lg:grid-cols-3">
+        <Stack class="lg:col-span-2">
             <Section card title="Avancement" description="38 h pointées sur les 60 h estimées.">
                 <Sparkline data={[2, 4, 3, 6, 5, 7, 8, 6, 9]} height={56} area smooth showLast />
             </Section>
 
             <Section card title="Dernières entrées">
-                <Stack gap="tight">
+                <Stack>
                     {#each entrees as entree (entree.quoi)}
                         <Inline class="justify-between">
-                            <Stack gap="bound">
-                                <span class="text-fc-sm text-fc-fg">{entree.quoi}</span>
-                                <span class="text-fc-xs text-fc-fg-muted">{entree.qui}</span>
+                            <Stack>
+                                <span class="text-fc-p text-fc-ink">{entree.quoi}</span>
+                                <span class="text-fc-subtext text-fc-muted">{entree.qui}</span>
                             </Stack>
-                            <span class="font-fc-mono text-fc-xs text-fc-fg-muted">{entree.duree}</span>
+                            <span class="font-fc-mono text-fc-subtext text-fc-muted">{entree.duree}</span>
                         </Inline>
                     {/each}
                     <Divider />
@@ -52,24 +52,24 @@
             </Section>
         </Stack>
 
-        <Stack gap="content">
+        <Stack>
             <Section card title="Détails">
-                <Stack gap="tight">
+                <Stack>
                     {#each details as [libelle, valeur] (libelle)}
                         <Inline align="baseline" class="justify-between">
-                            <span class="text-fc-sm text-fc-fg-muted">{libelle}</span>
-                            <span class="text-fc-sm text-fc-fg">{valeur}</span>
+                            <span class="text-fc-p text-fc-muted">{libelle}</span>
+                            <span class="text-fc-p text-fc-ink">{valeur}</span>
                         </Inline>
                     {/each}
                 </Stack>
             </Section>
 
             <Section card title="Équipe">
-                <Stack gap="tight">
+                <Stack>
                     {#each equipe as membre (membre)}
-                        <Inline gap="tight">
+                        <Inline>
                             <Avatar name={membre} size="sm" />
-                            <span class="text-fc-sm text-fc-fg">{membre}</span>
+                            <span class="text-fc-p text-fc-ink">{membre}</span>
                         </Inline>
                     {/each}
                 </Stack>

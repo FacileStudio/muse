@@ -4,7 +4,7 @@
     let recherche = $state('');
 </script>
 
-<Inline gap="tight" wrap={false}>
+<Inline wrap={false}>
     <Input bind:value={recherche} class="min-w-0 flex-1" placeholder="Rechercher un projet" />
     <Button size="lg">Rechercher</Button>
 </Inline>

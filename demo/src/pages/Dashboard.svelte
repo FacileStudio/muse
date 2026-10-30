@@ -102,8 +102,8 @@
          section, 20px of card padding, and a section's heading bound to its body by the
          same 16px. Card gutters used to be 12px — tighter than the padding inside the cards
          they separate, which reads as three panels leaning on each other. -->
-    <section class="flex flex-col gap-4">
-        <div class="grid gap-4 sm:grid-cols-3">
+    <section class="flex flex-col gap-1">
+        <div class="grid gap-1 sm:grid-cols-3">
             <StatCard label="Tracked" value="1 054 h" delta="+12% vs last month">
                 <Sparkline data={tracked[0].data} class="mt-3" showLast />
             </StatCard>
@@ -115,18 +115,18 @@
             </StatCard>
         </div>
 
-        <Card class="flex flex-col gap-4">
-            <p class="text-fc-sm font-medium text-fc-fg">Hours tracked per month</p>
+        <Card class="flex flex-col gap-1">
+            <p class="text-fc-p font-medium text-fc-ink">Hours tracked per month</p>
             <LineChart series={tracked} labels={months} area height={240} />
         </Card>
 
-        <div class="grid gap-4 lg:grid-cols-2">
-            <Card class="flex flex-col gap-4">
-                <p class="text-fc-sm font-medium text-fc-fg">Invoices by status</p>
+        <div class="grid gap-1 lg:grid-cols-2">
+            <Card class="flex flex-col gap-1">
+                <p class="text-fc-p font-medium text-fc-ink">Invoices by status</p>
                 <BarChart series={invoices} labels={months} stacked height={220} />
             </Card>
-            <Card class="flex flex-col gap-4">
-                <p class="text-fc-sm font-medium text-fc-fg">Storage used</p>
+            <Card class="flex flex-col gap-1">
+                <p class="text-fc-p font-medium text-fc-ink">Storage used</p>
                 <!-- flex-1 so the ring centres in the height the taller neighbour sets,
                      instead of hanging off the title. -->
                 <DonutChart
@@ -138,8 +138,8 @@
             </Card>
         </div>
 
-        <Card class="flex flex-col gap-4">
-            <p class="text-fc-sm font-medium text-fc-fg">Top clients</p>
+        <Card class="flex flex-col gap-1">
+            <p class="text-fc-p font-medium text-fc-ink">Top clients</p>
             <BarChart
                 series={[{ name: 'Revenue', data: [24, 18, 15, 11, 7] }]}
                 labels={['Acme', 'Nova', 'Hedra', 'Lumen', 'Pivot']}
@@ -150,41 +150,41 @@
         </Card>
     </section>
 
-    <section class="flex flex-col gap-4">
+    <section class="flex flex-col gap-1">
         <div class="flex flex-col gap-1">
-            <h2 class="text-fc-lg font-semibold text-fc-fg">Chart parts</h2>
-            <p class="text-fc-sm text-fc-fg-muted">
+            <h2 class="text-fc-lead font-semibold text-fc-ink">Chart parts</h2>
+            <p class="text-fc-p text-fc-muted">
                 The legend and the tooltip are exported separately, so a chart muse does not ship
                 can still read as one of ours.
             </p>
         </div>
-        <div class="grid gap-4 lg:grid-cols-2">
-            <Card class="flex flex-col gap-4">
-                <p class="text-fc-sm font-medium text-fc-fg">ChartLegend</p>
+        <div class="grid gap-1 lg:grid-cols-2">
+            <Card class="flex flex-col gap-1">
+                <p class="text-fc-p font-medium text-fc-ink">ChartLegend</p>
                 <ChartLegend items={legend} />
             </Card>
-            <Card class="relative flex min-h-32 flex-col gap-4">
-                <p class="text-fc-sm font-medium text-fc-fg">ChartTooltip</p>
+            <Card class="relative flex min-h-32 flex-col gap-1">
+                <p class="text-fc-p font-medium text-fc-ink">ChartTooltip</p>
                 <ChartTooltip x={120} y={80} title="Aug" rows={tipRows} visible />
             </Card>
         </div>
     </section>
 
-    <section class="flex flex-col gap-4">
-        <h2 class="text-fc-lg font-semibold text-fc-fg">Buttons</h2>
-        <div class="flex flex-wrap items-center gap-3">
+    <section class="flex flex-col gap-1">
+        <h2 class="text-fc-lead font-semibold text-fc-ink">Buttons</h2>
+        <div class="flex flex-wrap items-center gap-1">
             <Button variant="primary" size="sm" icon={icons.plus}>Create</Button>
             <Button variant="primary" size="md" icon={icons.plus}>New project</Button>
             <Button variant="primary" size="lg" icon={icons.plus}>New space</Button>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-1">
             <Button variant="outline" icon={icons.edit}>Edit</Button>
             <Button variant="outline" icon={icons.upload}>Upload</Button>
             <Button variant="ghost" icon={icons.settings}>Settings</Button>
             <Button variant="danger" icon={icons.remove}>Delete</Button>
             <Button variant="primary" disabled icon={icons.logout}>Disabled</Button>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-1">
             <IconButton variant="default" aria-label="Edit" title="Default">
                 <iconify-icon icon={icons.edit} width="18" height="18" class="block"></iconify-icon>
             </IconButton>
@@ -196,11 +196,11 @@
             </IconButton>
             <!-- icons.minus is the pair to icons.plus: MDI, because Solar's reads muddy at
                  16px. A stepper is where it earns its keep. -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1">
                 <IconButton variant="ghost" aria-label="Fewer" onclick={() => (seats = Math.max(1, seats - 1))}>
                     <iconify-icon icon={icons.minus} width="18" height="18" class="block"></iconify-icon>
                 </IconButton>
-                <span class="w-6 text-center text-fc-sm tabular-nums text-fc-fg">{seats}</span>
+                <span class="w-6 text-center text-fc-p tabular-nums text-fc-ink">{seats}</span>
                 <IconButton variant="ghost" aria-label="More" onclick={() => (seats = seats + 1)}>
                     <iconify-icon icon={icons.plus} width="18" height="18" class="block"></iconify-icon>
                 </IconButton>
@@ -209,7 +209,7 @@
 
         <!-- An action that navigates renders as an <a> and keeps the button's shape, so it is
              still middle-clickable and still shows its target in the status bar. -->
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-1">
             <Button href="#/projects" iconRight={icons.arrow}>All projects</Button>
             <Button href="#/spaces" variant="outline" icon={icons.usersGroup}>Spaces</Button>
             <Button href="#/motion" variant="ghost" iconRight={icons.arrow}>Motion</Button>
@@ -217,20 +217,20 @@
         </div>
     </section>
 
-    <section class="flex flex-col gap-4">
+    <section class="flex flex-col gap-1">
         <div class="flex flex-col gap-1">
-            <h2 class="text-fc-lg font-semibold text-fc-fg">Cards that navigate</h2>
-            <p class="text-fc-sm text-fc-fg-muted">
+            <h2 class="text-fc-lead font-semibold text-fc-ink">Cards that navigate</h2>
+            <p class="text-fc-p text-fc-muted">
                 `href` turns a Card into an anchor and adds the hover step, the focus ring and
                 `group`, so children can answer the hover.
             </p>
         </div>
-        <div class="grid gap-4 sm:grid-cols-3">
+        <div class="grid gap-1 sm:grid-cols-3">
             {#each cardLinks as link (link.href)}
-                <Card href={link.href} class="flex flex-col gap-4">
+                <Card href={link.href} class="flex flex-col gap-1">
                     <div class="flex items-center justify-between">
                         <span
-                            class="flex size-9 items-center justify-center rounded-fc-sm bg-fc-surface text-fc-fg transition-colors group-hover:bg-fc-component"
+                            class="flex size-9 items-center justify-center rounded-fc bg-fc-surface-hover text-fc-ink transition-colors group-hover:bg-fc-surface"
                         >
                             <iconify-icon icon={link.icon} width="18" height="18" class="block"></iconify-icon>
                         </span>
@@ -238,21 +238,21 @@
                             icon={icons.arrow}
                             width="16"
                             height="16"
-                            class="block text-fc-fg-muted transition-transform group-hover:translate-x-0.5"
+                            class="block text-fc-muted transition-transform group-hover:translate-x-0.5"
                         ></iconify-icon>
                     </div>
                     <div class="min-w-0">
-                        <p class="truncate text-fc-sm font-medium text-fc-fg">{link.label}</p>
-                        <p class="truncate text-fc-xs text-fc-fg-muted">{link.meta}</p>
+                        <p class="truncate text-fc-p font-medium text-fc-ink">{link.label}</p>
+                        <p class="truncate text-fc-subtext text-fc-muted">{link.meta}</p>
                     </div>
                 </Card>
             {/each}
         </div>
     </section>
 
-    <section class="flex flex-col gap-4">
-        <h2 class="text-fc-lg font-semibold text-fc-fg">Tones</h2>
-        <div class="flex flex-wrap items-center gap-2">
+    <section class="flex flex-col gap-1">
+        <h2 class="text-fc-lead font-semibold text-fc-ink">Tones</h2>
+        <div class="flex flex-wrap items-center gap-1">
             <Badge tone="neutral">Member</Badge>
             <Badge tone="owner">Owner</Badge>
             <Badge tone="admin">Admin</Badge>
@@ -262,7 +262,7 @@
             <Badge tone="warning">Expiring</Badge>
             <Badge tone="danger">Revoked</Badge>
         </div>
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        <div class="flex flex-wrap items-center gap-x-1 gap-y-1">
             <StatusDot tone="neutral" label="Idle" />
             <StatusDot tone="accent" label="Selected" />
             <StatusDot tone="info" label="Syncing" />
@@ -270,7 +270,7 @@
             <StatusDot tone="warning" label="Reconnecting" pulse />
             <StatusDot tone="danger" label="Offline" />
         </div>
-        <div class="grid gap-2 lg:grid-cols-2">
+        <div class="grid gap-1 lg:grid-cols-2">
             <Alert tone="neutral">Neutral — context, no state attached to it.</Alert>
             <Alert tone="info">Info — something worth knowing, nothing to do about it.</Alert>
             <Alert tone="success">Success — the thing you asked for happened.</Alert>
@@ -279,9 +279,9 @@
         </div>
     </section>
 
-    <section class="flex flex-col gap-4">
-        <h2 class="text-fc-lg font-semibold text-fc-fg">Form controls</h2>
-        <div class="flex max-w-sm flex-col gap-4">
+    <section class="flex flex-col gap-1">
+        <h2 class="text-fc-lead font-semibold text-fc-ink">Form controls</h2>
+        <div class="flex max-w-sm flex-col gap-1">
             <Field label="Email" helper="Used for space invitations.">
                 <Input bind:value={email} placeholder="you@facile.studio" type="email" />
             </Field>
@@ -297,33 +297,33 @@
                 <Input bind:value={billing} placeholder="billing@facile.studio" type="email" />
             </Field>
 
-            <fieldset class="flex flex-col gap-2">
-                <legend class="mb-1 text-fc-sm text-fc-fg">Export scopes</legend>
+            <fieldset class="flex flex-col gap-1">
+                <legend class="mb-1 text-fc-p text-fc-ink">Export scopes</legend>
                 <Checkbox bind:checked={scopes.projects} label="Projects and tasks" />
                 <Checkbox bind:checked={scopes.invoices} label="Invoices" />
                 <Checkbox bind:checked={scopes.exports} label="Tracked time" />
             </fieldset>
 
-            <fieldset class="flex flex-col gap-2">
-                <legend class="mb-1 text-fc-sm text-fc-fg">Digest frequency</legend>
+            <fieldset class="flex flex-col gap-1">
+                <legend class="mb-1 text-fc-p text-fc-ink">Digest frequency</legend>
                 <Radio bind:group={digest} value="daily" name="digest" label="Every morning" />
                 <Radio bind:group={digest} value="weekly" name="digest" label="Monday mornings" />
                 <Radio bind:group={digest} value="never" name="digest" label="Never" />
             </fieldset>
 
-            <Switch bind:checked={notify} label="Email notifications" class="text-fc-sm" />
-            <div class="flex items-center gap-3 text-fc-sm text-fc-fg-muted">
+            <Switch bind:checked={notify} label="Email notifications" class="text-fc-p" />
+            <div class="flex items-center gap-1 text-fc-p text-fc-muted">
                 <Spinner size="sm" /> Loading state
             </div>
         </div>
     </section>
 
-    <section class="flex flex-col gap-4">
+    <section class="flex flex-col gap-1">
         <div class="flex flex-col gap-1">
-            <h2 class="text-fc-lg font-semibold text-fc-fg">Overlays</h2>
-            <p class="text-fc-sm text-fc-fg-muted">Last action: {lastAction}</p>
+            <h2 class="text-fc-lead font-semibold text-fc-ink">Overlays</h2>
+            <p class="text-fc-p text-fc-muted">Last action: {lastAction}</p>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-1">
             <Button variant="outline" icon={icons.plus} onclick={() => (modalOpen = true)}>Invite</Button>
             <Button variant="outline" icon={icons.upload} onclick={() => (confirmOpen = true)}>
                 Publish
@@ -337,15 +337,15 @@
         </div>
     </section>
 
-    <section class="flex flex-col gap-4">
+    <section class="flex flex-col gap-1">
         <div class="flex flex-col gap-1">
-            <h2 class="text-fc-lg font-semibold text-fc-fg">Toasts</h2>
-            <p class="text-fc-sm text-fc-fg-muted">
+            <h2 class="text-fc-lead font-semibold text-fc-ink">Toasts</h2>
+            <p class="text-fc-p text-fc-muted">
                 Feedback that does not need an answer. Call <code>toast.success(…)</code> from
                 anywhere — the single <code>&lt;Toaster /&gt;</code> in the layout renders it.
             </p>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-1">
             <Button
                 variant="outline"
                 icon={icons.check}
@@ -392,7 +392,7 @@
         </div>
         <!-- The same component, sitting still, so the anatomy is readable without chasing a
              five-second timer. -->
-        <div class="flex max-w-sm flex-col gap-3">
+        <div class="flex max-w-sm flex-col gap-1">
             <Toast tone="success" title="Invoice sent">Acme Studio · €4 200 · due in 30 days.</Toast>
             <Toast
                 tone="neutral"
@@ -403,8 +403,8 @@
         </div>
     </section>
 
-    <section class="flex flex-col gap-4">
-        <h2 class="text-fc-lg font-semibold text-fc-fg">SpaceSwitcher</h2>
+    <section class="flex flex-col gap-1">
+        <h2 class="text-fc-lead font-semibold text-fc-ink">SpaceSwitcher</h2>
         <div class="max-w-xs">
             <SpaceSwitcher
                 {spaces}
@@ -417,14 +417,14 @@
 </Page>
 
 <Modal bind:open={modalOpen} title="Invite a teammate" showClose>
-    <p class="text-fc-sm text-fc-fg-muted">
+    <p class="text-fc-p text-fc-muted">
         They receive an email invitation and join with the Member role.
     </p>
     <Field label="Email">
         <Input placeholder="you@facile.studio" type="email" />
     </Field>
     {#snippet footer()}
-        <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <div class="flex flex-col-reverse gap-1 sm:flex-row sm:justify-end">
             <Button variant="ghost" class="w-full sm:w-auto" onclick={() => (modalOpen = false)}>
                 Cancel
             </Button>
@@ -469,20 +469,20 @@
     description="Drag the handle down, or press Escape, to dismiss."
     showClose
 >
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
         <Field label="Client">
             <Input placeholder="All clients" />
         </Field>
-        <Switch checked label="Billable only" class="text-fc-sm" />
-        <Switch label="Include archived" class="text-fc-sm" />
-        <div class="flex flex-wrap gap-2">
+        <Switch checked label="Billable only" class="text-fc-p" />
+        <Switch label="Include archived" class="text-fc-p" />
+        <div class="flex flex-wrap gap-1">
             {#each ['7 days', '30 days', 'Quarter', 'Year'] as range (range)}
                 <Badge tone="neutral">{range}</Badge>
             {/each}
         </div>
     </div>
     {#snippet footer()}
-        <div class="flex gap-2">
+        <div class="flex gap-1">
             <Button variant="ghost" icon={icons.refresh} class="flex-1" onclick={() => (drawerOpen = false)}>
                 Reset
             </Button>

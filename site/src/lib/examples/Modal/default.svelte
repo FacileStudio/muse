@@ -7,7 +7,7 @@
 <Button variant="outline" onclick={() => (open = true)}>Voir l'espace</Button>
 
 <Modal bind:open title="Espace « Heranova »" showClose>
-    <p class="text-fc-sm text-fc-fg-muted">
+    <p class="text-fc-p text-fc-muted">
         7 membres, 4 projets actifs et 312 h pointées depuis janvier. L'espace est facturé au
         forfait mensuel.
     </p>

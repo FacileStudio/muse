@@ -77,7 +77,7 @@
     }
 
     const box =
-        'h-11 rounded-fc-md border border-fc-border bg-fc-bg text-fc-md text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:opacity-50';
+        'h-11 rounded-fc border border-fc-border bg-fc-surface text-fc-lead text-fc-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand disabled:opacity-50';
 </script>
 
 <!--
@@ -85,8 +85,8 @@
 Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour choisir dans une palette fixe, c'est `SwatchPicker`.
 -->
 
-<div class={twMerge('flex flex-col gap-2', className)} {...rest}>
-    <div class="flex items-center gap-2">
+<div class={twMerge('flex flex-col gap-1', className)} {...rest}>
+    <div class="flex items-center gap-1">
         <!--
             Not `bind:value`: the browser coerces an unparseable value to black and reports it
             back, so a two-way binding here would rewrite the parent's empty string to
@@ -103,7 +103,7 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
             }}
             class={twMerge(
                 box,
-                'w-11 shrink-0 cursor-pointer appearance-none p-1 disabled:cursor-not-allowed [&::-moz-color-swatch]:rounded-fc-sm [&::-moz-color-swatch]:border-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-fc-sm [&::-webkit-color-swatch]:border-0'
+                'w-11 shrink-0 cursor-pointer appearance-none p-1 disabled:cursor-not-allowed [&::-moz-color-swatch]:rounded-fc [&::-moz-color-swatch]:border-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-fc [&::-webkit-color-swatch]:border-0'
             )}
         />
 
@@ -126,12 +126,12 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
                 if (parsed) commit(parsed);
             }}
             onblur={() => (typed = null)}
-            class={twMerge(box, 'w-full min-w-0 px-3 font-fc-mono placeholder:font-sans placeholder:text-fc-fg-muted')}
+            class={twMerge(box, 'w-full min-w-0 px-3 font-fc-mono placeholder:font-sans placeholder:text-fc-muted')}
         />
     </div>
 
     {#if swatches.length > 0}
-        <div class="flex flex-wrap gap-1.5" role="group" aria-label="Colour presets">
+        <div class="flex flex-wrap gap-1" role="group" aria-label="Colour presets">
             {#each swatches as color (color)}
                 {@const hex = parseHex(color) ?? color}
                 {@const active = selected !== null && hex.toLowerCase() === selected}
@@ -145,12 +145,12 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
                         typed = null;
                         commit(hex);
                     }}
-                    class="group flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-fc-pill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    class="group flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-fc focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     <span
                         class={twMerge(
-                            'h-7 w-7 rounded-fc-pill border border-fc-border/60 transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
-                            active && 'ring-2 ring-fc-ring ring-offset-2 ring-offset-fc-component'
+                            'h-7 w-7 rounded-fc border border-fc-border/60 transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+                            active && 'ring-2 ring-fc-brand ring-offset-2 ring-offset-fc-surface'
                         )}
                         style:background-color={hex}
                     ></span>

@@ -4,7 +4,7 @@
     let cadence = $state('quotidien');
 </script>
 
-<Stack gap="content">
+<Stack>
     <OptionCards
         name="cadence"
         label="Fréquence du récapitulatif"
@@ -16,5 +16,5 @@
             { value: 'jamais', label: 'Jamais' }
         ]}
     />
-    <p class="text-fc-sm text-fc-fg-muted">Envoyé à camille@heranova.fr : {cadence}</p>
+    <p class="text-fc-p text-fc-muted">Envoyé à camille@heranova.fr : {cadence}</p>
 </Stack>

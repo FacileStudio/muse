@@ -2,7 +2,7 @@
     import { Alert } from '@facile/muse';
 </script>
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-1">
     <Alert tone="neutral">Aucune activité sur cet espace depuis 30 jours.</Alert>
     <Alert tone="info">Les migrations sont appliquées au démarrage de l'API.</Alert>
     <Alert tone="success">Le projet « Refonte Sablier » a été archivé.</Alert>

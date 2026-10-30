@@ -24,8 +24,8 @@
     }: StatusDotProps = $props();
 
     const dots: Record<Tone, string> = {
-        neutral: 'bg-fc-fg-muted',
-        accent: 'bg-fc-accent',
+        neutral: 'bg-fc-muted',
+        accent: 'bg-fc-brand',
         info: 'bg-fc-info',
         success: 'bg-fc-success',
         warning: 'bg-fc-warning',
@@ -35,7 +35,7 @@
     };
 
     const classes = $derived(
-        twMerge('inline-flex items-center gap-2 text-fc-sm text-fc-fg-muted', className)
+        twMerge('inline-flex items-center gap-1 text-fc-p text-fc-muted', className)
     );
 </script>
 
@@ -49,12 +49,12 @@ Un état de connexion ou de santé, en une pastille et son libellé.
         {#if pulse}
             <span
                 class={twMerge(
-                    'absolute inset-0 animate-ping rounded-fc-pill opacity-60 motion-reduce:hidden',
+                    'absolute inset-0 animate-ping rounded-fc opacity-60 motion-reduce:hidden',
                     dots[tone]
                 )}
             ></span>
         {/if}
-        <span class={twMerge('relative inline-flex size-2 rounded-fc-pill', dots[tone])}></span>
+        <span class={twMerge('relative inline-flex size-2 rounded-fc', dots[tone])}></span>
     </span>
     {#if label}<span>{label}</span>{/if}
 </span>

@@ -9,13 +9,13 @@
     ];
 </script>
 
-<ul class="flex flex-col gap-3">
+<ul class="flex flex-col gap-1">
     {#each membres as membre (membre.email)}
-        <li class="flex items-center gap-3">
+        <li class="flex items-center gap-1">
             <Avatar name={membre.nom} size="sm" />
             <div class="min-w-0 flex-1">
-                <p class="text-fc-sm text-fc-fg">{membre.nom}</p>
-                <p class="text-fc-xs text-fc-fg-muted">{membre.email}</p>
+                <p class="text-fc-p text-fc-ink">{membre.nom}</p>
+                <p class="text-fc-subtext text-fc-muted">{membre.email}</p>
             </div>
             <Badge tone={membre.tone}>{membre.role}</Badge>
         </li>

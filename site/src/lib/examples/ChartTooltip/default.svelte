@@ -7,6 +7,6 @@
     ];
 </script>
 
-<div class="relative h-32 w-full rounded-fc-md bg-fc-component">
+<div class="relative h-32 w-full rounded-fc bg-fc-surface">
     <ChartTooltip x={40} y={60} title="Jeudi 13 août" {rows} visible />
 </div>

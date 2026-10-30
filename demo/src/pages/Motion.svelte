@@ -30,10 +30,10 @@
             <TextElevate
                 text="Un seul login, zéro dépendance cloud."
                 visible={heading}
-                class="text-fc-xl font-semibold text-fc-fg"
+                class="text-fc-subtitle font-semibold text-fc-ink"
             />
         </Card>
-        <Switch bind:checked={heading} label="Afficher la ligne" class="text-fc-sm" />
+        <Switch bind:checked={heading} label="Afficher la ligne" class="text-fc-p" />
     </Section>
 
     <Section
@@ -41,19 +41,19 @@
         description="Un panneau plein balaie la copie et ne la découvre qu'avec son bord de fuite. Une ligne par panneau : un paragraphe qui se replie arriverait d'un seul bloc."
     >
         <Card class="flex min-h-32 items-center">
-            <Stack gap="bound">
+            <Stack>
                 {#each manifesto as line, i (line)}
                     <BlockReveal
                         open={sweeping}
                         delay={i * 0.12}
-                        class="text-fc-xl font-semibold text-fc-fg"
+                        class="text-fc-subtitle font-semibold text-fc-ink"
                     >
                         {line}
                     </BlockReveal>
                 {/each}
             </Stack>
         </Card>
-        <Switch bind:checked={sweeping} label="Balayer les lignes" class="text-fc-sm" />
+        <Switch bind:checked={sweeping} label="Balayer les lignes" class="text-fc-p" />
     </Section>
 
     <Section
@@ -61,16 +61,16 @@
         description="Vous la regardez déjà : chaque changement de route passe par elle, cadencée sur la route depuis la coquille."
     >
         <Card>
-            <Stack gap="bound">
-                <p class="text-fc-sm text-fc-fg-muted">
+            <Stack>
+                <p class="text-fc-p text-fc-muted">
                     Entrée seule, jamais un fondu croisé. Un vrai croisement demanderait de monter
                     les deux routes en même temps, donc de tenir deux fois l'état de la page.
                 </p>
-                <p class="text-fc-sm text-fc-fg-muted">
-                    Le palier tenait aussi <code class="font-fc-mono text-fc-xs">Carousel</code>,
-                    <code class="font-fc-mono text-fc-xs">Mosaique</code>,
-                    <code class="font-fc-mono text-fc-xs">Rideau</code> et
-                    <code class="font-fc-mono text-fc-xs">WordReveal</code>. Les trois premiers
+                <p class="text-fc-p text-fc-muted">
+                    Le palier tenait aussi <code class="font-fc-mono text-fc-subtext">Carousel</code>,
+                    <code class="font-fc-mono text-fc-subtext">Mosaique</code>,
+                    <code class="font-fc-mono text-fc-subtext">Rideau</code> et
+                    <code class="font-fc-mono text-fc-subtext">WordReveal</code>. Les trois premiers
                     n'avaient aucun consommateur dans la suite ; le dernier servait une seule
                     landing page et tirait à lui seul les deux plugins GSAP de la bibliothèque.
                     Partis en v1.0.

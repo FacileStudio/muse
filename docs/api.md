@@ -101,8 +101,8 @@ inverted slab. `ghost` is transparent with a `bg-fc-surface` hover. `outline` ad
 `ghost-danger` is muted at rest and turns red on hover — the variant for a destructive row
 action inside a table or member list.
 
-Sizes: `sm` is `h-8 px-3.5 text-fc-xs`, `md` is `h-9 px-4 text-fc-sm`, `lg` is
-`h-11 px-6 text-fc-md`. The `icon` props size the glyph to the button (14 / 16 / 18) and emit
+Sizes: `sm` is `h-8 px-3.5 text-fc-subtext`, `md` is `h-9 px-4 text-fc-p`, `lg` is
+`h-11 px-6 text-fc-p`. The `icon` props size the glyph to the button (14 / 16 / 18) and emit
 the required `width`, `height` and `class="block"` — never hand-write an `<iconify-icon>`
 inside a `Button`.
 
@@ -215,7 +215,7 @@ or the row passes `for` and you give the switch a matching `id`.
 
 ### `Badge`
 
-Inline pill, `rounded-fc-pill`, `text-fc-xs`, transparent border. Spreads to `<span>`.
+Inline pill, `rounded-fc-pill`, `text-fc-subtext`, transparent border. Spreads to `<span>`.
 
 | Prop | Type | Default |
 |---|---|---|
@@ -228,7 +228,7 @@ token as text colour. No tone uses a solid saturated fill or a literal colour.
 
 ### `Alert`
 
-Status banner, `rounded-fc-md`, `text-fc-sm`, **borderless**. Spreads to `<div>`. Uses the same
+Status banner, `rounded-fc-md`, `text-fc-p`, **borderless**. Spreads to `<div>`. Uses the same
 pairing as `Badge` — `bg-fc-<tone>/10 text-fc-<tone>` — so the tint and the text state the tone
 together; `neutral` is `bg-fc-surface text-fc-fg`.
 
@@ -380,7 +380,7 @@ whichever element renders.
 |---|---|---|---|
 | `href` | `string` | — | Presence switches the element from `<button>` to `<a>` |
 | `icon` | `string` | — | Iconify name, rendered at `18×18`, inheriting `currentColor` |
-| `label` | `string` | — | Rendered through `TextElevate` at `text-fc-sm` |
+| `label` | `string` | — | Rendered through `TextElevate` at `text-fc-p` |
 | `active` | `boolean` | `false` | Inverts the row: `bg-fc-accent text-fc-accent-fg font-medium`, plus `aria-current="page"` on the link branch |
 | `collapsed` | `boolean` | `false` | Unmounts the label and makes the row a `size-fc-nav-item` square |
 | `textDelay` | `number` | `0.15` | Passed to `TextElevate` as its `delay` |
@@ -397,8 +397,8 @@ Spreads to the card `<div>`.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `label` | `string` | — | Required. Uppercased, `text-fc-xs`, muted |
-| `value` | `string \| number` | — | Required. `text-fc-2xl`, semibold |
+| `label` | `string` | — | Required. Uppercased, `text-fc-subtext`, muted |
+| `value` | `string \| number` | — | Required. `text-fc-title`, semibold |
 | `delta` | `string` | — | Trend line under the value |
 | `children` | `Snippet` | — | Optional slot for a `Sparkline` or extra content |
 
@@ -454,7 +454,7 @@ Label and description on the left, control on the right; stacks below `sm:`. Spr
 | Prop | Type | Default | Notes |
 |---|---|---|---|
 | `label` | `string` | — | |
-| `description` | `string` | — | `text-fc-xs`, muted |
+| `description` | `string` | — | `text-fc-subtext`, muted |
 | `for` | `string` | — | Renders the label as a real `<label for>` instead of a `<span>` |
 | `stacked` | `boolean` | `false` | Control on its own full-width line — use for text fields |
 | `children` | `Snippet` | — | The control |
@@ -468,7 +468,7 @@ Heading, description, optional actions, and a `Card` around the body. Spreads to
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `title` | `string` | — | `text-fc-lg`, semibold, rendered as `<h2>` |
+| `title` | `string` | — | `text-fc-lead`, semibold, rendered as `<h2>` |
 | `description` | `string` | — | |
 | `actions` | `Snippet` | — | Right-aligned beside the heading |
 | `bare` | `boolean` | `false` | Skips the `Card` — for a `Table` or a `Dropzone` that brings its own surface |
@@ -557,7 +557,7 @@ content. Spreads to the root element.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `title` | `string` | — (required) | `text-fc-sm font-medium` |
+| `title` | `string` | — (required) | `text-fc-p font-medium` |
 | `icon` | `string` | — | Muted glyph above the title, 24px |
 | `description` | `string` | — | Muted, capped at `max-w-sm` |
 | `bare` | `boolean` | `false` | Skip the `Card` — for use inside one, or in a table's empty row |
@@ -1180,4 +1180,4 @@ Exported types: `ChartSeries` `{ name, data, color? }`, `ChartSlice` `{ label, v
 | `cn` | alias of `twMerge` | |
 
 Use it for any consumer markup mixing `fc-*` utilities. Stock `tailwind-merge` classifies
-`text-fc-sm` as a *colour* and silently deletes `text-fc-fg` from the same string.
+`text-fc-p` as a *colour* and silently deletes `text-fc-fg` from the same string.

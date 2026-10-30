@@ -42,7 +42,7 @@
     const controlId = $derived(id ?? field?.().id);
     const describes = $derived(describedBy ?? field?.().describedBy);
 
-    const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
+    const classes = $derived(twMerge('inline-flex items-center gap-1 cursor-pointer text-fc-p text-fc-ink', className));
 </script>
 
 <!--
@@ -57,7 +57,7 @@ Un bouton radio. La validité appartient au groupe, pas au bouton, donc il ne po
         aria-describedby={describes}
         bind:group
         {value}
-        class="h-4 w-4 accent-fc-accent disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+        class="h-4 w-4 accent-fc-brand disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand"
         {...rest}
     />
     {#if label}<span>{label}</span>{/if}

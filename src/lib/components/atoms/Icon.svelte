@@ -40,6 +40,20 @@
      * rewrites these per instance for exactly this reason; inlining has to do the same.
      */
     const uid = $props.id();
+
+    /* SVG cannot read `--fc-brand-angle`, so the icon gradient is fixed at the default 30deg.
+       The line spans the box the way CSS sizes a linear-gradient line. */
+    const BRAND_ANGLE = (30 * Math.PI) / 180;
+    const line = $derived.by(() => {
+        const w = data?.width ?? 24;
+        const h = data?.height ?? 24;
+        // CSS gradient line length: |w·sin a| + |h·cos a|, half of it each side of the centre
+        const half = (Math.abs(w * Math.sin(BRAND_ANGLE)) + Math.abs(h * Math.cos(BRAND_ANGLE))) / 2;
+        const dx = Math.sin(BRAND_ANGLE) * half;
+        const dy = -Math.cos(BRAND_ANGLE) * half;
+
+        return { x1: w / 2 - dx, y1: h / 2 - dy, x2: w / 2 + dx, y2: h / 2 + dy };
+    });
     const body = $derived(
         /\bid="/.test(data?.body ?? '')
             ? data!.body.replace(/([#"])(SVG[A-Za-z0-9]+)/g, `$1$2-${uid}`)
@@ -63,8 +77,15 @@ Une icône en SVG inline, rendue côté serveur et sans requête réseau. Le nom
         aria-hidden="true"
         focusable="false"
         class={classes}
+        style:--fc-icon-brand="url(#fc-brand-{uid})"
         {...rest}
     >
+        <defs>
+            <linearGradient id="fc-brand-{uid}" gradientUnits="userSpaceOnUse" {...line}>
+                <stop offset="0" style:stop-color="var(--fc-brand-from)" />
+                <stop offset="1" style:stop-color="var(--fc-brand-to)" />
+            </linearGradient>
+        </defs>
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
         {@html body}
     </svg>

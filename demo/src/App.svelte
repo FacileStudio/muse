@@ -16,7 +16,6 @@
     import Settings from './pages/Settings.svelte';
     import { spaces } from './data.js';
     import { HOME, router, segment } from './router.svelte.js';
-    import { setTheme, theme } from './theme.svelte.js';
 
     const routes: Record<string, typeof Dashboard> = {
         '#/dashboard': Dashboard,
@@ -66,9 +65,6 @@
 
 
 
-    /* Apply the stored preference to <html> on boot; the store already read it. */
-    setTheme(theme.mode);
-
     /*
      * No Settings row here, by design — the user card at the bottom of the rail is the only way
      * in. See the comment in SideBar.svelte.
@@ -86,7 +82,7 @@
     const user = { name: 'Camille' };
 </script>
 
-<div class="flex h-dvh w-full overflow-hidden bg-fc-page">
+<div class="flex h-dvh w-full overflow-hidden bg-fc-bg">
     <div class="hidden h-full shrink-0 p-3 md:block">
         <SideBar
             icon="iconoir:palette"
@@ -114,7 +110,7 @@
         <!-- Spaces live in the rail, and the rail is desktop-only — without this header there
              is no way to switch space on a phone at all. -->
         <Topbar class="md:hidden">
-            <span class="text-fc-md font-semibold text-fc-fg">Muse</span>
+            <span class="text-fc-lead font-semibold text-fc-ink">Muse</span>
             <div class="min-w-0 max-w-56 flex-1">
                 <SpaceSwitcher
                     {spaces}
@@ -128,11 +124,7 @@
         <!-- The page column is not here any more: each route renders its own `<Page>`, so a
              dashboard can take the wide container and a settings page the reading one. The
              shell owns the rail, the mobile chrome and the single scroller, nothing inside the
-             content edge.
-
-             No theme toggle here either: the colour scheme lives in Settings › Appearance, like
-             every other preference. A control floating over every page is one more thing
-             competing with the page's own actions. -->
+             content edge. -->
         <PageTransition key={root}>
             <Route />
         </PageTransition>

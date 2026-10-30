@@ -16,11 +16,11 @@
 </Row>
 
 <Modal bind:open={modal} title="Renommer l'espace" showClose>
-    <p class="text-fc-sm text-fc-fg-muted">Le nom est visible par tous les membres.</p>
+    <p class="text-fc-p text-fc-muted">Le nom est visible par tous les membres.</p>
 </Modal>
 
 <Drawer bind:open={drawer} title="Filtres">
-    <p class="text-fc-sm text-fc-fg-muted">Une feuille du bas, qui se referme au glissement.</p>
+    <p class="text-fc-p text-fc-muted">Une feuille du bas, qui se referme au glissement.</p>
 </Drawer>
 
 <ConfirmModal
@@ -40,15 +40,15 @@
         <Table>
             <thead>
                 <tr>
-                    <th class="px-4 py-2 text-left text-fc-sm font-semibold text-fc-fg">Projet</th>
-                    <th class="px-4 py-2 text-left text-fc-sm font-semibold text-fc-fg">Heures</th>
+                    <th class="px-4 py-2 text-left text-fc-p font-semibold text-fc-ink">Projet</th>
+                    <th class="px-4 py-2 text-left text-fc-p font-semibold text-fc-ink">Heures</th>
                 </tr>
             </thead>
             <tbody>
                 {#each [['Refonte du site', '42,5'], ['Application mobile', '18,0']] as [name, hours] (name)}
                     <tr>
-                        <td class="px-4 py-2 text-fc-sm text-fc-fg-muted">{name}</td>
-                        <td class="px-4 py-2 text-fc-sm text-fc-fg-muted">{hours}</td>
+                        <td class="px-4 py-2 text-fc-p text-fc-muted">{name}</td>
+                        <td class="px-4 py-2 text-fc-p text-fc-muted">{hours}</td>
                     </tr>
                 {/each}
             </tbody>
@@ -64,7 +64,7 @@
 
 <Row name="Topbar" lead="Chrome collant, utilisé sur mobile là où le rail n'existe pas.">
     <div class="w-full">
-        <Topbar><span class="text-fc-md font-semibold text-fc-fg">Facile</span></Topbar>
+        <Topbar><span class="text-fc-lead font-semibold text-fc-ink">Facile</span></Topbar>
     </div>
 </Row>
 

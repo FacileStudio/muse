@@ -16,7 +16,7 @@
         {#each members as member (member.email)}
             <tr>
                 <td>
-                    <Inline gap="tight">
+                    <Inline>
                         <Avatar name={member.name} size="sm" />
                         <span class="font-medium">{member.name}</span>
                     </Inline>

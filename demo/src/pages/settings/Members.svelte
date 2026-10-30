@@ -45,7 +45,7 @@
     }
 </script>
 
-<Stack gap="section">
+<Stack>
     <SettingsSection
         title="Members"
         description="Everyone with access to Acme Studio. Owners cannot be removed."
@@ -64,16 +64,16 @@
                 {#each members as member (member.id)}
                     <tr>
                         <td>
-                            <div class="flex min-w-0 items-center gap-3">
+                            <div class="flex min-w-0 items-center gap-1">
                                 <Avatar name={member.name} size="sm" />
                                 <div class="flex min-w-0 flex-col">
-                                    <span class="truncate font-medium text-fc-fg">{member.name}</span>
-                                    <span class="truncate text-fc-xs text-fc-fg-muted">{member.email}</span>
+                                    <span class="truncate font-medium text-fc-ink">{member.name}</span>
+                                    <span class="truncate text-fc-subtext text-fc-muted">{member.email}</span>
                                 </div>
                             </div>
                         </td>
                         <td><Badge tone={roleTone[member.role]}>{roleLabel[member.role]}</Badge></td>
-                        <td class="whitespace-nowrap text-fc-fg-muted">{member.joined}</td>
+                        <td class="whitespace-nowrap text-fc-muted">{member.joined}</td>
                         <td class="text-right">
                             {#if member.role !== 'owner'}
                                 <Button
@@ -99,7 +99,7 @@
         title="Invite"
         description="They get an email with a link. Facile SSO handles the rest."
     >
-        <form class="flex flex-col gap-3 sm:flex-row" onsubmit={invite}>
+        <form class="flex flex-col gap-1 sm:flex-row" onsubmit={invite}>
             <Input
                 bind:value={inviteEmail}
                 type="email"

@@ -26,9 +26,9 @@
     }: AvatarProps = $props();
 
     const sizes: Record<Size, string> = {
-        sm: 'h-8 w-8 text-fc-xs',
-        md: 'h-10 w-10 text-fc-sm',
-        lg: 'h-14 w-14 text-fc-md'
+        sm: 'h-8 w-8 text-fc-subtext',
+        md: 'h-10 w-10 text-fc-p',
+        lg: 'h-14 w-14 text-fc-p'
     };
 
     const pixels: Record<Size, number> = { sm: 32, md: 40, lg: 56 };
@@ -54,7 +54,7 @@
         failed = false;
     });
     /* `relative` contains the `sr-only` label — see the note in `Switch.svelte`. */
-    const classes = $derived(twMerge('relative inline-flex shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent text-fc-accent-fg font-semibold overflow-hidden', sizes[size], className));
+    const classes = $derived(twMerge('relative inline-flex shrink-0 items-center justify-center rounded-fc fc-selected font-semibold overflow-hidden', sizes[size], className));
 </script>
 
 <!--

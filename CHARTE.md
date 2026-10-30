@@ -134,7 +134,7 @@ Rules:
   are never series slots.
 - Recommended ceiling is **6 series**; past that `chartColor()` wraps, so fold the tail into
   an "Other" bucket or facet into small multiples instead.
-- Grid and axis lines are `fc-border`; tick labels are `fc-fg-muted` at `text-fc-xs`. Value
+- Grid and axis lines are `fc-border`; tick labels are `fc-fg-muted` at `text-fc-subtext`. Value
   and label text never wears the series colour — the mark beside it carries identity.
 
 ### Destructive actions
@@ -191,37 +191,34 @@ those two tokens is the fix; it has not been done because the tokens are shared 
 
 ## 3. Typography
 
-- **Sans**: the platform stack (`ui-sans-serif`, `system-ui`, `-apple-system`, `'Segoe UI'`,
-  `Roboto`, `'Helvetica Neue'`, `Arial`, `sans-serif`) — `--font-fc-body`
+- **Sans**: `'Magnetik'`, then the platform stack (`ui-sans-serif`, `system-ui`,
+  `-apple-system`, `'Segoe UI'`, `Roboto`, `'Helvetica Neue'`, `Arial`, `sans-serif`) — `--font-fc-body`
 - **Display**: same stack — `--font-fc-title`. The display/body split is
-  intentional-in-name-only so consumers can diverge without touching components. It is also
-  the seam a licensed display face would come back through: headings only, body untouched.
+  intentional-in-name-only so consumers can diverge without touching components.
 - **Mono**: the platform stack — `--font-fc-mono`, used via `font-fc-mono`. It is for
   **machine strings only**: secrets, API keys, IDs, endpoints, event channel names. Prose
   never wears it.
-- **muse bundles no typeface, and re-adding one is a gated decision.** Through v0.5.0 it
-  shipped the Goga *trial* cut: 68 glyphs, no accented Latin, no apostrophe, no colon, no
-  percent sign. In a French-language suite every `é` fell back to Helvetica mid-word, and the
-  files were redistributed to thirteen apps under a test licence with no LICENSE in the repo.
-  `src/lib/styles/fonts.test.ts` now fails the build on any face in `src/lib/fonts/` that does
-  not cover the character set the suite actually types. A new face needs a real licence
-  recorded in `LICENSE` and a full Latin-1 cut. Weights: use `font-medium` and
-  `font-semibold`; do not reach for `font-bold`.
+- **muse names Magnetik but does not ship it.** The repo is public and Magnetik is a commercial
+  face, so each app declares its own `@font-face` for Magnetik Regular (400) and Medium (500).
+  An app without one renders the platform stack. Through v0.5.0 muse shipped the Goga *trial*
+  cut with no accented Latin; `src/lib/styles/fonts.test.ts` still fails the build on any face
+  in `src/lib/fonts/` that does not cover the character set the suite types. Weights:
+  `font-normal` and `font-medium`.
 
-Scale — `text-fc-*`, each with a paired line-height:
+Scale — `text-fc-*`. Five styles and no others. Each utility sets size, a 130% line-height
+and -2% letter-spacing (`-0.02em`; Tailwind has no percentage form):
 
-| Token           | Size          | Line-height | Usage                        |
-|-----------------|---------------|-------------|------------------------------|
-| `--text-fc-xs`  | `0.75rem` 12px| 1rem        | meta, badges, hints          |
-| `--text-fc-sm`  | `0.875rem` 14px| 1.25rem    | **body / UI default** — nav rows, buttons, table cells |
-| `--text-fc-md`  | `1rem` 16px   | 1.5rem      | lead paragraphs, inputs      |
-| `--text-fc-lg`  | `1.125rem` 18px| 1.75rem    | section headings (h3)        |
-| `--text-fc-xl`  | `1.375rem` 22px| 1.75rem    | sidebar brand, h2            |
-| `--text-fc-2xl` | `1.75rem` 28px| 2.125rem    | page titles                  |
-| `--text-fc-3xl` | `2.25rem` 36px| 2.5rem      | hero / h1                    |
+| Token                | Size              | Weight | Usage                                         |
+|----------------------|-------------------|--------|-----------------------------------------------|
+| `--text-fc-title`    | `2rem` 32px       | 500    | page titles, hero, big stat values            |
+| `--text-fc-subtitle` | `1.5rem` 24px     | —      | section titles, sidebar brand                 |
+| `--text-fc-lead`     | `1.125rem` 18px   | —      | lead paragraphs, card headings, form fields   |
+| `--text-fc-p`        | `0.875rem` 14px   | —      | **body / UI default** — nav rows, buttons, table cells |
+| `--text-fc-subtext`  | `0.6875rem` 11px  | —      | meta, badges, hints, axis labels              |
 
-`14px` is the workhorse, matching the suite's `text-sm` default. Headings get
-`tracking-tight` (`-0.02em`, applied to `h1`–`h6` in the base layer).
+`14px` is the workhorse and the `body` default. Form fields sit at `lead` because iOS Safari
+zooms the page when a focused field's text is under 16px.
+
 
 ---
 
@@ -314,7 +311,7 @@ both do this for you.
 ### Empty states
 
 A list with nothing in it is `EmptyState`, not a paragraph. It is a `Card` (`bare` skips it,
-for use inside one) with `py-12` and centred content: an optional muted glyph, a `text-fc-sm
+for use inside one) with `py-12` and centred content: an optional muted glyph, a `text-fc-p
 font-medium` title, an optional muted description capped at `max-w-sm`, and whatever action
 resolves it. The height is the point — a two-line card where a list should be reads as a
 rendering failure, a tall quiet one reads as deliberate.
@@ -794,7 +791,7 @@ The atomic button unit used inside `SideBar`. Also standalone for custom nav UIs
 `size-fc-nav-item` square; `gap-2.5`, `rounded-fc-md`, `overflow-hidden`, icon `width="18"`
 `height="18"` `class="block shrink-0"` (no colour class — it inherits `currentColor`, which
 is what lets the inverted active state flip the glyph with the label), label via `TextElevate`
-at `text-fc-sm`. No border. Inactive: `text-fc-fg-muted`, `hover:bg-fc-surface
+at `text-fc-p`. No border. Inactive: `text-fc-fg-muted`, `hover:bg-fc-surface
 hover:text-fc-fg`. Active: **inverted**, `bg-fc-accent text-fc-accent-fg font-medium` — never
 a tinted wash, and `aria-current="page"` on the anchor so it is not styling alone.
 

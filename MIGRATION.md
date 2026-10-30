@@ -352,3 +352,16 @@ with `pr-10` keeping the label clear of it. The stroke follows `fc-fg` in light 
 
 **Do:** nothing, unless you pass a horizontal padding to `Select`. `class="px-2"` now replaces
 the `pr-10` too and the label runs under the chevron, so pass `pl-*` instead.
+
+## 18. Five type styles, in Magnetik
+
+**Symptom:** `text-fc-xs`, `-sm`, `-md`, `-lg`, `-xl`, `-2xl` and `-3xl` generate nothing, so
+text using them falls back to the inherited size.
+
+**Now:** the scale is `text-fc-title` (32px, medium), `text-fc-subtitle` (24), `text-fc-lead`
+(18), `text-fc-p` (14) and `text-fc-subtext` (11). Every style sets a 130% line-height and
+`-0.02em` letter-spacing. The font stack starts with `'Magnetik'`, which muse does not ship.
+
+**Do:** rename classes: `xs` → `subtext`, `sm` → `p`, `md` and `lg` → `lead`, `xl` →
+`subtitle`, `2xl` and `3xl` → `title`. Add an `@font-face` for Magnetik Regular (400) and
+Medium (500) in your app, or it renders the platform stack.

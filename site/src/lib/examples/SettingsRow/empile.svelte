@@ -9,7 +9,7 @@
     label="Domaine de l'espace"
     description="Toute adresse de ce domaine rejoint l'espace sans invitation."
 >
-    <Inline gap="tight" class="w-full">
+    <Inline class="w-full">
         <Input bind:value={domaine} class="min-w-0 flex-1" />
         <Button size="lg">Vérifier</Button>
     </Inline>

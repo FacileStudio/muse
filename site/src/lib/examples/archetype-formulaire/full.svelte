@@ -16,7 +16,7 @@
     />
 
     <Section title="Identité" description="Ce que l'équipe verra dans la liste.">
-        <Stack gap="content">
+        <Stack>
             <Field label="Nom du projet" helper="Visible par tous les membres de l'espace.">
                 <Input bind:value={nom} placeholder="Refonte du site vitrine" />
             </Field>
@@ -36,7 +36,7 @@
     </Section>
 
     <Section title="Facturation">
-        <Stack gap="content">
+        <Stack>
             <Field
                 label="Budget estimé"
                 error={budget !== '' && Number.isNaN(Number(budget)) ? 'Saisissez un montant en euros.' : undefined}
@@ -48,9 +48,9 @@
         </Stack>
     </Section>
 
-    <Stack gap="content">
+    <Stack>
         <Divider />
-        <Inline gap="tight" class="justify-end">
+        <Inline class="justify-end">
             <Button variant="ghost" size="lg">Annuler</Button>
             <Button type="submit" size="lg">Créer le projet</Button>
         </Inline>

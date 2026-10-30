@@ -46,7 +46,7 @@ const MIN_ARC = 0.02;
 export const TAU = Math.PI * 2;
 
 /**
- * Average glyph advance at `text-fc-xs`, used to size axis gutters. It was measured on the
+ * Average glyph advance at `text-fc-subtext`, used to size axis gutters. It was measured on the
  * face muse used to bundle; the platform stack now resolves per OS, so treat it as an estimate
  * with slack rather than an exact metric. Axis labels are digits, whose advances vary little.
  */

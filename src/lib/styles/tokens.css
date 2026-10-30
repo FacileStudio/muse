@@ -32,71 +32,62 @@
   --color-transparent: transparent;
   --color-current: currentColor;
 
-  /* colors → bg-fc-*, text-fc-*, -fc-* — chroma-zero OKLCH, matches shipped suite apps.
-     `page` and `bg` carry the same value today and are kept separate on purpose: `page` is
-     the document canvas, `bg` is a component's own default fill, and an app that wants a
-     tinted canvas should be able to move one without the other. */
-  --color-fc-page: oklch(1 0 0);
-  --color-fc-bg: oklch(1 0 0);
-  --color-fc-surface: oklch(0.97 0 0);
-  --color-fc-component: oklch(0.985 0 0);
-  --color-fc-fg: oklch(0.145 0 0);
-  --color-fc-fg-muted: oklch(0.556 0 0);
-  --color-fc-accent: oklch(0.145 0 0);
-  --color-fc-accent-fg: oklch(1 0 0);
-  --color-fc-border: oklch(0.9 0 0);
-  --color-fc-ring: oklch(0.4 0 0);
-  --color-fc-danger: oklch(0.55 0.22 29);
-  --color-fc-danger-fg: oklch(1 0 0);
-  --color-fc-success: oklch(0.52 0.12 150);
-  /* `info` is a status colour like success and warning, not a second accent. It exists
-     because without it `Alert tone="info"` and `StatusDot tone="info"` had to borrow
-     `fc-accent` and rendered identically to `tone="accent"` — a tone that is
-     indistinguishable from another tone is not a tone. */
-  --color-fc-info: oklch(0.52 0.14 255);
-  /* Lightness here is set by the tinted-text case, not by taste: these are read as
-     `text-fc-warning` on `bg-fc-warning/10`, which is the *lowest*-contrast use any
-     semantic token gets. At the previous 0.58 both landed at 4.0–4.1:1 and missed AA.
-     0.55 clears 4.5:1 on page, on `fc-component`, and on their own 10% tint. */
-  --color-fc-warning: oklch(0.55 0.13 75);
-  --color-fc-owner: oklch(0.55 0.13 64);
-  --color-fc-admin: oklch(0.5 0.16 292);
+  /* colors → bg-fc-*, text-fc-*. Dark only. `surface` is translucent so nested surfaces stack
+     brighter; anything that floats over content takes `surface-solid`, the same colour
+     pre-mixed over `bg`, or the content behind shows through. */
+  --color-fc-bg: #050505;
+  --color-fc-surface: rgb(121 113 107 / 10%);
+  --color-fc-surface-hover: rgb(121 113 107 / 20%);
+  --color-fc-surface-solid: color-mix(in srgb, rgb(121 113 107) 10%, var(--color-fc-bg));
+  --color-fc-border: rgb(121 113 107 / 20%);
+  --color-fc-ink: #f3f3f3;
+  --color-fc-muted: #7c7c7c;
+
+  /* Brand marks what is active, selected or focused: `bg-fc-brand-bg` behind, `text-fc-brand` on
+     the text and icons. The full gradient (`bg-fc-brand`) is for marks, not states: a dot, a
+     progress bar. This solid is its first stop, for text, icons, outlines and the focus ring. */
+  --color-fc-brand: var(--fc-brand-from);
+  --color-fc-brand-bg: color-mix(in srgb, var(--fc-brand-from) 20%, transparent);
+
+  --color-fc-danger: #e0767c;
+  --color-fc-success: #58c981;
+  --color-fc-warning: #c8a55d;
+  --color-fc-info: oklch(0.72 0.13 255);
+  --color-fc-owner: oklch(0.78 0.13 64);
+  --color-fc-admin: oklch(0.75 0.14 292);
 
   /* Scrim behind overlays. A token rather than a literal because `Modal` and `Drawer`
      both draw one and they must never disagree. */
   --color-fc-scrim: oklch(0 0 0 / 50%);
 
-  /* radii → rounded-fc-* — `pill` and `full` are the same value, kept as two names so
-     "a pill-shaped button" and "a circular avatar" read differently at the call site. */
-  --radius-fc-xs: 4px;
-  --radius-fc-sm: 6px;
-  --radius-fc-md: 8px;
-  --radius-fc-lg: 12px;
-  --radius-fc-pill: 999px;
-  --radius-fc-full: 999px;
+  /* radius → rounded-fc. One value for every component. */
+  --radius-fc: 8px;
 
-  /* type scale → text-fc-* (font-size + paired line-height) */
-  --text-fc-xs: 0.75rem;
-  --text-fc-xs--line-height: 1rem;
-  --text-fc-sm: 0.875rem;
-  --text-fc-sm--line-height: 1.25rem;
-  --text-fc-md: 1rem;
-  --text-fc-md--line-height: 1.5rem;
-  --text-fc-lg: 1.125rem;
-  --text-fc-lg--line-height: 1.75rem;
-  --text-fc-xl: 1.375rem;
-  --text-fc-xl--line-height: 1.75rem;
-  --text-fc-2xl: 1.75rem;
-  --text-fc-2xl--line-height: 2.125rem;
-  --text-fc-3xl: 2.25rem;
-  --text-fc-3xl--line-height: 2.5rem;
+  /* type scale → text-fc-*. Five styles and no others; each sets size, line-height (130%) and
+     letter-spacing (-2%, which CSS spells -0.02em) in one utility. */
+  --text-fc-title: 2rem;
+  --text-fc-title--line-height: 1.3;
+  --text-fc-title--letter-spacing: -0.02em;
+  --text-fc-title--font-weight: 500;
+  --text-fc-subtitle: 1.5rem;
+  --text-fc-subtitle--line-height: 1.3;
+  --text-fc-subtitle--letter-spacing: -0.02em;
+  --text-fc-lead: 1.125rem;
+  --text-fc-lead--line-height: 1.3;
+  --text-fc-lead--letter-spacing: -0.02em;
+  --text-fc-p: 0.875rem;
+  --text-fc-p--line-height: 1.3;
+  --text-fc-p--letter-spacing: -0.02em;
+  --text-fc-subtext: 0.6875rem;
+  --text-fc-subtext--line-height: 1.3;
+  --text-fc-subtext--letter-spacing: -0.02em;
 
-  /* fonts → font-fc-* / font-sans. The platform stack renders every accented character the
-     suite actually types, which the bundled face did not. `title` stays a separate token so a
-     licensed display cut can be reintroduced on headings alone without touching body copy. */
-  --font-fc-body: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-fc-title: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* fonts → font-fc-* / font-sans. Magnetik is named, not bundled: its licence does not allow
+     redistribution from this public repo, so each app declares the face itself and an
+     app without one lands on the platform stack, which covers every accented character. */
+  --font-fc-body: 'Magnetik', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-fc-title: 'Magnetik', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'Magnetik', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* Mono is for machine strings only — secrets, keys, IDs, endpoints. This is the platform
      stack: nothing extra to download, and it lands on the font the user already reads code in. */
@@ -116,19 +107,18 @@
 
   /* nav sidebar widths — SideBar reads these off getComputedStyle for its width tween, so
      these two values are the single source of truth and changing them reaches the animation */
-  --width-fc-nav-collapsed: 68px;
-  --width-fc-nav-expanded: 220px;
+  --width-fc-nav-collapsed: 60px;
+  --width-fc-nav-expanded: 240px;
 
   /* Collapsed nav item — a fixed square, so the sidebar's width tween cannot distort it.
-     68px rail = 44px item + 12px padding either side, and 44px is exactly `min-h-11`, the
-     expanded row height. Matching them is what stops every row growing at the instant the
-     collapsed layout lands. */
-  --spacing-fc-nav-item: 44px;
+     60px rail = 52px item + 4px padding either side, and expanded rows share the 52px
+     height, so no row grows the instant the collapsed layout lands. */
+  --spacing-fc-nav-item: 52px;
 
-  /* Expanded nav content width (220px rail - 12px padding either side). Block children of
+  /* Expanded nav content width. Block children of
      the sidebar take this fixed width so the collapse tween clips them instead of
      reflowing them. */
-  --spacing-fc-nav-content: 196px;
+  --spacing-fc-nav-content: 232px;
 }
 
 /*
@@ -158,90 +148,6 @@
  * SVG `fill` falls back to black.
  */
 @theme static {
-  --color-fc-chart-1: oklch(0.7 0.15 292);
-  --color-fc-chart-2: oklch(0.755 0.13 64);
-  --color-fc-chart-3: oklch(0.72 0.11 190);
-  --color-fc-chart-4: oklch(0.68 0.15 15);
-  --color-fc-chart-5: oklch(0.76 0.16 135);
-  --color-fc-chart-6: oklch(0.73 0.14 339);
-
-  /* Select's chevron. Chrome draws the native <select> arrow at a fixed offset that
-     padding cannot move, so Select hides it and paints this one 12px inside the border.
-     A data URI cannot read currentColor, so the dark blocks swap in a light stroke. */
-  --fc-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23252525' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-}
-
-/*
- * Dark mode — variables swap, utilities pick up new values automatically.
- *
- * Two ways in, and they compose:
- *   1. OS preference, automatic — nothing to wire up.
- *   2. An explicit `.dark` / `.light` class on <html>, which always wins over the OS.
- * The `:not(.light)` guard is what lets a user force light while the OS says dark.
- *
- * The two blocks below are deliberately byte-identical duplicates. Plain CSS has no way
- * to share a declaration block between a media query and a class selector, and the one
- * mechanism that would collapse them — `light-dark()` — needs Chrome 123, ahead of the
- * Chrome 111 floor Tailwind v4 targets. **Edit both or neither** — `tokens.test.ts` asserts
- * they stay identical, so drifting one is a test failure rather than a dark-mode bug nobody
- * notices for a month.
- */
-@custom-variant dark (&:where(.dark, .dark *));
-
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    /* Tells the browser to paint *its own* surfaces dark: the native <select> popup, form
-       control internals, autofill, the caret, text selection, and the canvas past the page
-       background. Without it every one of those stays light on a dark page, which is the
-       half of "dark mode" a token cannot reach. Must be in both blocks — see below. */
-    color-scheme: dark;
-
-    --color-fc-page: oklch(0.09 0 0);
-    --color-fc-bg: oklch(0.09 0 0);
-    --color-fc-surface: oklch(0.18 0 0);
-    --color-fc-component: oklch(0.13 0 0);
-    --color-fc-fg: oklch(0.985 0 0);
-    --color-fc-fg-muted: oklch(0.6 0 0);
-    --color-fc-accent: oklch(0.985 0 0);
-    --color-fc-accent-fg: oklch(0.09 0 0);
-    --color-fc-border: oklch(1 0 0 / 10%);
-    --color-fc-ring: oklch(0.6 0 0);
-    --color-fc-danger: oklch(0.65 0.22 29);
-    --color-fc-success: oklch(0.72 0.14 150);
-    --color-fc-info: oklch(0.72 0.13 255);
-    --color-fc-warning: oklch(0.8 0.13 75);
-    --color-fc-owner: oklch(0.78 0.13 64);
-    --color-fc-admin: oklch(0.75 0.14 292);
-    --color-fc-chart-1: oklch(0.58 0.15 292);
-    --color-fc-chart-2: oklch(0.66 0.14 64);
-    --color-fc-chart-3: oklch(0.6 0.12 195);
-    --color-fc-chart-4: oklch(0.55 0.16 15);
-    --color-fc-chart-5: oklch(0.64 0.15 135);
-    --color-fc-chart-6: oklch(0.62 0.14 339);
-    --fc-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fbfbfb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  }
-}
-
-:root.dark {
-  /* Twin of the declaration in the media block above — see the note there. */
-  color-scheme: dark;
-
-  --color-fc-page: oklch(0.09 0 0);
-  --color-fc-bg: oklch(0.09 0 0);
-  --color-fc-surface: oklch(0.18 0 0);
-  --color-fc-component: oklch(0.13 0 0);
-  --color-fc-fg: oklch(0.985 0 0);
-  --color-fc-fg-muted: oklch(0.6 0 0);
-  --color-fc-accent: oklch(0.985 0 0);
-  --color-fc-accent-fg: oklch(0.09 0 0);
-  --color-fc-border: oklch(1 0 0 / 10%);
-  --color-fc-ring: oklch(0.6 0 0);
-  --color-fc-danger: oklch(0.65 0.22 29);
-  --color-fc-success: oklch(0.72 0.14 150);
-  --color-fc-info: oklch(0.72 0.13 255);
-  --color-fc-warning: oklch(0.8 0.13 75);
-  --color-fc-owner: oklch(0.78 0.13 64);
-  --color-fc-admin: oklch(0.75 0.14 292);
   --color-fc-chart-1: oklch(0.58 0.15 292);
   --color-fc-chart-2: oklch(0.66 0.14 64);
   --color-fc-chart-3: oklch(0.6 0.12 195);
@@ -251,20 +157,58 @@
   --fc-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fbfbfb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 
+/*
+ * Brand. An app overrides the three inputs on :root; the gradients and `--color-fc-brand`
+ * follow. `brand-bg` defaults to both stops at 20% and can be overridden on its own.
+ */
+:root {
+  --fc-brand-from: #71ffc6;
+  --fc-brand-to: #c256ae;
+  --fc-brand-angle: 30deg;
+  --fc-brand: linear-gradient(var(--fc-brand-angle), var(--fc-brand-from), var(--fc-brand-to));
+  --fc-brand-bg: linear-gradient(
+    var(--fc-brand-angle),
+    color-mix(in srgb, var(--fc-brand-from) 20%, transparent),
+    color-mix(in srgb, var(--fc-brand-to) 20%, transparent)
+  );
+}
+
+/* Tailwind merges these with the colour utilities of the same name: the solid stays as the
+   fallback and the gradient paints over it, variants included. */
+@utility bg-fc-brand {
+  background-image: var(--fc-brand);
+}
+
+@utility bg-fc-brand-bg {
+  background-image: var(--fc-brand-bg);
+}
+
+@utility text-fc-brand {
+  background-image: var(--fc-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* The active, selected or focused state in one class. Two background layers because
+   `text-fc-brand` clips its background to the text: the gradient on the glyphs, `brand-bg`
+   behind. Kept as one utility so the two can never fight over `background-image`. */
+@utility fc-selected {
+  color: var(--color-fc-brand);
+  background-image: var(--fc-brand), var(--fc-brand-bg);
+  -webkit-background-clip: text, padding-box;
+  background-clip: text, padding-box;
+  -webkit-text-fill-color: transparent;
+}
+
 @layer base {
   html {
     font-family: var(--font-fc-body);
-    letter-spacing: -0.011em;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
     -webkit-font-smoothing: antialiased;
 
-    /*
-     * The light default. The two dark blocks above flip it to `dark`, and they are
-     * *unlayered* while this sits in `@layer base` — unlayered wins over layered whatever
-     * the specificity, so the override lands without needing `!important` or a longer
-     * selector. Forcing light on a dark OS also works: `:root:not(.light)` excludes the
-     * media block, so this declaration is what remains.
-     */
-    color-scheme: light;
+    color-scheme: dark;
   }
 
   /*
@@ -285,14 +229,20 @@
     display: none;
   }
 
+  /* `Icon` carries its own gradient in `--fc-icon-brand`; inside a brand state its strokes
+     take it, so icons match the gradient text beside them. */
+  :where(.fc-selected, .text-fc-brand) [stroke='currentColor'] {
+    stroke: var(--fc-icon-brand, currentColor);
+  }
+
   body {
-    background-color: var(--color-fc-page);
-    color: var(--color-fc-fg);
+    font-size: var(--text-fc-p);
+    background-color: var(--color-fc-bg);
+    color: var(--color-fc-ink);
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-fc-title);
-    letter-spacing: -0.02em;
   }
 
   /*

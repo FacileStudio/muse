@@ -10,8 +10,8 @@
     let key = $state<keyof typeof views>('semaine');
 </script>
 
-<Stack gap="tight">
-    <Inline gap="tight">
+<Stack>
+    <Inline>
         {#each Object.keys(views) as view (view)}
             <Button variant={key === view ? 'primary' : 'outline'} size="sm" onclick={() => (key = view as keyof typeof views)}>
                 {view}
@@ -20,6 +20,6 @@
     </Inline>
 
     <PageTransition {key}>
-        <p class="text-fc-sm text-fc-fg-muted">{views[key]}</p>
+        <p class="text-fc-p text-fc-muted">{views[key]}</p>
     </PageTransition>
 </Stack>

@@ -118,20 +118,20 @@ Le choix dans une palette fixe — la couleur d'identité d'un membre, d'un cale
             tabindex={i === focusIndex ? 0 : -1}
             onclick={() => select(i)}
             class={twMerge(
-                'group flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center rounded-fc-pill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
-                showLabels ? 'h-auto w-auto flex-col gap-1.5 px-2 py-2' : 'h-11 w-11'
+                'group flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center rounded-fc focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand',
+                showLabels ? 'h-auto w-auto flex-col gap-1 px-2 py-2' : 'h-11 w-11'
             )}
         >
             <span
                 class={twMerge(
-                    'flex items-center justify-center rounded-fc-pill border border-fc-border/60 transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+                    'flex items-center justify-center rounded-fc border border-fc-border/60 transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
                     dots[size],
-                    selected && 'ring-2 ring-fc-ring ring-offset-2 ring-offset-fc-component'
+                    selected && 'ring-2 ring-fc-brand ring-offset-2 ring-offset-fc-surface'
                 )}
                 style:background-color={color}
             ></span>
             {#if showLabels}
-                <span class={twMerge('text-fc-xs', selected ? 'font-medium text-fc-fg' : 'text-fc-fg-muted')}>
+                <span class={twMerge('text-fc-subtext', selected ? 'font-medium text-fc-ink' : 'text-fc-muted')}>
                     {labelFor(color)}
                 </span>
             {/if}

@@ -30,7 +30,7 @@
 
     let {
         width = 'lg',
-        gap = 'section',
+        gap = 'default',
         class: className = '',
         children,
         ...rest

@@ -9,7 +9,7 @@ différemment : neuf coquilles de réglages, cinq espacements de premier niveau 
 <Page>
   <PageHeader title="Réglages" description="Votre identité, cet espace, et tout ce qui y est branché." />
 
-  <Stack gap="content">
+  <Stack>
     <Tabs items={sections.map((s) => ({ ...s, href: `/settings/${s.id}` }))} value={active} />
     <Divider />
   </Stack>
@@ -20,7 +20,7 @@ différemment : neuf coquilles de réglages, cinq espacements de premier niveau 
 </Page>
 ```
 
-Ce `Stack gap="content"` est **porteur**. `Divider` ne porte aucune marge, donc le gap du parent
+Ce `Stack` est **porteur**. `Divider` ne porte aucune marge, donc le gap du parent
 est la seule chose qui donne de l'air au trait. Serré contre la bande d'onglets, il se lit comme
 un soulignement soudé à la pastille active et se bat avec sa forme.
 

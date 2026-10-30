@@ -6,7 +6,7 @@ c'est ce qui fait qu'un utilisateur qui passe de Sablier à Casier n'a rien à r
 ## Les trois zones
 
 ```svelte
-<div class="flex h-dvh w-full overflow-hidden bg-fc-page">
+<div class="flex h-dvh w-full overflow-hidden bg-fc-bg">
   <div class="hidden h-full shrink-0 p-3 md:block">
     <SideBar {pages} {spaces} {user} userHref="/settings" class="h-full" />
   </div>

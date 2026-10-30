@@ -18,7 +18,7 @@
 
     /* The gap between two entries has to beat the 6px inside one, or "412 GB · 46%" and the
        swatch of the next series read as a single run of text. */
-    const classes = $derived(twMerge('flex flex-wrap items-center gap-x-4 gap-y-2 text-fc-xs', className));
+    const classes = $derived(twMerge('flex flex-wrap items-center gap-x-1 gap-y-1 text-fc-subtext', className));
 </script>
 
 <!--
@@ -29,15 +29,15 @@ La légende d'un graphique. L'écart entre deux entrées bat toujours celui qui 
 {#if items.length}
     <ul class={classes}>
         {#each items as item, i (item.name + i)}
-            <li class="flex items-center gap-1.5">
+            <li class="flex items-center gap-1">
                 <span
-                    class="h-2 w-2 shrink-0 rounded-fc-xs"
+                    class="h-2 w-2 shrink-0 rounded-fc"
                     style:background-color={item.color}
                     aria-hidden="true"
                 ></span>
-                <span class="text-fc-fg-muted">{item.name}</span>
+                <span class="text-fc-muted">{item.name}</span>
                 {#if item.value !== undefined}
-                    <span class="text-fc-fg font-medium tabular-nums">{item.value}</span>
+                    <span class="text-fc-ink font-medium tabular-nums">{item.value}</span>
                 {/if}
             </li>
         {/each}

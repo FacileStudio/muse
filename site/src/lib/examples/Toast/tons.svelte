@@ -2,7 +2,7 @@
     import { icons, Stack, Toast } from '@facile/muse';
 </script>
 
-<Stack gap="tight" class="max-w-sm">
+<Stack class="max-w-sm">
     <Toast tone="neutral">Minuteur mis en pause.</Toast>
     <Toast tone="info" icon={icons.bolt}>Nook Pool reconnecté après 3 tentatives.</Toast>
     <Toast tone="success" title="Facture payée">1 240 € reçus de GF Conseil.</Toast>

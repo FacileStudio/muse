@@ -40,7 +40,7 @@
 </Row>
 
 <Row name="Alert" lead="Ce qui reste à l'écran. Un retour qui passe est un toast.">
-    <div class="flex w-full flex-col gap-3">
+    <div class="flex w-full flex-col gap-1">
         <Alert tone="info" title="Synchronisation en cours">Trois espaces restants.</Alert>
         <Alert tone="warning" title="Jeton bientôt expiré">Renouvelez-le avant le 3 septembre.</Alert>
         <Alert tone="danger" title="Échec de l'envoi">Le serveur a refusé le fichier.</Alert>
@@ -48,7 +48,7 @@
 </Row>
 
 <Row name="Input · Textarea · Select" lead="Tous en h-11. Dans un Field ils adoptent son id.">
-    <div class="grid w-full gap-3 sm:grid-cols-3">
+    <div class="grid w-full gap-1 sm:grid-cols-3">
         <Input bind:value={text} placeholder="Nom" aria-label="Nom" />
         <Select aria-label="Rôle">
             <option>Membre</option>
@@ -82,16 +82,16 @@
 
 <Row name="Card · Divider" lead="Surface sans bordure : le remplissage sépare. Le trait ne porte aucune marge.">
     <div class="w-full">
-        <Card class="flex flex-col gap-4">
-            <span class="text-fc-sm text-fc-fg">Au-dessus du trait</span>
+        <Card class="flex flex-col gap-1">
+            <span class="text-fc-p text-fc-ink">Au-dessus du trait</span>
             <Divider />
-            <span class="text-fc-sm text-fc-fg-muted">En dessous</span>
+            <span class="text-fc-p text-fc-muted">En dessous</span>
         </Card>
     </div>
 </Row>
 
 <Row name="Icon" lead="SVG inline, rendu côté serveur, sans requête réseau.">
     {#each ['dashboard', 'folder', 'usersGroup', 'settings', 'key', 'bolt', 'clock', 'shield'] as key (key)}
-        <Icon icon={icons[key as keyof typeof icons]} size={22} class="text-fc-fg" />
+        <Icon icon={icons[key as keyof typeof icons]} size={22} class="text-fc-ink" />
     {/each}
 </Row>

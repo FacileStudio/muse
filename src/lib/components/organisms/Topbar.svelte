@@ -18,7 +18,7 @@
 
     /* z-30 is the sticky page-chrome rung: above content and floating surfaces anchored to
        it, below anything fixed to the viewport. */
-    const classes = $derived(twMerge('sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-fc-border bg-fc-bg/80 backdrop-blur px-4', className));
+    const classes = $derived(twMerge('sticky top-0 z-30 flex h-14 items-center justify-between gap-1 border-b border-fc-border bg-fc-bg/80 backdrop-blur px-4', className));
 </script>
 
 <!--

@@ -129,7 +129,7 @@ Un panneau plein balaie le texte : il entre par la gauche, sort par la droite, e
         style="top: -0.14em; bottom: -0.14em; left: -0.08em; right: -0.08em"
         class={twMerge(
             'pointer-events-none absolute will-change-transform',
-            panel === 'page' ? 'bg-fc-page' : 'bg-fc-accent'
+            panel === 'page' ? 'bg-fc-bg' : 'bg-fc-brand'
         )}
     ></span>
 </span>

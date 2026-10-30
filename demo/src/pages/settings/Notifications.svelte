@@ -16,7 +16,7 @@
     let poolAlerts = $state(true);
 </script>
 
-<Stack gap="section">
+<Stack>
     <SettingsSection
         title="Email"
         description="Nothing here is marketing — turn it all off and the app still works."

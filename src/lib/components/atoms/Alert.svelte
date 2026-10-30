@@ -31,7 +31,7 @@
         which is what made these read as unstyled boxes rather than a status surface.
     */
     const tones: Record<Tone, string> = {
-        neutral: 'bg-fc-surface text-fc-fg',
+        neutral: 'bg-fc-surface-hover text-fc-ink',
         info: 'bg-fc-info/10 text-fc-info',
         success: 'bg-fc-success/10 text-fc-success',
         warning: 'bg-fc-warning/10 text-fc-warning',
@@ -42,7 +42,7 @@
        is saying. Only earn that for tones the user must act on. */
     const role = $derived(tone === 'warning' || tone === 'danger' ? 'alert' : 'status');
 
-    const classes = $derived(twMerge('rounded-fc-md p-3 text-fc-sm', tones[tone], className));
+    const classes = $derived(twMerge('rounded-fc p-3 text-fc-p', tones[tone], className));
 </script>
 
 <!--

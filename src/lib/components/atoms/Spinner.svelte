@@ -34,7 +34,7 @@
      * 24px ring turning once every three seconds is a legible status, and `Skeleton` and
      * `StatusDot` can keep hiding outright because their absence still reads correctly.
      */
-    const classes = $derived(twMerge('inline-block rounded-fc-pill border-fc-border border-t-fc-fg animate-spin motion-reduce:[animation-duration:3s]', sizes[size], className));
+    const classes = $derived(twMerge('inline-block rounded-fc border-fc-border border-t-fc-ink animate-spin motion-reduce:[animation-duration:3s]', sizes[size], className));
 </script>
 
 <!--

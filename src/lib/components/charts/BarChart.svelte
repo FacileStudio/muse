@@ -143,7 +143,7 @@ Un graphique en barres, empilable. Chaque coin face à une gouttière est arrond
 <div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div
-            class="flex items-center justify-center text-fc-sm text-fc-fg-muted"
+            class="flex items-center justify-center text-fc-p text-fc-muted"
             style:min-height="{height}px"
         >
             {emptyLabel}
@@ -166,7 +166,7 @@ Un graphique en barres, empilable. Chaque coin face à une gouttière est arrond
                         y={geometry.bands[hover].y}
                         width={geometry.bands[hover].w}
                         height={geometry.bands[hover].h}
-                        fill="var(--color-fc-surface)"
+                        fill="var(--color-fc-surface-hover)"
                     />
                 {/if}
 
@@ -191,14 +191,14 @@ Un graphique en barres, empilable. Chaque coin face à une gouttière est arrond
                             x={tick.x}
                             y={tick.y}
                             text-anchor={tick.anchor}
-                            class="fill-fc-fg-muted text-fc-xs tabular-nums">{tick.text}</text
+                            class="fill-fc-muted text-fc-subtext tabular-nums">{tick.text}</text
                         >
                     {/each}
                 </g>
 
                 <g>
                     {#each geometry.catTicks as tick, i (i)}
-                        <text x={tick.x} y={tick.y} text-anchor={tick.anchor} class="fill-fc-fg-muted text-fc-xs"
+                        <text x={tick.x} y={tick.y} text-anchor={tick.anchor} class="fill-fc-muted text-fc-subtext"
                             >{tick.text}</text
                         >
                     {/each}

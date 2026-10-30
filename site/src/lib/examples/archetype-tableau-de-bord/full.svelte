@@ -37,7 +37,7 @@
         {/snippet}
     </PageHeader>
 
-    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="grid gap-1 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Heures pointées" value="34,5 h" delta="+4,2 h vs semaine dernière" />
         <StatCard label="Projets actifs" value="7" delta="2 démarrés ce mois-ci" />
         <StatCard label="À facturer" value="4 820 €" delta="sur 3 clients" />
@@ -45,7 +45,7 @@
     </div>
 
     <Section title="Activité" description="Heures pointées sur les sept derniers jours.">
-        <div class="grid gap-4 xl:grid-cols-3">
+        <div class="grid gap-1 xl:grid-cols-3">
             <Card class="xl:col-span-2">
                 <LineChart series={pointage} labels={jours} height={220} area smooth />
             </Card>

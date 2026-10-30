@@ -53,7 +53,7 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
       rather than a bar running off screen. If you need seven destinations on a phone, the nav
       is wrong — move one behind the space switcher or the page it belongs to.
     -->
-    <div class="flex max-w-full items-center gap-0.5 overflow-x-auto rounded-fc-pill bg-fc-bg/70 p-1 shadow-lg backdrop-blur-2xl backdrop-saturate-150 sm:gap-1 sm:p-1.5">
+    <div class="flex max-w-full items-center gap-0.5 overflow-x-auto rounded-fc bg-fc-bg/70 p-1 shadow-lg backdrop-blur-2xl backdrop-saturate-150 sm:gap-1 sm:p-1.5">
         {#each items as item (item.href)}
             <a
                 href={item.href}
@@ -61,10 +61,10 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
                 aria-current={item.active ? 'page' : undefined}
                 title={item.label}
                 class={twMerge(
-                    'flex size-fc-nav-item shrink-0 items-center justify-center rounded-fc-pill transition-all duration-200',
+                    'flex size-fc-nav-item shrink-0 items-center justify-center rounded-fc transition-all duration-200',
                     item.active
-                        ? 'bg-fc-accent text-fc-accent-fg shadow-sm'
-                        : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg'
+                        ? 'fc-selected shadow-sm'
+                        : 'text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink'
                 )}
             >
                 <Icon icon={item.icon} size={22} />
@@ -78,8 +78,8 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
                 aria-current={profileActive ? 'page' : undefined}
                 title="Profile"
                 class={twMerge(
-                    'flex size-fc-nav-item shrink-0 items-center justify-center rounded-fc-pill transition-all duration-200',
-                    profileActive ? 'bg-fc-accent shadow-sm' : 'hover:bg-fc-surface'
+                    'flex size-fc-nav-item shrink-0 items-center justify-center rounded-fc transition-all duration-200',
+                    profileActive ? 'fc-selected shadow-sm' : 'hover:bg-fc-surface-hover'
                 )}
             >
                 <Avatar name={user.name} src={user.avatar} size="sm" class="h-7 w-7" />

@@ -11,9 +11,9 @@
 <div class="flex flex-col">
     {#each entrees as entree, i (entree.tache)}
         {#if i > 0}<Divider class="my-3" />{/if}
-        <div class="flex items-center justify-between text-fc-sm">
-            <span class="text-fc-fg">{entree.tache}</span>
-            <span class="text-fc-fg-muted">{entree.duree}</span>
+        <div class="flex items-center justify-between text-fc-p">
+            <span class="text-fc-ink">{entree.tache}</span>
+            <span class="text-fc-muted">{entree.duree}</span>
         </div>
     {/each}
 </div>

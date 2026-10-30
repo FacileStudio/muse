@@ -10,7 +10,7 @@ par le composant** (désactivé, sélectionné, en cours, en erreur).
 |---|---|
 | Survol | monte d'un cran de surface — jamais une teinte |
 | Appui | `springPress`, un creux à 0.997 sur 70ms |
-| Focus clavier | **un seul anneau, partout** : `focus-visible:outline-2 outline-offset-2 outline-fc-ring` |
+| Focus clavier | **un seul anneau, partout** : `focus-visible:outline-2 outline-offset-2 outline-fc-brand` |
 
 L'anneau de focus n'est pas négociable et ne se personnalise pas par composant. Un anneau par
 système, c'est ce qui rend la navigation clavier lisible d'une app à l'autre.

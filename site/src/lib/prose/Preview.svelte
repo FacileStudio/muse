@@ -16,18 +16,18 @@
     }: { verdict?: 'good' | 'bad'; label?: string; children: Snippet } = $props();
 </script>
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-1">
     {#if verdict || label}
-        <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-wrap items-center gap-1">
             {#if verdict}
                 <Badge tone={verdict === 'good' ? 'success' : 'danger'}>
                     {verdict === 'good' ? 'Bon' : 'Mauvais'}
                 </Badge>
             {/if}
-            {#if label}<span class="text-fc-sm text-fc-fg-muted">{label}</span>{/if}
+            {#if label}<span class="text-fc-p text-fc-muted">{label}</span>{/if}
         </div>
     {/if}
-    <div class="rounded-fc-md border border-fc-border bg-fc-page p-5">
+    <div class="rounded-fc border border-fc-border bg-fc-bg p-5">
         {@render children()}
     </div>
 </div>

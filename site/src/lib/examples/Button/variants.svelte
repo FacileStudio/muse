@@ -2,7 +2,7 @@
     import { Button } from '@facile/muse';
 </script>
 
-<div class="flex flex-wrap items-center gap-3">
+<div class="flex flex-wrap items-center gap-1">
     <Button variant="primary">Enregistrer</Button>
     <Button variant="outline">Prévisualiser</Button>
     <Button variant="ghost">Annuler</Button>

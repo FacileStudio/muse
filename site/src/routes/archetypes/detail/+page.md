@@ -32,5 +32,5 @@ largeur, puis deux colonnes : ce qu'on est venu lire à gauche, ce qui décrit l
 - Le lien retour est la prop `back` du `PageHeader`, jamais un bouton posé à la main : il
   annule son propre padding avec `-ml-3` pour aligner le texte sur le bord de la page, et
   quatre apps avaient chacune trouvé une valeur différente.
-- Chaque colonne est une `Stack gap="content"`, pas des `Section` posées côte à côte. La grille
+- Chaque colonne est une `Stack`, pas des `Section` posées côte à côte. La grille
   possède la gouttière, la pile possède l'espace vertical — aucune carte ne porte de marge.

@@ -72,9 +72,9 @@
         [formatBytes(item.size), statusText(item)].filter(Boolean).join(' · ');
 
     const rowTone = (status: Status): string =>
-        status === 'error' ? 'border-fc-danger/40 bg-fc-danger/10' : 'border-fc-border bg-fc-bg';
+        status === 'error' ? 'border-fc-danger/40 bg-fc-danger/10' : 'border-fc-border bg-fc-surface';
 
-    const classes = $derived(twMerge('flex w-full flex-col gap-2', className));
+    const classes = $derived(twMerge('flex w-full flex-col gap-1', className));
 </script>
 
 <!--
@@ -84,10 +84,10 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
 
 {#if items.length > 0}
     <div class={classes} {...rest}>
-        <ul class="flex flex-col gap-2">
+        <ul class="flex flex-col gap-1">
             {#each items as item (item.id)}
-                <li class={twMerge('rounded-fc-md border p-3', rowTone(item.status))}>
-                    <div class="flex items-center gap-3">
+                <li class={twMerge('rounded-fc border p-3', rowTone(item.status))}>
+                    <div class="flex items-center gap-1">
                         <span class="flex size-5 shrink-0 items-center justify-center">
                             {#if item.status === 'uploading'}
                                 <Spinner size="sm" />
@@ -100,22 +100,22 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
                                     <Icon icon={icons.warning} size={18} />
                                 </span>
                             {:else}
-                                <span class="text-fc-fg-muted">
+                                <span class="text-fc-muted">
                                     <Icon icon={icons.clock} size={18} />
                                 </span>
                             {/if}
                         </span>
 
                         <div class="min-w-0 flex-1">
-                            <p class="truncate text-fc-sm text-fc-fg">{item.name}</p>
-                            <p class="text-fc-xs text-fc-fg-muted">{meta(item)}</p>
+                            <p class="truncate text-fc-p text-fc-ink">{item.name}</p>
+                            <p class="text-fc-subtext text-fc-muted">{meta(item)}</p>
                         </div>
 
                         {#if onRetry && item.status === 'error'}
                             <IconButton
                                 type="button"
                                 aria-label={`Retry ${item.name}`}
-                                class="border-transparent text-fc-fg-muted hover:text-fc-fg"
+                                class="border-transparent text-fc-muted hover:text-fc-ink"
                                 onclick={() => onRetry?.(item.id)}
                             >
                                 <Icon icon={icons.refresh} size={18} />
@@ -126,7 +126,7 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
                             <IconButton
                                 type="button"
                                 aria-label={`Remove ${item.name}`}
-                                class="border-transparent text-fc-fg-muted hover:text-fc-fg"
+                                class="border-transparent text-fc-muted hover:text-fc-ink"
                                 onclick={() => onCancel?.(item.id)}
                             >
                                 <Icon icon={icons.close} size={18} />
@@ -135,7 +135,7 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
                     </div>
 
                     <div
-                        class="mt-2 h-1.5 w-full overflow-hidden rounded-fc-pill bg-fc-surface"
+                        class="mt-2 h-1.5 w-full overflow-hidden rounded-fc bg-fc-surface-hover"
                         role="progressbar"
                         aria-label={`Upload progress for ${item.name}`}
                         aria-valuemin={0}
@@ -143,26 +143,26 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
                         aria-valuenow={item.status === 'pending' ? undefined : clamp(item.progress)}
                     >
                         <div
-                            class="h-full rounded-fc-pill bg-fc-accent transition-[width] duration-300 motion-reduce:transition-none"
+                            class="h-full rounded-fc bg-fc-brand transition-[width] duration-300 motion-reduce:transition-none"
                             style:width="{item.status === 'pending' ? 0 : clamp(item.progress)}%"
                         ></div>
                     </div>
 
                     {#if item.status === 'error' && item.error}
-                        <p class="mt-2 text-fc-xs text-fc-danger">{item.error}</p>
+                        <p class="mt-2 text-fc-subtext text-fc-danger">{item.error}</p>
                     {/if}
                 </li>
             {/each}
         </ul>
 
         {#if showTotal}
-            <div class="flex flex-col gap-1.5 pt-1">
-                <div class="flex items-baseline justify-between gap-3 text-fc-xs text-fc-fg-muted">
+            <div class="flex flex-col gap-1 pt-1">
+                <div class="flex items-baseline justify-between gap-1 text-fc-subtext text-fc-muted">
                     <span>{doneCount} of {items.length} complete</span>
                     <span>{total}%</span>
                 </div>
                 <div
-                    class="h-1.5 w-full overflow-hidden rounded-fc-pill bg-fc-surface"
+                    class="h-1.5 w-full overflow-hidden rounded-fc bg-fc-surface-hover"
                     role="progressbar"
                     aria-label="Total upload progress"
                     aria-valuemin={0}
@@ -170,7 +170,7 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
                     aria-valuenow={total}
                 >
                     <div
-                        class="h-full rounded-fc-pill bg-fc-accent transition-[width] duration-300 motion-reduce:transition-none"
+                        class="h-full rounded-fc bg-fc-brand transition-[width] duration-300 motion-reduce:transition-none"
                         style:width="{total}%"
                     ></div>
                 </div>

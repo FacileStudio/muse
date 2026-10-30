@@ -111,7 +111,7 @@ Une tendance dans une ligne de tableau, sans axes ni légende.
 
 <div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
-        <div class="flex items-center justify-center text-fc-xs text-fc-fg-muted" style:min-height="{height}px">
+        <div class="flex items-center justify-center text-fc-subtext text-fc-muted" style:min-height="{height}px">
             {emptyLabel}
         </div>
     {:else if w > 0}
@@ -142,7 +142,7 @@ Une tendance dans une ligne de tableau, sans axes ni légende.
                     cy={last[1]}
                     r={DOT_R}
                     fill={color}
-                    stroke="var(--color-fc-component)"
+                    stroke="var(--color-fc-surface-solid)"
                     stroke-width="2"
                     data-fade
                 />

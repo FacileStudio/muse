@@ -10,7 +10,7 @@
     let { ok = false, label }: { ok?: boolean; label: string } = $props();
 </script>
 
-<Inline gap="tight">
+<Inline>
     <Badge tone={ok ? 'success' : 'danger'}>{ok ? 'Bon' : 'Mauvais'}</Badge>
-    <span class="text-fc-sm text-fc-fg-muted">{label}</span>
+    <span class="text-fc-p text-fc-muted">{label}</span>
 </Inline>

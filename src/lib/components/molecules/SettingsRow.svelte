@@ -33,8 +33,8 @@
      */
     const classes = $derived(
         twMerge(
-            'flex flex-col gap-3 border-t border-fc-border py-4 first:border-t-0 first:pt-0 last:pb-0',
-            !stacked && 'sm:flex-row sm:items-center sm:justify-between sm:gap-6',
+            'flex flex-col gap-1 border-t border-fc-border py-4 first:border-t-0 first:pt-0 last:pb-0',
+            !stacked && 'sm:flex-row sm:items-center sm:justify-between sm:gap-1',
             className
         )
     );
@@ -50,19 +50,19 @@ Une ligne de réglage : libellé, description et contrôle. Le contrôle prend `
         <div class="flex min-w-0 flex-col gap-1">
             {#if label}
                 {#if htmlFor}
-                    <label for={htmlFor} class="text-fc-sm font-medium text-fc-fg">{label}</label>
+                    <label for={htmlFor} class="text-fc-p font-medium text-fc-ink">{label}</label>
                 {:else}
-                    <span class="text-fc-sm font-medium text-fc-fg">{label}</span>
+                    <span class="text-fc-p font-medium text-fc-ink">{label}</span>
                 {/if}
             {/if}
             {#if description}
-                <p class="text-fc-xs text-fc-fg-muted">{description}</p>
+                <p class="text-fc-subtext text-fc-muted">{description}</p>
             {/if}
         </div>
     {/if}
 
     {#if children}
-        <div class={twMerge('flex items-center gap-2', !stacked && 'sm:shrink-0 sm:justify-end')}>
+        <div class={twMerge('flex items-center gap-1', !stacked && 'sm:shrink-0 sm:justify-end')}>
             {@render children()}
         </div>
     {/if}

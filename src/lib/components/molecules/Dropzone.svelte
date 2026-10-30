@@ -138,9 +138,9 @@
 
     const classes = $derived(
         twMerge(
-            'relative flex min-h-[140px] w-full flex-col items-center justify-center gap-2 rounded-fc-md border border-dashed border-fc-border bg-fc-bg p-6 text-center text-fc-fg transition-colors motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-fc-ring',
-            disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-fc-surface',
-            dragging ? 'border-fc-accent bg-fc-surface' : '',
+            'relative flex min-h-[140px] w-full flex-col items-center justify-center gap-1 rounded-fc border border-dashed border-fc-border bg-fc-surface p-6 text-center text-fc-ink transition-colors motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-fc-brand',
+            disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-fc-surface-hover',
+            dragging ? 'border-fc-brand bg-fc-surface-hover' : '',
             className
         )
     );
@@ -175,13 +175,13 @@ Le dépôt de fichiers. Il valide aussi le chemin du glisser-déposer, pas seule
     {#if children}
         {@render children()}
     {:else}
-        <span class="text-fc-fg-muted">
+        <span class="text-fc-muted">
             <Icon icon={icons.upload} size={28} />
         </span>
-        <span class="text-fc-sm font-medium">{label}</span>
-        {#if hint}<span class="text-fc-xs text-fc-fg-muted">{hint}</span>{/if}
+        <span class="text-fc-p font-medium">{label}</span>
+        {#if hint}<span class="text-fc-subtext text-fc-muted">{hint}</span>{/if}
         <span
-            class="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-fc-pill border border-fc-border px-4 text-fc-sm"
+            class="mt-1 inline-flex h-11 items-center justify-center gap-1 rounded-fc border border-fc-border px-4 text-fc-p"
         >
             <Icon icon={icons.folder} size={16} />
             {browseLabel}

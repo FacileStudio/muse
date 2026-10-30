@@ -116,12 +116,12 @@ fills for the inverted accent.
 | `--radius-fc-md` | `8px` | `rounded-fc-md` — the default on most components |
 | `--radius-fc-lg` | `12px` | `rounded-fc-lg` — `Modal`, `Drawer`, `SideBar` |
 | `--radius-fc-pill` / `--radius-fc-full` | `999px` | `rounded-fc-pill` — `Button`, `Badge`, `Avatar`, `Tabs` pill, `MobileNav`. Two names for one value so "a pill-shaped button" and "a circular avatar" read differently at the call site |
-| `--text-fc-xs` … `--text-fc-3xl` | `12` / `14` / `16` / `18` / `22` / `28` / `36px` | `text-fc-xs` … `text-fc-3xl` |
-| `--text-fc-*--line-height` | `16` / `20` / `24` / `28` / `28` / `34` / `40px` | applied automatically by the size utility |
-| `--font-fc-body` | `'Goga', Helvetica, Arial, sans-serif` | `font-fc-body` |
+| `--text-fc-title` … `--text-fc-subtext` | `32` / `24` / `18` / `14` / `11px` | `text-fc-title`, `text-fc-subtitle`, `text-fc-lead`, `text-fc-p`, `text-fc-subtext` |
+| `--text-fc-*--line-height`, `--letter-spacing` | `1.3`, `-0.02em` on all five; `title` also sets weight 500 | applied automatically by the size utility |
+| `--font-fc-body` | `'Magnetik'`, then the platform sans stack | `font-fc-body` — the app ships Magnetik's `@font-face`; muse does not bundle it |
 | `--font-fc-title` | identical to `--font-fc-body` | `font-fc-title` |
 | `--font-sans` | identical to `--font-fc-body` | `font-sans` |
-| `--font-fc-mono` | `ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace` | `font-fc-mono` — machine strings only: secrets, keys, IDs, endpoints. Goga has no mono cut, so this is the platform stack |
+| `--font-fc-mono` | `ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace` | `font-fc-mono` — machine strings only: secrets, keys, IDs, endpoints. this is the platform stack |
 | `--ease-fc` | `cubic-bezier(0.77, 0, 0.175, 1)` | `ease-fc` — the CSS spelling of GSAP's `power3.inOut`, so a consumer's CSS transition lands on the same curve as a muse animation beside it |
 | `--container-fc-sm` … `--container-fc-xl` | `600` / `720` / `960` / `1200px` | `max-w-fc-sm` … `max-w-fc-xl` |
 | `--width-fc-nav-collapsed` | `68px` | `w-fc-nav-collapsed` — `SideBar` reads this off `getComputedStyle` for its width tween |
@@ -132,9 +132,9 @@ fills for the inverted accent.
 There are **no `--fc-space-*` tokens**. Spacing is Tailwind's stock scale; the two
 `--spacing-fc-nav-*` entries above are fixed nav geometry, not a scale.
 
-`--text-fc-sm` (14px) is the UI default — nav rows, buttons and table cells all sit there,
-matching the suite's `text-sm`. Each size ships a paired `--line-height`, so `text-fc-sm`
-sets both properties in one utility.
+`--text-fc-p` (14px) is the UI default — nav rows, buttons and table cells all sit there.
+Each style ships its line-height and letter-spacing, so `text-fc-p` sets all three in one
+utility.
 
 ## Stacking order
 
@@ -158,8 +158,9 @@ to the browser's top layer, above every z-index there is.
 
 `tokens.css` emits an `@layer base` block that does four things beyond utilities:
 
-- `html` gets the Goga stack, `letter-spacing: -0.011em` and antialiasing; `h1`–`h6` get
-  `--font-fc-title` with `-0.02em` tracking; `body` gets `--color-fc-page` / `--color-fc-fg`.
+- `html` gets the Magnetik stack, `line-height: 1.3`, `letter-spacing: -0.02em` and
+  antialiasing; `h1`–`h6` get `--font-fc-title`; `body` gets `text-fc-p`'s 14px and
+  `--color-fc-page` / `--color-fc-fg`.
   Importing the styles therefore sets a consumer's base typography **and page colours**.
 - Scrollbars are hidden globally (`scrollbar-width: none`, `-ms-overflow-style`,
   `::-webkit-scrollbar { display: none }`). A classic scrollbar takes layout width, so it
@@ -174,9 +175,9 @@ to the browser's top layer, above every z-index there is.
 
 ## Fonts
 
-Two `@font-face` rules, both Goga: Medium at weight `500` and Semibold at weight `600`, both
-`font-display: swap`. Any other weight synthesizes — prefer `font-semibold` over `font-bold`.
-The shipped files are labeled "GogaTest" (test license).
+None. The stack names `'Magnetik'` first, and muse ships no file for it: the repo is public and
+the face is commercial. Declare `@font-face` for Magnetik Regular (`400`) and Medium (`500`) in
+the app, with `font-display: swap`. Without it the platform stack renders.
 
 ## Icons
 
@@ -254,7 +255,7 @@ This is how the suite reconciles muse with its own palette rather than forking t
 
 That block is adapted from `Casier/apps/client/src/app.css`, the one app in the suite that
 currently depends on `@facile/muse`. Two overrides it used to need are now obsolete: the type
-scale no longer needs flattening (muse's `text-fc-sm` is already `0.875rem`), and
+scale no longer needs flattening (muse's `text-fc-p` is already `0.875rem`), and
 `--color-yellow-500` no longer needs neutralising (`Alert`'s warning tone reads
 `--color-fc-warning`; **no colour in the library escapes the `fc-*` namespace**).
 
@@ -262,7 +263,7 @@ Aliasing is only *needed* when an app wants muse primitives to track its own loc
 Casier's case, so hand-written `bg-background` markup and muse components stay in lockstep.
 The published defaults already match the shipped suite look: chroma-zero OKLCH on a
 `0.145 / 0.985` inverted accent, `--radius-fc-md: 8px` (the suite's `--radius: 0.5rem`), a
-12–36px scale anchored on 14px, Goga, and Iconoir icons at stroke 2. `--destructive`'s suite value
+five-style scale anchored on 14px, Magnetik, and Iconoir icons at stroke 2. `--destructive`'s suite value
 is `--color-fc-danger` verbatim.
 
 Forking the library is still not the supported route.

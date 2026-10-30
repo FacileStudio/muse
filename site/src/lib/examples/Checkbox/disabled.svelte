@@ -2,7 +2,7 @@
     import { Checkbox } from '@facile/muse';
 </script>
 
-<div class="flex flex-col gap-2">
+<div class="flex flex-col gap-1">
     <Checkbox label="Journalisation des accès" checked disabled />
     <Checkbox label="Export automatique vers Ardoise" disabled />
 </div>

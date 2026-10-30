@@ -25,13 +25,13 @@
     }: IconButtonProps = $props();
 
     const variants: Record<Variant, string> = {
-        default: 'border border-fc-border text-fc-fg hover:bg-fc-surface',
-        ghost: 'bg-transparent text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
-        danger: 'bg-transparent text-fc-fg-muted hover:bg-fc-danger/10 hover:text-fc-danger'
+        default: 'border border-fc-border text-fc-ink hover:bg-fc-surface-hover',
+        ghost: 'bg-transparent text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink',
+        danger: 'bg-transparent text-fc-muted hover:bg-fc-danger/10 hover:text-fc-danger'
     };
 
     const classes = $derived(twMerge(
-        'inline-flex size-11 shrink-0 items-center justify-center rounded-fc-pill [&_svg]:size-4.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
+        'inline-flex size-11 shrink-0 items-center justify-center rounded-fc [&_svg]:size-4.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand',
         variants[variant],
         className
     ));

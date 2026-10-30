@@ -9,24 +9,6 @@
 
     let { children }: { children: Snippet } = $props();
 
-    /* Both classes, never just `dark`. The token file paints dark from a media query scoped
-       `:root:not(.light)`, so an app that only ever adds `.dark` cannot show light mode on a
-       dark-preferring OS — the media block still wins. */
-    let theme = $state<'light' | 'dark' | 'system'>('system');
-
-    $effect(() => {
-        if (!browser) return;
-        const root = document.documentElement;
-        root.classList.toggle('dark', theme === 'dark');
-        root.classList.toggle('light', theme === 'light');
-        localStorage.setItem('muse-theme', theme);
-    });
-
-    if (browser) {
-        const saved = localStorage.getItem('muse-theme');
-        if (saved === 'light' || saved === 'dark') theme = saved;
-    }
-
     let open = $state(false);
 
     /*
@@ -49,7 +31,7 @@
     const rail = $derived(RAIL.map((l) => ({ ...l, active: l.href === here })));
 </script>
 
-<div class="flex min-h-dvh w-full bg-fc-page">
+<div class="flex min-h-dvh w-full bg-fc-bg">
     <!-- muse's own rail, not a hand-rolled nav. Building the design system's site out of
          anything else would be an argument against the design system, and it is how the
          grouped-navigation gap got found: `SideBar` took a flat `pages` array, so the section
@@ -87,7 +69,7 @@
 
     <div class="flex min-w-0 flex-1 flex-col">
         <header
-            class="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-fc-border bg-fc-page/90 px-4 py-3 backdrop-blur md:justify-end md:border-0 md:bg-transparent md:px-10"
+            class="sticky top-0 z-30 flex items-center justify-between gap-1 border-b border-fc-border bg-fc-bg/90 px-4 py-3 backdrop-blur md:justify-end md:border-0 md:bg-transparent md:px-10"
         >
             <IconButton
                 variant="ghost"
@@ -98,18 +80,6 @@
                 <Icon icon={icons.collapse} size={20} />
             </IconButton>
 
-            <div class="flex items-center gap-1">
-                {#each [['light', icons.sun, 'Clair'], ['system', icons.monitor, 'Système'], ['dark', icons.moon, 'Sombre']] as [mode, icon, label] (mode)}
-                    <IconButton
-                        variant={theme === mode ? 'default' : 'ghost'}
-                        aria-label={label}
-                        aria-pressed={theme === mode}
-                        onclick={() => (theme = mode as typeof theme)}
-                    >
-                        <Icon {icon} size={18} />
-                    </IconButton>
-                {/each}
-            </div>
         </header>
 
         <main class="min-w-0 flex-1">

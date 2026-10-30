@@ -1,20 +1,18 @@
 import { extendTailwindMerge } from 'tailwind-merge';
 
-const sizes = ['fc-xs', 'fc-sm', 'fc-md', 'fc-lg', 'fc-xl', 'fc-2xl', 'fc-3xl'];
+const sizes = ['fc-title', 'fc-subtitle', 'fc-lead', 'fc-p', 'fc-subtext'];
 const colors = [
-    'fc-page',
     'fc-bg',
     'fc-surface',
-    'fc-component',
-    'fc-fg',
-    'fc-fg-muted',
-    'fc-accent',
-    'fc-accent-fg',
+    'fc-surface-hover',
+    'fc-surface-solid',
     'fc-border',
-    'fc-ring',
+    'fc-ink',
+    'fc-muted',
+    'fc-brand',
+    'fc-brand-bg',
     'fc-scrim',
     'fc-danger',
-    'fc-danger-fg',
     'fc-success',
     'fc-info',
     'fc-warning',
@@ -27,7 +25,7 @@ const colors = [
     'fc-chart-5',
     'fc-chart-6'
 ];
-const radii = ['fc-xs', 'fc-sm', 'fc-md', 'fc-lg', 'fc-pill', 'fc-full'];
+const radii = ['fc'];
 
 /* Container and nav tokens are not on any scale tailwind-merge knows, so without these it
    cannot tell that a consumer's `max-w-4xl` conflicts with `Page`'s `max-w-fc-lg` — both

@@ -4,8 +4,8 @@
     let masque = $state(true);
 </script>
 
-<div class="flex items-center gap-2">
-    <span class="flex-1 font-mono text-fc-sm text-fc-fg">
+<div class="flex items-center gap-1">
+    <span class="flex-1 font-mono text-fc-p text-fc-ink">
         {masque ? '••••••••••••••••' : 'sk_live_9f2c41ab77e0'}
     </span>
     <IconButton

@@ -149,7 +149,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
 <div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div
-            class="flex items-center justify-center text-fc-sm text-fc-fg-muted"
+            class="flex items-center justify-center text-fc-p text-fc-muted"
             style:min-height="{height}px"
         >
             {emptyLabel}
@@ -190,7 +190,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                             x={padLeft - 8}
                             y={yAt(tick) + 4}
                             text-anchor="end"
-                            class="fill-fc-fg-muted text-fc-xs tabular-nums">{yLabels[i]}</text
+                            class="fill-fc-muted text-fc-subtext tabular-nums">{yLabels[i]}</text
                         >
                     {/each}
                 </g>
@@ -203,7 +203,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                                     x={xAt(i)}
                                     y={PAD_TOP + plotH + 16}
                                     text-anchor="middle"
-                                    class="fill-fc-fg-muted text-fc-xs">{label}</text
+                                    class="fill-fc-muted text-fc-subtext">{label}</text
                                 >
                             {/if}
                         {/each}
@@ -244,7 +244,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                             y1={PAD_TOP}
                             x2={xAt(hover)}
                             y2={PAD_TOP + plotH}
-                            stroke="var(--color-fc-ring)"
+                            stroke="var(--color-fc-brand)"
                             stroke-width="1"
                         />
                         {#each series as s, i (i)}
@@ -254,7 +254,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                                     cy={yAt(s.data[hover])}
                                     r="4"
                                     fill={colorAt(i)}
-                                    stroke="var(--color-fc-component)"
+                                    stroke="var(--color-fc-surface-solid)"
                                     stroke-width="2"
                                 />
                             {/if}

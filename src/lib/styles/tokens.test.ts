@@ -16,72 +16,15 @@ function block(selector: string): Record<string, string> {
     return out;
 }
 
-/*
- * The dark palette is written twice — once under `prefers-color-scheme` and once under an
- * explicit `.dark` class — because plain CSS cannot share a declaration block between a
- * media query and a class selector. A comment asking the next person to "edit both or
- * neither" is not a mechanism; this is.
- */
-describe('dark mode blocks', () => {
-    const media = block(':root:not(.light)');
-    const explicit = block(':root.dark');
-
-    test('define the same tokens', () => {
-        expect(Object.keys(explicit).sort()).toEqual(Object.keys(media).sort());
+describe('dark only', () => {
+    test('html declares the dark scheme and nothing switches it', () => {
+        expect(css.match(/html\s*\{[\s\S]*?color-scheme:\s*dark;/)).not.toBeNull();
+        expect(css).not.toMatch(/\.dark|\.light|prefers-color-scheme/);
     });
 
-    test('define the same values', () => {
-        expect(explicit).toEqual(media);
-    });
-});
-
-/*
- * `color-scheme` is not a custom property, so `block()` above does not see it and the
- * "edit both or neither" test cannot cover it. It gets its own check, because it is the
- * one declaration that controls everything the *browser* paints — native select popups,
- * form internals, autofill, caret, the canvas past the page background — and losing it
- * looks exactly like "dark mode is broken" while every token is correct.
- */
-describe('color-scheme', () => {
-    function scheme(selector: string): string | undefined {
-        const start = css.indexOf(selector);
-        const open = css.indexOf('{', start);
-        const end = css.indexOf('}', open);
-        return css.slice(open + 1, end).match(/color-scheme\s*:\s*(\w+)\s*;/)?.[1];
-    }
-
-    test('the light default is declared on html', () => {
-        expect(css.match(/html\s*\{[\s\S]*?color-scheme:\s*light;/)).not.toBeNull();
-    });
-
-    test('both dark blocks flip it', () => {
-        expect(scheme(':root:not(.light)')).toBe('dark');
-        expect(scheme(':root.dark')).toBe('dark');
-    });
-});
-
-describe('token surface', () => {
-    const light = block('@theme {');
-
-    test('every dark token overrides a token declared in the light theme', () => {
-        const declared = new Set(Object.keys(light));
-        const chart = block('@theme static {');
-        for (const key of Object.keys(chart)) declared.add(key);
-
-        const orphans = Object.keys(block(':root.dark')).filter((key) => !declared.has(key));
-        expect(orphans).toEqual([]);
-    });
-
-    test('semantic tokens that carry chroma are the only ones that do', () => {
-        const chromatic = Object.entries(light)
-            .filter(([key]) => key.startsWith('--color-'))
-            .filter(([, value]) => {
-                const match = value.match(/oklch\(\s*[\d.]+\s+([\d.]+)/);
-                return match ? Number(match[1]) > 0 : false;
-            })
-            .map(([key]) => key.replace('--color-fc-', ''));
-
-        expect(chromatic.sort()).toEqual(['admin', 'danger', 'info', 'owner', 'success', 'warning']);
+    test('the brand gradient and its solid share one source', () => {
+        expect(block('@theme {')['--color-fc-brand']).toBe('var(--fc-brand-from)');
+        expect(block(':root {')['--fc-brand-from']).toBe('#71ffc6');
     });
 });
 

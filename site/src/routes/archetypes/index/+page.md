@@ -25,7 +25,7 @@ cher — un utilisateur apprend un index et s'attend à retrouver le même parto
 - L'action primaire vit dans le snippet `actions` du `PageHeader`, jamais au-dessus du
   tableau. Elle reste au même endroit quand la liste est vide, et l'état vide n'a alors plus
   à la reproduire.
-- La barre de filtres est à `gap-2` — `tight`, des contrôles utilisés ensemble — puis
+- La barre de filtres est à `gap-1` — `tight`, des contrôles utilisés ensemble — puis
   `content` la sépare du tableau. Deux relations différentes, deux barreaux différents.
 - Le bouton de la barre de filtres prend `size="lg"`. `Input` et `Select` sont en `h-11`, le
   bouton par défaut en `h-9` : 8px d'écart sur la même ligne se lit comme un bug.

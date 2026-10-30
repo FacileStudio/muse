@@ -16,7 +16,7 @@
     import { GAP } from '../../utils/layout.js';
 
     let {
-        gap = 'content',
+        gap = 'default',
         class: className = '',
         children,
         ...rest

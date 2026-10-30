@@ -4,7 +4,7 @@
     const section = 'apparence';
 </script>
 
-<Stack gap="content">
+<Stack>
     <Tabs
         value={section}
         items={[

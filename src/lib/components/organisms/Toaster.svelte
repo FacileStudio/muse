@@ -57,7 +57,7 @@
      */
     const classes = $derived(
         twMerge(
-            'pointer-events-none fixed inset-x-0 z-60 flex flex-col gap-3 px-4 sm:inset-x-auto sm:right-6 sm:w-full sm:max-w-sm sm:px-0',
+            'pointer-events-none fixed inset-x-0 z-60 flex flex-col gap-1 px-4 sm:inset-x-auto sm:right-6 sm:w-full sm:max-w-sm sm:px-0',
             /* One padding utility per edge, no `sm:` variant: an app clearing a fixed bottom
                nav passes `pb-28 md:pb-6` and needs its own breakpoints to win. */
             position === 'top'

@@ -9,46 +9,46 @@
     let { children }: { children: Snippet } = $props();
 </script>
 
-<article class="fc-prose flex flex-col gap-6">
+<article class="fc-prose flex flex-col gap-1">
     {@render children()}
 </article>
 
 <style>
     .fc-prose :global(h1) {
-        font-size: var(--text-fc-2xl);
-        line-height: var(--text-fc-2xl--line-height);
+        font-size: var(--text-fc-title);
+        line-height: var(--text-fc-title--line-height);
         font-weight: 600;
-        color: var(--color-fc-fg);
+        color: var(--color-fc-ink);
     }
 
     .fc-prose :global(h2) {
         margin-top: calc(var(--spacing) * 6);
-        font-size: var(--text-fc-lg);
-        line-height: var(--text-fc-lg--line-height);
+        font-size: var(--text-fc-lead);
+        line-height: var(--text-fc-lead--line-height);
         font-weight: 600;
-        color: var(--color-fc-fg);
+        color: var(--color-fc-ink);
     }
 
     .fc-prose :global(h3) {
-        font-size: var(--text-fc-md);
+        font-size: var(--text-fc-lead);
         font-weight: 600;
-        color: var(--color-fc-fg);
+        color: var(--color-fc-ink);
     }
 
     .fc-prose :global(p),
     .fc-prose :global(li) {
-        font-size: var(--text-fc-sm);
+        font-size: var(--text-fc-p);
         line-height: 1.65;
-        color: var(--color-fc-fg-muted);
+        color: var(--color-fc-muted);
     }
 
     .fc-prose :global(strong) {
-        color: var(--color-fc-fg);
+        color: var(--color-fc-ink);
         font-weight: 600;
     }
 
     .fc-prose :global(a) {
-        color: var(--color-fc-fg);
+        color: var(--color-fc-ink);
         text-decoration: underline;
         text-underline-offset: 3px;
     }
@@ -63,9 +63,9 @@
 
     .fc-prose :global(code) {
         font-family: var(--font-fc-mono);
-        font-size: var(--text-fc-xs);
-        color: var(--color-fc-fg);
-        background: var(--color-fc-surface);
+        font-size: var(--text-fc-subtext);
+        color: var(--color-fc-ink);
+        background: var(--color-fc-surface-hover);
         border-radius: var(--radius-fc-sm);
         padding: 0.1em 0.35em;
     }
@@ -75,32 +75,20 @@
     .fc-prose :global(.fc-code) {
         overflow-x: auto;
         border-radius: var(--radius-fc-md);
-        background: var(--color-fc-surface);
+        background: var(--color-fc-surface-hover);
         padding: calc(var(--spacing) * 4);
     }
 
     .fc-prose :global(.fc-code code) {
         background: none;
         padding: 0;
-        font-size: var(--text-fc-xs);
+        font-size: var(--text-fc-subtext);
         line-height: 1.7;
     }
 
     .fc-prose :global(.shiki),
     .fc-prose :global(.shiki span) {
-        color: var(--shiki-light);
-    }
-
-    :global(:root.dark) .fc-prose :global(.shiki),
-    :global(:root.dark) .fc-prose :global(.shiki span) {
         color: var(--shiki-dark);
-    }
-
-    @media (prefers-color-scheme: dark) {
-        :global(:root:not(.light)) .fc-prose :global(.shiki),
-        :global(:root:not(.light)) .fc-prose :global(.shiki span) {
-            color: var(--shiki-dark);
-        }
     }
 
     /* `display: block` is what lets a table scroll instead of pushing the page sideways.
@@ -112,7 +100,7 @@
         max-width: 100%;
         overflow-x: auto;
         border-collapse: collapse;
-        font-size: var(--text-fc-sm);
+        font-size: var(--text-fc-p);
     }
 
     .fc-prose :global(th),
@@ -123,13 +111,13 @@
     .fc-prose :global(th) {
         text-align: left;
         font-weight: 600;
-        color: var(--color-fc-fg);
+        color: var(--color-fc-ink);
         padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
         border-bottom: 1px solid var(--color-fc-border);
     }
 
     .fc-prose :global(td) {
-        color: var(--color-fc-fg-muted);
+        color: var(--color-fc-muted);
         padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
         border-bottom: 1px solid var(--color-fc-border);
         vertical-align: top;
@@ -138,6 +126,6 @@
     .fc-prose :global(blockquote) {
         border-left: 2px solid var(--color-fc-border);
         padding-left: calc(var(--spacing) * 4);
-        color: var(--color-fc-fg-muted);
+        color: var(--color-fc-muted);
     }
 </style>

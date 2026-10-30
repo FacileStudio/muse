@@ -102,14 +102,14 @@
 </script>
 
 <Page>
-    <div class="flex flex-wrap items-start justify-between gap-4">
-        <div class="flex min-w-0 flex-col gap-2">
-            <h1 class="text-fc-2xl font-semibold text-fc-fg">Spaces</h1>
-            <p class="text-fc-sm text-fc-fg-muted">
+    <div class="flex flex-wrap items-start justify-between gap-1">
+        <div class="flex min-w-0 flex-col gap-1">
+            <h1 class="text-fc-title font-semibold text-fc-ink">Spaces</h1>
+            <p class="text-fc-p text-fc-muted">
                 Shared workspaces. Everyone in a space sees its projects, clients and tracked hours.
             </p>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1">
             <Button variant="outline" icon={icons.filter} onclick={() => (filtersOpen = true)}>
                 Filters
             </Button>
@@ -117,10 +117,10 @@
         </div>
     </div>
 
-    <section class="flex flex-col gap-4">
-        <div class="flex flex-wrap gap-4">
-            <div class="flex w-full max-w-xs flex-col gap-2">
-                <p class="text-fc-xs text-fc-fg-muted">With a personal scope</p>
+    <section class="flex flex-col gap-1">
+        <div class="flex flex-wrap gap-1">
+            <div class="flex w-full max-w-xs flex-col gap-1">
+                <p class="text-fc-subtext text-fc-muted">With a personal scope</p>
                 <SpaceSwitcher
                     spaces={switcherSpaces}
                     activeId={activeSpaceId}
@@ -132,8 +132,8 @@
                 />
             </div>
 
-            <div class="flex w-full max-w-xs flex-col gap-2">
-                <p class="text-fc-xs text-fc-fg-muted">personalLabel = null — every row is a space</p>
+            <div class="flex w-full max-w-xs flex-col gap-1">
+                <p class="text-fc-subtext text-fc-muted">personalLabel = null — every row is a space</p>
                 <SpaceSwitcher
                     spaces={switcherSpaces}
                     activeId={scopedSpaceId}
@@ -143,8 +143,8 @@
                 />
             </div>
 
-            <div class="flex w-full max-w-xs flex-col gap-2">
-                <p class="text-fc-xs text-fc-fg-muted">No spaces — the switcher renders nothing</p>
+            <div class="flex w-full max-w-xs flex-col gap-1">
+                <p class="text-fc-subtext text-fc-muted">No spaces — the switcher renders nothing</p>
                 <SpaceSwitcher spaces={[]} activeId={null} manageHref="#/spaces" />
             </div>
         </div>
@@ -159,12 +159,12 @@
                     onclick={() => (selectedId = space.id)}
                 >
                     {#snippet right()}
-                        <span class="flex shrink-0 items-center gap-2">
-                            <span class="hidden text-fc-xs opacity-70 sm:inline">
+                        <span class="flex shrink-0 items-center gap-1">
+                            <span class="hidden text-fc-subtext opacity-70 sm:inline">
                                 {space.members.length} member{space.members.length === 1 ? '' : 's'} · {space.projects} projects
                             </span>
                             <span
-                                class="h-2.5 w-2.5 shrink-0 rounded-fc-pill"
+                                class="h-2.5 w-2.5 shrink-0 rounded-fc"
                                 style:background-color={space.color}
                             ></span>
                         </span>
@@ -175,19 +175,19 @@
     </section>
 
     {#if selected}
-        <section class="flex flex-col gap-4">
-            <h2 class="text-fc-lg font-semibold text-fc-fg">{selected.name}</h2>
-            <p class="text-fc-sm text-fc-fg-muted">{selected.description || 'No description yet.'}</p>
+        <section class="flex flex-col gap-1">
+            <h2 class="text-fc-lead font-semibold text-fc-ink">{selected.name}</h2>
+            <p class="text-fc-p text-fc-muted">{selected.description || 'No description yet.'}</p>
 
-            <div class="grid gap-4 sm:grid-cols-3">
+            <div class="grid gap-1 sm:grid-cols-3">
                 <StatCard label="Members" value={selected.members.length} />
                 <StatCard label="Projects" value={selected.projects} />
                 <StatCard label="Hours tracked" value="{selected.hours} h" />
             </div>
         </section>
 
-        <section class="flex flex-col gap-4">
-            <h2 class="text-fc-lg font-semibold text-fc-fg">Members</h2>
+        <section class="flex flex-col gap-1">
+            <h2 class="text-fc-lead font-semibold text-fc-ink">Members</h2>
 
             {#if visibleMembers.length === 0}
                 <EmptyState
@@ -218,12 +218,12 @@
             {/if}
         </section>
 
-        <section class="flex flex-col gap-4">
-            <h2 class="text-fc-lg font-semibold text-fc-fg">Invite a teammate</h2>
+        <section class="flex flex-col gap-1">
+            <h2 class="text-fc-lead font-semibold text-fc-ink">Invite a teammate</h2>
             {#if inviteSent}
                 <Alert tone="success">{inviteSent}</Alert>
             {/if}
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+            <div class="flex flex-col gap-1 sm:flex-row sm:items-end">
                 <div class="min-w-0 flex-1">
                     <Field label="Email">
                         <Input bind:value={inviteEmail} type="email" placeholder="teammate@facile.studio" />
@@ -242,7 +242,7 @@
 </Page>
 
 <Modal bind:open={createOpen} title="New space" showClose>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
         <Field label="Name">
             <Input bind:value={draftName} placeholder="Acme Studio" />
         </Field>
@@ -254,7 +254,7 @@
         </Field>
     </div>
     {#snippet footer()}
-        <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <div class="flex flex-col-reverse gap-1 sm:flex-row sm:justify-end">
             <Button variant="ghost" class="w-full sm:w-auto" onclick={() => (createOpen = false)}>Cancel</Button>
             <Button icon={icons.plus} class="w-full sm:w-auto" onclick={createSpace}>Create space</Button>
         </div>
@@ -281,7 +281,7 @@
         </Select>
     </Field>
     {#snippet footer()}
-        <div class="flex gap-2">
+        <div class="flex gap-1">
             <Button variant="ghost" icon={icons.refresh} class="flex-1" onclick={() => (roleFilter = 'all')}>
                 Reset
             </Button>

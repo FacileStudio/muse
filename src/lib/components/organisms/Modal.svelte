@@ -112,7 +112,7 @@
      * own `margin: auto`, and Tailwind preflight's `margin: 0` reset kills exactly that —
      * without this the dialog renders flush against the top-left corner in every consumer.
      */
-    const classes = $derived(twMerge('m-auto rounded-fc-lg border border-fc-border bg-fc-component text-fc-fg p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto backdrop:bg-fc-scrim', sizes[size], className));
+    const classes = $derived(twMerge('m-auto rounded-fc border border-fc-border bg-fc-surface-solid text-fc-ink p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto backdrop:bg-fc-scrim', sizes[size], className));
 </script>
 
 <!--
@@ -127,14 +127,14 @@ Un dialogue natif : le navigateur le place dans sa couche supérieure, au-dessus
     {...rest}
     {...dialog.handlers}
 >
-    <div class="flex flex-col gap-3 p-5">
+    <div class="flex flex-col gap-1 p-5">
         {#if header || title || (showClose && dismissible)}
-            <div class="flex items-start justify-between gap-3">
+            <div class="flex items-start justify-between gap-1">
                 <div class="min-w-0 flex-1">
                     {#if header}
                         {@render header()}
                     {:else if title}
-                        <h2 id={headingId} class="text-fc-lg font-semibold">{title}</h2>
+                        <h2 id={headingId} class="text-fc-lead font-semibold">{title}</h2>
                     {/if}
                 </div>
                 {#if showClose && dismissible}
@@ -142,7 +142,7 @@ Un dialogue natif : le navigateur le place dans sa couche supérieure, au-dessus
                         type="button"
                         aria-label="Close"
                         onclick={() => (open = false)}
-                        class="-mt-2 -mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-fc-pill text-fc-fg-muted transition-colors hover:bg-fc-surface hover:text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+                        class="-mt-2 -mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-fc text-fc-muted transition-colors hover:bg-fc-surface-hover hover:text-fc-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand"
                     >
                         <Icon icon="iconoir:xmark" size={18} />
                     </button>

@@ -8,7 +8,7 @@ Svelte 5 component library and design system for Facile tools. Published as `@fa
 - Tailwind CSS v4 with custom `@theme` tokens
 - GSAP for animations (`^3.13.0` — `gsap/SplitText` does not resolve on 3.12)
 - TypeScript, type-checked with `svelte-check`
-- Bundled font: Goga (Medium 500 + Semibold 600)
+- Font: Magnetik, named in the stack but not bundled (each app ships its own `@font-face`)
 
 ## Project structure
 
@@ -26,7 +26,6 @@ muse/
     icons.ts                  Iconify name map (47 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
     components/               53 Svelte components (atoms/ molecules/ organisms/ charts/ motion/)
-    fonts/                    Bundled Goga font files (.otf)
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
     utils/cn.ts               fc-*-aware tailwind-merge — every component uses it
     utils/motion.ts           prefersReducedMotion() and isMobile() helpers
@@ -87,8 +86,9 @@ The palette is **chroma-zero OKLCH**, matching the shipped suite apps. Namespace
 series (Sablier's identity palette, deepened for legibility). Use via Tailwind utilities like
 `bg-fc-bg`, `text-fc-fg`, `rounded-fc-md`.
 
-Type scale is 12/14/16/18/22/28/36px with paired line-heights — **`text-fc-sm` (14px) is the
-UI default**. Radii: `fc-xs` 4, `fc-sm` 6, `fc-md` 8, `fc-lg` 12, `fc-pill` 999.
+Type scale is five styles: `text-fc-title` 32 (medium), `subtitle` 24, `lead` 18, `p` 14,
+`subtext` 11, all at 130% line-height and `-0.02em` — **`text-fc-p` (14px) is the UI default**.
+Form fields use `lead`: under 16px, iOS Safari zooms on focus. Radii: `fc-xs` 4, `fc-sm` 6, `fc-md` 8, `fc-lg` 12, `fc-pill` 999.
 `--ease-fc` is `cubic-bezier(0.77, 0, 0.175, 1)`, the CSS spelling of GSAP's `power3.inOut`,
 so a consumer's CSS transition lands on the same curve as a muse animation beside it.
 
@@ -110,7 +110,7 @@ byte-identical duplicates on purpose — **edit both or neither**.
 - Svelte 5 runes only. No legacy `$:` reactivity.
 - No hardcoded hex values -- use tokens from `tokens.css`. Ask before adding new ones.
 - **Import `twMerge` from `../../utils/cn.js`, never from `tailwind-merge`.** Stock
-  tailwind-merge reads `text-fc-sm` as a *colour* and silently deletes `text-fc-fg` from the
+  tailwind-merge reads `text-fc-p` as a *colour* and silently deletes `text-fc-fg` from the
   same class string. Any new `fc-*` token must be added to `cn.ts` too.
 - One tone vocabulary. `Badge` and `StatusDot` take
   `neutral | accent | info | success | warning | danger | owner | admin`; `Alert` takes the
@@ -173,6 +173,6 @@ byte-identical duplicates on purpose — **edit both or neither**.
 - The `@theme static` block for `fc-chart-*` is deliberate: `chartColor()` builds the variable
   name with a template literal, so Tailwind never sees the class names and a plain `@theme`
   would drop the unused slots — and an undefined `var()` in an SVG `fill` renders black.
-- Only Goga Medium and Semibold ship, so `font-bold` synthesizes -- prefer `font-semibold`.
-  The Goga files are labeled "GogaTest" (test license).
+- Magnetik is not bundled: the repo is public and the face is commercial. The demo renders it
+  only on a machine with Magnetik installed; elsewhere it falls back to the platform stack.
 - `peerDependencies` require Svelte 5+ and Tailwind 4+ in the consumer.

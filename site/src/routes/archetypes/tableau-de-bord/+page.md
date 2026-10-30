@@ -28,7 +28,7 @@ changé depuis la dernière fois » — et tout ce qui n'y répond pas appartien
   960px tombent à deux colonnes, et la comparaison qui justifiait la rangée disparaît.
 - La rangée de statistiques n'est pas une `Section` — elle n'a pas de titre parce qu'elle en
   est un. Un `h2` « Vue d'ensemble » au-dessus de quatre chiffres ne dit rien de plus.
-- La gouttière est `gap-4`, jamais moins : `Card` est à `p-5`, et une gouttière plus serrée
+- La gouttière est `gap-1`, jamais moins : `Card` est à `p-5`, et une gouttière plus serrée
   que le padding des cartes soude la rangée en un seul panneau à coutures.
 - Les 40px entre sections viennent du `gap` de `Page`, pas d'une marge sur les sections —
   c'est ce qui rend le rythme identique d'une app à l'autre.

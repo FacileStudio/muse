@@ -19,7 +19,7 @@
 
     /*
      * Three consumer repos hand-wrote this component, each citing CHARTE §4 in a comment, and
-     * all three disagreed: `text-fc-2xl` against `text-fc-lg`, `gap-4` against `gap-3`, one with
+     * all three disagreed: `text-fc-title` against `text-fc-lead`, `gap-1` against `gap-1`, one with
      * a border-bottom the others do not have. The title block is `gap-1` — a heading and its
      * description are two parts of one thing, not two siblings of the header's own gap.
      */
@@ -39,7 +39,7 @@
 Le bloc de titre d'une page : h1, description, actions et lien retour, avec le titre et sa description liés par le barreau `bound`.
 -->
 
-<header class={twMerge('flex flex-col gap-4', className)} {...rest}>
+<header class={twMerge('flex flex-col gap-1', className)} {...rest}>
     {#if back}
         <!--
           `-ml-3` cancels the ghost button's own horizontal padding so the label starts on the
@@ -52,13 +52,13 @@ Le bloc de titre d'une page : h1, description, actions et lien retour, avec le t
         </Button>
     {/if}
 
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div class="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
         <div class="flex min-w-0 flex-col gap-1">
-            <h1 class="text-fc-2xl font-semibold text-fc-fg">{title}</h1>
-            {#if description}<p class="text-fc-sm text-fc-fg-muted">{description}</p>{/if}
+            <h1 class="text-fc-title font-semibold text-fc-ink">{title}</h1>
+            {#if description}<p class="text-fc-p text-fc-muted">{description}</p>{/if}
         </div>
         {#if actions}
-            <div class="flex shrink-0 flex-wrap items-center gap-2">{@render actions()}</div>
+            <div class="flex shrink-0 flex-wrap items-center gap-1">{@render actions()}</div>
         {/if}
     </div>
 </header>

@@ -18,7 +18,7 @@
 
 <div
     role="presentation"
-    class="relative flex h-32 w-full items-center justify-center rounded-fc-md bg-fc-component text-fc-xs text-fc-fg-muted"
+    class="relative flex h-32 w-full items-center justify-center rounded-fc bg-fc-surface text-fc-subtext text-fc-muted"
     onpointermove={track}
     onpointerleave={() => (index = -1)}
 >

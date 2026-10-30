@@ -6,7 +6,7 @@
     let refus = $state<string[]>([]);
 </script>
 
-<Stack gap="content">
+<Stack>
     <Dropzone
         multiple
         accept="application/pdf,.png,.jpg"

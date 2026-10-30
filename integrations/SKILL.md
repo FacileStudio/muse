@@ -175,7 +175,7 @@ identity palette. Assign **by series index in fixed order, never by rank**; `fc-
 taste — two charts on one page have to agree about what "series 2" looks like.
 
 Radii: `rounded-fc-xs` 4 · `fc-sm` 6 · `fc-md` 8 · `fc-lg` 12 · `fc-pill` 999
-Type: `text-fc-xs` 12 · **`text-fc-sm` 14 ← the UI default** · `fc-md` 16 · `fc-lg` 18 · `fc-xl` 22 · `fc-2xl` 28 · `fc-3xl` 36
+Type: `text-fc-title` 32 medium · `fc-subtitle` 24 · `fc-lead` 18 · **`text-fc-p` 14 ← the UI default** · `fc-subtext` 11. Only these five; each carries 130% line-height and `-0.02em`. Font: Magnetik (the app ships the `@font-face`)
 
 Five house rules that make generated UI look like the suite rather than generic Tailwind:
 
@@ -230,7 +230,7 @@ destructive row actions** (delete in a table or member list) — muted at rest, 
 ## Traps that produce silently broken UI
 
 **1. Merge classes with muse's `cn`, never raw `tailwind-merge`.**
-Stock `tailwind-merge` does not know `fc-*` is a custom scale, so it classifies `text-fc-sm`
+Stock `tailwind-merge` does not know `fc-*` is a custom scale, so it classifies `text-fc-p`
 as a *colour* and silently deletes `text-fc-fg` from the same string — yielding black-on-black
 buttons and invisible avatar initials, with no error. Inside the library import
 `twMerge` from `../../utils/cn.js`; in a consumer app import `cn` from `@facile/muse`.

@@ -129,7 +129,7 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
     <span
         bind:this={indicator}
         aria-hidden="true"
-        class="pointer-events-none absolute inset-y-0 left-0 -z-0 rounded-fc-pill bg-fc-accent opacity-0"
+        class="pointer-events-none absolute inset-y-0 left-0 -z-0 rounded-fc bg-fc-brand-bg opacity-0"
     ></span>
 
     {#snippet content(item: Item, active: boolean)}
@@ -140,8 +140,8 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
         {#if item.badge !== undefined}
             <span
                 class={twMerge(
-                    'rounded-fc-pill px-1.5 text-fc-xs',
-                    active ? 'bg-fc-accent-fg/15' : 'bg-fc-surface'
+                    'rounded-fc px-1.5 text-fc-subtext',
+                    active ? 'fc-selected' : 'bg-fc-surface-hover'
                 )}>{item.badge}</span
             >
         {/if}
@@ -150,8 +150,8 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
     {#each items as item (item.id)}
         {@const active = item.id === value}
         {@const inner = twMerge(
-            'relative z-10 inline-flex min-h-11 shrink-0 items-center gap-2 rounded-fc-pill px-4 text-fc-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
-            active ? 'text-fc-accent-fg' : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
+            'relative z-10 inline-flex min-h-11 shrink-0 items-center gap-1 rounded-fc px-4 text-fc-p font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand',
+            active ? 'text-fc-brand' : 'text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink',
             item.disabled && 'pointer-events-none opacity-50'
         )}
 

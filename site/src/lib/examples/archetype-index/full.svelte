@@ -27,8 +27,8 @@
         {/snippet}
     </PageHeader>
 
-    <Stack gap="content">
-        <div class="flex flex-col gap-2 sm:flex-row">
+    <Stack>
+        <div class="flex flex-col gap-1 sm:flex-row">
             <Input class="sm:flex-1" placeholder="Rechercher un projet" bind:value={recherche} />
             <Select bind:value={statut} class="sm:w-52">
                 <option value="tous">Tous les statuts</option>
@@ -48,9 +48,9 @@
                     {#each visibles as projet (projet.nom)}
                         <tr>
                             <td>{projet.nom}</td>
-                            <td class="text-fc-fg-muted">{projet.client}</td>
+                            <td class="text-fc-muted">{projet.client}</td>
                             <td><Badge tone={projet.tone}>{projet.statut}</Badge></td>
-                            <td class="text-fc-fg-muted">{projet.heures}</td>
+                            <td class="text-fc-muted">{projet.heures}</td>
                         </tr>
                     {/each}
                 </tbody>

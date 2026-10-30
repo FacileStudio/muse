@@ -8,13 +8,13 @@
 <Button variant="outline" onclick={() => (open = true)}>Nouvelle tâche</Button>
 
 <Drawer bind:open title="Nouvelle tâche" showClose>
-    <Stack gap="tight">
+    <Stack>
         <Field label="Titre"><Input bind:value={title} /></Field>
         <Field label="Notes"><Textarea rows={3} placeholder="Contexte, liens, critères d'acceptation" /></Field>
     </Stack>
 
     {#snippet footer()}
-        <div class="flex gap-2">
+        <div class="flex gap-1">
             <Button variant="ghost" class="flex-1" onclick={() => (open = false)}>Annuler</Button>
             <Button class="flex-1" onclick={() => { open = false; toast.success('Tâche créée dans l\'espace Infra.'); }}>
                 Créer

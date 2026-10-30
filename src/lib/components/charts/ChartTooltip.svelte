@@ -30,14 +30,13 @@
     let box = $state({ w: 0, h: 0, pw: 0, ph: 0, left: 0, view: 0 });
 
     /*
-        No border. It floats over a chart that lives in a `bg-fc-component` card, so the
-        separation comes from one step of fill — `fc-surface` is darker than the card in
-        light mode and lighter in dark — plus the shadow. An outline on top of that was a
-        third statement of the same thing, and it boxed in a surface that is 60px wide.
+        No border, and an opaque fill: a translucent one would let the chart lines run through
+        the numbers. The shadow separates it from the card. An outline on top boxed in a surface
+        that is 60px wide.
     */
     const classes = $derived(
         twMerge(
-            'absolute z-10 pointer-events-none whitespace-nowrap rounded-fc-sm bg-fc-surface shadow-lg px-2.5 py-2 text-fc-xs',
+            'absolute z-10 pointer-events-none whitespace-nowrap rounded-fc bg-fc-surface-solid shadow-lg px-2.5 py-2 text-fc-subtext',
             className
         )
     );
@@ -100,16 +99,16 @@ L'infobulle d'un graphique, ramenée dans les bornes de son conteneur et du view
         style:transform={place.centred ? 'translateY(-50%)' : 'none'}
     >
         {#if title}
-            <div class="mb-1 text-fc-fg font-medium">{title}</div>
+            <div class="mb-1 text-fc-ink font-medium">{title}</div>
         {/if}
         <div class="flex flex-col gap-1">
             {#each rows as row, i (row.name + i)}
-                <div class="flex items-center gap-1.5">
+                <div class="flex items-center gap-1">
                     {#if row.color}
-                        <span class="h-0.5 w-2.5 shrink-0 rounded-fc-pill" style:background-color={row.color}></span>
+                        <span class="h-0.5 w-2.5 shrink-0 rounded-fc" style:background-color={row.color}></span>
                     {/if}
-                    <span class="text-fc-fg-muted">{row.name}</span>
-                    <span class="ml-auto pl-3 text-fc-fg font-medium tabular-nums">{row.value}</span>
+                    <span class="text-fc-muted">{row.name}</span>
+                    <span class="ml-auto pl-3 text-fc-ink font-medium tabular-nums">{row.value}</span>
                 </div>
             {/each}
         </div>

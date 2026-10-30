@@ -38,19 +38,19 @@
 
     /* p-5, not p-4: the fill against the page is a 1.5% lightness step and there is no border,
        so the padding is what separates the card from the page. See CHARTE §5. */
-    const base = 'rounded-fc-md bg-fc-component p-5';
+    const base = 'rounded-fc bg-fc-surface p-5';
 
     /*
      * A card that navigates needs the affordances a div cannot carry: the focus ring, a hover
      * step, and `group` so children can react to the hover (an arrow that nudges, an icon tile
-     * that inverts). Hover goes *up* to `fc-surface` rather than tinting — same inversion
+     * that inverts). Hover goes *up* to `fc-surface-hover` rather than tinting — same inversion
      * logic as every other active state.
      */
     const classes = $derived(
         twMerge(
             base,
             href &&
-                'group block transition-colors hover:bg-fc-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
+                'group block transition-colors hover:bg-fc-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand',
             className
         )
     );

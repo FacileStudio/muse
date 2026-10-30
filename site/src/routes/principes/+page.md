@@ -48,7 +48,7 @@ comme « le serveur l'a gardée », pas comme une valeur.
 
 ## Ce qui n'est pas un principe ici
 
-**Chroma-zéro, états actifs inversés, conteneurs sans bordure, Goga, icônes Iconoir en trait 2.**
+**Chroma-zéro, états actifs inversés, conteneurs sans bordure, Magnetik, icônes Iconoir en trait 2.**
 Ce sont des décisions de charte, pas des principes : elles décrivent à quoi la suite ressemble,
 pas comment on tranche un arbitrage. Elles vivent dans [Couleur](/fondations/couleur) et
 [Typographie](/fondations/typographie).

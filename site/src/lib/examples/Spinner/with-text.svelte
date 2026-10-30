@@ -2,7 +2,7 @@
     import { Spinner } from '@facile/muse';
 </script>
 
-<div class="inline-flex items-center gap-3 text-fc-sm text-fc-fg-muted">
+<div class="inline-flex items-center gap-1 text-fc-p text-fc-muted">
     <Spinner size="sm" label="Synchronisation avec Nook" />
     Synchronisation avec Nook…
 </div>

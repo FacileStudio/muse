@@ -7,8 +7,8 @@
 <Button variant="outline" onclick={() => (open = true)}>Import en cours</Button>
 
 <Drawer bind:open title="Import de l'archive Nuage" dismissible={false} showHandle={false}>
-    <Stack gap="tight">
-        <p class="text-fc-sm text-fc-fg-muted">
+    <Stack>
+        <p class="text-fc-p text-fc-muted">
             1 248 fichiers sur 3 100 transférés. Ne fermez pas cette fenêtre.
         </p>
         <UploadProgress items={[{ id: 'archive', name: 'archive-2026.zip', progress: 40, status: 'uploading' }]} />

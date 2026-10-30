@@ -53,7 +53,7 @@
 </Row>
 
 <Row name="StatCard" lead="Un chiffre et son libellé. La gouttière entre eux ne descend jamais sous le padding.">
-    <div class="grid w-full gap-4 sm:grid-cols-3">
+    <div class="grid w-full gap-1 sm:grid-cols-3">
         <StatCard label="Projets actifs" value="12" />
         <StatCard label="Heures ce mois" value="148,5" />
         <StatCard label="Membres" value="7" />

@@ -19,19 +19,19 @@
     }
 </script>
 
-<Card class="flex flex-col gap-4">
+<Card class="flex flex-col gap-1">
     {#if title || lead}
-        <Stack gap="bound">
-            {#if title}<p class="text-fc-md font-semibold text-fc-fg">{title}</p>{/if}
-            {#if lead}<p class="text-fc-sm text-fc-fg-muted">{lead}</p>{/if}
+        <Stack>
+            {#if title}<p class="text-fc-lead font-semibold text-fc-ink">{title}</p>{/if}
+            {#if lead}<p class="text-fc-p text-fc-muted">{lead}</p>{/if}
         </Stack>
     {/if}
 
-    <div class="rounded-fc-sm bg-fc-page p-5">
+    <div class="rounded-fc bg-fc-bg p-5">
         <Rendered />
     </div>
 
-    <Inline gap="tight">
+    <Inline>
         <Button
             size="sm"
             variant="ghost"
@@ -59,7 +59,7 @@
             role="region"
             aria-label="Source de l'exemple"
             tabindex="0"
-            class="overflow-x-auto rounded-fc-sm bg-fc-surface p-4"><code
-                class="font-fc-mono text-fc-xs leading-relaxed text-fc-fg">{source}</code></pre>
+            class="overflow-x-auto rounded-fc bg-fc-surface-hover p-4"><code
+                class="font-fc-mono text-fc-subtext leading-relaxed text-fc-ink">{source}</code></pre>
     {/if}
 </Card>

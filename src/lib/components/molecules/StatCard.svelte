@@ -34,8 +34,8 @@ Un chiffre et son libellé. La gouttière entre les cartes ne descend jamais sou
 -->
 
 <Card class={classes} {...rest}>
-    <span class="text-fc-xs text-fc-fg-muted uppercase tracking-wide">{label}</span>
-    <span class="text-fc-2xl text-fc-fg font-semibold">{value}</span>
-    {#if delta}<span class="text-fc-xs text-fc-fg-muted">{delta}</span>{/if}
+    <span class="text-fc-subtext text-fc-muted uppercase tracking-wide">{label}</span>
+    <span class="text-fc-title text-fc-ink font-semibold">{value}</span>
+    {#if delta}<span class="text-fc-subtext text-fc-muted">{delta}</span>{/if}
     {#if children}{@render children()}{/if}
 </Card>

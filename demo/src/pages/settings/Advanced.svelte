@@ -30,7 +30,7 @@
     }
 </script>
 
-<Stack gap="section">
+<Stack>
     <SettingsSection
         title="Your data"
         description="Everything this workspace holds about you, as JSON, in one archive."

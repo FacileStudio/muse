@@ -45,17 +45,17 @@
 
 
     const variants: Record<Variant, string> = {
-        primary: 'bg-fc-accent text-fc-accent-fg hover:opacity-90',
-        ghost: 'bg-transparent text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
-        outline: 'border border-fc-border bg-transparent text-fc-fg hover:bg-fc-surface',
+        primary: 'fc-selected hover:opacity-90',
+        ghost: 'bg-transparent text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink',
+        outline: 'border border-fc-border bg-transparent text-fc-ink hover:bg-fc-surface-hover',
         danger: 'bg-fc-danger/10 text-fc-danger hover:bg-fc-danger/20',
-        'ghost-danger': 'bg-transparent text-fc-fg-muted hover:bg-fc-danger/10 hover:text-fc-danger'
+        'ghost-danger': 'bg-transparent text-fc-muted hover:bg-fc-danger/10 hover:text-fc-danger'
     };
 
     const sizes: Record<Size, string> = {
-        sm: 'h-8 px-3.5 text-fc-xs',
-        md: 'h-9 px-4 text-fc-sm',
-        lg: 'h-11 px-6 text-fc-md'
+        sm: 'h-8 px-3.5 text-fc-subtext',
+        md: 'h-9 px-4 text-fc-p',
+        lg: 'h-11 px-6 text-fc-p'
     };
 
     /*
@@ -67,7 +67,7 @@
        two elements, and Svelte's handler props are invariant in their element type. */
     const anchorRest = $derived(rest as unknown as HTMLAnchorAttributes);
 
-    const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc-pill justify-center gap-2 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring', variants[variant], sizes[size], className));
+    const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc justify-center gap-1 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand', variants[variant], sizes[size], className));
 </script>
 
 <!--

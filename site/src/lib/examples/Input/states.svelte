@@ -2,7 +2,7 @@
     import { Field, Input } from '@facile/muse';
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-1">
     <Field label="Espace" helper="Défini à la création, non modifiable.">
         <Input value="studio" readonly disabled />
     </Field>

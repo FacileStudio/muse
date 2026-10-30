@@ -25,7 +25,7 @@
      */
 
     let {
-        gap = 'tight',
+        gap = 'default',
         align = 'center',
         wrap = true,
         class: className = '',

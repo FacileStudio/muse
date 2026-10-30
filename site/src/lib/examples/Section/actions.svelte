@@ -7,6 +7,6 @@
         <Button size="sm" variant="outline" icon={icons.refresh}>Tout relancer</Button>
     {/snippet}
 
-    <p class="text-fc-sm text-fc-fg-muted">lucas@gfconseil.fr · envoyée il y a 2 jours</p>
-    <p class="text-fc-sm text-fc-fg-muted">sarah@lpb.fr · envoyée il y a 5 jours</p>
+    <p class="text-fc-p text-fc-muted">lucas@gfconseil.fr · envoyée il y a 2 jours</p>
+    <p class="text-fc-p text-fc-muted">sarah@lpb.fr · envoyée il y a 5 jours</p>
 </Section>

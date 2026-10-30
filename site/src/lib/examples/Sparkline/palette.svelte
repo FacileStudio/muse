@@ -8,10 +8,10 @@
     ];
 </script>
 
-<div class="flex w-full max-w-sm flex-col gap-2">
+<div class="flex w-full max-w-sm flex-col gap-1">
     {#each rows as row, i (row.name)}
-        <div class="flex items-center gap-3">
-            <span class="w-40 shrink-0 text-fc-xs text-fc-fg-muted">{row.name}</span>
+        <div class="flex items-center gap-1">
+            <span class="w-40 shrink-0 text-fc-subtext text-fc-muted">{row.name}</span>
             <Sparkline data={row.data} color={chartColor(i)} height={28} valueFormat={(n) => `${n} h`} />
         </div>
     {/each}

@@ -27,7 +27,7 @@ consumer/node_modules/@facile/muse/src/lib/
                     │                     ▲
                     │  @theme { --color-fc-* … }
                     │                     │
-                    └── fonts/Goga*.otf   │
+                    │                     │
                                           │
                         @source '…/@facile/muse/src'  ← consumer must declare this
                                                        or no fc-* utility is emitted
@@ -56,8 +56,7 @@ raw.githubusercontent.com/FacileStudio/muse/main
 | Charts | `src/lib/components/charts/` | 6 exported SVG charts and chart parts, plus internal `ChartTable.svelte` and `entry.ts` |
 | Motion | `src/lib/components/motion/` | 6 pieces that exist for the animation, not the markup |
 | Icons | `src/lib/icons.ts` | 53 Iconoir names behind stable keys, bundled at stroke width 2 |
-| Theme | `src/lib/styles/tokens.css` | `@import 'tailwindcss'`, `@font-face` rules, an `@theme` block, an `@theme static` block for the chart slots, a media-query dark override, a `.dark` class override, and an `@layer base` |
-| Fonts | `src/lib/fonts/` | Goga Medium (500) and Goga Semibold (600) |
+| Theme | `src/lib/styles/tokens.css` | `@import 'tailwindcss'`, an `@theme` block, an `@theme static` block for the chart slots, a media-query dark override, a `.dark` class override, and an `@layer base` |
 | Class merge | `src/lib/utils/cn.ts` | `fc-*`-aware `tailwind-merge`. Every component imports `twMerge` from here |
 | Motion helpers | `src/lib/utils/motion.ts` | `prefersReducedMotion()`, `isMobile()` — both SSR-safe |
 | Press | `src/lib/utils/press.ts` | `springPress`, the one press curve, as a `use:` action |
@@ -123,7 +122,7 @@ consumer passing `class="p-8"` replaces `p-4` rather than fighting it in the cas
 is the library-wide contract: pass `class` and expect it to win.
 
 The indirection through `cn.ts` is not stylistic. Stock `tailwind-merge` only knows
-Tailwind's built-in scales, so `text-fc-sm` fails its font-size validator and falls through
+Tailwind's built-in scales, so `text-fc-p` fails its font-size validator and falls through
 to the permissive `text-color` group — where it collides with `text-fc-fg` and, being later
 in the string, **deletes it**. The failure is silent and produces components that render
 with no text colour at all. `cn.ts` calls `extendTailwindMerge` to register the `fc-*`

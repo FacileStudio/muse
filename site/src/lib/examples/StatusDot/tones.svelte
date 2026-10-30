@@ -2,7 +2,7 @@
     import { StatusDot } from '@facile/muse';
 </script>
 
-<div class="flex flex-col gap-2">
+<div class="flex flex-col gap-1">
     <StatusDot tone="success" label="PostgreSQL — 12 ms" />
     <StatusDot tone="warning" label="Nook — latence élevée" />
     <StatusDot tone="danger" label="Redis — injoignable" />

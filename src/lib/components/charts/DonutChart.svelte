@@ -52,7 +52,7 @@
        the ring then sits in the middle of the space it was given instead of hanging off the
        title with the legend stranded at the bottom. */
     const classes = $derived(
-        twMerge('relative flex flex-col items-center justify-center gap-4', className)
+        twMerge('relative flex flex-col items-center justify-center gap-1', className)
     );
 
     const box = $derived(w > 0 ? Math.max(48, Math.min(size, w)) : size);
@@ -140,7 +140,7 @@ Un anneau de proportions. Jamais arrondi au `stroke-linecap` : ça pousse chaque
 <div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div
-            class="flex w-full items-center justify-center text-fc-sm text-fc-fg-muted"
+            class="flex w-full items-center justify-center text-fc-p text-fc-muted"
             style:min-height="{box}px"
         >
             {emptyLabel}
@@ -174,9 +174,9 @@ Un anneau de proportions. Jamais arrondi au `stroke-linecap` : ça pousse chaque
             <div
                 class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-0.5 text-center"
             >
-                <span class="text-fc-lg text-fc-fg font-semibold">{centerValue ?? valueFormat(total)}</span>
+                <span class="text-fc-lead text-fc-ink font-semibold">{centerValue ?? valueFormat(total)}</span>
                 {#if centerLabel}
-                    <span class="text-fc-xs text-fc-fg-muted">{centerLabel}</span>
+                    <span class="text-fc-subtext text-fc-muted">{centerLabel}</span>
                 {/if}
             </div>
 

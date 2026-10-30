@@ -49,7 +49,7 @@
 	];
 </script>
 
-<div class="flex h-dvh w-full overflow-hidden bg-fc-page" data-smoke="ready">
+<div class="flex h-dvh w-full overflow-hidden bg-fc-bg" data-smoke="ready">
 	<div class="hidden h-full shrink-0 p-3 md:block">
 		<SideBar
 			icon="iconoir:palette"
@@ -63,11 +63,11 @@
 	</div>
 
 	<main class="min-w-0 flex-1 overflow-auto overscroll-contain pb-28 md:pb-0">
-		<div class="mx-auto flex max-w-fc-lg flex-col gap-10 px-6 py-10">
+		<div class="mx-auto flex max-w-fc-lg flex-col gap-1 px-6 py-10">
 			<PageTransition key={section}>
-				<div class="flex flex-col gap-10">
-					<section class="flex flex-col gap-4">
-						<div class="flex flex-wrap items-center gap-3">
+				<div class="flex flex-col gap-1">
+					<section class="flex flex-col gap-1">
+						<div class="flex flex-wrap items-center gap-1">
 							<Button icon={icons.plus}>Action</Button>
 							<Button href="/" variant="outline" iconRight={icons.arrow}>Link button</Button>
 							<Badge tone="success">Live</Badge>
@@ -80,7 +80,7 @@
 						</Alert>
 					</section>
 
-					<section class="grid gap-4 sm:grid-cols-3">
+					<section class="grid gap-1 sm:grid-cols-3">
 						<StatCard label="Visits" value="1 054" delta="+12%">
 							<Sparkline data={series[0].data} class="mt-2" showLast />
 						</StatCard>
@@ -88,29 +88,29 @@
 						<StatCard label="Errors" value="0" />
 					</section>
 
-					<section class="grid gap-4 lg:grid-cols-2">
-						<Card class="flex flex-col gap-4">
-							<p class="text-fc-sm font-medium text-fc-fg">Line</p>
+					<section class="grid gap-1 lg:grid-cols-2">
+						<Card class="flex flex-col gap-1">
+							<p class="text-fc-p font-medium text-fc-ink">Line</p>
 							<LineChart {series} {labels} area />
 						</Card>
-						<Card class="flex flex-col gap-4">
-							<p class="text-fc-sm font-medium text-fc-fg">Bar</p>
+						<Card class="flex flex-col gap-1">
+							<p class="text-fc-p font-medium text-fc-ink">Bar</p>
 							<BarChart {series} {labels} />
 						</Card>
-						<Card class="flex flex-col gap-4">
-							<p class="text-fc-sm font-medium text-fc-fg">Donut</p>
+						<Card class="flex flex-col gap-1">
+							<p class="text-fc-p font-medium text-fc-ink">Donut</p>
 							<DonutChart data={slices} class="flex-1" />
 						</Card>
 						<!-- Card as a link: proves the anchor branch and the `group` hover wiring. -->
-						<Card href="/" class="flex flex-col gap-4">
-							<span class="text-fc-sm font-medium text-fc-fg">Card that navigates</span>
-							<span class="text-fc-xs text-fc-fg-muted transition-transform group-hover:translate-x-0.5">
+						<Card href="/" class="flex flex-col gap-1">
+							<span class="text-fc-p font-medium text-fc-ink">Card that navigates</span>
+							<span class="text-fc-subtext text-fc-muted transition-transform group-hover:translate-x-0.5">
 								Follow →
 							</span>
 						</Card>
 					</section>
 
-					<section class="flex flex-col gap-4">
+					<section class="flex flex-col gap-1">
 						<Tabs
 							bind:value={section}
 							items={[
@@ -118,7 +118,7 @@
 								{ id: 'keys', label: 'Keys', icon: icons.key }
 							]}
 						/>
-						<Card class="flex flex-col gap-4">
+						<Card class="flex flex-col gap-1">
 							<Field label="Name" helper="Wired through Field's context.">
 								{#snippet children()}
 									<Input bind:value={name} placeholder="Camille" />
@@ -137,7 +137,7 @@
 						</Card>
 					</section>
 
-					<section class="flex flex-col gap-4">
+					<section class="flex flex-col gap-1">
 						<Table>
 							<thead>
 								<tr>

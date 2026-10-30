@@ -14,13 +14,13 @@
     }: { name: string; lead?: string; children: Snippet } = $props();
 </script>
 
-<Card class="flex flex-col gap-4">
-    <Stack gap="bound">
-        <code class="font-fc-mono text-fc-sm font-semibold text-fc-fg">{name}</code>
-        {#if lead}<p class="text-fc-sm text-fc-fg-muted">{lead}</p>{/if}
+<Card class="flex flex-col gap-1">
+    <Stack>
+        <code class="font-fc-mono text-fc-p font-semibold text-fc-ink">{name}</code>
+        {#if lead}<p class="text-fc-p text-fc-muted">{lead}</p>{/if}
     </Stack>
-    <div class="rounded-fc-sm bg-fc-page p-4">
-        <Inline gap="content" align="center">
+    <div class="rounded-fc bg-fc-bg p-4">
+        <Inline align="center">
             {@render children()}
         </Inline>
     </div>

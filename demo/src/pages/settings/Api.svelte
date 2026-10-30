@@ -105,7 +105,7 @@
     }
 </script>
 
-<Stack gap="section">
+<Stack>
     <SettingsSection
         title="Endpoint"
         description="Point the CLI or any HTTP client here. Not a secret — the token is."
@@ -139,15 +139,15 @@
                 <tbody>
                     {#each tokens as token (token.id)}
                         <tr class={token.revoked ? 'opacity-55' : ''}>
-                            <td class="font-medium text-fc-fg">{token.name}</td>
-                            <td class="font-fc-mono text-fc-xs text-fc-fg-muted">{token.prefix}…</td>
+                            <td class="font-medium text-fc-ink">{token.name}</td>
+                            <td class="font-fc-mono text-fc-subtext text-fc-muted">{token.prefix}…</td>
                             <td>
                                 <Badge tone={token.scope.includes('write') ? 'accent' : 'neutral'}>
                                     {token.scope === 'read' ? 'read' : 'read + write'}
                                 </Badge>
                             </td>
-                            <td class="whitespace-nowrap text-fc-fg-muted">{token.lastUsed}</td>
-                            <td class="whitespace-nowrap text-fc-fg-muted">{token.expires}</td>
+                            <td class="whitespace-nowrap text-fc-muted">{token.lastUsed}</td>
+                            <td class="whitespace-nowrap text-fc-muted">{token.expires}</td>
                             <td class="text-right">
                                 {#if token.revoked}
                                     <Badge>Revoked</Badge>
@@ -175,7 +175,7 @@
 
 <Drawer bind:open={createOpen} title="New API token">
     {#if createdToken}
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
             <Alert tone="warning" title="Copy it now">
                 This is the only time the token is shown. We store a hash, so we cannot show it
                 to you again — losing it means issuing a new one.
@@ -198,7 +198,7 @@
             </div>
         </div>
     {:else}
-        <form class="flex flex-col gap-4" onsubmit={create}>
+        <form class="flex flex-col gap-1" onsubmit={create}>
             <Field label="Name" helper="Where the token will live — a machine, a pipeline, a script.">
                 <Input bind:value={newName} placeholder="ci-deploy" required disabled={creating} />
             </Field>
@@ -221,7 +221,7 @@
                 </Select>
             </Field>
 
-            <div class="flex justify-end gap-2 pt-1">
+            <div class="flex justify-end gap-1 pt-1">
                 <Button
                     type="button"
                     variant="ghost"

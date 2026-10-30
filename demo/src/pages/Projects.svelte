@@ -110,17 +110,17 @@
 </script>
 
 <Page width="xl">
-    <div class="flex flex-wrap items-start justify-between gap-4">
-        <div class="flex min-w-0 flex-col gap-2">
-            <h1 class="text-fc-2xl font-semibold text-fc-fg">Projects</h1>
-            <p class="text-fc-sm text-fc-fg-muted">
+    <div class="flex flex-wrap items-start justify-between gap-1">
+        <div class="flex min-w-0 flex-col gap-1">
+            <h1 class="text-fc-title font-semibold text-fc-ink">Projects</h1>
+            <p class="text-fc-p text-fc-muted">
                 Every project across your spaces, with the hours tracked against each one.
             </p>
         </div>
         <Button icon={icons.plus} onclick={() => (createOpen = true)}>New project</Button>
     </div>
 
-    <section class="grid gap-4 sm:grid-cols-3">
+    <section class="grid gap-1 sm:grid-cols-3">
         <StatCard label="Active" value={activeCount} delta="of {projects.length} projects">
             <Sparkline data={projects[0]?.trend ?? []} class="mt-2" showLast />
         </StatCard>
@@ -132,12 +132,12 @@
         </StatCard>
     </section>
 
-    <section class="flex flex-col gap-4">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+    <section class="flex flex-col gap-1">
+        <div class="flex flex-col gap-1 sm:flex-row sm:items-center">
             <div class="min-w-0 flex-1">
                 <Input bind:value={search} placeholder="Search projects or clients…" />
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1">
                 <Select bind:value={sort} class="min-w-36" aria-label="Sort projects">
                     <option value="name">Sort by name</option>
                     <option value="hours">Sort by hours</option>
@@ -181,16 +181,16 @@
                         {#each visible as project (project.id)}
                             <tr>
                                 <td>
-                                    <div class="flex min-w-0 items-center gap-2.5">
+                                    <div class="flex min-w-0 items-center gap-1">
                                         <span
-                                            class="h-2.5 w-2.5 shrink-0 rounded-fc-pill"
+                                            class="h-2.5 w-2.5 shrink-0 rounded-fc"
                                             style:background-color={project.color}
                                         ></span>
-                                        <span class="truncate font-medium text-fc-fg">{project.name}</span>
+                                        <span class="truncate font-medium text-fc-ink">{project.name}</span>
                                     </div>
                                 </td>
-                                <td class="text-fc-fg-muted">{project.client}</td>
-                                <td class="text-fc-fg-muted">{project.space}</td>
+                                <td class="text-fc-muted">{project.client}</td>
+                                <td class="text-fc-muted">{project.space}</td>
                                 <td><Badge tone={statusTone[project.status]}>{statusLabel[project.status]}</Badge></td>
                                 <td class="tabular-nums">{project.hours} h</td>
                                 <td>
@@ -210,24 +210,24 @@
                 </Table>
             </div>
 
-            <div class="flex flex-col gap-2 md:hidden">
+            <div class="flex flex-col gap-1 md:hidden">
                 {#each visible as project (project.id)}
-                    <Card class="flex flex-col gap-3">
-                        <div class="flex min-w-0 items-start justify-between gap-3">
-                            <div class="flex min-w-0 items-center gap-2.5">
+                    <Card class="flex flex-col gap-1">
+                        <div class="flex min-w-0 items-start justify-between gap-1">
+                            <div class="flex min-w-0 items-center gap-1">
                                 <span
-                                    class="h-2.5 w-2.5 shrink-0 rounded-fc-pill"
+                                    class="h-2.5 w-2.5 shrink-0 rounded-fc"
                                     style:background-color={project.color}
                                 ></span>
                                 <div class="min-w-0">
-                                    <p class="truncate text-fc-sm font-medium text-fc-fg">{project.name}</p>
-                                    <p class="truncate text-fc-xs text-fc-fg-muted">{project.client}</p>
+                                    <p class="truncate text-fc-p font-medium text-fc-ink">{project.name}</p>
+                                    <p class="truncate text-fc-subtext text-fc-muted">{project.client}</p>
                                 </div>
                             </div>
                             <Badge tone={statusTone[project.status]}>{statusLabel[project.status]}</Badge>
                         </div>
-                        <div class="flex items-center justify-between gap-3">
-                            <span class="text-fc-sm tabular-nums text-fc-fg-muted">{project.hours} h tracked</span>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="text-fc-p tabular-nums text-fc-muted">{project.hours} h tracked</span>
                             <!-- `lg` and not the `sm` used in the table above: CHARTE §7 makes
                                  `sm` a desktop-density exception, and this card is the phone
                                  layout where Delete is the only control in the row. -->
@@ -246,12 +246,12 @@
             </div>
         {/if}
 
-        <Switch bind:checked={loading} label="Simulate loading state" class="text-fc-sm" />
+        <Switch bind:checked={loading} label="Simulate loading state" class="text-fc-p" />
     </section>
 
-    <section class="flex flex-col gap-4">
-        <Card class="flex flex-col gap-3">
-            <p class="text-fc-sm font-medium text-fc-fg">Hours per project</p>
+    <section class="flex flex-col gap-1">
+        <Card class="flex flex-col gap-1">
+            <p class="text-fc-p font-medium text-fc-ink">Hours per project</p>
             <BarChart
                 series={chartSeries}
                 labels={chartLabels}
@@ -264,7 +264,7 @@
 </Page>
 
 <Modal bind:open={createOpen} title="New project" showClose>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
         <Field label="Name">
             <Input bind:value={draftName} placeholder="Refonte site vitrine" />
         </Field>
@@ -282,7 +282,7 @@
         </Field>
     </div>
     {#snippet footer()}
-        <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <div class="flex flex-col-reverse gap-1 sm:flex-row sm:justify-end">
             <Button variant="ghost" class="w-full sm:w-auto" onclick={() => (createOpen = false)}>Cancel</Button>
             <Button icon={icons.plus} class="w-full sm:w-auto" onclick={createProject}>Create project</Button>
         </div>
@@ -300,7 +300,7 @@
 />
 
 <Drawer bind:open={filtersOpen} title="Filters" description="Narrow the project list." showClose>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
         <Field label="Status">
             <Select bind:value={statusFilter}>
                 <option value="all">All statuses</option>
@@ -309,10 +309,10 @@
                 <option value="done">Delivered</option>
             </Select>
         </Field>
-        <Switch bind:checked={billableOnly} label="Billable only" class="text-fc-sm" />
+        <Switch bind:checked={billableOnly} label="Billable only" class="text-fc-p" />
     </div>
     {#snippet footer()}
-        <div class="flex gap-2">
+        <div class="flex gap-1">
             <Button
                 variant="ghost"
                 icon={icons.refresh}

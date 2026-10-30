@@ -40,7 +40,7 @@
     const describes = $derived(describedBy ?? field?.().describedBy);
     const isInvalid = $derived(invalid ?? (field?.().invalid ? 'true' : undefined));
 
-    const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
+    const classes = $derived(twMerge('inline-flex items-center gap-1 cursor-pointer text-fc-p text-fc-ink', className));
 </script>
 
 <!--
@@ -55,7 +55,7 @@ Une case à cocher qui adopte l'identifiant de son `Field`. La boîte fait 16px 
         aria-describedby={describes}
         aria-invalid={isInvalid}
         bind:checked
-        class="h-4 w-4 rounded-fc-sm accent-fc-accent disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+        class="h-4 w-4 rounded-fc accent-fc-brand disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand"
         {...rest}
     />
     {#if label}<span>{label}</span>{/if}

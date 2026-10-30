@@ -124,14 +124,14 @@ definitions; `@source` is what makes Tailwind generate utilities from them. You 
 ## The `twMerge` trap — why `utils/cn.ts` exists
 
 Stock `tailwind-merge` only knows Tailwind's built-in scales. It has no idea `fc-*` is a
-custom namespace, so it classifies **`text-fc-sm` as a text _colour_**, not a font size —
+custom namespace, so it classifies **`text-fc-p` as a text _colour_**, not a font size —
 `fc-sm` is not a recognised t-shirt size, and the `text-color` group accepts anything.
 
 The consequence is silent and vicious. Given a component that merges a variant and a size:
 
 ```js
-twMerge('border border-fc-border text-fc-fg', 'h-9 px-4 text-fc-sm')
-// stock tailwind-merge → 'border border-fc-border h-9 px-4 text-fc-sm'
+twMerge('border border-fc-border text-fc-fg', 'h-9 px-4 text-fc-p')
+// stock tailwind-merge → 'border border-fc-border h-9 px-4 text-fc-p'
 //                                        text-fc-fg is GONE
 ```
 

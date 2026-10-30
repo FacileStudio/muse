@@ -26,7 +26,7 @@
      *
      * This is `SettingsSection` with the settings taken out of the name — that component was
      * always structurally generic, and nine repos used it only under `/settings` because of what
-     * it was called, hand-rolling the identical `<section class="flex flex-col gap-4"><div
+     * it was called, hand-rolling the identical `<section class="flex flex-col gap-1"><div
      * class="flex flex-col gap-1">` everywhere else. `SettingsSection` now delegates here.
      *
      * The card is opt-in, and that is the one behavioural difference from the settings preset.
@@ -39,7 +39,7 @@
         description,
         actions,
         card = false,
-        gap = 'content',
+        gap = 'default',
         bodyClass = '',
         class: className = '',
         children,
@@ -56,13 +56,13 @@ Un bloc titré dans une page. La carte est optionnelle : une section qui contien
 
 <section class={twMerge('flex flex-col', GAP[gap], className)} {...rest}>
     {#if title || description || actions}
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div class="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
             <div class="flex min-w-0 flex-col gap-1">
-                {#if title}<h2 class="text-fc-lg font-semibold text-fc-fg">{title}</h2>{/if}
-                {#if description}<p class="text-fc-sm text-fc-fg-muted">{description}</p>{/if}
+                {#if title}<h2 class="text-fc-lead font-semibold text-fc-ink">{title}</h2>{/if}
+                {#if description}<p class="text-fc-p text-fc-muted">{description}</p>{/if}
             </div>
             {#if actions}
-                <div class="flex shrink-0 flex-wrap items-center gap-2">{@render actions()}</div>
+                <div class="flex shrink-0 flex-wrap items-center gap-1">{@render actions()}</div>
             {/if}
         </div>
     {/if}

@@ -19,22 +19,22 @@ séries de graphiques.
 
 | Rôle | Token |
 |---|---|
-| Canevas du document | `bg-fc-page` |
-| Remplissage propre d'un composant | `bg-fc-bg` |
-| Surface enfoncée | `bg-fc-surface` |
-| Surface de conteneur | `bg-fc-component` |
-| Encre | `text-fc-fg`, `text-fc-fg-muted` |
-| Accent | `bg-fc-accent` / `text-fc-accent-fg` |
-| Bordure, anneau de focus | `border-fc-border`, `outline-fc-ring` |
+| Canevas du document | `bg-fc-bg` |
+| Remplissage propre d'un composant | `bg-fc-surface` |
+| Surface enfoncée | `bg-fc-surface-hover` |
+| Surface de conteneur | `bg-fc-surface` |
+| Encre | `text-fc-ink`, `text-fc-muted` |
+| Accent | `bg-fc-brand` / `text-fc-brand-ink` |
+| Bordure, anneau de focus | `border-fc-border`, `outline-fc-brand` |
 
 ## Inversé, jamais teinté
 
-Un état actif **inverse** : `bg-fc-accent` vaut la couleur de premier plan, donc un élément
+Un état actif **inverse** : `bg-fc-brand` vaut la couleur de premier plan, donc un élément
 sélectionné se lit comme un pavé inversé. Il ne se teinte pas d'une nuance de la couleur de
 marque. C'est la règle qui donne à la suite son aspect, et c'est celle qu'un agent enfreint en
 premier en atteignant un `bg-primary/10`.
 
-Corollaire : le survol d'une carte cliquable **monte** vers `fc-surface`. Il ne s'assombrit pas.
+Corollaire : le survol d'une carte cliquable **monte** vers `fc-surface-hover`. Il ne s'assombrit pas.
 
 ## Le mode sombre a une moitié que les tokens n'atteignent pas
 

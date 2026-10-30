@@ -11,13 +11,13 @@
     const lines = ['Nous construisons', 'des expériences', 'mémorables.'];
 </script>
 
-<Stack gap="content">
-    <Stack gap="bound">
+<Stack>
+    <Stack>
         {#each lines as line, i (line)}
-            <BlockReveal open={shown} delay={i * 0.12} class="text-fc-2xl font-semibold text-fc-fg">
+            <BlockReveal open={shown} delay={i * 0.12} class="text-fc-title font-semibold text-fc-ink">
                 {line}
             </BlockReveal>
         {/each}
     </Stack>
-    <Switch bind:checked={shown} label="Afficher" class="text-fc-sm" />
+    <Switch bind:checked={shown} label="Afficher" class="text-fc-p" />
 </Stack>

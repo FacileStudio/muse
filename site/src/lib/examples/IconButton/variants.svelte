@@ -2,7 +2,7 @@
     import { Icon, IconButton, icons } from '@facile/muse';
 </script>
 
-<div class="flex items-center gap-3">
+<div class="flex items-center gap-1">
     <IconButton aria-label="Rafraîchir la liste">
         <Icon icon={icons.refresh} />
     </IconButton>

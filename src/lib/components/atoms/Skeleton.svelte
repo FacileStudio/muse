@@ -14,7 +14,7 @@
         ...rest
     }: SkeletonProps = $props();
 
-    const classes = $derived(twMerge('animate-pulse motion-reduce:animate-none rounded-fc-sm bg-fc-surface/60', className));
+    const classes = $derived(twMerge('animate-pulse motion-reduce:animate-none rounded-fc bg-fc-surface-hover/60', className));
 </script>
 
 <!--

@@ -49,20 +49,20 @@
     const vertical = $derived(orientation === 'vertical');
     const roleTone = $derived(role === 'owner' ? 'owner' : role === 'admin' ? 'admin' : 'neutral');
 
-    const classes = $derived(twMerge('flex flex-col gap-4', className));
+    const classes = $derived(twMerge('flex flex-col gap-1', className));
     const identityClasses = $derived(
         vertical
-            ? 'flex flex-col items-center gap-3 text-center'
-            : 'flex flex-col gap-4 sm:flex-row sm:items-center'
+            ? 'flex flex-col items-center gap-1 text-center'
+            : 'flex flex-col gap-1 sm:flex-row sm:items-center'
     );
     const textClasses = $derived(vertical ? 'flex w-full min-w-0 flex-col gap-1' : 'flex min-w-0 flex-1 flex-col gap-1');
     const headingClasses = $derived(
-        vertical ? 'flex min-w-0 items-center justify-center gap-2' : 'flex min-w-0 items-center gap-2'
+        vertical ? 'flex min-w-0 items-center justify-center gap-1' : 'flex min-w-0 items-center gap-1'
     );
     const actionsClasses = $derived(
         vertical
-            ? 'flex min-h-11 w-full flex-wrap items-center justify-center gap-2'
-            : 'flex min-h-11 flex-wrap items-center gap-2 sm:ml-auto sm:shrink-0'
+            ? 'flex min-h-11 w-full flex-wrap items-center justify-center gap-1'
+            : 'flex min-h-11 flex-wrap items-center gap-1 sm:ml-auto sm:shrink-0'
     );
 </script>
 
@@ -77,7 +77,7 @@ Le bloc d'identité d'un membre : avatar, nom et actions de session.
             <Avatar src={avatar} alt={name} {name} size="lg" />
             {#if color}
                 <span
-                    class="absolute -right-0.5 -bottom-0.5 h-4 w-4 rounded-fc-pill border-2 border-fc-component"
+                    class="absolute -right-0.5 -bottom-0.5 h-4 w-4 rounded-fc border-2 border-fc-surface"
                     style:background-color={color}
                     aria-hidden="true"
                 ></span>
@@ -86,13 +86,13 @@ Le bloc d'identité d'un membre : avatar, nom et actions de session.
 
         <div class={textClasses}>
             <div class={headingClasses}>
-                <span class="truncate text-fc-lg font-semibold text-fc-fg">{name}</span>
+                <span class="truncate text-fc-lead font-semibold text-fc-ink">{name}</span>
                 {#if role}
                     <Badge tone={roleTone} class="shrink-0">{role}</Badge>
                 {/if}
             </div>
             {#if email}
-                <span class="truncate text-fc-sm text-fc-fg-muted">{email}</span>
+                <span class="truncate text-fc-p text-fc-muted">{email}</span>
             {/if}
         </div>
 
@@ -108,10 +108,10 @@ Le bloc d'identité d'un membre : avatar, nom et actions de session.
         <dl class="flex flex-col">
             {#each meta as row (row.label)}
                 <div
-                    class="flex items-baseline justify-between gap-3 border-t border-fc-border py-2 text-fc-sm first:border-t-0 first:pt-0"
+                    class="flex items-baseline justify-between gap-1 border-t border-fc-border py-2 text-fc-p first:border-t-0 first:pt-0"
                 >
-                    <dt class="shrink-0 text-fc-fg-muted">{row.label}</dt>
-                    <dd class="min-w-0 truncate text-right text-fc-fg">{row.value}</dd>
+                    <dt class="shrink-0 text-fc-muted">{row.label}</dt>
+                    <dd class="min-w-0 truncate text-right text-fc-ink">{row.value}</dd>
                 </div>
             {/each}
         </dl>

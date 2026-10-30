@@ -91,7 +91,7 @@ Le choix d'une option parmi N — thème, mode d'affichage, base de facturation 
 -->
 
 <div
-    class={twMerge('flex flex-wrap gap-2', className)}
+    class={twMerge('flex flex-wrap gap-1', className)}
     {...rest}
     role="radiogroup"
     aria-label={label}
@@ -108,10 +108,10 @@ Le choix d'une option parmi N — thème, mode d'affichage, base de facturation 
             tabindex={i === focusIndex ? 0 : -1}
             onclick={() => select(i)}
             class={twMerge(
-                'inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-fc-md border px-4 text-fc-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:cursor-not-allowed disabled:opacity-50',
+                'inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-1 rounded-fc border px-4 text-fc-p font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand disabled:cursor-not-allowed disabled:opacity-50',
                 selected
-                    ? 'border-fc-accent bg-fc-accent text-fc-accent-fg'
-                    : 'border-fc-border bg-fc-bg text-fc-fg hover:bg-fc-surface'
+                    ? 'border-fc-brand fc-selected'
+                    : 'border-fc-border bg-fc-surface text-fc-ink hover:bg-fc-surface-hover'
             )}
         >
             {#if option.icon}

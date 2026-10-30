@@ -118,7 +118,7 @@
     const describedBy = $derived(error ? errorId : helper ? helperId : undefined);
 
     const box =
-        'flex h-11 min-w-0 flex-1 items-center rounded-fc-md border border-fc-border bg-fc-bg px-3 font-fc-mono text-fc-sm';
+        'flex h-11 min-w-0 flex-1 items-center rounded-fc border border-fc-border bg-fc-surface px-3 font-fc-mono text-fc-p';
 </script>
 
 <!--
@@ -127,12 +127,12 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
 -->
 
 <!-- `relative` contains the `sr-only` live region — see the note in `Switch.svelte`. -->
-<div class={twMerge('relative flex flex-col gap-1.5', className)} {...rest}>
+<div class={twMerge('relative flex flex-col gap-1', className)} {...rest}>
     {#if label}
-        <label for={id} class="text-fc-sm text-fc-fg">{label}</label>
+        <label for={id} class="text-fc-p text-fc-ink">{label}</label>
     {/if}
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1">
         {#if editable}
             <input
                 {id}
@@ -148,14 +148,14 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                 aria-describedby={describedBy}
                 class={twMerge(
                     box,
-                    'text-fc-fg placeholder:font-sans placeholder:text-fc-fg-muted focus:outline-2 focus:outline-fc-ring disabled:opacity-50'
+                    'text-fc-ink placeholder:font-sans placeholder:text-fc-muted focus:outline-2 focus:outline-fc-brand disabled:opacity-50'
                 )}
             />
         {:else}
             <output
                 {id}
                 aria-describedby={describedBy}
-                class={twMerge(box, empty ? 'text-fc-fg-muted' : 'text-fc-fg')}
+                class={twMerge(box, empty ? 'text-fc-muted' : 'text-fc-ink')}
                 title={visible || !sensitive ? value : undefined}
             >
                 <span class={visible || !sensitive ? 'truncate select-all' : 'truncate select-none'}
@@ -192,9 +192,9 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
     </div>
 
     {#if error}
-        <span id={errorId} class="text-fc-xs text-fc-danger">{error}</span>
+        <span id={errorId} class="text-fc-subtext text-fc-danger">{error}</span>
     {:else if helper}
-        <span id={helperId} class="text-fc-xs text-fc-fg-muted">{helper}</span>
+        <span id={helperId} class="text-fc-subtext text-fc-muted">{helper}</span>
     {/if}
 
     <span aria-live="polite" class="sr-only">{status}</span>

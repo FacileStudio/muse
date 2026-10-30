@@ -2,7 +2,7 @@
     import { Button, Inline, toast } from '@facile/muse';
 </script>
 
-<Inline gap="tight">
+<Inline>
     <Button variant="outline" onclick={() => toast.success('Feuille de temps envoyée pour validation.')}>
         Succès
     </Button>

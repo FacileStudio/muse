@@ -1,8 +1,6 @@
 <script lang="ts">
     import {
         ColorPicker,
-        icons,
-        OptionCards,
         Select,
         SettingsRow,
         SettingsSection,
@@ -11,7 +9,6 @@
         USER_COLOR_LABELS,
         USER_COLORS
     } from '@facile/muse';
-    import { setTheme, theme, type ThemeMode } from '../../theme.svelte.js';
 
     let compactMode = $state(true);
     let sidebarCollapsed = $state(false);
@@ -19,37 +16,13 @@
     let timezone = $state('Europe/Paris');
     let brandColor = $state('#7eeedb');
 
-    const modes = [
-        { value: 'system', label: 'System', icon: icons.monitor },
-        { value: 'light', label: 'Light', icon: icons.sun },
-        { value: 'dark', label: 'Dark', icon: icons.moon }
-    ];
-
-    let mode = $state<string>(theme.mode);
-
-    $effect(() => {
-        setTheme(mode as ThemeMode);
-    });
 </script>
 
-<Stack gap="section">
+<Stack>
     <SettingsSection
         title="Theme"
         description="Applied to this browser. Every device you sign in from keeps its own choice."
     >
-        <SettingsRow
-            label="Colour scheme"
-            description="System follows your OS for as long as the app is open."
-            stacked
-        >
-            <OptionCards
-                options={modes}
-                bind:value={mode}
-                name="theme-mode"
-                label="Colour scheme"
-            />
-        </SettingsRow>
-
         <SettingsRow
             label="Compact mode"
             description="Tighter rows and smaller cards — more on screen, less breathing room."

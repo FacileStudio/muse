@@ -42,7 +42,7 @@
         tinted the same way `ConfirmModal` tints its own.
     */
     const badges: Record<ToastTone, string> = {
-        neutral: 'bg-fc-surface text-fc-fg-muted',
+        neutral: 'bg-fc-surface-hover text-fc-muted',
         info: 'bg-fc-info/10 text-fc-info',
         success: 'bg-fc-success/10 text-fc-success',
         warning: 'bg-fc-warning/10 text-fc-warning',
@@ -64,7 +64,7 @@
 
     const classes = $derived(
         twMerge(
-            'pointer-events-auto flex w-full items-start gap-3 rounded-fc-md border border-fc-border bg-fc-bg p-4 shadow-lg',
+            'pointer-events-auto flex w-full items-start gap-1 rounded-fc border border-fc-border bg-fc-surface-solid p-4 shadow-lg',
             className
         )
     );
@@ -78,7 +78,7 @@ La présentation d'un message éphémère. La file et l'auto-fermeture appartien
 <div class={classes} {role} {...rest}>
     {#if glyph}
         <span
-            class={twMerge('flex size-8 shrink-0 items-center justify-center rounded-fc-pill', badges[tone])}
+            class={twMerge('flex size-8 shrink-0 items-center justify-center rounded-fc', badges[tone])}
             aria-hidden="true"
         >
             <Icon icon={glyph} size={18} />
@@ -86,9 +86,9 @@ La présentation d'un message éphémère. La file et l'auto-fermeture appartien
     {/if}
 
     <div class="flex min-w-0 flex-1 flex-col gap-1 py-1">
-        {#if title}<p class="text-fc-sm font-semibold text-fc-fg">{title}</p>{/if}
+        {#if title}<p class="text-fc-p font-semibold text-fc-ink">{title}</p>{/if}
         {#if children}
-            <p class={title ? 'text-fc-sm text-fc-fg-muted' : 'text-fc-sm text-fc-fg'}>
+            <p class={title ? 'text-fc-p text-fc-muted' : 'text-fc-p text-fc-ink'}>
                 {@render children()}
             </p>
         {/if}

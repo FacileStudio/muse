@@ -51,7 +51,7 @@
 
     setFieldContext(() => ({ id, describedBy, invalid: Boolean(error) }));
 
-    const classes = $derived(twMerge('flex flex-col gap-1.5', className));
+    const classes = $derived(twMerge('flex flex-col gap-1', className));
 </script>
 
 <!--
@@ -60,11 +60,11 @@ L'étiquetage d'un contrôle. Il rend un vrai `label for`, et les contrôles mus
 -->
 
 <div class={classes} {...rest}>
-    {#if label}<label for={id} class="text-fc-sm text-fc-fg">{label}</label>{/if}
+    {#if label}<label for={id} class="text-fc-p text-fc-ink">{label}</label>{/if}
     {@render children({ id, describedBy })}
     {#if error}
-        <span id={errorId} class="text-fc-xs text-fc-danger">{error}</span>
+        <span id={errorId} class="text-fc-subtext text-fc-danger">{error}</span>
     {:else if helper}
-        <span id={helperId} class="text-fc-xs text-fc-fg-muted">{helper}</span>
+        <span id={helperId} class="text-fc-subtext text-fc-muted">{helper}</span>
     {/if}
 </div>

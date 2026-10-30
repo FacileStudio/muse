@@ -171,7 +171,7 @@
      */
     const dialogClasses = $derived(
         twMerge(
-            'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-none bg-transparent p-0 text-fc-fg sm:max-w-fc-sm backdrop:bg-fc-scrim',
+            'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-none bg-transparent p-0 text-fc-ink sm:max-w-fc-sm backdrop:bg-fc-scrim',
             className
         )
     );
@@ -184,12 +184,12 @@
     );
 
     const headerClasses = $derived(
-        twMerge('flex items-start gap-3 px-5 pb-4', showHandle ? 'pt-0' : 'pt-5')
+        twMerge('flex items-start gap-1 px-5 pb-4', showHandle ? 'pt-0' : 'pt-5')
     );
 
     const bodyClasses = $derived(
         twMerge(
-            'min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-5 text-fc-sm',
+            'min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-5 text-fc-p',
             hasHeader || showHandle ? 'pt-0' : 'pt-5',
             footer ? '' : 'pb-[max(1.25rem,env(safe-area-inset-bottom))]'
         )
@@ -211,7 +211,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
 >
     <div
         bind:this={panel}
-        class="relative flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-fc-lg border-x border-t border-fc-border bg-fc-component shadow-lg"
+        class="relative flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-fc border-x border-t border-fc-border bg-fc-surface-solid shadow-lg"
     >
         <div
             role="presentation"
@@ -224,7 +224,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
         >
             {#if showHandle}
                 <div class="flex h-11 items-center justify-center" aria-hidden="true">
-                    <div class="h-1 w-10 rounded-fc-pill bg-fc-border"></div>
+                    <div class="h-1 w-10 rounded-fc bg-fc-border"></div>
                 </div>
             {/if}
 
@@ -232,16 +232,16 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
                 <div class={headerClasses}>
                     <div class="flex min-w-0 flex-1 flex-col gap-1">
                         {#if title}
-                            <h2 id={titleId} class="text-fc-lg font-semibold">{title}</h2>
+                            <h2 id={titleId} class="text-fc-lead font-semibold">{title}</h2>
                         {/if}
                         {#if description}
-                            <p class="text-fc-sm text-fc-fg-muted">{description}</p>
+                            <p class="text-fc-p text-fc-muted">{description}</p>
                         {/if}
                     </div>
                     {#if showClose}
                         <IconButton
                             aria-label="Close"
-                            class="-mr-1 border-0 text-fc-fg-muted hover:text-fc-fg"
+                            class="-mr-1 border-0 text-fc-muted hover:text-fc-ink"
                             onclick={() => (open = false)}
                         >
                             <Icon icon="iconoir:xmark" size={18} />
