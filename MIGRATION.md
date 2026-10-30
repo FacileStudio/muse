@@ -365,3 +365,14 @@ text using them falls back to the inherited size.
 **Do:** rename classes: `xs` → `subtext`, `sm` → `p`, `md` and `lg` → `lead`, `xl` →
 `subtitle`, `2xl` and `3xl` → `title`. Add an `@font-face` for Magnetik Regular (400) and
 Medium (500) in your app, or it renders the platform stack.
+
+## 19. Fields lose their border and focus outline
+
+**Symptom:** `Input`, `Textarea`, `Select`, `SecretField` and `ColorPicker`'s hex field no
+longer draw a 1px border or a brand focus outline.
+
+**Now:** a field is its fill. `bg-fc-surface` at rest, `bg-fc-surface-hover` on hover and on
+focus, matching the Vitrine back office.
+
+**Do:** nothing, unless you passed `border-*` or `focus-visible:outline-*` classes to a field to
+restyle it; those now add back what the field dropped on purpose.

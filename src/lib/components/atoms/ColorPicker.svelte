@@ -77,7 +77,7 @@
     }
 
     const box =
-        'h-11 rounded-fc border border-fc-border bg-fc-surface text-fc-lead text-fc-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand disabled:opacity-50';
+        'h-11 rounded-fc bg-fc-surface hover:bg-fc-surface-hover focus:bg-fc-surface-hover text-fc-lead text-fc-ink outline-none disabled:opacity-50';
 </script>
 
 <!--

@@ -29,7 +29,7 @@
     const describes = $derived(describedBy ?? field?.().describedBy);
     const isInvalid = $derived(invalid ?? (field?.().invalid ? 'true' : undefined));
 
-    const classes = $derived(twMerge('h-11 w-full appearance-none rounded-fc border border-fc-border bg-fc-surface bg-(image:--fc-select-chevron) bg-size-[1rem_1rem] bg-position-[right_0.75rem_center] bg-no-repeat pl-3 pr-10 text-fc-lead text-fc-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand disabled:opacity-50', className));
+    const classes = $derived(twMerge('h-11 w-full appearance-none rounded-fc bg-fc-surface hover:bg-fc-surface-hover focus:bg-fc-surface-hover bg-(image:--fc-select-chevron) bg-size-[1rem_1rem] bg-position-[right_0.75rem_center] bg-no-repeat pl-3 pr-10 text-fc-lead text-fc-ink outline-none disabled:opacity-50', className));
 </script>
 
 <!--

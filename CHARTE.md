@@ -354,10 +354,15 @@ card or a list container.
 1px `--fc-border` is still the right tool, but only for these:
 - **separation *inside* a container** — rows in a member list, `<tbody>` row rules, the
   meta rows in `ProfileCard`, a footer above a `Drawer`'s actions;
-- **form controls**, which need a visible edge to read as editable — `Input`, `Select`,
-  `Textarea`, `SpaceSwitcher`'s trigger;
+- `SpaceSwitcher`'s trigger;
 - **`Dropzone`**, whose dashed outline *is* the affordance;
 - **floating surfaces**, which pair it with a shadow — `Modal`, `Drawer`, dropdowns, `Toast`.
+
+**Form fields carry no border and no outline either.** `Input`, `Textarea`, `Select`,
+`SecretField` and `ColorPicker`'s hex field read as editable through their fill alone:
+`bg-fc-surface` at rest, `bg-fc-surface-hover` on hover and on focus. Focus shows as the fill
+stepping up plus the caret, the way the Vitrine back office has always drawn its fields. Do
+not add a border or a focus outline back to a field; buttons keep their focus outline.
 
 **`ChartTooltip` is the exception.** It is 60px wide, it follows the pointer, and it lives
 *inside* a chart card rather than on top of the page — so it separates itself with one step

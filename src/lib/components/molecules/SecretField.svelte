@@ -118,7 +118,7 @@
     const describedBy = $derived(error ? errorId : helper ? helperId : undefined);
 
     const box =
-        'flex h-11 min-w-0 flex-1 items-center rounded-fc border border-fc-border bg-fc-surface px-3 font-fc-mono text-fc-p';
+        'flex h-11 min-w-0 flex-1 items-center rounded-fc bg-fc-surface hover:bg-fc-surface-hover focus-within:bg-fc-surface-hover px-3 font-fc-mono text-fc-p';
 </script>
 
 <!--
@@ -148,7 +148,7 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                 aria-describedby={describedBy}
                 class={twMerge(
                     box,
-                    'text-fc-ink placeholder:font-sans placeholder:text-fc-muted focus:outline-2 focus:outline-fc-brand disabled:opacity-50'
+                    'text-fc-ink placeholder:font-sans placeholder:text-fc-muted outline-none disabled:opacity-50'
                 )}
             />
         {:else}
