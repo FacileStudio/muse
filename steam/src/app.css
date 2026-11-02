@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@import '../../src/lib/styles/tokens.css';
+@source '../../src/lib';
+@source './';
+
+/* the brand is an app's three inputs, so Steam's blue is the only theming this test does */
+:root {
+  --fc-brand-from: #4aa8ff;
+  --fc-brand-to: #1b6fd8;
+}
+
+body {
+  margin: 0;
+}
