@@ -119,36 +119,36 @@ Sans espace il ne rend rien, et `personalLabel={null}` retire la ligne personnel
         <button
             bind:this={triggerEl}
             type="button"
-            class="flex w-full items-center gap-3 min-h-fc-nav-item rounded-fc bg-fc-surface backdrop-blur-[32px] py-4 pr-4 pl-4.5 text-left text-fc-p transition-colors hover:bg-fc-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand"
+            class="flex w-full items-center gap-3 min-h-fc-nav-item rounded-fc bg-fc-surface backdrop-blur-[32px] py-4 pr-4 pl-4.25 text-left text-fc-p transition-colors hover:bg-fc-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand"
             onclick={toggle}
             aria-expanded={open}
         >
-            <Icon icon={activeSpace ? icons.usersGroup : icons.userCircle} size={16} class="text-fc-muted" />
+            <Icon icon={activeSpace ? icons.usersGroup : icons.userCircle} class="text-fc-muted" />
             <span class="min-w-0 flex-1 truncate font-medium text-fc-ink">
                 {activeSpace?.name ?? personalLabel}
             </span>
-            <Icon icon={icons.arrow} size={16} class="block size-4 shrink-0 text-fc-muted" />
+            <Icon icon={icons.arrow} class="text-fc-muted" />
         </button>
 
         {#if open}
             <div
-                class="fixed z-40 flex w-56 flex-col overflow-hidden rounded-fc bg-fc-surface backdrop-blur-[32px] shadow-lg"
+                class="fixed z-40 flex w-56 flex-col gap-1 overflow-hidden rounded-fc p-1 bg-fc-surface backdrop-blur-[32px] shadow-lg"
                 style:left="{pos.left}px"
                 style:top={pos.top === null ? null : `${pos.top}px`}
                 style:bottom={pos.bottom === null ? null : `${pos.bottom}px`}
                 style:max-height="{maxHeight}px"
             >
-                <div class="min-h-0 flex-1 overflow-auto p-1">
+                <div class="flex min-h-0 flex-1 flex-col gap-1 overflow-auto">
                     {#if showPersonal}
                         <button
                             type="button"
                             class={twMerge(
-                                'flex w-full items-center gap-3 min-h-fc-nav-item rounded-fc py-4 pr-4 pl-4.5 text-left text-fc-p transition-colors',
-                                !activeId ? 'fc-selected font-medium' : 'text-fc-ink hover:bg-fc-surface-hover'
+                                'flex w-full items-center gap-3 min-h-fc-nav-item rounded-fc py-4 pr-4 pl-4.25 text-left text-fc-p transition-colors',
+                                !activeId ? 'bg-fc-surface-hover font-medium text-fc-ink' : 'text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink'
                             )}
                             onclick={() => select(null)}
                         >
-                            <Icon icon={icons.userCircle} size={16} />
+                            <Icon icon={icons.userCircle} />
                             <span class="min-w-0 flex-1 truncate">{personalLabel}</span>
                         </button>
                     {/if}
@@ -157,25 +157,25 @@ Sans espace il ne rend rien, et `personalLabel={null}` retire la ligne personnel
                         <button
                             type="button"
                             class={twMerge(
-                                'flex w-full items-center gap-3 min-h-fc-nav-item rounded-fc py-4 pr-4 pl-4.5 text-left text-fc-p transition-colors',
-                                activeId === space.id ? 'fc-selected font-medium' : 'text-fc-ink hover:bg-fc-surface-hover'
+                                'flex w-full items-center gap-3 min-h-fc-nav-item rounded-fc py-4 pr-4 pl-4.25 text-left text-fc-p transition-colors',
+                                activeId === space.id ? 'bg-fc-surface-hover font-medium text-fc-ink' : 'text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink'
                             )}
                             onclick={() => select(space.id)}
                         >
-                            <Icon icon={icons.usersGroup} size={16} />
+                            <Icon icon={icons.usersGroup} />
                             <span class="min-w-0 flex-1 truncate">{space.name}</span>
                         </button>
                     {/each}
                 </div>
 
                 {#if manageHref}
-                    <div class="p-1">
+                    <div>
                         <a
                             href={manageHref}
-                            class="flex w-full items-center gap-3 min-h-fc-nav-item rounded-fc py-4 pr-4 pl-4.5 text-left text-fc-p text-fc-muted transition-colors hover:bg-fc-surface-hover hover:text-fc-ink"
+                            class="flex w-full items-center gap-3 min-h-fc-nav-item rounded-fc py-4 pr-4 pl-4.25 text-left text-fc-p text-fc-muted transition-colors hover:bg-fc-surface-hover hover:text-fc-ink"
                             onclick={() => (open = false)}
                         >
-                            <Icon icon={icons.settings} size={16} />
+                            <Icon icon={icons.settings} />
                             {manageLabel}
                         </a>
                     </div>

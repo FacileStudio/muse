@@ -7,5 +7,5 @@
         <h3 class="text-fc-lead font-medium text-fc-ink">Refonte du portail</h3>
         <p class="text-fc-p text-fc-muted">Studio · 12 tâches ouvertes</p>
     </div>
-    <Icon icon={icons.arrow} size={18} class="text-fc-muted transition-transform group-hover:translate-x-0.5" />
+    <Icon icon={icons.arrow} class="text-fc-muted transition-transform group-hover:translate-x-0.5" />
 </Card>

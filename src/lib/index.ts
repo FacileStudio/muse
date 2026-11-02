@@ -62,6 +62,12 @@ export { default as SecretField } from './components/molecules/SecretField.svelt
 export type { SecretFieldProps } from './components/molecules/SecretField.svelte';
 export { default as SettingsRow } from './components/molecules/SettingsRow.svelte';
 export type { SettingsRowProps } from './components/molecules/SettingsRow.svelte';
+export { default as ListItem } from './components/molecules/ListItem.svelte';
+export type { ListItemProps } from './components/molecules/ListItem.svelte';
+export { default as MediaCard } from './components/molecules/MediaCard.svelte';
+export type { MediaCardProps } from './components/molecules/MediaCard.svelte';
+export { default as ToggleGroup } from './components/molecules/ToggleGroup.svelte';
+export type { ToggleGroupProps, ToggleItem } from './components/molecules/ToggleGroup.svelte';
 export { default as SettingsSection } from './components/molecules/SettingsSection.svelte';
 export type { SettingsSectionProps } from './components/molecules/SettingsSection.svelte';
 export { default as SpaceSwitcher } from './components/molecules/SpaceSwitcher.svelte';
@@ -116,6 +122,7 @@ export type { SparklineProps } from './components/charts/Sparkline.svelte';
 
 export { prefersReducedMotion, isMobile } from './utils/motion.js';
 export { springPress } from './utils/press.js';
+export { appear } from './utils/appear.js';
 export { getFieldContext } from './utils/field.js';
 export type { FieldContext } from './utils/field.js';
 export {
@@ -139,8 +146,8 @@ export type {
 } from './utils/chart.js';
 export { toast, toasts } from './utils/toast.svelte.js';
 export type { ToastAction, ToastItem, ToastOptions, ToastTone } from './utils/toast.svelte.js';
-export { GAP, PAGE_WIDTH, ALIGN } from './utils/layout.js';
-export type { Gap, PageWidth, Align } from './utils/layout.js';
+export { GAP, ALIGN } from './utils/layout.js';
+export type { Gap, Align } from './utils/layout.js';
 export { cn, twMerge } from './utils/cn.js';
 export { REDACTED, isRedacted, maskSecret } from './utils/secret.js';
 export { icons, registerIcons } from './icons.js';

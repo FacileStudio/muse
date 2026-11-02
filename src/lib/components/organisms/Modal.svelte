@@ -112,7 +112,7 @@
      * own `margin: auto`, and Tailwind preflight's `margin: 0` reset kills exactly that —
      * without this the dialog renders flush against the top-left corner in every consumer.
      */
-    const classes = $derived(twMerge('m-auto rounded-fc border border-fc-border bg-fc-surface-solid text-fc-ink p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto backdrop:bg-fc-scrim', sizes[size], className));
+    const classes = $derived(twMerge('m-auto rounded-fc bg-fc-surface-solid text-fc-ink p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto backdrop:bg-fc-scrim', sizes[size], className));
 </script>
 
 <!--
@@ -142,9 +142,9 @@ Un dialogue natif : le navigateur le place dans sa couche supérieure, au-dessus
                         type="button"
                         aria-label="Close"
                         onclick={() => (open = false)}
-                        class="-mt-2 -mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-fc text-fc-muted transition-colors hover:bg-fc-surface-hover hover:text-fc-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand"
+                        class="-mt-2 -mr-2 inline-flex size-8 shrink-0 items-center justify-center rounded-fc text-fc-muted transition-colors hover:bg-fc-surface-hover hover:text-fc-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand"
                     >
-                        <Icon icon="iconoir:xmark" size={18} />
+                        <Icon icon="iconoir:xmark" />
                     </button>
                 {/if}
             </div>

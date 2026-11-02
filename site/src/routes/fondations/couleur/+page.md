@@ -51,11 +51,14 @@ encore.
 
 ## Graphiques
 
-`fc-chart-1` … `fc-chart-6` — violet, orange, aqua, rouge, vert, rose. C'est la palette
-d'identité de Sablier avec les teintes conservées et la luminosité approfondie : les originales
-sont correctes en pastilles d'avatar et très en dessous du seuil de contraste de 3:1 en marques
-de graphique.
+Les couleurs des graphiques sortent du dégradé de marque. `chartColor(index, total)` répartit
+`total` entrées à intervalles réguliers entre `--fc-brand-from` (vert) et `--fc-brand-to`
+(violet), en mélange `oklch` pour que les teintes intermédiaires passent par le cyan et le bleu
+plutôt que par le gris. Une série seule prend le vert de la marque ; deux séries prennent les
+deux extrémités.
 
-**L'ordre est porteur.** Le jeu comporte trois teintes chaudes qui s'effondrent sous
-protanopie, donc aucun ordre ne passe sur la teinte seule : la palette s'appuie sur un
-échelonnement de luminosité et au moins 120° entre voisines.
+```ts
+chartColor(1, 3); // color-mix(in oklch, var(--fc-brand-to) 50%, var(--fc-brand-from))
+```
+
+Une app qui change sa marque sur `:root` change aussi ses graphiques, sans rien d'autre.

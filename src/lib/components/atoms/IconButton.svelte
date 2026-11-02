@@ -25,13 +25,13 @@
     }: IconButtonProps = $props();
 
     const variants: Record<Variant, string> = {
-        default: 'border border-fc-border text-fc-ink hover:bg-fc-surface-hover',
+        default: 'bg-fc-surface text-fc-ink hover:bg-fc-surface-hover',
         ghost: 'bg-transparent text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink',
         danger: 'bg-transparent text-fc-muted hover:bg-fc-danger/10 hover:text-fc-danger'
     };
 
     const classes = $derived(twMerge(
-        'inline-flex size-11 shrink-0 items-center justify-center rounded-fc [&_svg]:size-4.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand',
+        'inline-flex size-8 shrink-0 items-center justify-center rounded-fc [&_svg]:size-4.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand',
         variants[variant],
         className
     ));
@@ -39,7 +39,7 @@
 
 <!--
 @component
-Un bouton rond de 44px pour une action sans libellé. Il prend l'icône en enfant, et toujours un `aria-label`.
+Un bouton carré de 32px pour une action sans libellé. Il prend l'icône en enfant, et toujours un `aria-label`.
 -->
 
 <button {type} class={classes} use:springPress {...rest}>

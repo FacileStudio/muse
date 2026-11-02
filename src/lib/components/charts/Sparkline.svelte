@@ -33,7 +33,7 @@
         height = 32,
         area = true,
         smooth = true,
-        color = 'var(--color-fc-chart-1)',
+        color = 'var(--fc-brand-from)',
         showLast = false,
         valueFormat = formatCompact,
         animate = true,

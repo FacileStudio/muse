@@ -2,7 +2,7 @@
     import { Avatar, IconButton, Icon, Topbar, icons } from '@facile/muse';
 </script>
 
-<div class="w-full overflow-hidden rounded-fc border border-fc-border">
+<div class="w-full overflow-hidden rounded-fc">
     <Topbar>
         <span class="text-fc-lead font-semibold text-fc-ink">Sablier</span>
         <div class="flex items-center gap-1">

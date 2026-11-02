@@ -140,7 +140,6 @@
     <SettingsSection
         title="Avatar"
         description="Replaces the initial in the sidebar. Square images crop best."
-        bare
     >
         <Dropzone
             accept="image/*"

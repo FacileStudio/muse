@@ -4,8 +4,6 @@
     export interface IconProps extends SVGAttributes<SVGSVGElement> {
         /** An iconify name (`iconoir:settings`) — usually from the `icons` map. */
         icon: string;
-        /** Rendered size in pixels, applied as width, height and a matching CSS box. @default 16 */
-        size?: number;
         class?: string;
     }
 </script>
@@ -27,7 +25,10 @@
      * their box from the first frame. `<iconify-icon>` remains the fallback for a name muse
      * does not carry, so an app passing a name muse does not bundle keeps working.
      */
-    let { icon, size = 16, class: className = '', ...rest }: IconProps = $props();
+    let { icon, class: className = '', ...rest }: IconProps = $props();
+
+    // one size for every icon in the suite, the same 18px IconButton reserves
+    const size = 18;
 
     const data = $derived(ICON_DATA[icon] ?? extraIcons[icon]);
     const classes = $derived(twMerge('block shrink-0', className));

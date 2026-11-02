@@ -77,13 +77,13 @@
 
     const legend = storage.map((slice, i) => ({
         name: slice.label,
-        color: chartColor(i),
+        color: chartColor(i, storage.length),
         value: `${slice.value} GB`
     }));
 
     const tipRows = [
-        { name: 'Billable', value: '152 h', color: chartColor(0) },
-        { name: 'Internal', value: '47 h', color: chartColor(1) }
+        { name: 'Billable', value: '152 h', color: chartColor(0, 2) },
+        { name: 'Internal', value: '47 h', color: chartColor(1, 2) }
     ];
 
     async function deleteSpace() {
@@ -92,26 +92,22 @@
     }
 </script>
 
-<Page width="xl">
+<Page>
     <PageHeader
         title="Dashboard"
         description="Overview of the current space, and a gallery of the primitives every Facile tool shares."
     />
 
-    <!-- One rhythm for the whole page: 40px between sections, 16px between the cards of a
-         section, 20px of card padding, and a section's heading bound to its body by the
-         same 16px. Card gutters used to be 12px — tighter than the padding inside the cards
-         they separate, which reads as three panels leaning on each other. -->
     <section class="flex flex-col gap-1">
         <div class="grid gap-1 sm:grid-cols-3">
             <StatCard label="Tracked" value="1 054 h" delta="+12% vs last month">
-                <Sparkline data={tracked[0].data} class="mt-3" showLast />
+                <Sparkline data={tracked[0].data} color={chartColor(0, 3)} class="mt-3" showLast />
             </StatCard>
             <StatCard label="Invoiced" value="€48.2k" delta="+8% vs last month">
-                <Sparkline data={invoices[0].data} color="var(--color-fc-chart-5)" class="mt-3" showLast />
+                <Sparkline data={invoices[0].data} color={chartColor(1, 3)} class="mt-3" showLast />
             </StatCard>
             <StatCard label="Overdue" value="10" delta="−3 vs last month">
-                <Sparkline data={invoices[2].data} color="var(--color-fc-chart-2)" class="mt-3" showLast />
+                <Sparkline data={invoices[2].data} color={chartColor(2, 3)} class="mt-3" showLast />
             </StatCard>
         </div>
 

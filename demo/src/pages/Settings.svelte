@@ -1,6 +1,5 @@
 <script lang="ts">
     import {
-        Divider,
         icons,
         Page,
         PageHeader,
@@ -65,7 +64,6 @@
     -->
     <div class="flex flex-col gap-1">
         <Tabs {items} value={active} label="Settings sections" />
-        <Divider />
     </div>
 
     <PageTransition key={active} distance={8} duration={0.25}>

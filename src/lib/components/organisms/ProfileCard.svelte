@@ -61,8 +61,8 @@
     );
     const actionsClasses = $derived(
         vertical
-            ? 'flex min-h-11 w-full flex-wrap items-center justify-center gap-1'
-            : 'flex min-h-11 flex-wrap items-center gap-1 sm:ml-auto sm:shrink-0'
+            ? 'flex min-h-8 w-full flex-wrap items-center justify-center gap-1'
+            : 'flex min-h-8 flex-wrap items-center gap-1 sm:ml-auto sm:shrink-0'
     );
 </script>
 
@@ -77,7 +77,7 @@ Le bloc d'identité d'un membre : avatar, nom et actions de session.
             <Avatar src={avatar} alt={name} {name} size="lg" />
             {#if color}
                 <span
-                    class="absolute -right-0.5 -bottom-0.5 h-4 w-4 rounded-fc border-2 border-fc-surface"
+                    class="absolute -right-0.5 -bottom-0.5 h-4 w-4 rounded-fc"
                     style:background-color={color}
                     aria-hidden="true"
                 ></span>
@@ -108,7 +108,7 @@ Le bloc d'identité d'un membre : avatar, nom et actions de session.
         <dl class="flex flex-col">
             {#each meta as row (row.label)}
                 <div
-                    class="flex items-baseline justify-between gap-1 border-t border-fc-border py-2 text-fc-p first:border-t-0 first:pt-0"
+                    class="flex items-baseline justify-between gap-1 py-2 text-fc-p first:pt-0"
                 >
                     <dt class="shrink-0 text-fc-muted">{row.label}</dt>
                     <dd class="min-w-0 truncate text-right text-fc-ink">{row.value}</dd>

@@ -14,6 +14,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { appear } from '../../utils/appear.js';
 
     /*
      * Typed for the <div>, plus the three anchor props by name. Intersecting with
@@ -62,11 +63,11 @@ La surface conteneur du système : remplissage sans bordure, `p-5`. Avec `href`,
 -->
 
 {#if href}
-    <a {href} class={classes} {...anchorRest}>
+    <a {href} class={classes} use:appear {...anchorRest}>
         {@render children()}
     </a>
 {:else}
-    <div class={classes} {...rest}>
+    <div class={classes} use:appear {...rest}>
         {@render children()}
     </div>
 {/if}

@@ -27,7 +27,7 @@
         </Stack>
     {/if}
 
-    <div class="rounded-fc bg-fc-bg p-5">
+    <div class="rounded-fc p-5">
         <Rendered />
     </div>
 

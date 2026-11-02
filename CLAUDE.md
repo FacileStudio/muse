@@ -23,7 +23,7 @@ muse/
   integrations/SKILL.md       Shared AI skill definition
   src/lib/
     index.ts                  Public re-exports (all components + utils)
-    icons.ts                  Iconify name map (47 keys) + IconKey type
+    icons.ts                  Iconoir name map (53 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
     components/               53 Svelte components (atoms/ molecules/ organisms/ charts/ motion/)
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
@@ -79,16 +79,16 @@ them once in their root layout:
 import '@facile/muse/styles';
 ```
 
-The palette is **chroma-zero OKLCH**, matching the shipped suite apps. Namespaces: `fc-page`,
-`fc-bg`, `fc-surface`, `fc-component`, `fc-fg`, `fc-fg-muted`, `fc-accent`, `fc-accent-fg`,
-`fc-border`, `fc-ring`, `fc-scrim`, `fc-danger`, `fc-danger-fg`, `fc-success`, `fc-info`,
-`fc-warning`, `fc-owner`, `fc-admin`, plus `fc-chart-1`…`fc-chart-6` for categorical chart
-series (Sablier's identity palette, deepened for legibility). Use via Tailwind utilities like
-`bg-fc-bg`, `text-fc-fg`, `rounded-fc-md`.
+The palette is dark only, one block, no light mode. Namespaces: `fc-bg` (the page, never on a
+component), `fc-surface`, `fc-surface-hover`, `fc-surface-solid` (floating things), `fc-ink`,
+`fc-muted`, `fc-faint` (`fc-muted` at 50%), `fc-brand`, `fc-brand-bg`, `fc-scrim`, `fc-danger`,
+`fc-success`, `fc-info`, `fc-warning`, `fc-owner`, `fc-admin`, plus `fc-chart-1`…`fc-chart-6`.
+There is no border token. Use via Tailwind utilities like `bg-fc-surface`, `text-fc-ink`,
+`rounded-fc`.
 
 Type scale is five styles: `text-fc-title` 32 (medium), `subtitle` 24, `lead` 18, `p` 14,
-`subtext` 11, all at 130% line-height and `-0.02em` — **`text-fc-p` (14px) is the UI default**.
-Form fields use `lead`: under 16px, iOS Safari zooms on focus. Radii: `fc-xs` 4, `fc-sm` 6, `fc-md` 8, `fc-lg` 12, `fc-pill` 999.
+`subtext` 11, all at 130% line-height and `-0.02em`. Control text (buttons, inputs, selects,
+textareas) is `subtext`; `lead` is for names only. One radius: `rounded-fc`, 8px.
 `--ease-fc` is `cubic-bezier(0.77, 0, 0.175, 1)`, the CSS spelling of GSAP's `power3.inOut`,
 so a consumer's CSS transition lands on the same curve as a muse animation beside it.
 
@@ -99,10 +99,6 @@ entries are fixed nav-item geometry, not a scale.
 sticky chrome `z-30`, dropdowns `z-40`, viewport-fixed chrome `z-50`, `Rideau` `z-[100]`;
 `<dialog>.showModal()` puts modals in the top layer, above all of it) and a global
 `prefers-reduced-motion` block that collapses every CSS animation and transition.
-
-Dark mode swaps token values two ways: `prefers-color-scheme` (scoped `:root:not(.light)`)
-and an explicit `.dark` class, so apps can offer a manual toggle. The two blocks are
-byte-identical duplicates on purpose — **edit both or neither**.
 
 ## Conventions
 
@@ -120,30 +116,32 @@ byte-identical duplicates on purpose — **edit both or neither**.
 - Callback props are camelCase `onX` — `onChange`, `onSelect`, `onClose`, `onConfirm`,
   `onCancel`, `onReveal`, `onCopy`, `onFiles`, `onReject`. Lowercase `on*` names are reserved
   for native DOM handlers arriving through `...rest`.
-- Active and primary states are **inverted** (`bg-fc-accent text-fc-accent-fg`), never tinted.
-  Semantic fills are the opposite — tinted (`bg-fc-danger/10 text-fc-danger`), never solid.
+- Active and primary states use the brand: `fc-selected` on nav and buttons, `bg-fc-brand-bg`
+  with a `text-fc-brand` title on rows. Semantic fills are tinted (`bg-fc-danger/10
+  text-fc-danger`), never solid.
 - **Never show scrollbars.** `tokens.css` hides them globally in the base layer; scrolling
   still works everywhere. A visible scrollbar takes layout width and shifts content sideways.
   Don't re-enable them, and don't add `[scrollbar-width:none]` utilities — already handled.
-- Container surfaces (`Card`, `StatCard`, `Table`) carry **no border** — the `bg-fc-component`
-  fill separates them. 1px `border-fc-border` is for separation *inside* a container, form
-  controls, `Dropzone`, and floating surfaces. Shadows only on floating things. `ChartTooltip`
-  is the one floating surface with no border: it is 60px wide and lives inside a card, so a
-  step of fill plus the shadow is enough. A `Toast` keeps its border — nothing frames it.
-- Dashboard spacing is ranked, not per-component: `gap-4` inside a card, `p-5` card padding,
-  `gap-4` between cards, `gap-10` between sections. A gutter is never tighter than the
-  padding of the cards it separates. See CHARTE §4.
+- **The house style is a bento grid** (CHARTE §4): `gap-1` between everything, padding carries
+  the hierarchy, `Page` is a full-width `overflow-hidden p-1` frame with its own scroller,
+  `PageHeader` for every page title, `h-8` for every control, 18px for every icon.
+- **No borders anywhere.** `surface` and `surface-hover` separate things. Shadows only on
+  floating things.
+- **No surface on a surface.** The fill goes on the leaf (field, row, card of text), never on
+  the container holding several. `no-nested-surface.test.ts` fails the build on it. Lists are
+  `ListItem` rows, not a card of rows.
 - Every `<button>` declares `type` — an undeclared button inside a form submits it.
 - One focus ring everywhere:
-  `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring`.
+  `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand`.
 - `...rest` goes on the root element, **last**, so a consumer attribute wins. The exceptions
   are deliberate: `Modal`/`Drawer` spread the dialog controller's handlers after `rest`
   (they are what keeps `open` in sync), and `Tabs`, `Dropzone`, `SwatchPicker`, `OptionCards`
   and `SpaceSwitcher` keep their own role/keyboard wiring after it. Motion and chart
   components take `class` only and spread nothing.
-- Icons: Solar **`linear`** for chrome, MDI for plus/close/chevrons, `bold-duotone` for brand
-  marks only. Icons inherit `currentColor`; always pass `width`, `height` and `class="block"`.
-- Mobile-first: minimum supported width is 360px, hit targets >= 44px, use `100dvh` not `100vh`.
+- Icons: Iconoir at stroke 2, bundled offline, always through `<Icon>` at its one size (18px).
+  Icons inherit `currentColor`.
+- Mobile-first: minimum supported width is 360px, controls are 32px (`h-8`), use `100dvh` not
+  `100vh`.
 - All animations must respect `prefers-reduced-motion: reduce`.
 - GSAP with `power3.inOut` ease by default; press feedback goes through `springPress`.
 - Components go in `src/lib/components/<tier>/` and must be re-exported from `src/lib/index.ts`.

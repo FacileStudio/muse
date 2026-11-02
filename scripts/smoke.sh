@@ -165,10 +165,10 @@ CSS=$(find "$SMOKE/build/client/_app/immutable/assets" -name '*.css' 2>/dev/null
 [ -n "$CSS" ] || fail 'no compiled stylesheet under smoke/build/client/_app/immutable/assets'
 
 # --color-fc-bg         the theme block survived the package import
-# --color-fc-chart-6    the `@theme static` slot — a plain @theme drops it and SVG fills render black
+# --fc-brand-to         the last gradient stop, which every chart colour mixes from
 # color-scheme          the half of dark mode a token cannot reach
 # bg-fc-surface         a utility that only exists because @source scanned node_modules
-for needle in '--color-fc-bg' '--color-fc-chart-6' 'color-scheme:dark' 'bg-fc-surface'; do
+for needle in '--color-fc-bg' '--fc-brand-to' 'color-scheme:dark' 'bg-fc-surface'; do
     grep -q -- "$needle" "$CSS" || fail "the compiled CSS is missing '$needle'" "stylesheet: $CSS"
 done
 

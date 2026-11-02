@@ -28,7 +28,7 @@
      */
 </script>
 
-<Page width="xl">
+<Page>
     <PageHeader
         title="Rythme"
         description="L’espacement n’est pas un réglage par page. Un seul écart, 4px, entre deux éléments quels qu’ils soient, et une règle : un composant possède son padding, jamais sa marge."

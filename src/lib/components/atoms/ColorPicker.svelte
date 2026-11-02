@@ -77,7 +77,7 @@
     }
 
     const box =
-        'h-11 rounded-fc bg-fc-surface hover:bg-fc-surface-hover focus:bg-fc-surface-hover text-fc-lead text-fc-ink outline-none disabled:opacity-50';
+        'h-8 rounded-fc bg-fc-surface hover:bg-fc-surface-hover focus:bg-fc-surface-hover text-fc-subtext text-fc-ink outline-none disabled:opacity-50';
 </script>
 
 <!--
@@ -145,11 +145,11 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
                         typed = null;
                         commit(hex);
                     }}
-                    class="group flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-fc focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand disabled:cursor-not-allowed disabled:opacity-50"
+                    class="group flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-fc focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     <span
                         class={twMerge(
-                            'h-7 w-7 rounded-fc border border-fc-border/60 transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+                            'h-7 w-7 rounded-fc transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
                             active && 'ring-2 ring-fc-brand ring-offset-2 ring-offset-fc-surface'
                         )}
                         style:background-color={hex}

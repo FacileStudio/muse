@@ -33,7 +33,7 @@
      */
     const classes = $derived(
         twMerge(
-            'flex flex-col gap-1 border-t border-fc-border py-4 first:border-t-0 first:pt-0 last:pb-0',
+            'flex flex-col gap-1 py-4 first:pt-0 last:pb-0',
             !stacked && 'sm:flex-row sm:items-center sm:justify-between sm:gap-1',
             className
         )

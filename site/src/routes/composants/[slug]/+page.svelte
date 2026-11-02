@@ -55,14 +55,14 @@
         <div class="overflow-x-auto">
             <table class="w-full text-fc-p">
                 <thead>
-                    <tr class="border-b border-fc-border">
+                    <tr>
                         <th class="py-2 pr-4 text-left font-semibold text-fc-ink">Prop</th>
                         <th class="py-2 pr-4 text-left font-semibold text-fc-ink">Type</th>
                     </tr>
                 </thead>
                 <tbody>
                     {#each doc.props as p (p.name)}
-                        <tr class="border-b border-fc-border/60 align-top">
+                        <tr class="align-top">
                             <td class="py-2 pr-4 whitespace-nowrap">
                                 <code class="font-fc-mono text-fc-subtext text-fc-ink">{p.name}</code>
                                 {#if !p.optional}<span class="text-fc-danger" title="Requis">*</span>{/if}

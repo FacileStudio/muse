@@ -11,7 +11,7 @@
     const total = spaces.reduce((sum, s) => sum + s.gb, 0);
     const items = spaces.map((s, i) => ({
         name: s.name,
-        color: chartColor(i),
+        color: chartColor(i, spaces.length),
         value: `${s.gb} Go · ${Math.round((s.gb / total) * 100)} %`
     }));
 </script>

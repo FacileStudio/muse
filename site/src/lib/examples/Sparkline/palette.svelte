@@ -12,7 +12,7 @@
     {#each rows as row, i (row.name)}
         <div class="flex items-center gap-1">
             <span class="w-40 shrink-0 text-fc-subtext text-fc-muted">{row.name}</span>
-            <Sparkline data={row.data} color={chartColor(i)} height={28} valueFormat={(n) => `${n} h`} />
+            <Sparkline data={row.data} color={chartColor(i, rows.length)} height={28} valueFormat={(n) => `${n} h`} />
         </div>
     {/each}
 </div>

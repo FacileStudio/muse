@@ -35,7 +35,7 @@
 
     /*
         A toast floats over content it does not own, so it takes the floating-surface
-        treatment from CHARTE §5 — opaque fill, 1px border, shadow — and not `Alert`'s tinted
+        treatment from CHARTE §5 — opaque fill and shadow — and not `Alert`'s tinted
         wash, which would let whatever is underneath bleed through the tone. It is the one
         overlay that lands *on* arbitrary content with no scrim under it, which is why it
         keeps the outline a `ChartTooltip` drops. The tone lives in the icon badge instead,
@@ -64,7 +64,7 @@
 
     const classes = $derived(
         twMerge(
-            'pointer-events-auto flex w-full items-start gap-1 rounded-fc border border-fc-border bg-fc-surface-solid p-4 shadow-lg',
+            'pointer-events-auto flex w-full items-start gap-1 rounded-fc bg-fc-surface-solid p-4 shadow-lg',
             className
         )
     );
@@ -81,7 +81,7 @@ La présentation d'un message éphémère. La file et l'auto-fermeture appartien
             class={twMerge('flex size-8 shrink-0 items-center justify-center rounded-fc', badges[tone])}
             aria-hidden="true"
         >
-            <Icon icon={glyph} size={18} />
+            <Icon icon={glyph} />
         </span>
     {/if}
 
@@ -107,7 +107,7 @@ La présentation d'un message éphémère. La file et l'auto-fermeture appartien
             aria-label="Dismiss notification"
             onclick={onDismiss}
         >
-            <Icon icon={icons.close} size={16} />
+            <Icon icon={icons.close} />
         </IconButton>
     {/if}
 </div>

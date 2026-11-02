@@ -92,7 +92,7 @@
      * here is how a retheme silently stops reaching the animation. The fallbacks only cover
      * SSR and a consumer that forgot to import the stylesheet.
      */
-    const FALLBACK_WIDTH = { collapsed: 60, expanded: 240 };
+    const FALLBACK_WIDTH = { collapsed: 56, expanded: 236 };
     const RAIL_DURATION = 0.3;
 
     function railWidth(el: HTMLElement, isCollapsed: boolean): number {
@@ -187,7 +187,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
 
 <div
     bind:this={navEl}
-    class={twMerge('relative flex flex-col justify-between h-full min-h-0 gap-12 overflow-hidden p-6 pb-1 px-1', className)}
+    class={twMerge('relative flex flex-col justify-between h-full min-h-0 gap-12 overflow-hidden pt-6 pb-1 pl-1', className)}
     {...rest}
 >
     <!--
@@ -202,9 +202,9 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
         menu". The scrollbar stays hidden, as everywhere else in the suite.
     -->
     <div class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain [&>*+*]:mt-5">
-        <!-- h-7 stops the title from growing the row, pl-3.5 matches where the collapsed rail centres the mark -->
-        <div class={twMerge('flex h-7 items-center gap-2.5 pt-1', narrow ? 'justify-center px-0' : 'pl-3.5 pr-2')}>
-            {#if icon}<Icon {icon} size={24} />{/if}
+        <!-- h-7 stops the title from growing the row, pl-4.25 matches where the collapsed rail centres the 18px mark -->
+        <div class={twMerge('flex h-7 items-center gap-2.5 pt-1', narrow ? 'justify-center px-0' : 'pl-4.25 pr-2')}>
+            {#if icon}<Icon {icon} />{/if}
             {#if !narrow}
                 <!--
                   This lockup used to carry `translate-y-[0.04em]`, an optical correction
@@ -274,7 +274,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                 {#if page.group && page.group !== pages[i - 1]?.group}
                     <p
                         class={twMerge(
-                            'px-3 pt-4 pb-1 text-fc-subtext font-semibold text-fc-muted uppercase',
+                            'px-3 pt-4 pb-1 text-fc-subtext font-semibold text-fc-faint uppercase',
                             narrow && 'sr-only'
                         )}
                     >
@@ -284,7 +284,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                 <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} collapsed={narrow}>
                     {#snippet right()}
                         {#if page.active}
-                            <Icon icon={icons.arrow} size={16} class="text-fc-brand" />
+                            <Icon icon={icons.arrow} class="text-fc-brand" />
                         {/if}
                     {/snippet}
                 </NavButton>
@@ -323,7 +323,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
             {#if !narrow}
                 <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
                     <TextElevate text={u.name} visible={!narrow} class="truncate" />
-                    <Icon icon={icons.settings} size={18} />
+                    <Icon icon={icons.settings} />
                 </span>
             {/if}
         {/snippet}

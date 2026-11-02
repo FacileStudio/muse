@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Alert, Button, Card, Divider, Field, Icon, Input, Page, Stack, icons } from '@facile/muse';
+    import { Alert, Button, Divider, Field, Icon, Input, Page, Stack, icons } from '@facile/muse';
 
     let email = $state('');
     let motDePasse = $state('');
@@ -7,10 +7,10 @@
     const erreur = 'Votre session a expiré. Reconnectez-vous pour continuer.';
 </script>
 
-<Page width="sm" class="items-center justify-center py-16">
+<Page class="items-center justify-center py-16">
     <Stack class="w-full max-w-[360px]">
         <Stack class="items-center text-center">
-            <Icon icon={icons.clock} size={32} class="text-fc-brand" />
+            <Icon icon={icons.clock} class="text-fc-brand" />
             <h1 class="text-fc-subtitle font-semibold text-fc-ink">Se connecter à Sablier</h1>
             <p class="text-fc-p text-fc-muted">Un seul login, zéro dépendance cloud.</p>
         </Stack>
@@ -19,7 +19,7 @@
             <Alert tone="warning">{erreur}</Alert>
         {/if}
 
-        <Card class="flex flex-col gap-1">
+        <Stack>
             <Button size="lg" class="w-full" icon={icons.shield} href="/auth/oidc" rel="external">
                 Continuer avec Porte
             </Button>
@@ -39,7 +39,7 @@
             </Field>
 
             <Button type="submit" variant="outline" size="lg" class="w-full">Se connecter</Button>
-        </Card>
+        </Stack>
 
         <p class="text-center text-fc-subtext text-fc-muted">
             Besoin d'un accès ? Demandez-le à l'administrateur de votre espace.

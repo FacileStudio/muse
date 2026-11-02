@@ -116,7 +116,6 @@
     <SettingsSection
         title="API tokens"
         description="One token per machine. Revoking one never touches the others."
-        bare
     >
         {#snippet actions()}
             <Button icon={icons.plus} onclick={openCreate}>New token</Button>

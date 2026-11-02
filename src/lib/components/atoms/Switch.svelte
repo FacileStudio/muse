@@ -71,9 +71,9 @@ Un interrupteur. Dans une `SettingsRow` il prend `aria-label` et jamais de libel
         {...rest}
     />
     <span
-        class="relative h-6 w-11 shrink-0 rounded-fc border border-fc-border bg-fc-surface-hover transition-colors peer-checked:border-fc-brand peer-checked:bg-fc-brand-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fc-brand peer-checked:[&>span]:translate-x-5 peer-checked:[&>span]:bg-fc-brand"
+        class="relative h-6 w-11 shrink-0 rounded-fc bg-fc-surface-hover transition-colors peer-checked:bg-fc-brand-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fc-brand peer-checked:[&>span]:translate-x-5 peer-checked:[&>span]:bg-fc-brand"
     >
-        <span class="absolute top-[3px] left-[3px] h-4 w-4 rounded-fc bg-fc-muted transition-transform"></span>
+        <span class="absolute top-1 left-1 h-4 w-4 rounded-fc bg-fc-muted transition-transform"></span>
     </span>
     {#if label}<span>{label}</span>{/if}
 </label>

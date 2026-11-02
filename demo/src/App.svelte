@@ -28,7 +28,6 @@
 
     let collapsed = $state(false);
     let activeSpaceId = $state<string | null>('acme');
-    let scroller: HTMLElement | null = $state(null);
 
     /*
      * Routes match on the first segment only, so #/settings/pool still resolves to Settings and
@@ -57,11 +56,6 @@
         router.hash = HOME;
     });
 
-    /* <main> is the scroll container and sits outside PageTransition, so its scrollTop
-       survives a route change unless someone puts it back. */
-    $effect(() => {
-        if (router.hash) scroller?.scrollTo({ top: 0 });
-    });
 
 
 
@@ -83,7 +77,7 @@
 </script>
 
 <div class="flex h-dvh w-full overflow-hidden bg-fc-bg">
-    <div class="hidden h-full shrink-0 p-3 md:block">
+    <div class="hidden h-full shrink-0 md:block">
         <SideBar
             icon="iconoir:palette"
             title="Muse"
@@ -103,10 +97,8 @@
         />
     </div>
 
-    <!-- `overscroll-contain`: <main> is the only scroller, so a flick past either end has
-         nowhere useful to chain to. Without it the gesture keeps going into the document and
-         the whole shell rubber-bands off the top of the window. -->
-    <main bind:this={scroller} class="min-w-0 flex-1 overflow-auto overscroll-contain pb-28 md:pb-0">
+    <!-- <main> does not scroll: each route's <Page> is a clipped frame with its own scroller. -->
+    <main class="flex min-w-0 flex-1 flex-col overflow-hidden pb-28 md:pb-0">
         <!-- Spaces live in the rail, and the rail is desktop-only — without this header there
              is no way to switch space on a phone at all. -->
         <Topbar class="md:hidden">
@@ -125,7 +117,7 @@
              dashboard can take the wide container and a settings page the reading one. The
              shell owns the rail, the mobile chrome and the single scroller, nothing inside the
              content edge. -->
-        <PageTransition key={root}>
+        <PageTransition key={root} class="min-h-0 flex-1">
             <Route />
         </PageTransition>
     </main>

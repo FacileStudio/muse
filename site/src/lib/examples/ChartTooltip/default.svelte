@@ -2,8 +2,8 @@
     import { ChartTooltip, chartColor } from '@facile/muse';
 
     const rows = [
-        { name: 'Facturable', value: '7 h 30', color: chartColor(0) },
-        { name: 'Interne', value: '1 h 00', color: chartColor(1) }
+        { name: 'Facturable', value: '7 h 30', color: chartColor(0, 2) },
+        { name: 'Interne', value: '1 h 00', color: chartColor(1, 2) }
     ];
 </script>
 

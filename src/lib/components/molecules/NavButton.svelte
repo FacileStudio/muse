@@ -37,12 +37,12 @@
     const anchorRest = $derived(rest as HTMLAnchorAttributes);
     const buttonRest = $derived(rest as HTMLButtonAttributes);
 
-    // pl-4.5 puts the 16px icon 18px in, where the collapsed 52px square centres it, so collapsing moves nothing
+    // pl-4.25 puts the 18px icon 17px in, where the collapsed 52px square centres it, so collapsing moves nothing
     const classes = $derived(twMerge(
         'flex items-center gap-3 rounded-fc text-fc-p transition-colors overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand',
         collapsed
             ? 'size-fc-nav-item aspect-square shrink-0 self-center justify-center gap-0 p-0'
-            : 'w-full min-h-fc-nav-item py-4 pr-4 pl-4.5',
+            : 'w-full min-h-fc-nav-item py-4 pr-4 pl-4.25',
         active ? 'fc-selected font-medium' : 'text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink',
         className
     ));
@@ -50,11 +50,11 @@
 
 <!--
 @component
-Une ligne de navigation. Elle se réduit à un carré de 44px quand le rail se replie.
+Une ligne de navigation. Elle se réduit à un carré de 52px quand le rail se replie.
 -->
 
 {#snippet inner()}
-    {#if icon}<Icon {icon} size={16} />{/if}
+    {#if icon}<Icon {icon} />{/if}
     {#if !collapsed}
         <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
             {#if label}<TextElevate text={label} visible={!collapsed} delay={textDelay} class="truncate" />{/if}

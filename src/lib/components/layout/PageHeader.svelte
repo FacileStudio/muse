@@ -5,10 +5,11 @@
     export interface PageHeaderProps extends HTMLAttributes<HTMLElement> {
         title: string;
         description?: string;
+        /** A count shown beside the title, such as the number of rows below. */
+        count?: number | string | null;
         actions?: Snippet;
         back?: { href: string; label?: string };
         class?: string;
-
     }
 </script>
 
@@ -17,16 +18,10 @@
     import { icons } from '../../icons.js';
     import Button from '../atoms/Button.svelte';
 
-    /*
-     * Three consumer repos hand-wrote this component, each citing CHARTE §4 in a comment, and
-     * all three disagreed: `text-fc-title` against `text-fc-lead`, `gap-1` against `gap-1`, one with
-     * a border-bottom the others do not have. The title block is `gap-1` — a heading and its
-     * description are two parts of one thing, not two siblings of the header's own gap.
-     */
-
     let {
         title,
         description,
+        count,
         actions,
         back,
         class: className = '',
@@ -36,29 +31,30 @@
 
 <!--
 @component
-Le bloc de titre d'une page : h1, description, actions et lien retour, avec le titre et sa description liés par le barreau `bound`.
+L'en-tête d'une page : titre, compteur et description à gauche, actions à droite, alignés sur le bas.
 -->
 
-<header class={twMerge('flex flex-col gap-1', className)} {...rest}>
-    {#if back}
-        <!--
-          `-ml-3` cancels the ghost button's own horizontal padding so the label starts on the
-          page's left edge rather than three pixels inside it. Four apps each discovered this
-          and each picked a different number (-ml-3, -ml-3.5, -ml-4, and one with `self-start`
-          instead); it belongs here once. `w-fit` stops the button stretching in the column.
-        -->
-        <Button href={back.href} variant="ghost" size="sm" icon={icons.chevronLeft} class="-ml-3 w-fit">
-            {back.label ?? 'Back'}
-        </Button>
-    {/if}
-
-    <div class="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-        <div class="flex min-w-0 flex-col gap-1">
-            <h1 class="text-fc-title font-semibold text-fc-ink">{title}</h1>
-            {#if description}<p class="text-fc-p text-fc-muted">{description}</p>{/if}
-        </div>
-        {#if actions}
-            <div class="flex shrink-0 flex-wrap items-center gap-1">{@render actions()}</div>
+<header
+    class={twMerge('flex flex-col gap-1 px-6 pt-12 pb-9 sm:flex-row sm:items-end sm:justify-between', className)}
+    {...rest}
+>
+    <div class="flex min-w-0 flex-col gap-0.5">
+        {#if back}
+            <!-- `-ml-2.5` cancels the small button's own padding so the label starts on the title's edge -->
+            <Button href={back.href} variant="ghost" size="sm" icon={icons.chevronLeft} class="-ml-2.5 w-fit">
+                {back.label ?? 'Back'}
+            </Button>
         {/if}
+        <div class="flex min-w-0 items-center gap-3">
+            <h1 class="truncate text-fc-title text-fc-ink">{title}</h1>
+            {#if count != null}
+                <span class="shrink-0 rounded-fc bg-fc-surface px-1.5 text-fc-subtext text-fc-muted tabular-nums">{count}</span>
+            {/if}
+        </div>
+        {#if description}<p class="text-fc-subtext text-fc-muted">{description}</p>{/if}
     </div>
+
+    {#if actions}
+        <div class="flex shrink-0 flex-wrap items-center gap-1">{@render actions()}</div>
+    {/if}
 </header>

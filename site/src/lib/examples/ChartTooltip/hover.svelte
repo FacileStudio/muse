@@ -28,6 +28,6 @@
         {y}
         visible={index >= 0}
         title={days[index]}
-        rows={[{ name: 'Facturable', value: `${hours[index]} h`, color: chartColor(0) }]}
+        rows={[{ name: 'Facturable', value: `${hours[index]} h`, color: chartColor(0, 1) }]}
     />
 </div>

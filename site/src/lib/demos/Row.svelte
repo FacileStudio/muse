@@ -19,7 +19,7 @@
         <code class="font-fc-mono text-fc-p font-semibold text-fc-ink">{name}</code>
         {#if lead}<p class="text-fc-p text-fc-muted">{lead}</p>{/if}
     </Stack>
-    <div class="rounded-fc bg-fc-bg p-4">
+    <div class="rounded-fc p-4">
         <Inline align="center">
             {@render children()}
         </Inline>

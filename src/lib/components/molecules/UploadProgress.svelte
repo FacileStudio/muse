@@ -72,7 +72,7 @@
         [formatBytes(item.size), statusText(item)].filter(Boolean).join(' · ');
 
     const rowTone = (status: Status): string =>
-        status === 'error' ? 'border-fc-danger/40 bg-fc-danger/10' : 'border-fc-border bg-fc-surface';
+        status === 'error' ? 'bg-fc-danger/10' : 'bg-fc-surface';
 
     const classes = $derived(twMerge('flex w-full flex-col gap-1', className));
 </script>
@@ -86,22 +86,22 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
     <div class={classes} {...rest}>
         <ul class="flex flex-col gap-1">
             {#each items as item (item.id)}
-                <li class={twMerge('rounded-fc border p-3', rowTone(item.status))}>
+                <li class={twMerge('rounded-fc p-3', rowTone(item.status))}>
                     <div class="flex items-center gap-1">
                         <span class="flex size-5 shrink-0 items-center justify-center">
                             {#if item.status === 'uploading'}
                                 <Spinner size="sm" />
                             {:else if item.status === 'done'}
                                 <span class="text-fc-success">
-                                    <Icon icon={icons.check} size={18} />
+                                    <Icon icon={icons.check} />
                                 </span>
                             {:else if item.status === 'error'}
                                 <span class="text-fc-danger">
-                                    <Icon icon={icons.warning} size={18} />
+                                    <Icon icon={icons.warning} />
                                 </span>
                             {:else}
                                 <span class="text-fc-muted">
-                                    <Icon icon={icons.clock} size={18} />
+                                    <Icon icon={icons.clock} />
                                 </span>
                             {/if}
                         </span>
@@ -115,10 +115,10 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
                             <IconButton
                                 type="button"
                                 aria-label={`Retry ${item.name}`}
-                                class="border-transparent text-fc-muted hover:text-fc-ink"
+                                class="text-fc-muted hover:text-fc-ink"
                                 onclick={() => onRetry?.(item.id)}
                             >
-                                <Icon icon={icons.refresh} size={18} />
+                                <Icon icon={icons.refresh} />
                             </IconButton>
                         {/if}
 
@@ -126,10 +126,10 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
                             <IconButton
                                 type="button"
                                 aria-label={`Remove ${item.name}`}
-                                class="border-transparent text-fc-muted hover:text-fc-ink"
+                                class="text-fc-muted hover:text-fc-ink"
                                 onclick={() => onCancel?.(item.id)}
                             >
-                                <Icon icon={icons.close} size={18} />
+                                <Icon icon={icons.close} />
                             </IconButton>
                         {/if}
                     </div>

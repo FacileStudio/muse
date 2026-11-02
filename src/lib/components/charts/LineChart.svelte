@@ -177,7 +177,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                                 y1={yAt(tick)}
                                 x2={padLeft + plotW}
                                 y2={yAt(tick)}
-                                stroke="var(--color-fc-border)"
+                                stroke="var(--color-fc-surface-hover)"
                                 stroke-width="1"
                             />
                         {/each}

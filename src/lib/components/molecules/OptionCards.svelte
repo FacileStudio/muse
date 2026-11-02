@@ -108,14 +108,14 @@ Le choix d'une option parmi N — thème, mode d'affichage, base de facturation 
             tabindex={i === focusIndex ? 0 : -1}
             onclick={() => select(i)}
             class={twMerge(
-                'inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-1 rounded-fc border px-4 text-fc-p font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand disabled:cursor-not-allowed disabled:opacity-50',
+                'inline-flex h-8 shrink-0 cursor-pointer items-center justify-center gap-1 rounded-fc px-4 text-fc-subtext font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand disabled:cursor-not-allowed disabled:opacity-50',
                 selected
-                    ? 'border-fc-brand fc-selected'
-                    : 'border-fc-border bg-fc-surface text-fc-ink hover:bg-fc-surface-hover'
+                    ? 'bg-fc-surface-hover text-fc-ink'
+                    : 'bg-fc-surface text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink'
             )}
         >
             {#if option.icon}
-                <Icon icon={option.icon} size={16} />
+                <Icon icon={option.icon} />
             {/if}
             {option.label}
         </button>

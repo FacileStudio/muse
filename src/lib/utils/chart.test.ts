@@ -95,10 +95,13 @@ test('arcPath rounds inside the ring it was given', () => {
     expect(arcPath(50, 50, 40, 20, 0, 1, 0)).toBe(arcPath(50, 50, 40, 20, 0, 1));
 });
 
-test('chartColor wraps through six fixed slots', () => {
-    expect(chartColor(0)).toBe('var(--color-fc-chart-1)');
-    expect(chartColor(6)).toBe('var(--color-fc-chart-1)');
-    expect(chartColor(-1)).toBe('var(--color-fc-chart-6)');
+test('chartColor spreads entries across the brand gradient', () => {
+    expect(chartColor(0, 1)).toBe('var(--fc-brand-from)');
+    expect(chartColor(0, 3)).toBe('var(--fc-brand-from)');
+    expect(chartColor(1, 3)).toBe('color-mix(in oklch, var(--fc-brand-to) 50%, var(--fc-brand-from))');
+    expect(chartColor(2, 3)).toBe('var(--fc-brand-to)');
+    expect(chartColor(9, 3)).toBe('var(--fc-brand-to)');
+    expect(chartColor(-1, 3)).toBe('var(--fc-brand-from)');
 });
 
 test('formatCompact keeps small numbers exact and abbreviates large ones', () => {
@@ -138,7 +141,7 @@ test('series helpers span labels and data, and mark gaps', () => {
     expect(seriesCount(series, ['x'])).toBe(3);
     expect(seriesValues(series)).toEqual([1, 2, 3, 5]);
     expect(seriesColor(series, 1)).toBe('red');
-    expect(seriesColor(series, 0)).toBe('var(--color-fc-chart-1)');
+    expect(seriesColor(series, 0)).toBe('var(--fc-brand-from)');
     expect(seriesRows(series, ['x'], 3, formatCompact)).toEqual([
         { label: 'x', cells: ['1', '3'] },
         { label: '2', cells: ['2', ''] },

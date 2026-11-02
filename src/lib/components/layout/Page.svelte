@@ -1,62 +1,38 @@
 <script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
-    import type { Gap, PageWidth } from '../../utils/layout.js';
+    import type { Gap } from '../../utils/layout.js';
 
     export interface PageProps extends HTMLAttributes<HTMLDivElement> {
-        width?: PageWidth;
         gap?: Gap;
+        /** Classes for the scrolling content, not the frame. */
         class?: string;
         children: Snippet;
-
     }
 </script>
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { GAP, PAGE_WIDTH } from '../../utils/layout.js';
+    import { GAP } from '../../utils/layout.js';
 
     /*
-     * The page column: centring, the width cap, the outer padding, and the rhythm between
-     * sections. Every one of those was a per-app decision until now, and the suite shipped
-     * eight different answers — max widths spanning `fc-md` to `max-w-7xl`, column gaps of 4, 6,
-     * 8 and 10, and one page with no gap at all. None of it was a design choice; it was eight
-     * agents each inventing a page shell because none was exported.
-     *
-     * `<Page>` goes *inside* the app shell's scroll container, not around it. The shell owns the
-     * rail, the mobile nav and the single scroller; this owns everything from the content edge
-     * inwards.
+     * Two boxes. The frame fills its parent, clips, and holds the 4px edge; the scroller inside
+     * it is the only thing that moves, so the last element stops 4px above the frame's bottom
+     * instead of running off the edge. The parent has to give the frame a height.
      */
-
-    let {
-        width = 'lg',
-        gap = 'default',
-        class: className = '',
-        children,
-        ...rest
-    }: PageProps = $props();
-
-    /*
-     * A responsive ladder rather than one padding: at the documented 360px floor `px-4` leaves
-     * 328px of content, where `px-10` would leave 280 and force every card into a scroll.
-     * `mx-auto` is self-centring inside a parent that already sized this — the one margin the
-     * library allows, and the reason the no-outer-margin check exempts `auto`.
-     */
-    const classes = $derived(
-        twMerge(
-            'mx-auto flex w-full flex-col px-4 py-8 sm:px-6 md:px-10 md:py-10',
-            PAGE_WIDTH[width],
-            GAP[gap],
-            className
-        )
-    );
+    let { gap = 'default', class: className = '', children, ...rest }: PageProps = $props();
 </script>
 
 <!--
 @component
-La colonne de page : centrage, largeur maximale, padding extérieur et rythme entre les sections. Se place à l'intérieur du conteneur de défilement de la coquille.
+Le cadre d'une page : toute la place disponible, 4px de bord, et le défilement à l'intérieur pour que le contenu s'arrête à 4px du bas.
 -->
 
-<div class={classes} {...rest}>
-    {@render children()}
+<div class="flex h-full min-h-0 w-full flex-col overflow-hidden p-1">
+    <div
+        class={twMerge('flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain rounded-fc', GAP[gap], className)}
+        {...rest}
+    >
+        {@render children()}
+    </div>
 </div>

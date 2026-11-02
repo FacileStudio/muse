@@ -211,7 +211,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
 >
     <div
         bind:this={panel}
-        class="relative flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-fc border-x border-t border-fc-border bg-fc-surface-solid shadow-lg"
+        class="relative flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-fc bg-fc-surface-solid shadow-lg"
     >
         <div
             role="presentation"
@@ -224,7 +224,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
         >
             {#if showHandle}
                 <div class="flex h-11 items-center justify-center" aria-hidden="true">
-                    <div class="h-1 w-10 rounded-fc bg-fc-border"></div>
+                    <div class="h-1 w-10 rounded-fc bg-fc-surface-hover"></div>
                 </div>
             {/if}
 
@@ -241,10 +241,10 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
                     {#if showClose}
                         <IconButton
                             aria-label="Close"
-                            class="-mr-1 border-0 text-fc-muted hover:text-fc-ink"
+                            class="-mr-1 text-fc-muted hover:text-fc-ink"
                             onclick={() => (open = false)}
                         >
-                            <Icon icon="iconoir:xmark" size={18} />
+                            <Icon icon="iconoir:xmark" />
                         </IconButton>
                     {/if}
                 </div>
@@ -257,7 +257,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
 
         {#if footer}
             <div
-                class="shrink-0 border-t border-fc-border px-5 pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+                class="shrink-0 px-5 pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
             >
                 {@render footer()}
             </div>

@@ -134,7 +134,7 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
 
     {#snippet content(item: Item, active: boolean)}
         {#if item.icon}
-            <Icon icon={item.icon} size={16} />
+            <Icon icon={item.icon} />
         {/if}
         {item.label}
         {#if item.badge !== undefined}
@@ -150,7 +150,7 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
     {#each items as item (item.id)}
         {@const active = item.id === value}
         {@const inner = twMerge(
-            'relative z-10 inline-flex min-h-11 shrink-0 items-center gap-1 rounded-fc px-4 text-fc-p font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand',
+            'relative z-10 inline-flex h-8 shrink-0 items-center gap-1 rounded-fc px-4 text-fc-subtext font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand',
             active ? 'text-fc-brand' : 'text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink',
             item.disabled && 'pointer-events-none opacity-50'
         )}

@@ -38,8 +38,6 @@ export type DonutSegment = {
     mid: number;
 };
 
-const SLOT_COUNT = 6;
-
 /** ~1.1°: below this an arc is sub-pixel at any donut radius we ship and reads as missing. */
 const MIN_ARC = 0.02;
 
@@ -59,10 +57,21 @@ export const AREA_OPACITY = 0.12;
 const r2 = (n: number): number => Math.round(n * 100) / 100;
 const clean = (n: number): number => Number(n.toPrecision(12));
 
-export function chartColor(index: number): string {
-    const i = Number.isFinite(index) ? Math.floor(index) : 0;
-    const slot = ((i % SLOT_COUNT) + SLOT_COUNT) % SLOT_COUNT;
-    return `var(--color-fc-chart-${slot + 1})`;
+/** Entry `index` of `count`, sampled evenly along the brand gradient from its first stop to its last. */
+export function chartColor(index: number, count: number): string {
+    const n = Number.isFinite(count) ? Math.max(1, Math.floor(count)) : 1;
+    const i = Number.isFinite(index) ? Math.min(Math.max(Math.floor(index), 0), n - 1) : 0;
+    // position along the gradient, 0 at the first stop and 1 at the last
+    const t = n === 1 ? 0 : i / (n - 1);
+
+    if (t === 0)
+        return 'var(--fc-brand-from)';
+
+    if (t === 1)
+        return 'var(--fc-brand-to)';
+
+    // oklch so the hues between the two stops pass through cyan and blue, not grey
+    return `color-mix(in oklch, var(--fc-brand-to) ${Math.round(t * 100)}%, var(--fc-brand-from))`;
 }
 
 function niceNum(range: number, round: boolean): number {
@@ -161,7 +170,7 @@ export function seriesEmpty(series: ChartSeries[], labels: string[] = []): boole
 }
 
 export function seriesColor(series: ChartSeries[], index: number): string {
-    return series[index]?.color ?? chartColor(index);
+    return series[index]?.color ?? chartColor(index, series.length);
 }
 
 export function seriesLegend(series: ChartSeries[]): ChartLegendItem[] {
@@ -579,7 +588,7 @@ export function donutSegments(slices: ChartSlice[], gap: number): DonutSegment[]
             label: slice.label,
             value: slice.value,
             frac,
-            color: slice.color ?? chartColor(i),
+            color: slice.color ?? chartColor(i, slices.length),
             a0,
             a1: Math.max(a0 + MIN_ARC, end - inset),
             mid: (start + end) / 2

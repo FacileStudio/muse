@@ -1,21 +1,23 @@
 <script lang="ts">
     import {
         Alert,
+        Avatar,
         Badge,
         Button,
-        Card,
         SwatchPicker,
         ConfirmModal,
         Drawer,
         EmptyState,
         Field,
+        Icon,
+        IconButton,
         icons,
         Input,
+        ListItem,
         Modal,
-        NavButton,
         Page,
+        PageHeader,
         Select,
-        SettingsRow,
         SpaceSwitcher,
         StatCard,
         Textarea,
@@ -102,20 +104,16 @@
 </script>
 
 <Page>
-    <div class="flex flex-wrap items-start justify-between gap-1">
-        <div class="flex min-w-0 flex-col gap-1">
-            <h1 class="text-fc-title font-semibold text-fc-ink">Spaces</h1>
-            <p class="text-fc-p text-fc-muted">
-                Shared workspaces. Everyone in a space sees its projects, clients and tracked hours.
-            </p>
-        </div>
-        <div class="flex items-center gap-1">
-            <Button variant="outline" icon={icons.filter} onclick={() => (filtersOpen = true)}>
-                Filters
-            </Button>
+    <PageHeader
+        title="Spaces"
+        count={spaces.length}
+        description="Shared workspaces. Everyone in a space sees its projects, clients and tracked hours."
+    >
+        {#snippet actions()}
+            <Button variant="outline" icon={icons.filter} onclick={() => (filtersOpen = true)}>Filters</Button>
             <Button icon={icons.plus} onclick={() => (createOpen = true)}>New space</Button>
-        </div>
-    </div>
+        {/snippet}
+    </PageHeader>
 
     <section class="flex flex-col gap-1">
         <div class="flex flex-wrap gap-1">
@@ -149,29 +147,25 @@
             </div>
         </div>
 
-        <Card class="flex flex-col gap-1 p-2">
+        <div class="flex flex-col gap-1">
             {#each spaces as space (space.id)}
-                <NavButton
-                    icon={icons.usersGroup}
-                    label={space.name}
+                <ListItem
+                    title={space.name}
+                    description={space.description || undefined}
                     active={space.id === selectedId}
-                    aria-pressed={space.id === selectedId}
-                    onclick={() => (selectedId = space.id)}
+                    tint={space.color}
+                    onSelect={() => (selectedId = space.id)}
                 >
-                    {#snippet right()}
-                        <span class="flex shrink-0 items-center gap-1">
-                            <span class="hidden text-fc-subtext opacity-70 sm:inline">
-                                {space.members.length} member{space.members.length === 1 ? '' : 's'} · {space.projects} projects
-                            </span>
-                            <span
-                                class="h-2.5 w-2.5 shrink-0 rounded-fc"
-                                style:background-color={space.color}
-                            ></span>
-                        </span>
+                    {#snippet leading()}
+                        <span class="block aspect-square h-full" style:background-color={space.color}></span>
                     {/snippet}
-                </NavButton>
+                    {#snippet meta()}
+                        <span>{space.members.length} member{space.members.length === 1 ? '' : 's'}</span>
+                        <span>{space.projects} projects</span>
+                    {/snippet}
+                </ListItem>
             {/each}
-        </Card>
+        </div>
     </section>
 
     {#if selected}
@@ -196,25 +190,29 @@
                     description="Invite a teammate below and they will see this space as soon as they accept."
                 />
             {:else}
-                <!-- SettingsRow draws the rule on its own top edge and drops it on the first
-                     child, so the list needs no manual Divider and no index. -->
-                <Card class="flex flex-col">
+                <div class="flex flex-col gap-1">
                     {#each visibleMembers as member (member.id)}
-                        <SettingsRow label={member.name} description={member.email}>
-                            <Badge tone={roleTone[member.role]}>{roleLabel[member.role]}</Badge>
-                            {#if member.role !== 'owner'}
-                                <Button
-                                    variant="ghost-danger"
-                                    icon={icons.remove}
-                                    aria-label="Remove {member.name}"
-                                    onclick={() => askRemove(member)}
-                                >
-                                    Remove
-                                </Button>
-                            {/if}
-                        </SettingsRow>
+                        <ListItem title={member.name} description={member.email}>
+                            {#snippet leading()}
+                                <Avatar name={member.name} class="size-16 rounded-none" />
+                            {/snippet}
+                            {#snippet meta()}
+                                <Badge tone={roleTone[member.role]}>{roleLabel[member.role]}</Badge>
+                            {/snippet}
+                            {#snippet actions()}
+                                {#if member.role !== 'owner'}
+                                    <IconButton
+                                        variant="danger"
+                                        aria-label="Remove {member.name}"
+                                        onclick={() => askRemove(member)}
+                                    >
+                                        <Icon icon={icons.remove} />
+                                    </IconButton>
+                                {/if}
+                            {/snippet}
+                        </ListItem>
                     {/each}
-                </Card>
+                </div>
             {/if}
         </section>
 

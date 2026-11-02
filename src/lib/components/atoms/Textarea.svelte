@@ -25,7 +25,7 @@
     const describes = $derived(describedBy ?? field?.().describedBy);
     const isInvalid = $derived(invalid ?? (field?.().invalid ? 'true' : undefined));
 
-    const classes = $derived(twMerge('w-full rounded-fc bg-fc-surface hover:bg-fc-surface-hover focus:bg-fc-surface-hover px-3 py-2 text-fc-lead text-fc-ink placeholder:text-fc-muted outline-none disabled:opacity-50 resize-y', className));
+    const classes = $derived(twMerge('w-full rounded-fc bg-fc-surface hover:bg-fc-surface-hover focus:bg-fc-surface-hover px-3 py-2 text-fc-subtext text-fc-ink placeholder:text-fc-muted outline-none disabled:opacity-50 resize-y', className));
 </script>
 
 <!--

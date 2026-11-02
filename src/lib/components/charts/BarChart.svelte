@@ -178,7 +178,7 @@ Un graphique en barres, empilable. Chaque coin face à une gouttière est arrond
                                 y1={line.y1}
                                 x2={line.x2}
                                 y2={line.y2}
-                                stroke="var(--color-fc-border)"
+                                stroke="var(--color-fc-surface-hover)"
                                 stroke-width="1"
                             />
                         {/each}

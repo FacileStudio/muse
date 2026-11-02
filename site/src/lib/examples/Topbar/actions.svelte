@@ -2,7 +2,7 @@
     import { Button, Icon, IconButton, Topbar, icons, toast } from '@facile/muse';
 </script>
 
-<div class="w-full overflow-hidden rounded-fc border border-fc-border">
+<div class="w-full overflow-hidden rounded-fc">
     <Topbar>
         <div class="flex min-w-0 items-center gap-1">
             <IconButton variant="ghost" aria-label="Retour aux projets">

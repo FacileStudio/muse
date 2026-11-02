@@ -23,9 +23,9 @@
 </Row>
 
 <Row name="IconButton" lead="Rond, 44px, avec le press de la maison. Toujours un aria-label.">
-    <IconButton aria-label="Réglages"><Icon icon={icons.settings} size={18} /></IconButton>
-    <IconButton variant="ghost" aria-label="Copier"><Icon icon={icons.copy} size={18} /></IconButton>
-    <IconButton variant="danger" aria-label="Supprimer"><Icon icon={icons.remove} size={18} /></IconButton>
+    <IconButton aria-label="Réglages"><Icon icon={icons.settings} /></IconButton>
+    <IconButton variant="ghost" aria-label="Copier"><Icon icon={icons.copy} /></IconButton>
+    <IconButton variant="danger" aria-label="Supprimer"><Icon icon={icons.remove} /></IconButton>
 </Row>
 
 <Row name="Badge" lead="Le vocabulaire de tons, en huit valeurs. Se dimensionne sur son texte, jamais sur sa colonne.">
@@ -92,6 +92,6 @@
 
 <Row name="Icon" lead="SVG inline, rendu côté serveur, sans requête réseau.">
     {#each ['dashboard', 'folder', 'usersGroup', 'settings', 'key', 'bolt', 'clock', 'shield'] as key (key)}
-        <Icon icon={icons[key as keyof typeof icons]} size={22} class="text-fc-ink" />
+        <Icon icon={icons[key as keyof typeof icons]} class="text-fc-ink" />
     {/each}
 </Row>

@@ -53,7 +53,7 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
       rather than a bar running off screen. If you need seven destinations on a phone, the nav
       is wrong — move one behind the space switcher or the page it belongs to.
     -->
-    <div class="flex max-w-full items-center gap-0.5 overflow-x-auto rounded-fc bg-fc-bg/70 p-1 shadow-lg backdrop-blur-2xl backdrop-saturate-150 sm:gap-1 sm:p-1.5">
+    <div class="flex max-w-full items-center gap-1 overflow-x-auto rounded-fc bg-fc-surface p-1 shadow-lg backdrop-blur-2xl backdrop-saturate-150">
         {#each items as item (item.href)}
             <a
                 href={item.href}
@@ -67,7 +67,7 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
                         : 'text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink'
                 )}
             >
-                <Icon icon={item.icon} size={22} />
+                <Icon icon={item.icon} />
             </a>
         {/each}
 

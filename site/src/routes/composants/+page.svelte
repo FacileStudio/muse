@@ -59,7 +59,7 @@
         bind:value={query}
         type="search"
         placeholder="Stack, secret, graphique…"
-        class="h-11 w-full max-w-sm rounded-fc border border-fc-border bg-fc-surface px-3 text-fc-lead text-fc-ink placeholder:text-fc-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand"
+        class="h-11 w-full max-w-sm rounded-fc bg-fc-surface px-3 text-fc-p text-fc-ink placeholder:text-fc-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand"
     />
 </label>
 
@@ -100,14 +100,14 @@
                             <div class="overflow-x-auto">
                                 <table class="w-full text-fc-subtext">
                                     <thead>
-                                        <tr class="border-b border-fc-border">
+                                        <tr>
                                             <th class="py-1.5 pr-3 text-left font-semibold text-fc-ink">Prop</th>
                                             <th class="py-1.5 pr-3 text-left font-semibold text-fc-ink">Type</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {#each c.props as p (p.name)}
-                                            <tr class="border-b border-fc-border/60 align-top">
+                                            <tr class="align-top">
                                                 <td class="py-1.5 pr-3 whitespace-nowrap">
                                                     <code class="font-fc-mono text-fc-ink">{p.name}</code>
                                                     {#if !p.optional}<span class="text-fc-danger">*</span>{/if}

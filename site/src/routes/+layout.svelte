@@ -69,7 +69,7 @@
 
     <div class="flex min-w-0 flex-1 flex-col">
         <header
-            class="sticky top-0 z-30 flex items-center justify-between gap-1 border-b border-fc-border bg-fc-bg/90 px-4 py-3 backdrop-blur md:justify-end md:border-0 md:bg-transparent md:px-10"
+            class="sticky top-0 z-30 flex items-center justify-between gap-1 bg-fc-surface px-4 py-3 backdrop-blur md:justify-end md:border-0 md:bg-transparent md:px-10"
         >
             <IconButton
                 variant="ghost"
@@ -77,7 +77,7 @@
                 aria-label="Ouvrir la navigation"
                 onclick={() => (open = true)}
             >
-                <Icon icon={icons.collapse} size={20} />
+                <Icon icon={icons.collapse} />
             </IconButton>
 
         </header>

@@ -118,7 +118,7 @@
     const describedBy = $derived(error ? errorId : helper ? helperId : undefined);
 
     const box =
-        'flex h-11 min-w-0 flex-1 items-center rounded-fc bg-fc-surface hover:bg-fc-surface-hover focus-within:bg-fc-surface-hover px-3 font-fc-mono text-fc-p';
+        'flex h-8 min-w-0 flex-1 items-center rounded-fc bg-fc-surface hover:bg-fc-surface-hover focus-within:bg-fc-surface-hover px-3 font-fc-mono text-fc-subtext';
 </script>
 
 <!--
@@ -172,7 +172,7 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                 aria-pressed={visible}
                 title={visible ? 'Hide' : 'Reveal'}
             >
-                <Icon icon={visible ? icons.eyeClosed : icons.eye} size={18} />
+                <Icon icon={visible ? icons.eyeClosed : icons.eye} />
             </IconButton>
         {/if}
 
@@ -182,9 +182,9 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                 disabled={inert}
                 aria-label={sensitive ? 'Copy secret to clipboard' : 'Copy to clipboard'}
                 title="Copy"
-                class={copied ? 'border-fc-success text-fc-success' : ''}
+                class={copied ? 'text-fc-success' : ''}
             >
-                <Icon icon={copied ? icons.check : icons.copy} size={18} />
+                <Icon icon={copied ? icons.check : icons.copy} />
             </IconButton>
         {/if}
 

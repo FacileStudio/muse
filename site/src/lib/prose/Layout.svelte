@@ -66,7 +66,7 @@
         font-size: var(--text-fc-subtext);
         color: var(--color-fc-ink);
         background: var(--color-fc-surface-hover);
-        border-radius: var(--radius-fc-sm);
+        border-radius: var(--radius-fc);
         padding: 0.1em 0.35em;
     }
 
@@ -74,7 +74,7 @@
        page rather than the OS — muse lets an app force light on a dark system. */
     .fc-prose :global(.fc-code) {
         overflow-x: auto;
-        border-radius: var(--radius-fc-md);
+        border-radius: var(--radius-fc);
         background: var(--color-fc-surface-hover);
         padding: calc(var(--spacing) * 4);
     }
@@ -99,7 +99,8 @@
         width: 100%;
         max-width: 100%;
         overflow-x: auto;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0 calc(var(--spacing) * 2);
         font-size: var(--text-fc-p);
     }
 
@@ -112,20 +113,28 @@
         text-align: left;
         font-weight: 600;
         color: var(--color-fc-ink);
-        padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
-        border-bottom: 1px solid var(--color-fc-border);
+        padding: calc(var(--spacing) * 1) calc(var(--spacing) * 3);
     }
 
     .fc-prose :global(td) {
         color: var(--color-fc-muted);
-        padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
-        border-bottom: 1px solid var(--color-fc-border);
+        background: var(--color-fc-surface);
+        padding: calc(var(--spacing) * 3);
         vertical-align: top;
     }
 
+    .fc-prose :global(td:first-child) {
+        border-radius: var(--radius-fc) 0 0 var(--radius-fc);
+    }
+
+    .fc-prose :global(td:last-child) {
+        border-radius: 0 var(--radius-fc) var(--radius-fc) 0;
+    }
+
     .fc-prose :global(blockquote) {
-        border-left: 2px solid var(--color-fc-border);
-        padding-left: calc(var(--spacing) * 4);
+        background: var(--color-fc-surface);
+        border-radius: var(--radius-fc);
+        padding: calc(var(--spacing) * 4);
         color: var(--color-fc-muted);
     }
 </style>

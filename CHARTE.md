@@ -237,6 +237,36 @@ parent, that snippet welds the rule to whatever sits above it — which is exact
 stuck to separators" every agent-written page kept producing. A default no call site wants is
 not a default.
 
+### The house style: a bento grid
+
+Every page reads as a bento grid: blocks of surface laid edge to edge with the same 4px between
+them. Padding inside a block says how important it is; the gap between blocks never changes.
+
+- **One gap: `gap-1`.** Between sections, cards, list rows, buttons in a toolbar, and the rows
+  of a dropdown. Hierarchy comes from each block's padding, never from a wider gutter.
+- **The page fills the space.** `Page` has no max width. It is an `overflow-hidden p-1` frame
+  with the scroller inside it, so the last block stops 4px above the bottom edge instead of
+  running off it. The parent gives the frame its height.
+- **Page header.** `PageHeader` is `pt-12 pb-9 px-6`, `justify-between items-end`. On the left,
+  `flex-col gap-1`: the title in `text-fc-title` with an optional count beside it, then the
+  description in `subtext`. On the right, the actions at `gap-1`.
+- **One control height: `h-8`.** Buttons, inputs, selects, icon buttons, tabs, option cards,
+  including the ones in a header. `Button`'s `size` changes only its width. Sidebar nav rows
+  are the exception: they keep their 52px row.
+- **Control text is `subtext`** (11px) in buttons, inputs, selects and textareas. A button's
+  icon sits `gap-2` from its label.
+- **One icon size: 18px.** `Icon` has no `size` prop.
+- **`lead` is for names only**: a list row title, a section or dialog heading.
+- **List rows (`ListItem`).** Each row carries its own `bg-fc-surface`, rows sit `gap-1` apart,
+  and nothing wraps them. A title alone is `lead`. A title with a second element is a
+  `flex-row` with a gap and the second element in `subtext`. A row with an image has no
+  padding: the image sits flush and fills the row height. A row without one is padded.
+- **No borders.** `surface` and `surface-hover` are the only separators. The focus ring is an
+  outline, not a border, and stays.
+- **No surface on a surface**, and `bg-fc-bg` never on a component. Enforced by
+  `src/lib/components/no-nested-surface.test.ts`.
+- **Sidebar group headings** are `text-fc-faint`: `fc-muted` at 50%.
+
 ### Use the layout components
 
 Nothing below needs to be typed by hand. The rhythm is four named rungs on a `gap` prop, and

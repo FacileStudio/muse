@@ -40,22 +40,20 @@
         ...rest
     }: ButtonProps = $props();
 
-    const iconSizes: Record<Size, number> = { sm: 14, md: 16, lg: 18 };
-    const glyph = $derived(iconSizes[size]);
 
 
     const variants: Record<Variant, string> = {
         primary: 'fc-selected hover:opacity-90',
         ghost: 'bg-transparent text-fc-muted hover:bg-fc-surface-hover hover:text-fc-ink',
-        outline: 'border border-fc-border bg-transparent text-fc-ink hover:bg-fc-surface-hover',
+        outline: 'bg-fc-surface text-fc-ink hover:bg-fc-surface-hover',
         danger: 'bg-fc-danger/10 text-fc-danger hover:bg-fc-danger/20',
         'ghost-danger': 'bg-transparent text-fc-muted hover:bg-fc-danger/10 hover:text-fc-danger'
     };
 
     const sizes: Record<Size, string> = {
-        sm: 'h-8 px-3.5 text-fc-subtext',
-        md: 'h-9 px-4 text-fc-p',
-        lg: 'h-11 px-6 text-fc-p'
+        sm: 'h-8 px-2.5 text-fc-subtext',
+        md: 'h-8 px-3 text-fc-subtext',
+        lg: 'h-8 px-5 text-fc-subtext'
     };
 
     /*
@@ -67,21 +65,21 @@
        two elements, and Svelte's handler props are invariant in their element type. */
     const anchorRest = $derived(rest as unknown as HTMLAnchorAttributes);
 
-    const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc justify-center gap-1 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand', variants[variant], sizes[size], className));
+    const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc justify-center gap-2 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-brand', variants[variant], sizes[size], className));
 </script>
 
 <!--
 @component
-L'action principale. Cinq variantes sur un axe d'emphase, trois tailles, et `size="lg"` dès qu'il partage une ligne avec un champ.
+L'action principale. Cinq variantes sur un axe d'emphase, toujours 32px de haut : la taille ne change que la largeur.
 -->
 
 {#snippet content()}
     {#if icon}
-        <Icon {icon} size={glyph} />
+        <Icon {icon} />
     {/if}
     {#if children}{@render children()}{/if}
     {#if iconRight}
-        <Icon icon={iconRight} size={glyph} />
+        <Icon icon={iconRight} />
     {/if}
 {/snippet}
 

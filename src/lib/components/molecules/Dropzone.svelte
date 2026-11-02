@@ -138,9 +138,9 @@
 
     const classes = $derived(
         twMerge(
-            'relative flex min-h-[140px] w-full flex-col items-center justify-center gap-1 rounded-fc border border-dashed border-fc-border bg-fc-surface p-6 text-center text-fc-ink transition-colors motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-fc-brand',
+            'relative flex min-h-[140px] w-full flex-col items-center justify-center gap-1 rounded-fc bg-fc-surface p-6 text-center text-fc-ink transition-colors motion-reduce:transition-none has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-fc-brand',
             disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-fc-surface-hover',
-            dragging ? 'border-fc-brand bg-fc-surface-hover' : '',
+            dragging ? 'bg-fc-surface-hover' : '',
             className
         )
     );
@@ -176,14 +176,14 @@ Le dépôt de fichiers. Il valide aussi le chemin du glisser-déposer, pas seule
         {@render children()}
     {:else}
         <span class="text-fc-muted">
-            <Icon icon={icons.upload} size={28} />
+            <Icon icon={icons.upload} />
         </span>
         <span class="text-fc-p font-medium">{label}</span>
         {#if hint}<span class="text-fc-subtext text-fc-muted">{hint}</span>{/if}
         <span
-            class="mt-1 inline-flex h-11 items-center justify-center gap-1 rounded-fc border border-fc-border px-4 text-fc-p"
+            class="mt-1 inline-flex h-8 items-center justify-center gap-1 rounded-fc bg-fc-surface-hover px-4 text-fc-subtext"
         >
-            <Icon icon={icons.folder} size={16} />
+            <Icon icon={icons.folder} />
             {browseLabel}
         </span>
     {/if}

@@ -8,7 +8,7 @@
     let facturable = $state(true);
 </script>
 
-<Page width="md">
+<Page>
     <PageHeader
         back={{ href: '#', label: 'Projets' }}
         title="Nouveau projet"

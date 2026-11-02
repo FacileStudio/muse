@@ -123,7 +123,7 @@ La confirmation d'une action destructive. Jamais une `Modal` nue avec deux bouto
     <div class="flex gap-1">
         {#if badgeIcon}
             <span class={badgeClasses} aria-hidden="true">
-                <Icon icon={badgeIcon} size={18} />
+                <Icon icon={badgeIcon} />
             </span>
         {/if}
         <div class="flex min-w-0 flex-1 flex-col gap-1">

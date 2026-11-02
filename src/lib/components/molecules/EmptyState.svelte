@@ -41,7 +41,7 @@ Une liste sans contenu. La hauteur est le sujet : une carte de deux lignes se li
 
 {#snippet body()}
     {#if icon}
-        <Icon {icon} size={24} class="text-fc-muted" />
+        <Icon {icon} class="text-fc-muted" />
     {/if}
     <!-- Title and description are one block on `gap-1`, not two siblings of the outer
          `gap-1` — otherwise the description floats between the two and belongs to neither.

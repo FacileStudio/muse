@@ -16,16 +16,17 @@
         ...rest
     }: TableProps = $props();
 
-    const classes = $derived(twMerge('w-full overflow-x-auto rounded-fc bg-fc-surface', className));
+    const classes = $derived(twMerge('w-full overflow-x-auto', className));
 </script>
 
 <!--
 @component
-La surface d'un tableau de données. Le tri et la sélection appartiennent encore au consommateur.
+Un tableau de données dont chaque ligne porte sa propre surface. Le tri et la sélection appartiennent encore au consommateur.
 -->
 
 <div class={classes} {...rest}>
-    <table class="w-full border-collapse text-fc-p text-fc-ink [&_th]:bg-fc-surface-hover [&_th]:text-fc-muted [&_th]:font-medium [&_th]:text-left [&_th]:px-3 [&_th]:py-2 [&_td]:px-3 [&_td]:py-2 [&_tbody_tr]:border-t [&_tbody_tr]:border-fc-border">
+    <!-- Rows carry the surface, not the table: border-spacing opens the gap between them. -->
+    <table class="w-full border-separate border-spacing-y-2 text-fc-p text-fc-ink [&_th]:text-fc-muted [&_th]:font-medium [&_th]:text-left [&_th]:px-3 [&_th]:py-1 [&_td]:bg-fc-surface [&_td]:px-3 [&_td]:py-3 [&_tbody_tr:hover_td]:bg-fc-surface-hover [&_td:first-child]:rounded-l-fc [&_td:last-child]:rounded-r-fc">
         {@render children()}
     </table>
 </div>

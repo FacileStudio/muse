@@ -4,13 +4,14 @@
         Badge,
         Button,
         ConfirmModal,
+        Icon,
+        IconButton,
         icons,
         Input,
+        ListItem,
         Select,
-        SettingsRow,
         SettingsSection,
-        Stack,
-        Table
+        Stack
     } from '@facile/muse';
     import { currentUser, roleLabel, roleTone, wait, type Member, type Role } from '../../data.js';
 
@@ -49,50 +50,34 @@
     <SettingsSection
         title="Members"
         description="Everyone with access to Acme Studio. Owners cannot be removed."
-        bare
     >
-        <Table>
-            <thead>
-                <tr>
-                    <th>Person</th>
-                    <th>Role</th>
-                    <th>Joined</th>
-                    <th class="text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#each members as member (member.id)}
-                    <tr>
-                        <td>
-                            <div class="flex min-w-0 items-center gap-1">
-                                <Avatar name={member.name} size="sm" />
-                                <div class="flex min-w-0 flex-col">
-                                    <span class="truncate font-medium text-fc-ink">{member.name}</span>
-                                    <span class="truncate text-fc-subtext text-fc-muted">{member.email}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td><Badge tone={roleTone[member.role]}>{roleLabel[member.role]}</Badge></td>
-                        <td class="whitespace-nowrap text-fc-muted">{member.joined}</td>
-                        <td class="text-right">
-                            {#if member.role !== 'owner'}
-                                <Button
-                                    variant="ghost-danger"
-                                    size="sm"
-                                    icon={icons.remove}
-                                    onclick={() => {
-                                        removeTarget = member;
-                                        removeOpen = true;
-                                    }}
-                                >
-                                    Remove
-                                </Button>
-                            {/if}
-                        </td>
-                    </tr>
-                {/each}
-            </tbody>
-        </Table>
+        <div class="flex flex-col gap-1">
+            {#each members as member (member.id)}
+                <ListItem title={member.name} description={member.email}>
+                    {#snippet leading()}
+                        <Avatar name={member.name} class="size-16 rounded-none" />
+                    {/snippet}
+                    {#snippet meta()}
+                        <span>Joined {member.joined}</span>
+                        <Badge tone={roleTone[member.role]}>{roleLabel[member.role]}</Badge>
+                    {/snippet}
+                    {#snippet actions()}
+                        {#if member.role !== 'owner'}
+                            <IconButton
+                                variant="danger"
+                                aria-label="Remove {member.name}"
+                                onclick={() => {
+                                    removeTarget = member;
+                                    removeOpen = true;
+                                }}
+                            >
+                                <Icon icon={icons.remove} />
+                            </IconButton>
+                        {/if}
+                    {/snippet}
+                </ListItem>
+            {/each}
+        </div>
     </SettingsSection>
 
     <SettingsSection
@@ -119,18 +104,24 @@
 
     {#if invites.length > 0}
         <SettingsSection title="Pending invites" description="Unaccepted after 7 days, they expire.">
-            {#each invites as invite (invite.email)}
-                <SettingsRow label={invite.email} description="Sent {invite.sent}">
-                    <Badge tone={roleTone[invite.role]}>{roleLabel[invite.role]}</Badge>
-                    <Button
-                        variant="ghost-danger"
-                        icon={icons.close}
-                        onclick={() => (invites = invites.filter((i) => i.email !== invite.email))}
-                    >
-                        Cancel
-                    </Button>
-                </SettingsRow>
-            {/each}
+            <div class="flex flex-col gap-1">
+                {#each invites as invite (invite.email)}
+                    <ListItem title={invite.email} description="Sent {invite.sent}">
+                        {#snippet meta()}
+                            <Badge tone={roleTone[invite.role]}>{roleLabel[invite.role]}</Badge>
+                        {/snippet}
+                        {#snippet actions()}
+                            <IconButton
+                                variant="danger"
+                                aria-label="Cancel the invite to {invite.email}"
+                                onclick={() => (invites = invites.filter((i) => i.email !== invite.email))}
+                            >
+                                <Icon icon={icons.close} />
+                            </IconButton>
+                        {/snippet}
+                    </ListItem>
+                {/each}
+            </div>
         </SettingsSection>
     {/if}
 </Stack>

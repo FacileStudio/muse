@@ -39,9 +39,10 @@
   --color-fc-surface: rgb(121 113 107 / 10%);
   --color-fc-surface-hover: rgb(121 113 107 / 20%);
   --color-fc-surface-solid: color-mix(in srgb, rgb(121 113 107) 10%, var(--color-fc-bg));
-  --color-fc-border: rgb(121 113 107 / 20%);
   --color-fc-ink: #f3f3f3;
   --color-fc-muted: #7c7c7c;
+  /* `muted` at half strength, for labels that organise rather than inform: sidebar section headings. */
+  --color-fc-faint: color-mix(in srgb, var(--color-fc-muted) 50%, transparent);
 
   /* Brand marks what is active, selected or focused: `bg-fc-brand-bg` behind, `text-fc-brand` on
      the text and icons. The full gradient (`bg-fc-brand`) is for marks, not states: a dot, a
@@ -99,19 +100,14 @@
      meant the two halves of the system eased differently. */
   --ease-fc: cubic-bezier(0.77, 0, 0.175, 1);
 
-  /* containers → container-fc-* via max-w-fc-* */
-  --container-fc-sm: 600px;
-  --container-fc-md: 720px;
-  --container-fc-lg: 960px;
-  --container-fc-xl: 1200px;
-
   /* nav sidebar widths — SideBar reads these off getComputedStyle for its width tween, so
      these two values are the single source of truth and changing them reaches the animation */
-  --width-fc-nav-collapsed: 60px;
-  --width-fc-nav-expanded: 240px;
+  --width-fc-nav-collapsed: 56px;
+  --width-fc-nav-expanded: 236px;
 
   /* Collapsed nav item — a fixed square, so the sidebar's width tween cannot distort it.
-     60px rail = 52px item + 4px padding either side, and expanded rows share the 52px
+     56px rail = 4px from the window edge + 52px item; the page's own p-1 is the 4px on the
+     other side. Expanded rows share the 52px
      height, so no row grows the instant the collapsed layout lands. */
   --spacing-fc-nav-item: 52px;
 
@@ -138,22 +134,7 @@
  * promotes them to the browser's top layer, which sits above every z-index there is.
  */
 
-/*
- * Chart series — Sablier's identity palette, deepened so it stays legible as a chart mark.
- *
- * `static` is load-bearing: chartColor() builds the var name with a template literal
- * (`--color-fc-chart-${n}`), so the strings `fc-chart-3`…`fc-chart-6` never appear in any
- * source file. A plain @theme block only emits the variables Tailwind saw used, which left
- * every slot past the ones hardcoded in the demo undefined — and an undefined var() in an
- * SVG `fill` falls back to black.
- */
 @theme static {
-  --color-fc-chart-1: oklch(0.58 0.15 292);
-  --color-fc-chart-2: oklch(0.66 0.14 64);
-  --color-fc-chart-3: oklch(0.6 0.12 195);
-  --color-fc-chart-4: oklch(0.55 0.16 15);
-  --color-fc-chart-5: oklch(0.64 0.15 135);
-  --color-fc-chart-6: oklch(0.62 0.14 339);
   --fc-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fbfbfb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 
