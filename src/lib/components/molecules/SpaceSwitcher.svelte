@@ -115,7 +115,7 @@ Sans espace il ne rend rien, et `personalLabel={null}` retire la ligne personnel
             onclick={toggle}
             aria-expanded={open}
         >
-            <Icon icon={activeSpace ? icons.usersGroup : icons.userCircle} size={18} class="text-fc-fg-muted" />
+            <Icon icon={activeSpace ? icons.space : icons.userCircle} size={18} class="text-fc-fg-muted" />
             <span class="min-w-0 flex-1 truncate font-medium text-fc-fg">
                 {activeSpace?.name ?? personalLabel}
             </span>
@@ -157,7 +157,7 @@ Sans espace il ne rend rien, et `personalLabel={null}` retire la ligne personnel
                             )}
                             onclick={() => select(space.id)}
                         >
-                            <Icon icon={icons.usersGroup} size={16} />
+                            <Icon icon={icons.space} size={16} />
                             <span class="min-w-0 flex-1 truncate">{space.name}</span>
                         </button>
                     {/each}
