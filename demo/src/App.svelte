@@ -101,7 +101,11 @@
             personalSpaceLabel="No space"
             manageSpacesLabel="All spaces"
             {user}
-            userHref="#/settings"
+            userMenu={[
+                { label: 'Settings', icon: icons.settings, href: '#/settings' },
+                { label: 'Downloads', icon: icons.download, href: '#/' },
+                { label: 'Sign out', icon: icons.logout, tone: 'danger', onSelect: () => {} }
+            ]}
             userActive={onSettings}
             class="h-full"
         />

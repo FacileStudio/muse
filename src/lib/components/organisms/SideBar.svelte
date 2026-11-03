@@ -16,6 +16,15 @@
 
     export type User = { name: string; avatar?: string };
 
+    /** One row of the user card's menu: a link when `href` is set, otherwise a button calling `onSelect`. */
+    export type UserMenuItem = {
+        label: string;
+        icon?: string;
+        href?: string;
+        onSelect?: () => void;
+        tone?: 'default' | 'danger';
+    };
+
     export type SpaceItem = { id: string; name: string };
 
     export interface SideBarProps extends HTMLAttributes<HTMLDivElement> {
@@ -25,6 +34,8 @@
         user?: User;
         userHref?: string;
         userActive?: boolean;
+        /** Turns the user card into a menu trigger and drops its settings cog. Wins over `userHref`. */
+        userMenu?: UserMenuItem[];
         collapsed?: boolean;
         showSearch?: boolean;
         showCollapse?: boolean;
@@ -61,6 +72,7 @@
         user,
         userHref,
         userActive = false,
+        userMenu,
         collapsed = $bindable(false),
         showSearch = false,
         showCollapse = true,
@@ -179,6 +191,39 @@
             }
         };
     }
+
+    let menuOpen = $state(false);
+    let menuRoot: HTMLElement | null = $state(null);
+    let menuTrigger: HTMLButtonElement | null = $state(null);
+    const hasMenu = $derived(Boolean(userMenu?.length));
+
+    function closeMenu(focusTrigger = false) {
+        menuOpen = false;
+        if (focusTrigger) menuTrigger?.focus();
+    }
+
+    function pick(item: UserMenuItem) {
+        closeMenu();
+        item.onSelect?.();
+    }
+
+    $effect(() => {
+        if (!menuOpen) return;
+        const outside = (e: MouseEvent) => {
+            if (menuRoot && !menuRoot.contains(e.target as Node)) closeMenu();
+        };
+        const escape = (e: KeyboardEvent) => {
+            if (e.key !== 'Escape') return;
+            e.stopPropagation();
+            closeMenu(true);
+        };
+        document.addEventListener('click', outside);
+        document.addEventListener('keydown', escape);
+        return () => {
+            document.removeEventListener('click', outside);
+            document.removeEventListener('keydown', escape);
+        };
+    });
 </script>
 
 <!--
@@ -316,12 +361,54 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
             {#if !narrow}
                 <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
                     <TextElevate text={u.name} visible={!narrow} class="truncate" />
-                    <Icon icon={icons.settings} size={18} />
+                    <Icon icon={hasMenu ? icons.chevronUp : icons.settings} size={hasMenu ? 16 : 18} class={twMerge(hasMenu && 'text-fc-fg-muted transition-transform', hasMenu && menuOpen && 'rotate-180')} />
                 </span>
             {/if}
         {/snippet}
 
-        {#if userHref}
+        {#if hasMenu}
+            <div bind:this={menuRoot} class={twMerge('relative', narrow ? 'self-center' : 'w-full')}>
+                <button
+                    bind:this={menuTrigger}
+                    type="button"
+                    use:springPress
+                    class={twMerge(userClasses, menuOpen && 'bg-fc-surface')}
+                    aria-haspopup="menu"
+                    aria-expanded={menuOpen}
+                    aria-label="{u.name} — menu"
+                    onclick={() => (menuOpen = !menuOpen)}
+                >
+                    {@render userCard()}
+                </button>
+                {#if menuOpen}
+                    <div
+                        role="menu"
+                        class={twMerge(
+                            'absolute z-40 flex min-w-52 flex-col rounded-fc-md bg-fc-component p-1 shadow-lg',
+                            narrow ? 'bottom-0 left-full ml-2' : 'bottom-full left-0 right-0 mb-1.5'
+                        )}
+                    >
+                        {#each userMenu ?? [] as item (item.label)}
+                            {@const rowClasses = twMerge(
+                                'flex w-full items-center gap-2.5 rounded-fc-sm px-2.5 py-2 text-left text-fc-sm transition-colors hover:bg-fc-surface',
+                                item.tone === 'danger' ? 'text-fc-danger' : 'text-fc-fg'
+                            )}
+                            {#if item.href}
+                                <a role="menuitem" href={item.href} class={rowClasses} onclick={() => pick(item)}>
+                                    {#if item.icon}<Icon icon={item.icon} size={16} />{/if}
+                                    <span class="min-w-0 flex-1 truncate">{item.label}</span>
+                                </a>
+                            {:else}
+                                <button role="menuitem" type="button" class={rowClasses} onclick={() => pick(item)}>
+                                    {#if item.icon}<Icon icon={item.icon} size={16} />{/if}
+                                    <span class="min-w-0 flex-1 truncate">{item.label}</span>
+                                </button>
+                            {/if}
+                        {/each}
+                    </div>
+                {/if}
+            </div>
+        {:else if userHref}
             <a
                 href={userHref}
                 aria-current={userActive ? 'page' : undefined}

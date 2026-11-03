@@ -86,7 +86,7 @@ export type { ProfileCardProps } from './components/organisms/ProfileCard.svelte
 export { default as Modal } from './components/organisms/Modal.svelte';
 export type { ModalProps } from './components/organisms/Modal.svelte';
 export { default as SideBar } from './components/organisms/SideBar.svelte';
-export type { SideBarProps } from './components/organisms/SideBar.svelte';
+export type { SideBarProps, UserMenuItem } from './components/organisms/SideBar.svelte';
 export { default as Table } from './components/organisms/Table.svelte';
 export type { TableProps } from './components/organisms/Table.svelte';
 export { default as Toaster } from './components/organisms/Toaster.svelte';
