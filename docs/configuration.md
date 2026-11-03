@@ -206,12 +206,13 @@ The shipped files are labeled "GogaTest" (test license).
 | `history` | `solar:history-linear` | `card` | `solar:card-linear` |
 | `download` | `solar:download-linear` | `filter` | `solar:filter-linear` |
 | `mail` | `solar:letter-linear` | `error` | `solar:close-circle-linear` |
+| `space` | `solar:share-circle-bold-duotone` | | |
 | `plus` | `mdi:plus` | `close` | `mdi:close` |
 | `arrow` | `mdi:chevron-right` | `chevronDown` | `mdi:chevron-down` |
 | `chevronUp` | `mdi:chevron-up` | `chevronLeft` | `mdi:chevron-left` |
 
-`bold-duotone` appears nowhere in this map by design — it is reserved for an app's own brand
-mark, which the consumer passes to `SideBar`'s `icon` prop.
+Apart from `space`, the suite-wide glyph for a space, `bold-duotone` is reserved for an app's
+own brand mark, which the consumer passes to `SideBar`'s `icon` prop.
 
 The map holds names only. Rendering goes through the `<iconify-icon>` custom element, which
 muse neither imports nor declares as a dependency — the consumer app must register it, or the

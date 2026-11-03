@@ -202,7 +202,7 @@ The tiers are import paths only; `index.ts` re-exports everything flat.
    automatically, with an explicit prop always winning.
 8. Icons come from `icons.ts`, always the Solar **`linear`** variant, inheriting
    `currentColor` (no tint class). Add a key there rather than inlining an Iconify name.
-   `bold-duotone` is reserved for brand marks.
+   `bold-duotone` is reserved for brand marks, plus `icons.space`, the suite's space glyph.
 9. Mobile-first: works at 360px, hit targets at least 44px, `h-dvh` rather than `h-screen`.
 10. Any animation branches on `prefersReducedMotion()` from `../../utils/motion.js`, or uses
     the `motion-reduce:` variant. Press feedback goes through `use:springPress` from

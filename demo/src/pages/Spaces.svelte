@@ -132,7 +132,7 @@
         <Card class="flex flex-col gap-1 p-2">
             {#each spaces as space (space.id)}
                 <NavButton
-                    icon={icons.usersGroup}
+                    icon={icons.space}
                     label={space.name}
                     active={space.id === selectedId}
                     aria-pressed={space.id === selectedId}

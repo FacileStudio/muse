@@ -76,7 +76,7 @@
     const links = [
         { href: '#/dashboard', label: 'Dashboard', icon: icons.dashboard },
         { href: '#/projects', label: 'Projects', icon: icons.folder },
-        { href: '#/spaces', label: 'Spaces', icon: icons.usersGroup },
+        { href: '#/spaces', label: 'Spaces', icon: icons.space },
         { href: '#/rythme', label: 'Rythme', icon: icons.palette },
         { href: '#/motion', label: 'Motion', icon: icons.bolt }
     ];
