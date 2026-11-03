@@ -25,7 +25,7 @@ séries de graphiques.
 | Surface de conteneur | `bg-fc-component` |
 | Encre | `text-fc-fg`, `text-fc-fg-muted` |
 | Accent | `bg-fc-accent` / `text-fc-accent-fg` |
-| Bordure, anneau de focus | `border-fc-border`, `outline-fc-ring` |
+| Bordure d'un contrôle de formulaire, anneau de focus | `border-fc-border`, `outline-fc-ring` |
 
 ## Inversé, jamais teinté
 
@@ -35,6 +35,21 @@ marque. C'est la règle qui donne à la suite son aspect, et c'est celle qu'un a
 premier en atteignant un `bg-primary/10`.
 
 Corollaire : le survol d'une carte cliquable **monte** vers `fc-surface`. Il ne s'assombrit pas.
+
+## Pas de bordure décorative
+
+Les surfaces se séparent par leur **fond** et par l'**espace**, jamais par un trait. Une carte,
+une section, un panneau, une liste, un en-tête, une barre latérale, une modale, un tiroir, un
+menu ou un toast ne portent ni `border`, ni `divide-*`, ni `ring` ou `outline` décoratif.
+
+- Un conteneur prend `bg-fc-component` sur `bg-fc-page`.
+- Un plateau à l'intérieur d'une carte prend `bg-fc-surface`.
+- Les lignes d'une liste se séparent par leur padding vertical.
+- Une surface flottante prend un fond opaque et `shadow-lg`.
+
+Une bordure reste là où elle porte un sens : les contrôles de formulaire, le pointillé de
+`Dropzone`, les filets de ligne d'un `Table`, un `Divider` posé exprès, et l'anneau de focus.
+`no-decorative-border.test.ts` fait échouer le build sur toute autre bordure dans muse.
 
 ## Le mode sombre a une moitié que les tokens n'atteignent pas
 

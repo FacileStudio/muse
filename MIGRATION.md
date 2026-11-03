@@ -352,3 +352,26 @@ with `pr-10` keeping the label clear of it. The stroke follows `fc-fg` in light 
 
 **Do:** nothing, unless you pass a horizontal padding to `Select`. `class="px-2"` now replaces
 the `pr-10` too and the label runs under the chevron, so pass `pl-*` instead.
+
+## 18. No decorative borders (v0.8.0)
+
+**Symptom:** after the bump, `Topbar`, `Modal`, `Drawer`, `Toast`, the `SpaceSwitcher` trigger
+and dropdown, `SettingsRow`, `ProfileCard`'s meta rows, `UploadProgress` rows and `OptionCards`
+lose their 1px outline or rule. Cards read a little darker in light mode and a little lighter
+in dark mode, and secondary text is a touch darker in light mode.
+
+**Why:** muse separates surfaces by fill and spacing, never by a line (CHARTE §5). With the
+outlines gone the card step had to carry the separation alone, so the surface tokens moved:
+`fc-component` 0.985 → 0.975 light, 0.13 → 0.16 dark; `fc-surface` 0.97 → 0.95 light,
+0.18 → 0.21 dark. `fc-fg-muted` went 0.556 → 0.5 light and 0.6 → 0.64 dark so secondary text
+still clears 4.5:1 on `fc-surface`, and the light tone tokens dropped to 0.50–0.54 so tinted
+text still clears 4.5:1 on a card.
+
+**Do:** remove the app's own decorative borders so the app matches: `border`, `border-t/b/l/r`,
+`divide-*`, `ring` and decorative `outline` on cards, panels, sections, page containers, list
+rows, headers, sidebars and empty states. Use `bg-fc-component` for a container,
+`bg-fc-surface` for a plate inside one, padding between rows and `gap` instead of a `Divider`
+under a header. Keep borders on form controls, `Table` row rules, focus rings and a
+deliberate `Divider`. Re-check any hand-picked text colour on `bg-fc-surface`.
+`no-decorative-border.test.ts` enforces this inside muse; apps can grep their own
+`src/` for `\b(border|border-[xytrbl]|divide-[xy])\b`.

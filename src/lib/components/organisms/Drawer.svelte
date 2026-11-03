@@ -211,7 +211,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
 >
     <div
         bind:this={panel}
-        class="relative flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-fc-lg border-x border-t border-fc-border bg-fc-component shadow-lg"
+        class="relative flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-fc-lg bg-fc-component shadow-lg"
     >
         <div
             role="presentation"
@@ -257,7 +257,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
 
         {#if footer}
             <div
-                class="shrink-0 border-t border-fc-border px-5 pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+                class="shrink-0 px-5 pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
             >
                 {@render footer()}
             </div>

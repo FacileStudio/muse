@@ -111,7 +111,7 @@ Sans espace il ne rend rien, et `personalLabel={null}` retire la ligne personnel
         <button
             bind:this={triggerEl}
             type="button"
-            class="flex w-full items-center gap-2.5 min-h-11 rounded-fc-md border border-fc-border bg-fc-surface/50 px-3 py-2 text-left text-fc-sm transition-colors hover:bg-fc-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+            class="flex w-full items-center gap-2.5 min-h-11 rounded-fc-md bg-fc-surface px-3 py-2 text-left text-fc-sm transition-colors hover:bg-fc-surface/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
             onclick={toggle}
             aria-expanded={open}
         >
@@ -128,7 +128,7 @@ Sans espace il ne rend rien, et `personalLabel={null}` retire la ligne personnel
         {#if open}
             <div
                 class={twMerge(
-                    'absolute left-0 right-0 z-40 flex flex-col overflow-hidden rounded-fc-md border border-fc-border bg-fc-component shadow-lg',
+                    'absolute left-0 right-0 z-40 flex flex-col overflow-hidden rounded-fc-md bg-fc-component shadow-lg',
                     dropUp ? 'bottom-full mb-1.5' : 'top-full mt-1.5'
                 )}
                 style:max-height="{maxHeight}px"
@@ -164,7 +164,7 @@ Sans espace il ne rend rien, et `personalLabel={null}` retire la ligne personnel
                 </div>
 
                 {#if manageHref}
-                    <div class="border-t border-fc-border p-1">
+                    <div class="p-1">
                         <a
                             href={manageHref}
                             class="flex w-full items-center gap-2.5 rounded-fc-sm px-2.5 py-2 text-left text-fc-sm text-fc-fg-muted transition-colors hover:bg-fc-surface hover:text-fc-fg"

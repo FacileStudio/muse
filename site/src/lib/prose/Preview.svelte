@@ -27,7 +27,7 @@
             {#if label}<span class="text-fc-sm text-fc-fg-muted">{label}</span>{/if}
         </div>
     {/if}
-    <div class="rounded-fc-md border border-fc-border bg-fc-page p-5">
+    <div class="rounded-fc-md bg-fc-page p-5">
         {@render children()}
     </div>
 </div>

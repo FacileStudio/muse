@@ -16,7 +16,7 @@
     ];
 </script>
 
-<div class="h-[420px] overflow-hidden rounded-fc-md border border-fc-border">
+<div class="h-[420px] overflow-hidden rounded-fc-md">
     <SideBar
         class="h-full"
         title="Ardoise"

@@ -183,13 +183,13 @@ Five house rules that make generated UI look like the suite rather than generic 
    — `fc-accent` deliberately equals `fc-fg`, so a selected nav row is a solid inverted slab.
 2. **Semantic fills are tinted, not solid.** `bg-fc-danger/10 text-fc-danger`, matching the
    suite's `bg-destructive/10`. A solid saturated block is wrong.
-3. **Container surfaces carry no border.** `Card`, `StatCard` and `Table` separate from the
-   page with their `bg-fc-component` fill. Do not add `border border-fc-border` to a card, a
-   chart wrapper or a list container. 1px borders are for separation *inside* a container
-   (list rows, table row rules), form controls, `Dropzone`, and floating surfaces — which
-   also get the only shadows (`Modal`, `Drawer`, dropdowns, `Toast`, `MobileNav`).
-   `ChartTooltip` is the single borderless floating surface — it is 60px wide and sits inside
-   a card, so a step of fill plus its shadow is enough.
+3. **No decorative borders.** Surfaces separate by fill and spacing, never by a line. Cards,
+   sections, panels, page containers, list rows, empty states, headers, sidebars, modals,
+   drawers, dropdowns and toasts carry no `border`, `divide-*`, decorative `ring` or
+   decorative `outline`. Containers take `bg-fc-component`; a plate inside a card takes
+   `bg-fc-surface`; list rows separate by padding; floating surfaces take an opaque fill plus
+   `shadow-lg`. Borders stay only where they carry meaning: form controls, `Dropzone`'s dashed
+   outline, `Table` row rules, an explicit `Divider`, and focus rings.
 4. **Never show scrollbars.** `tokens.css` hides them globally; scrolling still works. Do not
    re-enable them and do not add `[scrollbar-width:none]` utilities — already handled.
 5. **Never put a border or ring on an avatar.**

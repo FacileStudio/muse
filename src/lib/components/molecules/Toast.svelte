@@ -35,11 +35,10 @@
 
     /*
         A toast floats over content it does not own, so it takes the floating-surface
-        treatment from CHARTE §5 — opaque fill, 1px border, shadow — and not `Alert`'s tinted
-        wash, which would let whatever is underneath bleed through the tone. It is the one
-        overlay that lands *on* arbitrary content with no scrim under it, which is why it
-        keeps the outline a `ChartTooltip` drops. The tone lives in the icon badge instead,
-        tinted the same way `ConfirmModal` tints its own.
+        treatment from CHARTE §5 — opaque `fc-component` fill and a shadow, no border — and
+        not `Alert`'s tinted wash, which would let whatever is underneath bleed through the
+        tone. The shadow is what lifts it off arbitrary content with no scrim under it. The
+        tone lives in the icon badge instead, tinted the same way `ConfirmModal` tints its own.
     */
     const badges: Record<ToastTone, string> = {
         neutral: 'bg-fc-surface text-fc-fg-muted',
@@ -64,7 +63,7 @@
 
     const classes = $derived(
         twMerge(
-            'pointer-events-auto flex w-full items-start gap-3 rounded-fc-md border border-fc-border bg-fc-bg p-4 shadow-lg',
+            'pointer-events-auto flex w-full items-start gap-3 rounded-fc-md bg-fc-component p-4 shadow-lg',
             className
         )
     );

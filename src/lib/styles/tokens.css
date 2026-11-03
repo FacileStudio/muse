@@ -38,28 +38,30 @@
      tinted canvas should be able to move one without the other. */
   --color-fc-page: oklch(1 0 0);
   --color-fc-bg: oklch(1 0 0);
-  --color-fc-surface: oklch(0.97 0 0);
-  --color-fc-component: oklch(0.985 0 0);
+  --color-fc-surface: oklch(0.95 0 0);
+  --color-fc-component: oklch(0.975 0 0);
   --color-fc-fg: oklch(0.145 0 0);
-  --color-fc-fg-muted: oklch(0.556 0 0);
+  --color-fc-fg-muted: oklch(0.5 0 0);
   --color-fc-accent: oklch(0.145 0 0);
   --color-fc-accent-fg: oklch(1 0 0);
   --color-fc-border: oklch(0.9 0 0);
   --color-fc-ring: oklch(0.4 0 0);
-  --color-fc-danger: oklch(0.55 0.22 29);
+  --color-fc-danger: oklch(0.54 0.22 29);
   --color-fc-danger-fg: oklch(1 0 0);
-  --color-fc-success: oklch(0.52 0.12 150);
+  --color-fc-success: oklch(0.5 0.12 150);
   /* `info` is a status colour like success and warning, not a second accent. It exists
      because without it `Alert tone="info"` and `StatusDot tone="info"` had to borrow
      `fc-accent` and rendered identically to `tone="accent"` — a tone that is
      indistinguishable from another tone is not a tone. */
-  --color-fc-info: oklch(0.52 0.14 255);
+  --color-fc-info: oklch(0.51 0.14 255);
   /* Lightness here is set by the tinted-text case, not by taste: these are read as
      `text-fc-warning` on `bg-fc-warning/10`, which is the *lowest*-contrast use any
      semantic token gets. At the previous 0.58 both landed at 4.0–4.1:1 and missed AA.
-     0.55 clears 4.5:1 on page, on `fc-component`, and on their own 10% tint. */
-  --color-fc-warning: oklch(0.55 0.13 75);
-  --color-fc-owner: oklch(0.55 0.13 64);
+     0.55 cleared 4.5:1 on the old near-white card; v0.8.0 raised the card step for borderless
+     surfaces, so the light tones dropped to 0.50–0.54 to keep 4.5:1 on page, on
+     `fc-component`, and on their own 10% tint laid over a card. */
+  --color-fc-warning: oklch(0.52 0.13 75);
+  --color-fc-owner: oklch(0.52 0.13 64);
   --color-fc-admin: oklch(0.5 0.16 292);
 
   /* Scrim behind overlays. A token rather than a literal because `Modal` and `Drawer`
@@ -198,10 +200,10 @@
 
     --color-fc-page: oklch(0.09 0 0);
     --color-fc-bg: oklch(0.09 0 0);
-    --color-fc-surface: oklch(0.18 0 0);
-    --color-fc-component: oklch(0.13 0 0);
+    --color-fc-surface: oklch(0.21 0 0);
+    --color-fc-component: oklch(0.16 0 0);
     --color-fc-fg: oklch(0.985 0 0);
-    --color-fc-fg-muted: oklch(0.6 0 0);
+    --color-fc-fg-muted: oklch(0.64 0 0);
     --color-fc-accent: oklch(0.985 0 0);
     --color-fc-accent-fg: oklch(0.09 0 0);
     --color-fc-border: oklch(1 0 0 / 10%);
@@ -228,10 +230,10 @@
 
   --color-fc-page: oklch(0.09 0 0);
   --color-fc-bg: oklch(0.09 0 0);
-  --color-fc-surface: oklch(0.18 0 0);
-  --color-fc-component: oklch(0.13 0 0);
+  --color-fc-surface: oklch(0.21 0 0);
+  --color-fc-component: oklch(0.16 0 0);
   --color-fc-fg: oklch(0.985 0 0);
-  --color-fc-fg-muted: oklch(0.6 0 0);
+  --color-fc-fg-muted: oklch(0.64 0 0);
   --color-fc-accent: oklch(0.985 0 0);
   --color-fc-accent-fg: oklch(0.09 0 0);
   --color-fc-border: oklch(1 0 0 / 10%);

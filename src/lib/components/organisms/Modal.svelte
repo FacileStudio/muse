@@ -112,7 +112,7 @@
      * own `margin: auto`, and Tailwind preflight's `margin: 0` reset kills exactly that —
      * without this the dialog renders flush against the top-left corner in every consumer.
      */
-    const classes = $derived(twMerge('m-auto rounded-fc-lg border border-fc-border bg-fc-component text-fc-fg p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto backdrop:bg-fc-scrim', sizes[size], className));
+    const classes = $derived(twMerge('m-auto rounded-fc-lg bg-fc-component shadow-lg text-fc-fg p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto backdrop:bg-fc-scrim', sizes[size], className));
 </script>
 
 <!--

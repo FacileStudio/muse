@@ -1,6 +1,5 @@
 <script lang="ts">
     import {
-        Divider,
         icons,
         Page,
         PageHeader,
@@ -59,14 +58,7 @@
         description="Your identity, this workspace, and everything wired to it."
     />
 
-    <!--
-        The rule needs air. At a 4px gap it reads as an underline welded to the active pill and
-        fights its shape; the strip is a page header, so it separates like one.
-    -->
-    <div class="flex flex-col gap-4">
-        <Tabs {items} value={active} label="Settings sections" />
-        <Divider />
-    </div>
+    <Tabs {items} value={active} label="Settings sections" />
 
     <PageTransition key={active} distance={8} duration={0.25}>
         <Panel />

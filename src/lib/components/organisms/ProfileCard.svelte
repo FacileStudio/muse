@@ -26,7 +26,6 @@
     import Avatar from '../atoms/Avatar.svelte';
     import Badge from '../atoms/Badge.svelte';
     import Card from '../atoms/Card.svelte';
-    import Divider from '../atoms/Divider.svelte';
 
     /* `role` is the member's role in the workspace, not an ARIA role — the DOM attribute of
        the same name is dropped from the passthrough so the two cannot collide into an
@@ -104,11 +103,10 @@ Le bloc d'identité d'un membre : avatar, nom et actions de session.
     </div>
 
     {#if meta.length > 0}
-        <Divider />
         <dl class="flex flex-col">
             {#each meta as row (row.label)}
                 <div
-                    class="flex items-baseline justify-between gap-3 border-t border-fc-border py-2 text-fc-sm first:border-t-0 first:pt-0"
+                    class="flex items-baseline justify-between gap-3 py-2 text-fc-sm first:pt-0"
                 >
                     <dt class="shrink-0 text-fc-fg-muted">{row.label}</dt>
                     <dd class="min-w-0 truncate text-right text-fc-fg">{row.value}</dd>
@@ -118,7 +116,6 @@ Le bloc d'identité d'un membre : avatar, nom et actions de session.
     {/if}
 
     {#if children}
-        <Divider />
         {@render children()}
     {/if}
 </Card>

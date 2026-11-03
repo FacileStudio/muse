@@ -440,9 +440,9 @@ example or a custom stack. Spreads to the root `<div>`.
 | `children` | `Snippet` | — | The message |
 
 A toast floats over content it does not own, so it takes the floating-surface treatment —
-opaque `bg-fc-bg`, 1px `border-fc-border`, `shadow-lg` — and not `Alert`'s tinted wash, which
-would let whatever is underneath bleed through the tone. It lands on arbitrary content with
-no scrim beneath it, which is why it keeps the outline `ChartTooltip` drops. The tone is
+opaque `bg-fc-component` and `shadow-lg`, **no border** — and not `Alert`'s tinted wash, which
+would let whatever is underneath bleed through the tone. The shadow lifts it off arbitrary
+content with no scrim beneath it. The tone is
 carried by the icon badge instead. `role` follows the same rule as `Alert`: `alert` for
 `warning` and `danger`, `status` otherwise.
 
@@ -459,8 +459,8 @@ Label and description on the left, control on the right; stacks below `sm:`. Spr
 | `stacked` | `boolean` | `false` | Control on its own full-width line — use for text fields |
 | `children` | `Snippet` | — | The control |
 
-Each row draws its own top rule with `first:border-t-0`, so a section never has to know how
-many rows it holds.
+Rows separate by their own `py-4` (`first:pt-0`, `last:pb-0`) with **no rule** between them,
+so a section never has to know how many rows it holds.
 
 ### `SettingsSection`
 
@@ -622,7 +622,7 @@ framework-agnostic — no router import, no backend types. Spreads to the wrappi
 | `activeId` | `string \| null` | `null` | `null` selects the personal entry |
 | `onSelect` | `(id: string \| null) => void` | — | Called with the chosen id, or `null` |
 | `personalLabel` | `string \| null` | `'Personal'` | Label for the no-space entry. `null` removes the entry entirely |
-| `manageHref` | `string` | — | Renders a bordered footer link when set |
+| `manageHref` | `string` | — | Renders a footer link when set |
 | `manageLabel` | `string` | `'Manage spaces'` | Footer link text |
 
 **The component renders nothing when `spaces` is empty.** One option is not a choice, so a
@@ -752,7 +752,7 @@ closes.
 
 ### `Topbar`
 
-Sticky `<header>` at `z-30`, `h-14`, `border-b border-fc-border`, `bg-fc-bg/80` with
+Sticky `<header>` at `z-30`, `h-14`, **no border**, `bg-fc-bg/80` with
 `backdrop-blur`. Children are laid out with `justify-between` — pass a left group and a right
 group. Spreads to `<header>`.
 
@@ -796,7 +796,7 @@ and `onclick` are spread **after** `rest` and deliberately win.
 
 Enter is opacity + `scale(0.97)→1` over 0.2s `power3.out`; exit reverses it over 0.15s. Both
 collapse to a `set` under reduced motion. The surface is
-`rounded-fc-lg border border-fc-border bg-fc-component` with a `backdrop:bg-black/50` scrim.
+`rounded-fc-lg bg-fc-component shadow-lg`, **no border**, with a `backdrop:bg-fc-scrim` scrim.
 
 `m-auto` in the class string is load-bearing: a `<dialog>` opened with `showModal()` is
 centred by the UA's own `margin: auto`, and Tailwind preflight's `margin: 0` reset kills

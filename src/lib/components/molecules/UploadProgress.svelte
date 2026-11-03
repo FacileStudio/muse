@@ -72,7 +72,7 @@
         [formatBytes(item.size), statusText(item)].filter(Boolean).join(' · ');
 
     const rowTone = (status: Status): string =>
-        status === 'error' ? 'border-fc-danger/40 bg-fc-danger/10' : 'border-fc-border bg-fc-bg';
+        status === 'error' ? 'bg-fc-danger/10' : 'bg-fc-surface';
 
     const classes = $derived(twMerge('flex w-full flex-col gap-2', className));
 </script>
@@ -86,7 +86,7 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
     <div class={classes} {...rest}>
         <ul class="flex flex-col gap-2">
             {#each items as item (item.id)}
-                <li class={twMerge('rounded-fc-md border p-3', rowTone(item.status))}>
+                <li class={twMerge('rounded-fc-md p-3', rowTone(item.status))}>
                     <div class="flex items-center gap-3">
                         <span class="flex size-5 shrink-0 items-center justify-center">
                             {#if item.status === 'uploading'}

@@ -87,7 +87,7 @@
 
     <div class="flex min-w-0 flex-1 flex-col">
         <header
-            class="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-fc-border bg-fc-page/90 px-4 py-3 backdrop-blur md:justify-end md:border-0 md:bg-transparent md:px-10"
+            class="sticky top-0 z-30 flex items-center justify-between gap-3 bg-fc-page/90 px-4 py-3 backdrop-blur md:justify-end md:bg-transparent md:px-10"
         >
             <IconButton
                 variant="ghost"

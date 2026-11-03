@@ -27,13 +27,13 @@
     }: SettingsRowProps = $props();
 
     /*
-     * Rows are separated by a rule they draw on their own top edge, so a section can hold any
-     * number of them without the parent knowing how many — first:border-t-0 keeps the group
-     * flush with the card padding at both ends.
+     * Rows are separated by their own vertical padding, not a rule: muse draws no decorative
+     * lines (CHARTE §5). first:pt-0 and last:pb-0 keep the group flush with the card padding
+     * at both ends, so a section can hold any number of rows without counting them.
      */
     const classes = $derived(
         twMerge(
-            'flex flex-col gap-3 border-t border-fc-border py-4 first:border-t-0 first:pt-0 last:pb-0',
+            'flex flex-col gap-3 py-4 first:pt-0 last:pb-0',
             !stacked && 'sm:flex-row sm:items-center sm:justify-between sm:gap-6',
             className
         )

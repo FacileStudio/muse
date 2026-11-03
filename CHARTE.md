@@ -29,21 +29,21 @@ CSS custom properties. Source of truth: `src/lib/styles/tokens.css`.
 |---------------------|----------------------|------------------------|-----------------------------|
 | `--fc-page`          | `oklch(1 0 0)`       | `oklch(0.09 0 0)`      | document canvas             |
 | `--fc-bg`            | `oklch(1 0 0)`       | `oklch(0.09 0 0)`      | a component's own default fill — same value as `page` today, separate so an app can tint one without the other |
-| `--fc-surface`       | `oklch(0.97 0 0)`    | `oklch(0.18 0 0)`      | muted fills, hover states   |
-| `--fc-component`     | `oklch(0.985 0 0)`   | `oklch(0.13 0 0)`      | cards, sidebar/panel bg     |
+| `--fc-surface`       | `oklch(0.95 0 0)`    | `oklch(0.21 0 0)`      | muted fills, hover states   |
+| `--fc-component`     | `oklch(0.975 0 0)`   | `oklch(0.16 0 0)`      | cards, sidebar/panel bg, overlays |
 | `--fc-fg`             | `oklch(0.145 0 0)`  | `oklch(0.985 0 0)`     | primary text                |
-| `--fc-fg-muted`       | `oklch(0.556 0 0)`  | `oklch(0.6 0 0)`       | secondary text               |
+| `--fc-fg-muted`       | `oklch(0.5 0 0)`    | `oklch(0.64 0 0)`      | secondary text               |
 | `--fc-accent`         | `oklch(0.145 0 0)`  | `oklch(0.985 0 0)`     | primary action — same as fg, **inverted not tinted** |
 | `--fc-accent-fg`      | `oklch(1 0 0)`      | `oklch(0.09 0 0)`      | text on accent               |
-| `--fc-border`         | `oklch(0.9 0 0)`    | `oklch(1 0 0 / 10%)`   | dividers, outlines            |
+| `--fc-border`         | `oklch(0.9 0 0)`    | `oklch(1 0 0 / 10%)`   | form control edges, table row rules, `Divider` |
 | `--fc-ring`           | `oklch(0.4 0 0)`    | `oklch(0.6 0 0)`       | focus rings                   |
 | `--fc-scrim`          | `oklch(0 0 0 / 50%)` | `oklch(0 0 0 / 50%)`  | overlay backdrops — same in both modes |
-| `--fc-danger`         | `oklch(0.55 0.22 29)`| `oklch(0.65 0.22 29)` | destructive                    |
+| `--fc-danger`         | `oklch(0.54 0.22 29)`| `oklch(0.65 0.22 29)` | destructive                    |
 | `--fc-danger-fg`      | `oklch(1 0 0)`      | `oklch(1 0 0)`         | text on a solid danger fill   |
-| `--fc-success`        | `oklch(0.52 0.12 150)`| `oklch(0.72 0.14 150)`| success / positive            |
-| `--fc-info`           | `oklch(0.52 0.14 255)`| `oklch(0.72 0.13 255)`| informational status          |
-| `--fc-warning`        | `oklch(0.55 0.13 75)`| `oklch(0.8 0.13 75)`   | caution                        |
-| `--fc-owner`          | `oklch(0.55 0.13 64)`| `oklch(0.78 0.13 64)`  | `owner` role pill              |
+| `--fc-success`        | `oklch(0.5 0.12 150)`| `oklch(0.72 0.14 150)`| success / positive            |
+| `--fc-info`           | `oklch(0.51 0.14 255)`| `oklch(0.72 0.13 255)`| informational status          |
+| `--fc-warning`        | `oklch(0.52 0.13 75)`| `oklch(0.8 0.13 75)`   | caution                        |
+| `--fc-owner`          | `oklch(0.52 0.13 64)`| `oklch(0.78 0.13 64)`  | `owner` role pill              |
 | `--fc-admin`          | `oklch(0.5 0.16 292)`| `oklch(0.75 0.14 292)` | `admin` role pill              |
 
 **Chrome is chroma-zero; chroma is reserved for meaning.** Everything structural — page,
@@ -56,7 +56,10 @@ the two role pills (`owner`, `admin`), and the six chart series slots. Nothing e
 lowest-contrast use any of them gets. Every one clears **4.5:1 in that configuration**, in both
 modes, and that is the constraint that sets the value. `warning` and `owner` used to sit at
 `0.58` and measured 4.04:1 and 4.10:1 tinted — both failing the AA floor promised in §9 — which
-is why they are now `0.55`. If you retune one, re-measure the tinted case, not the on-white one.
+is why they moved to `0.55`. v0.8.0 raised the card step (below), which pushed the tinted
+case laid over a card under 4.5:1 again, so the light tones now sit at `0.50`–`0.54` and clear
+4.8:1 on a card. If you retune one, re-measure the tinted case over `fc-component`, not the
+on-white one.
 
 ### `color-scheme` is the half of dark mode tokens cannot reach
 
@@ -74,13 +77,15 @@ media block and the base declaration is what remains.
 `tokens.test.ts` asserts it in both blocks separately, since `color-scheme` is not a custom
 property and the "edit both or neither" test only compares those.
 
-### The container step is deliberate, and it is small
+### The container step carries the whole separation
 
-`--fc-component` against `--fc-page` is a contrast ratio of **1.04:1** in light mode and
-**1.03:1** in dark. That is the entire visual separation a `Card` gets, because §5 forbids
-giving it a border. It is enough on a decent screen and it is *not* enough on a dim laptop, a
-projector, or anything uncalibrated. Know that you are making that trade. If a specific surface
-must survive bad conditions, raise it to `--fc-surface` rather than reintroducing an outline.
+`--fc-component` against `--fc-page` is a contrast ratio of **1.08:1** in light mode and
+**1.07:1** in dark, and `--fc-surface` sits one more step past the card (1.08:1 light, 1.10:1
+dark). That fill is the entire visual separation a `Card` gets, because §5 forbids giving it a
+border. Through v0.7 the card step was 1.04:1 and vanished on a dim laptop; v0.8.0 doubled it
+when the last decorative borders went, and darkened `--fc-fg-muted` so secondary text still
+clears 4.5:1 on `--fc-surface` (5.2:1 light, 5.3:1 dark). If a surface must survive bad
+conditions, raise it to `--fc-surface` rather than reintroducing an outline.
 
 ### Chart series tokens
 
@@ -348,29 +353,35 @@ Container max-widths:
 - `--radius-fc-xs` 4px, `--radius-fc-sm` 6px, `--radius-fc-md` 8px, `--radius-fc-lg` 12px, `--radius-fc-pill`/`--radius-fc-full` 999px
 - No shadows beyond `shadow-sm`/`shadow-lg` on floating/overlay surfaces (dropdowns, Modal, Drawer, MobileNav bar).
 
-**Container surfaces carry no border.** `Card`, `StatCard` and `Table` separate themselves
-from the page with their **fill** (`bg-fc-component` against `bg-fc-page`), not with an
-outline. A 1px box drawn around every panel reads as clutter once a page has more than two
-of them. Do not add `border border-fc-border` back to a card, a chart wrapper, a profile
-card or a list container.
+**No decorative borders.** muse separates surfaces by **fill and spacing**, never by a line.
+`Card`, `StatCard`, `Section card`, `SettingsSection`, `ProfileCard`, `Table`, `SideBar`,
+`Topbar`, `Modal`, `Drawer`, `Toast`, dropdowns, list rows, empty states and page containers
+carry no border, no `divide-*`, no decorative `ring` and no decorative `outline`. A 1px box
+drawn around every panel reads as clutter once a page has more than two of them. Do not add
+`border border-fc-border` back to a card, a chart wrapper, a panel, a list container or a
+header strip, and do not put a `Divider` between a header and its content: give it a `gap`.
 
-1px `--fc-border` is still the right tool, but only for these:
-- **separation *inside* a container** — rows in a member list, `<tbody>` row rules, the
-  meta rows in `ProfileCard`, a footer above a `Drawer`'s actions;
-- **form controls**, which need a visible edge to read as editable — `Input`, `Select`,
-  `Textarea`, `SpaceSwitcher`'s trigger;
+- **Containers** take `bg-fc-component` against `bg-fc-page`.
+- **Something inside a card** that needs its own plate (an upload row, a code sample, the
+  `SpaceSwitcher` trigger, an unselected `OptionCards` choice) takes `bg-fc-surface`.
+- **Rows in a list** separate by vertical padding (`SettingsRow` is `py-4`, `ProfileCard` meta
+  rows are `py-2`), not by a rule.
+- **Floating surfaces** (`Modal`, `Drawer`, dropdowns, `Toast`, `MobileNav`, `ChartTooltip`)
+  take an opaque fill plus `shadow-lg`. The shadow lifts them; the scrim, when there is one,
+  does the rest.
+
+A border stays only where it carries meaning, and `no-decorative-border.test.ts` names every
+component allowed one, so adding another is a reviewed decision:
+- **form controls**, which need a visible edge to read as editable: `Input`, `Select`,
+  `Textarea`, `SecretField`, `ColorPicker`, `Switch`, and the `outline` `Button` and default
+  `IconButton` variants;
 - **`Dropzone`**, whose dashed outline *is* the affordance;
-- **floating surfaces**, which pair it with a shadow — `Modal`, `Drawer`, dropdowns, `Toast`.
+- **`Table` row rules**, because a wide data table is unreadable without them;
+- **`Divider`**, the explicit rule a caller places for a real semantic break, never as
+  decoration between a heading and its body;
+- **focus rings** (`outline-fc-ring`) and the ring around a selected swatch, which are state.
 
-**`ChartTooltip` is the exception.** It is 60px wide, it follows the pointer, and it lives
-*inside* a chart card rather than on top of the page — so it separates itself with one step
-of fill (`bg-fc-surface`, darker than the card in light mode and lighter in dark) plus
-`shadow-lg`, and no outline. At that size the outline was most of what you saw. A `Toast`
-keeps its border: it lands on arbitrary content with no scrim under it, and unlike the
-tooltip it has no card around it to belong to.
-
-Because the light-mode fill is a subtle step (`oklch(0.985)` on `oklch(1)`), keep container
-padding generous — the whitespace is doing the work the border used to. `Card` is **`p-5`**
+Keep container padding generous: the whitespace is doing the work the border used to. `Card` is **`p-5`**
 (20px); it was `p-4` and read cramped against its own fill.
 
 ---
@@ -943,7 +954,7 @@ client-order increments diverge and `aria-labelledby` ends up pointing at nothin
    itself with `mt-auto mb-0 mx-auto` + `w-full max-w-none`. Drop those and the dialog
    renders flush against the top-left corner in every consumer.
 2. **The animated element owns the surface styling.** `Drawer`'s `<dialog>` is transparent
-   and its inner panel carries the background, border and radius — otherwise the background
+   and its inner panel carries the background, shadow and radius — otherwise the background
    sits still while the panel slides out from under it.
 
 Motion: overlays use asymmetric easing (`power3.out` in, `power3.in` out) rather than the
@@ -1011,8 +1022,8 @@ or on the way to its own Undo button, is worse than no toast.
 is reported, and it cannot cover a `<dialog>` — `showModal()` owns the top layer, above every
 z-index there is. A modal reporting its own success closes first, then toasts.
 
-Its one border is deliberate: unlike `ChartTooltip` it lands on arbitrary content with no
-card and no scrim under it, so it keeps the outline (§5).
+It has no border (§5): an opaque `bg-fc-component` fill and `shadow-lg` lift it off
+whatever content it lands on.
 
 ### Drawer
 
@@ -1302,8 +1313,9 @@ action should cost a scroll, not sit one mis-click from every other tab all day.
 
 `SettingsSection` is heading + description + optional `actions`, wrapping its children in a
 `Card` (`bare` skips the card for a `Table` or a `Dropzone`). `SettingsRow` is
-label-and-description on the left, control on the right, stacking under `sm:` and drawing
-its own top rule so a section never has to count its children.
+label-and-description on the left, control on the right, stacking under `sm:`. Rows are
+separated by their own `py-4`, with no rule between them (§5), so a section never has to
+count its children.
 
 ```svelte
 <SettingsSection title="Theme" description="Applied to this browser.">
