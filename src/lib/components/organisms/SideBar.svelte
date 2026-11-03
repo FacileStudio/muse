@@ -44,6 +44,7 @@
     import { cubicInOut } from 'svelte/easing';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
+    import Avatar from '../atoms/Avatar.svelte';
     import Icon from '../atoms/Icon.svelte';
     import NavButton from '../molecules/NavButton.svelte';
     import SpaceSwitcher from '../molecules/SpaceSwitcher.svelte';
@@ -310,13 +311,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
         )}
 
         {#snippet userCard()}
-            {#if u.avatar}
-                <img src={u.avatar} alt="" class="h-7 w-7 rounded-fc-pill object-cover shrink-0" />
-            {:else}
-                <span class="h-7 w-7 shrink-0 rounded-fc-pill bg-fc-accent text-fc-accent-fg flex items-center justify-center text-fc-xs font-semibold">
-                    {u.name.charAt(0).toUpperCase()}
-                </span>
-            {/if}
+            <Avatar src={u.avatar} name={u.name} alt="" size="sm" class="h-7 w-7 text-fc-xs" />
             {#if !narrow}
                 <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
                     <TextElevate text={u.name} visible={!narrow} class="truncate" />
