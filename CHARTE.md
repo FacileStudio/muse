@@ -496,7 +496,8 @@ gesture reaches the document and rubber-bands the shell.
 - **Style**: **`linear`** — always `solar:*-linear` for UI chrome. This matches the shipped
   suite (Sablier, Nuage, Plume all use `solar:chart-2-linear`, `solar:folder-linear`, …).
   Reserve `bold-duotone` for **brand marks only** (an app's own logo glyph), never nav or
-  action icons.
+  action icons. One exception: `icons.space` (`solar:share-circle-bold-duotone`) is the
+  suite-wide glyph for a space, wherever a space appears.
 - **Color**: inherit `currentColor`. Do not tint icons with their own class — let the parent's
   `text-fc-fg-muted` / `text-fc-accent-fg` cascade, so inverted active states flip the icon too.
 - **Size**: `width="16"` inline, `width="18"` nav rows, `width="24"` brand mark. Always pass
@@ -589,6 +590,7 @@ Solar (`linear`, UI chrome):
 | `icons.history` | `solar:history-linear` | `icons.card` | `solar:card-linear` |
 | `icons.download` | `solar:download-linear` | `icons.filter` | `solar:filter-linear` |
 | `icons.mail` | `solar:letter-linear` | `icons.error` | `solar:close-circle-linear` |
+| `icons.space` | `solar:share-circle-bold-duotone` | | |
 
 MDI (plus, close, chevrons — Solar's read muddy at small sizes):
 

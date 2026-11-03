@@ -47,7 +47,7 @@
 
     const cardLinks = [
         { href: '#/projects', label: 'Projects', meta: '12 active', icon: icons.folder },
-        { href: '#/spaces', label: 'Spaces', meta: '3 spaces', icon: icons.usersGroup },
+        { href: '#/spaces', label: 'Spaces', meta: '3 spaces', icon: icons.space },
         { href: '#/settings', label: 'Settings', meta: 'Profile and API', icon: icons.settings }
     ];
 
@@ -211,7 +211,7 @@
              still middle-clickable and still shows its target in the status bar. -->
         <div class="flex flex-wrap items-center gap-3">
             <Button href="#/projects" iconRight={icons.arrow}>All projects</Button>
-            <Button href="#/spaces" variant="outline" icon={icons.usersGroup}>Spaces</Button>
+            <Button href="#/spaces" variant="outline" icon={icons.space}>Spaces</Button>
             <Button href="#/motion" variant="ghost" iconRight={icons.arrow}>Motion</Button>
             <Button href="#/settings" disabled iconRight={icons.arrow}>Disabled link</Button>
         </div>

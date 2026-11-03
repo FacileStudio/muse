@@ -11,6 +11,7 @@ export const icons = {
   folder:        'solar:folder-linear',
   usersGroup:    'solar:users-group-rounded-linear',
   userCircle:    'solar:user-circle-linear',
+  space:         'solar:share-circle-bold-duotone',
   logout:        'solar:logout-2-linear',
   warning:       'solar:danger-triangle-linear',
   error:         'solar:close-circle-linear',
