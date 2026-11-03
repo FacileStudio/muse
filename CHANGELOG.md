@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.9.0 (2026-11-03)
+
+### Added
+
+- `SideBar` takes `userMenu` (`UserMenuItem[]`). The user card then opens a menu of links and
+  actions above itself (beside it when the rail is collapsed) instead of linking to settings,
+  and shows a chevron instead of the settings cog. Escape and a click outside close it.
+
 ## v0.8.1 (2026-11-03)
 
 ### Added
