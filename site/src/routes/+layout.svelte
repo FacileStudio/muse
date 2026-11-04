@@ -3,11 +3,13 @@
     import type { Snippet } from 'svelte';
     import { browser } from '$app/environment';
     import { page } from '$app/state';
-    import { Icon, IconButton, Page, SideBar, icons } from '@facile/muse';
+    import { Icon, IconButton, Page, SideBar, icons, provideLocale } from '@facile/muse';
     import { RAIL } from '$lib/nav.js';
 
 
     let { children }: { children: Snippet } = $props();
+
+    provideLocale('fr');
 
     /* Both classes, never just `dark`. The token file paints dark from a media query scoped
        `:root:not(.light)`, so an app that only ever adds `.dark` cannot show light mode on a

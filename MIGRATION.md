@@ -375,3 +375,36 @@ under a header. Keep borders on form controls, `Table` row rules, focus rings an
 deliberate `Divider`. Re-check any hand-picked text colour on `bg-fc-surface`.
 `no-decorative-border.test.ts` enforces this inside muse; apps can grep their own
 `src/` for `\b(border|border-[xytrbl]|divide-[xy])\b`.
+
+## 19. Locale, sign-in screen and plan limits (v0.10.0)
+
+**Symptom:** after the bump, muse's own strings (close buttons, empty charts, `Dropzone`,
+`ConfirmModal`, `SpaceSwitcher`, `SecretField`) render in English, including the ones that were
+French before.
+
+**Why:** muse now reads its strings from fr, en, es and de catalogs, in the locale the app
+sets. With no locale set it falls back to English.
+
+**Do:**
+
+1. In the root `+layout.svelte`, once:
+
+   ```svelte
+   <script lang="ts">
+       import { provideLocale } from '@facile/muse';
+       let { data, children } = $props();
+       provideLocale(() => data.session?.locale);
+   </script>
+   ```
+
+   For server-rendered `lang`, put `<html lang="%lang%">` in `app.html` and replace it in
+   `hooks.server.ts` with `transformPageChunk: ({ html }) => html.replace('%lang%', resolveLocale(...))`.
+2. Delete the text props you passed only to translate muse (`confirmLabel="Confirmer"`,
+   `emptyLabel="Aucune donnée"`, `browseLabel`...). Keep the ones that say something specific.
+3. Replace the login page with `AuthScreen`, and delete every local sign-up and password form.
+   `signUpHref` defaults to Registre's sign-up page.
+4. On a 402, read the body with `planLimitFrom(await res.json())` and render `PlanLimit`
+   (`variant="dialog"` after an action, `banner` on a page).
+5. Put `LegalFooter` on public pages. Its links default to Registre's legal pages in the
+   current locale.
+6. Move app strings to catalogs with `createTranslator`; see the "Langues" page on the docs site.

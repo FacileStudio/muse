@@ -38,7 +38,8 @@ export const NAV: NavGroup[] = [
             { href: '/fondations/espacement', label: 'Espacement & rythme', icon: icons.ruler },
             { href: '/fondations/couleur', label: 'Couleur', icon: icons.palette },
             { href: '/fondations/typographie', label: 'Typographie', icon: icons.text },
-            { href: '/fondations/etats', label: 'États', icon: icons.refresh }
+            { href: '/fondations/etats', label: 'États', icon: icons.refresh },
+            { href: '/fondations/langues', label: 'Langues', icon: icons.globe }
         ]
     },
     {
