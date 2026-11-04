@@ -3,7 +3,7 @@
     import type { HTMLAttributes } from 'svelte/elements';
 
     export interface TopbarProps extends HTMLAttributes<HTMLElement> {
-        children: Snippet; class?: string 
+        children: Snippet; class?: string
     }
 </script>
 

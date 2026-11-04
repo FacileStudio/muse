@@ -3,7 +3,7 @@
     import type { HTMLAttributes } from 'svelte/elements';
 
     export interface TableProps extends HTMLAttributes<HTMLDivElement> {
-        children: Snippet; class?: string 
+        children: Snippet; class?: string
     }
 </script>
 

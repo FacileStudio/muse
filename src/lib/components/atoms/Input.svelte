@@ -2,7 +2,7 @@
     import type { HTMLInputAttributes } from 'svelte/elements';
 
     export interface InputProps extends HTMLInputAttributes {
-        class?: string; value?: string | number 
+        class?: string; value?: string | number
     }
 </script>
 
