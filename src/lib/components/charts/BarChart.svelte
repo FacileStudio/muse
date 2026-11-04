@@ -21,7 +21,8 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { barGeometry, barPath, categoryLabels, formatCompact, niceScale, resize, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesSummary, seriesTipRows, seriesValues, type ChartBox } from '../../utils/chart.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
+    import { barGeometry, barPath, categoryLabels, formatCompact, niceScale, resize, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesNames, seriesTipRows, seriesValues, type ChartBox } from '../../utils/chart.js';
     import { tweenProgress } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
     import ChartTable from './ChartTable.svelte';
@@ -38,10 +39,12 @@
         yFormat = formatCompact,
         yTicks = 4,
         animate = true,
-        emptyLabel = 'No data',
+        emptyLabel,
         class: className = '',
         ...rest
     }: BarChartProps = $props();
+
+    const i18n = getI18n();
 
     let w = $state(0);
     let hover = $state(-1);
@@ -107,7 +110,7 @@
 
     const legendOn = $derived(showLegend ?? series.length > 1);
     const legendItems = $derived(seriesLegend(series));
-    const summary = $derived(seriesSummary(stacked ? 'Stacked bar' : 'Bar', series, count, 'categories'));
+    const summary = $derived(i18n.t(stacked ? 'chart.stackedBarSummary' : 'chart.barSummary', { count, names: seriesNames(series) }));
     const tableRows = $derived(seriesRows(series, labels, count, yFormat));
     const tipRows = $derived(seriesTipRows(series, hover, yFormat));
 
@@ -146,7 +149,7 @@ Un graphique en barres, empilable. Chaque coin face à une gouttière est arrond
             class="flex items-center justify-center text-fc-sm text-fc-fg-muted"
             style:min-height="{height}px"
         >
-            {emptyLabel}
+            {emptyLabel ?? i18n.t('chart.empty')}
         </div>
     {:else if w > 0}
         <div class="relative">
@@ -240,7 +243,7 @@ Un graphique en barres, empilable. Chaque coin face à une gouttière est arrond
             </div>
         {/if}
 
-        <ChartTable caption={summary} head="Category" columns={series.map((s) => s.name)} rows={tableRows} />
+        <ChartTable caption={summary} head={i18n.t('chart.category')} columns={series.map((s) => s.name)} rows={tableRows} />
     {:else}
         <div style:height="{height}px"></div>
     {/if}

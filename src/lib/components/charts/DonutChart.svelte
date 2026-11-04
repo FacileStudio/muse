@@ -20,6 +20,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import { TAU, arcPath, donutSegments, formatCompact, resize } from '../../utils/chart.js';
     import { tweenProgress } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
@@ -36,10 +37,12 @@
         centerValue,
         valueFormat = formatCompact,
         animate = true,
-        emptyLabel = 'No data',
+        emptyLabel,
         class: className = '',
         ...rest
     }: DonutChartProps = $props();
+
+    const i18n = getI18n();
 
     const LIFT = 4;
 
@@ -101,9 +104,11 @@
     );
 
     const summary = $derived(
-        `Donut chart of ${segments.length} slices totalling ${valueFormat(total)}: ${segments
-            .map((seg) => `${seg.label} ${percent(seg.frac)}`)
-            .join(', ')}`
+        i18n.t('chart.donutSummary', {
+            count: segments.length,
+            total: valueFormat(total),
+            parts: segments.map((seg) => `${seg.label} ${percent(seg.frac)}`).join(', ')
+        })
     );
 
     const tableRows = $derived(
@@ -143,7 +148,7 @@ Un anneau de proportions. Jamais arrondi au `stroke-linecap` : ça pousse chaque
             class="flex w-full items-center justify-center text-fc-sm text-fc-fg-muted"
             style:min-height="{box}px"
         >
-            {emptyLabel}
+            {emptyLabel ?? i18n.t('chart.empty')}
         </div>
     {:else}
         <div class="relative" style:width="{box}px" style:height="{box}px">
@@ -187,6 +192,6 @@ Un anneau de proportions. Jamais arrondi au `stroke-linecap` : ça pousse chaque
             <ChartLegend items={legendItems} class="justify-center" />
         {/if}
 
-        <ChartTable caption={summary} head="Slice" columns={['Value', 'Share']} rows={tableRows} />
+        <ChartTable caption={summary} head={i18n.t('chart.slice')} columns={[i18n.t('chart.value'), i18n.t('chart.share')]} rows={tableRows} />
     {/if}
 </div>

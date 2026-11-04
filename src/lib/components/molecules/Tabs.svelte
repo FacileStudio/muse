@@ -24,6 +24,7 @@
 <script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import { resize } from '../../utils/chart.js';
@@ -33,10 +34,12 @@
         value = $bindable(''),
         onChange,
         panelId,
-        label = 'Sections',
+        label,
         class: className = '',
         ...rest
     }: TabsProps = $props();
+
+    const i18n = getI18n();
 
     const uid = $props.id();
 
@@ -122,7 +125,7 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
     class={twMerge('relative flex w-full items-center gap-1 overflow-x-auto', className)}
     {...rest}
     role={routed ? undefined : 'tablist'}
-    aria-label={routed ? undefined : label}
+    aria-label={routed ? undefined : (label ?? i18n.t('tabs.label'))}
     aria-orientation={routed ? undefined : 'horizontal'}
     onkeydown={routed ? undefined : keydown}
 >

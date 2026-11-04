@@ -56,6 +56,7 @@
     import { cubicInOut } from 'svelte/easing';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Avatar from '../atoms/Avatar.svelte';
     import Icon from '../atoms/Icon.svelte';
     import NavButton from '../molecules/NavButton.svelte';
@@ -86,6 +87,8 @@
         class: className = '',
         ...rest
     }: SideBarProps = $props();
+
+    const i18n = getI18n();
 
     let navEl: HTMLElement | null = $state(null);
     let ready = false;
@@ -285,7 +288,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
         {#if showSearch || showCollapse}
             <div class="flex flex-col gap-1">
                 {#if showSearch}
-                    <NavButton icon={icons.search} label="Search" collapsed={narrow} onclick={onSearch}>
+                    <NavButton icon={icons.search} label={i18n.t('sideBar.search')} collapsed={narrow} onclick={onSearch}>
                         {#snippet right()}
                             <!-- No handler, no chip: the shortcut hint is a promise, and an
                                  unwired Search row cannot keep it. -->
@@ -298,10 +301,10 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                 {#if showCollapse}
                     <NavButton
                         icon={icons.collapse}
-                        label="Collapse"
+                        label={i18n.t('sideBar.collapse')}
                         collapsed={narrow}
                         onclick={() => (collapsed = !collapsed)}
-                        aria-label={collapsed ? 'Expand' : 'Collapse'}
+                        aria-label={i18n.t(collapsed ? 'sideBar.expand' : 'sideBar.collapse')}
                     >
                         {#snippet right()}
                             <span class="text-fc-xs opacity-50 shrink-0">⌘D</span>

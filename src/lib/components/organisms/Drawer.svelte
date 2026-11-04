@@ -20,6 +20,7 @@
 <script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { createDialog } from '../../utils/dialog.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
@@ -38,6 +39,8 @@
         class: className = '',
         ...rest
     }: DrawerProps = $props();
+
+    const i18n = getI18n();
 
     const titleId = $props.id();
 
@@ -240,7 +243,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
                     </div>
                     {#if showClose}
                         <IconButton
-                            aria-label="Close"
+                            aria-label={i18n.t('dialog.close')}
                             class="-mr-1 border-0 text-fc-fg-muted hover:text-fc-fg"
                             onclick={() => (open = false)}
                         >

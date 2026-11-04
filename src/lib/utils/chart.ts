@@ -168,10 +168,9 @@ export function seriesLegend(series: ChartSeries[]): ChartLegendItem[] {
     return series.map((s, i) => ({ name: s.name, color: seriesColor(series, i) }));
 }
 
-export function seriesSummary(kind: string, series: ChartSeries[], count: number, unit: string): string {
-    return `${kind} chart of ${series.length} series across ${count} ${unit}: ${series
-        .map((s) => s.name)
-        .join(', ')}`;
+/** The series names joined for a screen-reader summary. */
+export function seriesNames(series: ChartSeries[]): string {
+    return series.map((s) => s.name).join(', ');
 }
 
 export function categoryLabels(labels: string[], count: number): string[] {

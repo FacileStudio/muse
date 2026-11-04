@@ -14,6 +14,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import { icons } from '../../icons.js';
     import Button from '../atoms/Button.svelte';
 
@@ -32,6 +33,8 @@
         class: className = '',
         ...rest
     }: PageHeaderProps = $props();
+
+    const i18n = getI18n();
 </script>
 
 <!--
@@ -48,7 +51,7 @@ Le bloc de titre d'une page : h1, description, actions et lien retour, avec le t
           instead); it belongs here once. `w-fit` stops the button stretching in the column.
         -->
         <Button href={back.href} variant="ghost" size="sm" icon={icons.chevronLeft} class="-ml-3 w-fit">
-            {back.label ?? 'Back'}
+            {back.label ?? i18n.t('pageHeader.back')}
         </Button>
     {/if}
 

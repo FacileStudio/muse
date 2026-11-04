@@ -23,6 +23,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import Button from '../atoms/Button.svelte';
     import Spinner from '../atoms/Spinner.svelte';
@@ -32,8 +33,8 @@
         open = $bindable(false),
         title,
         description,
-        confirmLabel = 'Confirm',
-        cancelLabel = 'Cancel',
+        confirmLabel,
+        cancelLabel,
         tone = 'neutral',
         icon,
         onConfirm,
@@ -42,6 +43,8 @@
         class: className = '',
         ...rest
     }: ConfirmModalProps = $props();
+
+    const i18n = getI18n();
 
     let pending = $state(false);
     let confirmed = false;
@@ -146,7 +149,7 @@ La confirmation d'une action destructive. Jamais une `Modal` nue avec deux bouto
                 disabled={pending}
                 onclick={() => (open = false)}
             >
-                {cancelLabel}
+                {cancelLabel ?? i18n.t('confirm.cancel')}
             </Button>
             <Button
                 variant={tone === 'danger' ? 'danger' : 'primary'}
@@ -157,7 +160,7 @@ La confirmation d'une action destructive. Jamais une `Modal` nue avec deux bouto
                 {#if pending}
                     <Spinner size="sm" class="border-current border-t-transparent" />
                 {/if}
-                {confirmLabel}
+                {confirmLabel ?? i18n.t('confirm.confirm')}
             </Button>
         </div>
     {/snippet}

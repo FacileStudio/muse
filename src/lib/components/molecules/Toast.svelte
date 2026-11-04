@@ -17,6 +17,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import Button from '../atoms/Button.svelte';
     import IconButton from '../atoms/IconButton.svelte';
@@ -32,6 +33,8 @@
         children,
         ...rest
     }: ToastProps = $props();
+
+    const i18n = getI18n();
 
     /*
         A toast floats over content it does not own, so it takes the floating-surface
@@ -103,7 +106,7 @@ La présentation d'un message éphémère. La file et l'auto-fermeture appartien
         <IconButton
             variant="ghost"
             class="-my-2 -mr-2 shrink-0"
-            aria-label="Dismiss notification"
+            aria-label={i18n.t('toast.dismiss')}
             onclick={onDismiss}
         >
             <Icon icon={icons.close} size={16} />
