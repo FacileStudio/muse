@@ -21,7 +21,11 @@
   `upgrade_url`.
 - `LegalFooter` (CGU, CGV, privacy, legal notice, defaulting to
   `https://sso.facile.studio/legal/<doc>?lang=<locale>`) and `LocaleSwitch`.
-- `legalUrl`, `signUpUrl`, `isSafeUpgradeUrl` helpers.
+- `legalUrl`, `signUpUrl`, `isSafeHref`, `safeHref` and `isSafeUpgradeUrl` helpers. Every href
+  muse renders from a prop (`SignInWithFacile`, `AuthScreen` sign-up, `LegalFooter` links,
+  `PlanLimit` upgrade) must be a same-origin path or an `https://` URL, or it falls back to
+  the default. Locales written by `set()`, `scopeLocale` and the URL helpers always pass
+  through `resolveLocale`.
 - `filet.yml` (suite standard limits) and `lefthook.yml` (shared FacileStudio/hooks config).
 - Docs site page "Langues", demo page "Lancement" with the four locales and both themes.
 

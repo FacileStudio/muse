@@ -4,7 +4,7 @@
     export type SignInSize = 'sm' | 'md' | 'lg';
 
     export interface SignInWithFacileProps extends Omit<HTMLAnchorAttributes, 'href'> {
-        /** The app's porte sign-in route. */
+        /** The app's porte sign-in route. Anything but a same-origin path or https URL falls back to `/auth/oidc`. */
         href?: string;
         size?: SignInSize;
         /** Stretch to the width of the container. */
@@ -20,10 +20,11 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
+    import { safeHref } from '../../utils/href.js';
     import Spinner from './Spinner.svelte';
 
     let {
-        href = '/auth/oidc',
+        href: hrefProp,
         size = 'md',
         fullWidth = false,
         loading = false,
@@ -34,6 +35,7 @@
     }: SignInWithFacileProps = $props();
 
     const i18n = getI18n();
+    const href = $derived(safeHref(hrefProp, '/auth/oidc'));
     let pending = $state(false);
     const busy = $derived(loading || pending);
     const name = $derived(label ?? i18n.t('signIn.label'));

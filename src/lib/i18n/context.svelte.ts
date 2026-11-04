@@ -14,11 +14,12 @@ export type LocaleSource = string | null | undefined | (() => string | null | un
 const KEY = Symbol.for('fc.i18n');
 
 /** A fixed-locale `I18n` with no context and no `<html lang>` effect: tests, emails, SSR helpers. */
-export function staticI18n(locale: Locale = DEFAULT_LOCALE): I18n {
+export function staticI18n(locale: string = DEFAULT_LOCALE): I18n {
+    const fixed = resolveLocale(locale);
     return {
-        locale,
+        locale: fixed,
         set: () => undefined,
-        t: createTranslator(museMessages, locale)
+        t: createTranslator(museMessages, fixed)
     };
 }
 
@@ -36,7 +37,7 @@ export function provideLocale(source: LocaleSource): I18n {
             return state.chosen ?? resolveLocale(read());
         },
         set(locale) {
-            state.chosen = locale;
+            state.chosen = resolveLocale(locale);
         },
         t: createTranslator(museMessages, () => i18n.locale)
     };
@@ -56,8 +57,8 @@ export function getI18n(): I18n {
  * Pins a subtree to one locale without touching `<html lang>`: a preview of another
  * language, or a block quoted in it. Put `lang={locale}` on the subtree's root element.
  */
-export function scopeLocale(source: Locale | (() => Locale)): I18n {
-    const read = typeof source === 'function' ? source : () => source;
+export function scopeLocale(source: string | (() => string)): I18n {
+    const read = () => resolveLocale(typeof source === 'function' ? source() : source);
     const i18n: I18n = {
         get locale() {
             return read();

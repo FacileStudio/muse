@@ -167,4 +167,5 @@ export type { I18n, LocaleSource } from './i18n/context.svelte.js';
 export { LEGAL_DOCS, LEGAL_BASE, SIGNUP_URL, legalUrl, signUpUrl } from './utils/legal.js';
 export type { LegalDoc } from './utils/legal.js';
 export { planLimitFrom, isSafeUpgradeUrl } from './utils/plan-limit.js';
+export { isSafeHref, safeHref } from './utils/href.js';
 export type { PlanLimitError } from './utils/plan-limit.js';
