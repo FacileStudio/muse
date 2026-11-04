@@ -42,7 +42,7 @@
 
     <Section title="AuthScreen" description="L'écran de connexion complet, dans la langue choisie en haut.">
         <Card class="overflow-hidden p-0">
-            <AuthScreen appName="Sablier" href="#/launch" class="min-h-0">
+            <AuthScreen appName="Sablier" class="min-h-0">
                 {#snippet logo()}
                     <Icon icon={icons.clock} size={40} class="text-fc-fg" />
                 {/snippet}

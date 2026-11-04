@@ -21,7 +21,8 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
-    import { LEGAL_BASE, legalUrl } from '../../utils/legal.js';
+    import { LEGAL_BASE, legalUrl, type LegalDoc } from '../../utils/legal.js';
+    import { safeHref } from '../../utils/href.js';
     import LocaleSwitch from './LocaleSwitch.svelte';
 
     let {
@@ -38,11 +39,13 @@
 
     const i18n = getI18n();
 
+    const link = (doc: LegalDoc, href: string | undefined) => safeHref(href, legalUrl(doc, i18n.locale, base));
+
     const links = $derived([
-        { href: cgu ?? legalUrl('cgu', i18n.locale, base), label: i18n.t('legal.cgu') },
-        { href: cgv ?? legalUrl('cgv', i18n.locale, base), label: i18n.t('legal.cgv') },
-        { href: privacy ?? legalUrl('privacy', i18n.locale, base), label: i18n.t('legal.privacy') },
-        { href: legalNotice ?? legalUrl('legal-notice', i18n.locale, base), label: i18n.t('legal.legalNotice') }
+        { href: link('cgu', cgu), label: i18n.t('legal.cgu') },
+        { href: link('cgv', cgv), label: i18n.t('legal.cgv') },
+        { href: link('privacy', privacy), label: i18n.t('legal.privacy') },
+        { href: link('legal-notice', legalNotice), label: i18n.t('legal.legalNotice') }
     ]);
 
     const classes = $derived(

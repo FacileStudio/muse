@@ -1,3 +1,5 @@
+import { isSafeHref } from './href.js';
+
 export type PlanLimitError = {
     message?: string;
     upgrade_url?: string;
@@ -15,20 +17,8 @@ const text = (value: unknown): string | undefined =>
 const amount = (value: unknown): number | string | undefined =>
     typeof value === 'number' && Number.isFinite(value) ? value : text(value);
 
-/**
- * True for a same-origin path or an https URL with a host and no credentials, the same rule
- * tronc's `WithUpgradeURL` applies server side. Anything else never reaches an `href`.
- */
-export function isSafeUpgradeUrl(raw: string | undefined): raw is string {
-    if (!raw || /[\s\\\p{Cc}]/u.test(raw)) return false;
-    if (raw.startsWith('/')) return !raw.startsWith('//');
-    try {
-        const url = new URL(raw);
-        return url.protocol === 'https:' && url.host !== '' && !url.username && !url.password;
-    } catch {
-        return false;
-    }
-}
+/** `isSafeHref`, under the name the 402 contract uses. */
+export const isSafeUpgradeUrl = (raw: string | undefined): raw is string => isSafeHref(raw);
 
 /**
  * Reads a 402 response body into a `PlanLimitError`, or `null` when it is not one. Accepts

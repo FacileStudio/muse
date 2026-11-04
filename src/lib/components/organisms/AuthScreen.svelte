@@ -28,6 +28,7 @@
     import { getI18n } from '../../i18n/context.svelte.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import { signUpUrl } from '../../utils/legal.js';
+    import { safeHref } from '../../utils/href.js';
     import SignInWithFacile from '../atoms/SignInWithFacile.svelte';
     import LegalFooter from '../molecules/LegalFooter.svelte';
 
@@ -47,7 +48,7 @@
 
     const i18n = getI18n();
     const headingId = $props.id();
-    const signUp = $derived(signUpHref === undefined ? signUpUrl(i18n.locale) : signUpHref);
+    const signUp = $derived(signUpHref === null ? null : safeHref(signUpHref, signUpUrl(i18n.locale)));
     let card: HTMLElement | null = $state(null);
 
     $effect(() => {
