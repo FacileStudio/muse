@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.10.0 (unreleased)
+
+### Added
+
+- i18n runtime, no dependency. `provideLocale(() => session.locale)` in the root layout sets the
+  locale for every muse component and keeps `<html lang>` in step; `getI18n()` reads it,
+  `scopeLocale()` pins a subtree. `createTranslator(catalogs, locale)` gives apps a typed `t()`
+  with `{name}` interpolation, plurals through `Intl.PluralRules` and fallback to English.
+  Locales: `fr`, `en`, `es`, `de` (`LOCALES`, `resolveLocale`, `LOCALE_NAMES`).
+- Catalogs for every muse string in the four locales (`museMessages`). es and de need native
+  review; see TRANSLATIONS.md.
+- `SignInWithFacile`: the one "Sign in with Facile" button. Facile mark, `sm`/`md`/`lg`,
+  `fullWidth`, `loading`, links to porte's `/auth/oidc`. Rules in BRAND.md.
+- `AuthScreen`: the sign-in screen. App name, `logo`, `tagline` and `notice` snippets, the
+  button, a "Create your account" link to Registre (`signUpHref`) and `LegalFooter`. No
+  password field.
+- `PlanLimit`: `banner` and `dialog` variants for a 402. `planLimitFrom(body)` reads tronc's
+  `{"error":{...}}` envelope or a bare `{message, upgrade_url, key, limit}` and drops an unsafe
+  `upgrade_url`.
+- `LegalFooter` (CGU, CGV, privacy, legal notice, defaulting to
+  `https://sso.facile.studio/legal/<doc>?lang=<locale>`) and `LocaleSwitch`.
+- `legalUrl`, `signUpUrl`, `isSafeUpgradeUrl` helpers.
+- `filet.yml` (suite standard limits) and `lefthook.yml` (shared FacileStudio/hooks config).
+- Docs site page "Langues", demo page "Lancement" with the four locales and both themes.
+
+### Changed
+
+- Default strings follow the locale. Without `provideLocale` they are English, which changes
+  `Dropzone`'s defaults from French to English. Text props still win.
+- Chart screen-reader summaries are reworded and translated. `seriesSummary` is replaced by
+  `seriesNames` (internal).
+- The auth archetype on the docs site now uses `AuthScreen`; the password form is gone.
+
+See MIGRATION.md §19.
+
 ## v0.9.0 (2026-11-03)
 
 ### Added

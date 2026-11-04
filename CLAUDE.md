@@ -25,7 +25,8 @@ muse/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map (47 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
-    components/               52 Svelte components (atoms/ molecules/ organisms/ charts/ motion/)
+    components/               59 Svelte components (layout/ atoms/ molecules/ organisms/ charts/ motion/)
+    i18n/                     Message helper, locale context (provideLocale/getI18n), fr/en/es/de catalogs
     fonts/                    Bundled Goga font files (.otf)
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
     utils/cn.ts               fc-*-aware tailwind-merge — every component uses it
@@ -38,7 +39,7 @@ muse/
     utils/toast.svelte.ts     Module-scope toast queue behind Toaster — toast, toasts
 ```
 
-Tier counts: 17 atoms, 14 molecules, 9 organisms, 6 charts, 6 motion. `ChartTable.svelte` and
+Tier counts: 5 layout, 19 atoms, 17 molecules, 10 organisms, 6 charts, 2 motion. `ChartTable.svelte` and
 `components/charts/entry.ts` are internal to the charts and not exported.
 
 ## Key commands
@@ -143,6 +144,9 @@ byte-identical duplicates on purpose — **edit both or neither**.
   components take `class` only and spread nothing.
 - Icons: Solar **`linear`** for chrome, MDI for plus/close/chevrons, `bold-duotone` for brand
   marks only. Icons inherit `currentColor`; always pass `width`, `height` and `class="block"`.
+- Every user-visible default string comes from `src/lib/i18n/messages/` via `getI18n().t(key)`,
+  and a prop always overrides it. A new key goes into all four catalogs; `i18n.test.ts` fails
+  on a missing key or a placeholder mismatch.
 - Mobile-first: minimum supported width is 360px, hit targets >= 44px, use `100dvh` not `100vh`.
 - All animations must respect `prefers-reduced-motion: reduce`.
 - GSAP with `power3.inOut` ease by default; press feedback goes through `springPress`.

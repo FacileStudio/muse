@@ -6,9 +6,11 @@
         SpaceSwitcher,
         Toaster,
         Topbar,
-        icons
+        icons,
+        provideLocale
     } from '@facile/muse';
     import Dashboard from './pages/Dashboard.svelte';
+    import Launch from './pages/Launch.svelte';
     import Motion from './pages/Motion.svelte';
     import Rhythm from './pages/Rhythm.svelte';
     import Projects from './pages/Projects.svelte';
@@ -24,6 +26,7 @@
         '#/spaces': Spaces,
         '#/rythme': Rhythm,
         '#/motion': Motion,
+        '#/launch': Launch,
         '#/settings': Settings
     };
 
@@ -69,6 +72,8 @@
     /* Apply the stored preference to <html> on boot; the store already read it. */
     setTheme(theme.mode);
 
+    provideLocale(navigator.language);
+
     /*
      * No Settings row here, by design — the user card at the bottom of the rail is the only way
      * in. See the comment in SideBar.svelte.
@@ -78,7 +83,8 @@
         { href: '#/projects', label: 'Projects', icon: icons.folder },
         { href: '#/spaces', label: 'Spaces', icon: icons.space },
         { href: '#/rythme', label: 'Rythme', icon: icons.palette },
-        { href: '#/motion', label: 'Motion', icon: icons.bolt }
+        { href: '#/motion', label: 'Motion', icon: icons.bolt },
+        { href: '#/launch', label: 'Lancement', icon: icons.key }
     ];
 
     const navPages = $derived(links.map((l) => ({ ...l, active: l.href === root })));
