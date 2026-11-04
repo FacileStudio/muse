@@ -2,7 +2,7 @@
     import type { HTMLTextareaAttributes } from 'svelte/elements';
 
     export interface TextareaProps extends HTMLTextareaAttributes {
-        class?: string; value?: string 
+        class?: string; value?: string
     }
 </script>
 

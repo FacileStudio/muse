@@ -2,7 +2,7 @@
     import type { HTMLAttributes } from 'svelte/elements';
 
     export interface DividerProps extends HTMLAttributes<HTMLHRElement> {
-        class?: string 
+        class?: string
     }
 </script>
 
