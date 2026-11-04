@@ -29,6 +29,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { icons } from '../../icons.js';
 
@@ -39,16 +40,20 @@
         maxSize,
         maxFiles,
         disabled = false,
-        label = 'Déposez vos fichiers ici',
+        label: labelProp,
         hint,
-        browseLabel = 'Parcourir',
-        dropAnnouncement = 'Relâchez pour ajouter les fichiers',
+        browseLabel,
+        dropAnnouncement,
         onFiles,
         onReject,
         children,
         class: className = '',
         ...rest
     }: DropzoneProps = $props();
+
+    const i18n = getI18n();
+
+    const label = $derived(labelProp ?? i18n.t('dropzone.label'));
 
     let depth = $state(0);
     const dragging = $derived(depth > 0 && !disabled);
@@ -184,9 +189,9 @@ Le dépôt de fichiers. Il valide aussi le chemin du glisser-déposer, pas seule
             class="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-fc-pill border border-fc-border px-4 text-fc-sm"
         >
             <Icon icon={icons.folder} size={16} />
-            {browseLabel}
+            {browseLabel ?? i18n.t('dropzone.browse')}
         </span>
     {/if}
 
-    <span class="sr-only" aria-live="polite">{dragging ? dropAnnouncement : ''}</span>
+    <span class="sr-only" aria-live="polite">{dragging ? (dropAnnouncement ?? i18n.t('dropzone.release')) : ''}</span>
 </label>

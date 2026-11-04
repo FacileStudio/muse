@@ -26,6 +26,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { icons } from '../../icons.js';
     import { isRedacted, maskSecret } from '../../utils/secret.js';
@@ -52,6 +53,8 @@
         ...rest
     }: SecretFieldProps = $props();
 
+    const i18n = getI18n();
+
     const uid = $props.id();
     const id = $derived(htmlFor ?? `${uid}-secret`);
 
@@ -73,7 +76,7 @@
     function toggle() {
         visible = !visible;
         onReveal?.(visible);
-        status = visible ? 'Secret revealed' : 'Secret hidden';
+        status = i18n.t(visible ? 'secret.revealed' : 'secret.hidden');
     }
 
     /*
@@ -85,7 +88,7 @@
         if (!visible || autoHideMs <= 0) return;
         const timer = setTimeout(() => {
             visible = false;
-            status = 'Secret hidden again';
+            status = i18n.t('secret.hiddenAgain');
         }, autoHideMs);
         return () => clearTimeout(timer);
     });
@@ -94,10 +97,10 @@
         try {
             await navigator.clipboard.writeText(value);
             copyTick += 1;
-            status = 'Copied to clipboard';
+            status = i18n.t('secret.copied');
             onCopy?.(true);
         } catch {
-            status = 'Could not copy — reveal it and copy by hand';
+            status = i18n.t('secret.copyFailed');
             onCopy?.(false);
         }
     }
@@ -159,7 +162,7 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                 title={visible || !sensitive ? value : undefined}
             >
                 <span class={visible || !sensitive ? 'truncate select-all' : 'truncate select-none'}
-                    >{empty ? placeholder || 'Not set' : shown}</span
+                    >{empty ? placeholder || i18n.t('secret.notSet') : shown}</span
                 >
             </output>
         {/if}
@@ -168,9 +171,9 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
             <IconButton
                 onclick={toggle}
                 disabled={inert}
-                aria-label={visible ? 'Hide secret' : 'Reveal secret'}
+                aria-label={i18n.t(visible ? 'secret.hideLabel' : 'secret.revealLabel')}
                 aria-pressed={visible}
-                title={visible ? 'Hide' : 'Reveal'}
+                title={i18n.t(visible ? 'secret.hide' : 'secret.reveal')}
             >
                 <Icon icon={visible ? icons.eyeClosed : icons.eye} size={18} />
             </IconButton>
@@ -180,8 +183,8 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
             <IconButton
                 onclick={copy}
                 disabled={inert}
-                aria-label={sensitive ? 'Copy secret to clipboard' : 'Copy to clipboard'}
-                title="Copy"
+                aria-label={i18n.t(sensitive ? 'secret.copySecretLabel' : 'secret.copyLabel')}
+                title={i18n.t('secret.copy')}
                 class={copied ? 'border-fc-success text-fc-success' : ''}
             >
                 <Icon icon={copied ? icons.check : icons.copy} size={18} />

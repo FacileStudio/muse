@@ -13,13 +13,16 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
 
     let {
         size = 'md',
-        label = 'Loading',
+        label,
         class: className = '',
         ...rest
     }: SpinnerProps = $props();
+
+    const i18n = getI18n();
 
     const sizes: Record<Size, string> = {
         sm: 'h-4 w-4 border-2',
@@ -42,4 +45,4 @@
 Une attente courte. Sous mouvement réduit il ralentit au lieu de se figer — un indicateur d'activité figé n'indique rien.
 -->
 
-<span role="status" aria-label={label} class={classes} {...rest}></span>
+<span role="status" aria-label={label ?? i18n.t('spinner.loading')} class={classes} {...rest}></span>

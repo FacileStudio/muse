@@ -22,7 +22,8 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelStride, linePath, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesSummary, seriesTipRows, seriesValues } from '../../utils/chart.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
+    import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelStride, linePath, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesNames, seriesTipRows, seriesValues } from '../../utils/chart.js';
     import { drawIn } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
     import ChartTable from './ChartTable.svelte';
@@ -40,10 +41,12 @@
         xFormat = (label: string) => label,
         yTicks = 4,
         animate = true,
-        emptyLabel = 'No data',
+        emptyLabel,
         class: className = '',
         ...rest
     }: LineChartProps = $props();
+
+    const i18n = getI18n();
 
     let w = $state(0);
     let svgEl: SVGSVGElement | null = $state(null);
@@ -103,7 +106,7 @@
 
     const legendOn = $derived(showLegend ?? series.length > 1);
     const legendItems = $derived(seriesLegend(series));
-    const summary = $derived(seriesSummary('Line', series, count, 'points'));
+    const summary = $derived(i18n.t('chart.lineSummary', { count, names: seriesNames(series) }));
     const tableRows = $derived(seriesRows(series, labels, count, yFormat));
     const tipRows = $derived(seriesTipRows(series, hover, yFormat));
 
@@ -152,7 +155,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
             class="flex items-center justify-center text-fc-sm text-fc-fg-muted"
             style:min-height="{height}px"
         >
-            {emptyLabel}
+            {emptyLabel ?? i18n.t('chart.empty')}
         </div>
     {:else if w > 0}
         <div class="relative">
@@ -280,7 +283,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
             </div>
         {/if}
 
-        <ChartTable caption={summary} head="Label" columns={series.map((s) => s.name)} rows={tableRows} />
+        <ChartTable caption={summary} head={i18n.t('chart.label')} columns={series.map((s) => s.name)} rows={tableRows} />
     {:else}
         <div style:height="{height}px"></div>
     {/if}

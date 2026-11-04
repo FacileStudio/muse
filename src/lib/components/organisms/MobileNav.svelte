@@ -17,6 +17,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import Avatar from '../atoms/Avatar.svelte';
 
@@ -28,6 +29,8 @@
         class: className = '',
         ...rest
     }: MobileNavProps = $props();
+
+    const i18n = getI18n();
 </script>
 
 <!--
@@ -74,9 +77,9 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
         {#if profileHref && user}
             <a
                 href={profileHref}
-                aria-label="Profile"
+                aria-label={i18n.t('mobileNav.profile')}
                 aria-current={profileActive ? 'page' : undefined}
-                title="Profile"
+                title={i18n.t('mobileNav.profile')}
                 class={twMerge(
                     'flex size-fc-nav-item shrink-0 items-center justify-center rounded-fc-pill transition-all duration-200',
                     profileActive ? 'bg-fc-accent shadow-sm' : 'hover:bg-fc-surface'

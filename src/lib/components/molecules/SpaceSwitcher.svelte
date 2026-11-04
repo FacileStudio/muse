@@ -21,6 +21,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { icons } from '../../icons.js';
 
@@ -28,12 +29,14 @@
         spaces = [],
         activeId = null,
         onSelect,
-        personalLabel = 'Personal',
+        personalLabel: personalProp,
         manageHref,
-        manageLabel = 'Manage spaces',
+        manageLabel,
         class: className = '',
         ...rest
     }: SpaceSwitcherProps = $props();
+
+    const i18n = getI18n();
 
     let open = $state(false);
     let rootEl: HTMLElement | null = $state(null);
@@ -42,6 +45,7 @@
     let maxHeight = $state(320);
     const activeSpace = $derived(spaces.find((s) => s.id === activeId) ?? null);
 
+    const personalLabel = $derived(personalProp === undefined ? i18n.t('spaceSwitcher.personal') : personalProp);
     const showPersonal = $derived(personalLabel !== null);
     const visible = $derived(spaces.length > 0);
 
@@ -171,7 +175,7 @@ Sans espace il ne rend rien, et `personalLabel={null}` retire la ligne personnel
                             onclick={() => (open = false)}
                         >
                             <Icon icon={icons.settings} size={16} />
-                            {manageLabel}
+                            {manageLabel ?? i18n.t('spaceSwitcher.manage')}
                         </a>
                     </div>
                 {/if}

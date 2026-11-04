@@ -16,6 +16,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import { parseHex } from '../../colors.js';
     import { getFieldContext } from '../../utils/field.js';
 
@@ -31,6 +32,8 @@
         class: className = '',
         ...rest
     }: ColorPickerProps = $props();
+
+    const i18n = getI18n();
 
     /*
      * `$bindable('')` and not `$bindable('#000000')`, deliberately.
@@ -96,7 +99,7 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
             type="color"
             value={shown}
             {disabled}
-            aria-label="Pick a colour"
+            aria-label={i18n.t('colorPicker.pick')}
             oninput={(event) => {
                 typed = null;
                 commit(event.currentTarget.value);
@@ -131,7 +134,7 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
     </div>
 
     {#if swatches.length > 0}
-        <div class="flex flex-wrap gap-1.5" role="group" aria-label="Colour presets">
+        <div class="flex flex-wrap gap-1.5" role="group" aria-label={i18n.t('colorPicker.presets')}>
             {#each swatches as color (color)}
                 {@const hex = parseHex(color) ?? color}
                 {@const active = selected !== null && hex.toLowerCase() === selected}

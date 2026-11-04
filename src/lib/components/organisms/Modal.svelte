@@ -22,6 +22,7 @@
 <script lang="ts">
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { createDialog } from '../../utils/dialog.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
@@ -39,6 +40,8 @@
         class: className = '',
         ...rest
     }: ModalProps = $props();
+
+    const i18n = getI18n();
 
     const sizes: Record<Size, string> = {
         sm: 'max-w-sm',
@@ -140,7 +143,7 @@ Un dialogue natif : le navigateur le place dans sa couche supérieure, au-dessus
                 {#if showClose && dismissible}
                     <button
                         type="button"
-                        aria-label="Close"
+                        aria-label={i18n.t('dialog.close')}
                         onclick={() => (open = false)}
                         class="-mt-2 -mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-fc-pill text-fc-fg-muted transition-colors hover:bg-fc-surface hover:text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
                     >

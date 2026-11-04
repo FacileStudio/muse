@@ -19,6 +19,7 @@
   "files": [
     "src/lib",
     "CHARTE.md",
+    "BRAND.md",
     "README.md"
   ],
   "peerDependencies": {

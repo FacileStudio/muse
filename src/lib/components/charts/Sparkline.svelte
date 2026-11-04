@@ -17,6 +17,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { getI18n } from '../../i18n/context.svelte.js';
     import {
         AREA_OPACITY,
         areaPath,
@@ -37,10 +38,12 @@
         showLast = false,
         valueFormat = formatCompact,
         animate = true,
-        emptyLabel = 'No data',
+        emptyLabel,
         class: className = '',
         ...rest
     }: SparklineProps = $props();
+
+    const i18n = getI18n();
 
     let w = $state(0);
     let svgEl: SVGSVGElement | null = $state(null);
@@ -88,9 +91,11 @@
     const last = $derived(points.length ? points[points.length - 1] : null);
 
     const summary = $derived(
-        `Sparkline of ${values.length} values, from ${valueFormat(values[0] ?? 0)} to ${valueFormat(
-            values[values.length - 1] ?? 0
-        )}`
+        i18n.t('chart.sparklineSummary', {
+            count: values.length,
+            first: valueFormat(values[0] ?? 0),
+            last: valueFormat(values[values.length - 1] ?? 0)
+        })
     );
 
     const tableRows = $derived.by((): ChartRow[] =>
@@ -112,7 +117,7 @@ Une tendance dans une ligne de tableau, sans axes ni légende.
 <div class={classes} use:resize={(width) => (w = width)} {...rest}>
     {#if isEmpty}
         <div class="flex items-center justify-center text-fc-xs text-fc-fg-muted" style:min-height="{height}px">
-            {emptyLabel}
+            {emptyLabel ?? i18n.t('chart.empty')}
         </div>
     {:else if w > 0}
         <svg
@@ -149,7 +154,7 @@ Une tendance dans une ligne de tableau, sans axes ni légende.
             {/if}
         </svg>
 
-        <ChartTable caption={summary} head="Point" columns={['Value']} rows={tableRows} />
+        <ChartTable caption={summary} head={i18n.t('chart.point')} columns={[i18n.t('chart.value')]} rows={tableRows} />
     {:else}
         <div style:height="{height}px"></div>
     {/if}

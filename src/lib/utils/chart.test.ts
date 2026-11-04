@@ -19,7 +19,7 @@ import {
     seriesCount,
     seriesEmpty,
     seriesRows,
-    seriesSummary,
+    seriesNames,
     seriesTipRows,
     seriesValues,
     tickStride,
@@ -146,7 +146,7 @@ test('series helpers span labels and data, and mark gaps', () => {
     ]);
     expect(seriesTipRows(series, 1, formatCompact).map((r) => r.value)).toEqual(['2', '—']);
     expect(seriesTipRows(series, -1, formatCompact)).toEqual([]);
-    expect(seriesSummary('Line', series, 3, 'points')).toBe('Line chart of 2 series across 3 points: a, b');
+    expect(seriesNames(series)).toBe('a, b');
 });
 
 const bars = (series: ChartSeries[], stacked = false, horizontal = false) =>
