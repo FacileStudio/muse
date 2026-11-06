@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.10.1 (unreleased)
+
+### Fixed
+
+- No session, no `?lang=`. `LegalFooter` and `AuthScreen`'s sign-up link add `?lang=` only
+  when the locale is known (`I18n.known`), so Registre falls back to the browser's languages
+  instead of English. `legalUrl` and `signUpUrl` take an optional locale.
+- `resolveLocale` reads a whole `Accept-Language` header, highest `q` first
+  (`it, de;q=0.8` is `de`). New `matchLocale` returns `null` instead of `en` when nothing matches.
+- The locale picked on the sign-in screen survives sign-in: `SignInWithFacile` adds
+  `ui_locales=<locale>` (OIDC) to its `href` when the locale is known, unless the href already
+  carries one. porte has to forward it to Registre.
+- `SignInWithFacile` stays idle on a modified click or when `target` opens another context,
+  and sets `aria-disabled` while busy.
+- `PlanLimit`'s banner keeps its `role="status"` region mounted and swaps the content, so
+  screen readers announce it. The dialog variant spreads `...rest` onto the `<dialog>`.
+- `LocaleSwitch` calls a consumer `onchange` as well as switching the locale, instead of losing
+  the switch to it.
+- `AuthScreen` no longer fades in on the first render (no flash after SSR hydration); it
+  animates only when mounted by a client-side navigation.
+- `upload.complete` agrees in number in fr and es (`1 sur 3 terminé`). Its params are now
+  `count` (done) and `total`.
+
+### Added
+
+- `LOCALE_COOKIE` (`fc_locale`), `matchLocale` and `withParam`. The "Langues" page shows
+  the cookie and `Accept-Language` fallback for session-less pages.
+
 ## v0.10.0 (2026-11-04)
 
 ### Added

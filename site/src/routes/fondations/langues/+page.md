@@ -38,6 +38,41 @@ export const handle = ({ event, resolve }) =>
     });
 ```
 
+## Pages sans session
+
+La page de connexion n'a pas de session. Passez alors le cookie de langue, puis l'en-tête
+`Accept-Language` : `resolveLocale` lit toutes les langues de l'en-tête, par ordre de `q`.
+
+```ts
+// +layout.server.ts
+import { LOCALE_COOKIE } from '@facile/muse';
+
+export const load = ({ locals, cookies, request }) => ({
+    locale: locals.session?.locale ?? cookies.get(LOCALE_COOKIE) ?? request.headers.get('accept-language')
+});
+```
+
+```svelte
+provideLocale(() => data.locale);
+```
+
+Quand aucune langue n'est connue (`getI18n().known` est faux), muse affiche l'anglais mais
+n'ajoute pas `?lang=` aux liens Registre : Registre choisit alors d'après le navigateur.
+
+## Garder la langue choisie
+
+`AuthScreen` reçoit `onLocaleChange` : enregistrez-y le choix, dans `LOCALE_COOKIE`, pour que
+la prochaine page sans session parte dans la bonne langue. Le bouton de connexion transmet
+déjà la langue à porte dans `ui_locales` (le paramètre OIDC standard), pour que l'écran de
+Registre et la session qui en sort la reprennent.
+
+```svelte
+<AuthScreen
+    appName="Sablier"
+    onLocaleChange={(l) => (document.cookie = `${LOCALE_COOKIE}=${l}; path=/; max-age=31536000; samesite=lax`)}
+/>
+```
+
 ## Les textes de l'app
 
 Le même moteur sert aux catalogues de l'app. TypeScript exige que les quatre langues aient
@@ -62,7 +97,8 @@ const t = createTranslator(messages, () => i18n.locale);
 ## Changer de langue
 
 `LocaleSwitch` liste les quatre langues dans leur propre langue. Il change la langue de muse
-tout de suite ; `onChange` sert à l'enregistrer (profil Registre, cookie). `LegalFooter` l'inclut.
+tout de suite ; `onChange` sert à l'enregistrer (profil Registre, cookie). Un `onchange` natif
+est appelé en plus, pas à la place. `LegalFooter` l'inclut.
 
 ## Un bloc dans une autre langue
 

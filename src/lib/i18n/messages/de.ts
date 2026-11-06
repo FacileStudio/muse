@@ -75,7 +75,10 @@ export const de: MuseMessages = {
     'toast.dismiss': 'Benachrichtigung schließen',
     'upload.total': 'Gesamtfortschritt des Uploads',
     'upload.progressFor': 'Upload-Fortschritt für {name}',
-    'upload.complete': '{done} von {count} abgeschlossen',
+    'upload.complete': {
+        one: '{count} von {total} abgeschlossen',
+        other: '{count} von {total} abgeschlossen'
+    },
     'upload.done': 'Fertig',
     'upload.failed': 'Fehlgeschlagen',
     'upload.waiting': 'Wartet',

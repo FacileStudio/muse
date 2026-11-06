@@ -17,9 +17,15 @@
         notice?: Snippet;
         /** Overrides for the four legal links. */
         legal?: Omit<LegalFooterProps, 'class' | 'onLocaleChange'>;
+        /**
+         * Persist the picked locale here, for example in the `LOCALE_COOKIE` cookie, so the next
+         * session-less page starts in it. The sign-in link already carries it as `ui_locales`.
+         */
         onLocaleChange?: (locale: Locale) => void;
         class?: string;
     }
+
+    const boot = { painted: false };
 </script>
 
 <script lang="ts">
@@ -48,11 +54,14 @@
 
     const i18n = getI18n();
     const headingId = $props.id();
-    const signUp = $derived(signUpHref === null ? null : safeHref(signUpHref, signUpUrl(i18n.locale)));
+    const signUp = $derived(signUpHref === null ? null : safeHref(signUpHref, signUpUrl(i18n.known ? i18n.locale : null)));
     let card: HTMLElement | null = $state(null);
 
+    const animate = boot.painted;
+
     $effect(() => {
-        if (!card || prefersReducedMotion()) return;
+        boot.painted = true;
+        if (!animate || !card || prefersReducedMotion()) return;
         const tween = gsap.from(card, { opacity: 0, y: 12, duration: 0.5, ease: 'power3.inOut' });
         return () => tween.kill();
     });

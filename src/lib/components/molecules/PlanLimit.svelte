@@ -1,11 +1,11 @@
 <script module lang="ts">
-    import type { HTMLAttributes } from 'svelte/elements';
+    import type { HTMLAttributes, HTMLDialogAttributes } from 'svelte/elements';
     import type { PlanLimitError } from '../../utils/plan-limit.js';
 
     export type PlanLimitVariant = 'banner' | 'dialog';
 
     export interface PlanLimitProps extends HTMLAttributes<HTMLDivElement> {
-        /** The 402 body, read with `planLimitFrom`. `null` renders nothing. */
+        /** The 402 body, read with `planLimitFrom`. With `null` the banner keeps an empty live region mounted. */
         error: PlanLimitError | null;
         /** `banner` sits in the page; `dialog` answers the action that hit the limit. */
         variant?: PlanLimitVariant;
@@ -38,10 +38,11 @@
         error?.limit === undefined ? undefined : i18n.t('planLimit.limit', { limit: error.limit })
     );
 
+    const dialogRest = $derived(rest as unknown as Omit<HTMLDialogAttributes, 'open' | 'title' | 'class' | 'children'>);
+
     $effect(() => {
         if (error) open = true;
     });
-
 </script>
 
 <!--
@@ -54,28 +55,32 @@ La limite d'offre atteinte, lue depuis une réponse 402 : un bandeau dans la pag
     {#if limit}<p class="text-fc-fg-muted">{limit}</p>{/if}
 {/snippet}
 
-{#if error && variant === 'banner'}
+{#if variant === 'banner'}
     <div
         role="status"
-        data-limit-key={error.key}
-        class={twMerge(
-            'flex flex-wrap items-center justify-between gap-3 rounded-fc-md bg-fc-warning/10 p-3 text-fc-sm text-fc-fg',
-            className
-        )}
+        data-limit-key={error?.key}
+        class={error
+            ? twMerge(
+                  'flex flex-wrap items-center justify-between gap-3 rounded-fc-md bg-fc-warning/10 p-3 text-fc-sm text-fc-fg',
+                  className
+              )
+            : undefined}
         {...rest}
     >
-        <div class="flex min-w-48 flex-1 flex-col gap-1">
-            <p class="font-semibold text-fc-warning">{i18n.t('planLimit.title')}</p>
-            {@render body()}
-        </div>
-        {#if upgrade}
-            <Button href={upgrade} rel="external" size="sm">
-                {i18n.t('planLimit.cta')}
-            </Button>
+        {#if error}
+            <div class="flex min-w-48 flex-1 flex-col gap-1">
+                <p class="font-semibold text-fc-warning">{i18n.t('planLimit.title')}</p>
+                {@render body()}
+            </div>
+            {#if upgrade}
+                <Button href={upgrade} rel="external" size="sm">
+                    {i18n.t('planLimit.cta')}
+                </Button>
+            {/if}
         {/if}
     </div>
 {:else if error}
-    <Modal bind:open title={i18n.t('planLimit.title')} size="sm" showClose {onClose} class={className}>
+    <Modal bind:open title={i18n.t('planLimit.title')} size="sm" showClose {onClose} class={className} {...dialogRest}>
         <div class="flex flex-col gap-2 text-fc-sm text-fc-fg" data-limit-key={error.key}>
             {@render body()}
         </div>
