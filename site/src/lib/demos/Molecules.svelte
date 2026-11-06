@@ -1,12 +1,14 @@
 <script lang="ts">
     import {
-        Button, ColorPicker, Dropzone, EmptyState, Field, Input, NavButton, OptionCards,
+        Breadcrumb, Button, ColorPicker, Dropzone, EmptyState, Field, Input, Menu, NavButton, OptionCards,
+        Pagination,
         SecretField, SettingsRow, SettingsSection, SpaceSwitcher, StatCard, SwatchPicker,
         Switch, Tabs, icons, toast
     } from '@facile/muse';
     import Row from './Row.svelte';
 
     let email = $state('');
+    let page = $state(4);
     let view = $state('board');
     let section = $state('profil');
     let colour = $state('#6366f1');
@@ -82,6 +84,21 @@
 <Row name="SwatchPicker · ColorPicker" lead="Choisir dans une palette fixe, ou choisir n'importe quelle couleur.">
     <SwatchPicker bind:value={swatch} />
     <ColorPicker bind:value={colour} />
+</Row>
+
+<Row name="Breadcrumb · Pagination · Menu" lead="Navigation dans une arborescence, dans une liste, et un menu d'actions.">
+    <div class="flex w-full flex-col gap-3">
+        <Breadcrumb items={[{ label: 'Fichiers', href: '#' }, { label: 'Clients', href: '#' }, { label: 'Contrat' }]} />
+        <Pagination bind:page pageCount={18} />
+        <Menu
+            label="Compte"
+            items={[
+                { label: 'Réglages', href: '#', icon: icons.settings },
+                { separator: true },
+                { label: 'Se déconnecter', onselect: () => toast.info('Déconnecté'), icon: icons.logout, tone: 'danger' }
+            ]}
+        />
+    </div>
 </Row>
 
 <Row name="SpaceSwitcher" lead="Le sélecteur d'espace du rail. Se retourne quand il manque de place sous lui.">

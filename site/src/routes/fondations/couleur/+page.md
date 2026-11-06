@@ -8,8 +8,8 @@ Mesuré avant d'activer la coupe : douze des treize apps consommatrices utilisai
 utilitaire de la palette stock. Seule Agenda en avait treize, tous des restes de shadcn.
 
 Survivent quatre primitives neutres — `white`, `black`, `transparent`, `current` — parce que ce
-sont des primitives et non des choix de palette : un voile, `border-transparent` sur un badge,
-`border-current` qui suit l'encre.
+sont des primitives et non des choix de palette : un voile, `text-white` sur une pastille,
+`currentColor` qui suit l'encre.
 
 ## Chroma zéro
 
@@ -25,7 +25,8 @@ séries de graphiques.
 | Surface de conteneur | `bg-fc-component` |
 | Encre | `text-fc-fg`, `text-fc-fg-muted` |
 | Accent | `bg-fc-accent` / `text-fc-accent-fg` |
-| Bordure d'un contrôle de formulaire, anneau de focus | `border-fc-border`, `outline-fc-ring` |
+| Remplissage d'un contrôle de formulaire (3:1 sur la page, une carte et `fc-surface`) | `bg-fc-field`, `text-fc-field-hint` |
+| Anneau de focus | `outline-fc-ring` |
 
 ## Inversé, jamais teinté
 
@@ -36,26 +37,30 @@ premier en atteignant un `bg-primary/10`.
 
 Corollaire : le survol d'une carte cliquable **monte** vers `fc-surface`. Il ne s'assombrit pas.
 
-## Pas de bordure décorative
+## Pas de bordure
 
-Les surfaces se séparent par leur **fond** et par l'**espace**, jamais par un trait. Une carte,
-une section, un panneau, une liste, un en-tête, une barre latérale, une modale, un tiroir, un
-menu ou un toast ne portent ni `border`, ni `divide-*`, ni `ring` ou `outline` décoratif.
+Muse ne dessine aucune bordure. La séparation vient des **fonds**, de l'**espace** et, sur les surfaces
+flottantes seulement, d'une **ombre**. Ni `border`, ni `divide-*`, ni `ring` : ni sur une carte, un
+panneau, une liste, un tableau, un séparateur, un menu, un toast, une modale, ni sur un champ.
 
 - Un conteneur prend `bg-fc-component` sur `bg-fc-page`.
 - Un plateau à l'intérieur d'une carte prend `bg-fc-surface`.
-- Les lignes d'une liste se séparent par leur padding vertical.
+- Les lignes d'une liste se séparent par leur padding vertical, un tableau alterne ses fonds.
 - Une surface flottante prend un fond opaque et `shadow-lg`.
+- Un contrôle de formulaire n'a que son fond pour frontière, donc `bg-fc-field`, mesuré à 3:1 contre
+  la page, une carte et `fc-surface` (WCAG 2.2, 1.4.11). Cases et boutons radio sont des aplats
+  inversés en accent une fois cochés, avec un tracé SVG ; un champ invalide mêle du rouge à son fond
+  et `Field` ajoute une icône et le message, pour que l'état ne tienne jamais à la couleur seule.
+- Le focus reste l'unique anneau, un `outline`, jamais une bordure.
 
-Une bordure reste là où elle porte un sens : les contrôles de formulaire, le pointillé de
-`Dropzone`, les filets de ligne d'un `Table`, un `Divider` posé exprès, et l'anneau de focus.
-`no-decorative-border.test.ts` fait échouer le build sur toute autre bordure dans muse.
+`no-borders.test.ts` fait échouer le build sur toute bordure, tout `divide-*`, tout `ring` et tout
+`outline` hors focus dans `src/lib/components`. Seuls `border-0` et `border-none` passent.
 
 ## Le mode sombre a une moitié que les tokens n'atteignent pas
 
 `color-scheme` doit être déclaré, dans les deux blocs. Les propriétés personnalisées ne
-touchent que ce que *vous* peignez : le navigateur peint le menu déroulant d'un `<select>`
-natif, l'intérieur des contrôles de formulaire, le fond de l'autocomplétion, le caret, la
+touchent que ce que *vous* peignez : le navigateur peint le sélecteur de date, les barres de défilement système
+et l'intérieur des contrôles de formulaire, le fond de l'autocomplétion, le caret, la
 sélection de texte et le canevas au-delà du fond de page. Tout cela reste clair sans
 `color-scheme: dark`, sur une page par ailleurs entièrement sombre.
 

@@ -1,7 +1,7 @@
 <script lang="ts">
     import {
         Alert, Avatar, Badge, Button, Card, Checkbox, Divider, Icon, IconButton, Input,
-        Radio, Select, Skeleton, Spinner, StatusDot, Switch, Textarea, icons
+        Progress, Radio, Select, Skeleton, Spinner, StatusDot, Switch, Textarea, icons
     } from '@facile/muse';
     import Row from './Row.svelte';
 
@@ -47,22 +47,31 @@
     </div>
 </Row>
 
-<Row name="Input · Textarea · Select" lead="Tous en h-11. Dans un Field ils adoptent son id.">
+<Row name="Input · Textarea · Select" lead="Tous en h-11, remplis sans bordure. Select ouvre sa propre liste, jamais celle du système. Dans un Field ils adoptent son id.">
     <div class="grid w-full gap-3 sm:grid-cols-3">
         <Input bind:value={text} placeholder="Nom" aria-label="Nom" />
-        <Select aria-label="Rôle">
-            <option>Membre</option>
-            <option>Admin</option>
-        </Select>
+        <Select
+            aria-label="Rôle"
+            value="Membre"
+            options={[{ value: 'Membre', label: 'Membre' }, { value: 'Admin', label: 'Admin' }]}
+        />
         <Textarea rows={2} placeholder="Notes" aria-label="Notes" />
     </div>
 </Row>
 
-<Row name="Checkbox · Radio · Switch" lead="Les trois contrôles qui s'enveloppent dans leur propre label.">
+<Row name="Checkbox · Radio · Switch" lead="Des aplats sans bordure, cochés en accent. L'input natif reste là, seul le tracé est dessiné.">
     <Checkbox bind:checked label="M'envoyer un résumé" />
     <Radio bind:group value="a" label="Mensuel" />
     <Radio bind:group value="b" label="Hebdomadaire" />
     <Switch bind:checked={toggled} label="Notifications" />
+</Row>
+
+<Row name="Progress" lead="Un aplat sur un aplat. Sans valeur, la barre pulse.">
+    <div class="flex w-full flex-col gap-3">
+        <Progress value={64} label="Stockage" />
+        <Progress value={90} tone="warning" label="Quota" />
+        <Progress label="Synchronisation" />
+    </div>
 </Row>
 
 <Row name="Avatar" lead="Retombe sur l'initiale quand l'image échoue — pas sur son alt.">
