@@ -1,5 +1,53 @@
 # Changelog
 
+## v0.13.0 (unreleased)
+
+### Added
+
+- `Select` draws its own option list. A `button[role=combobox]` opens a `role=listbox` popup
+  (WAI-ARIA APG select-only combobox): arrows, Home, End, PageUp, PageDown, Enter, Space,
+  Escape, Tab, type-ahead, `aria-activedescendant`, 44px options, disabled options and
+  `<optgroup>`. The popup is a top-layer popover, so it works inside `Modal` and `Drawer`, flips
+  upward near the viewport edge and scrolls the active option into view. A hidden native
+  `<select>` keeps `name`, `required`, `bind:value`, `onchange` and form submission. New props:
+  `options` (also renders the label on the server) and `placeholder`.
+- `Menu` (action menu, APG menu button), `Progress`, `Breadcrumb` and `Pagination`, replacing
+  hand-rolled copies in Bulle, Courrier, Nuage and Glouton.
+- Tokens `fc-field` (the fill of every form control, 3:1 against the page, a card and
+  `fc-surface`) and `fc-field-hint` (placeholder and icons on it, 4.5:1), in both dark blocks and
+  in `cn.ts`. `tokens.test.ts` recomputes the contrast ratios.
+- `controlFill` and `controlLine` exports, the one look of a text-like control, and
+  `resolveField`, the one place a control merges its own ids with its `Field`.
+- `Field` and `SecretField` put an icon before the error message, so an invalid state never
+  rests on colour alone.
+
+### Changed
+
+- **No borders anywhere.** `Input`, `Textarea`, `Select`, `SecretField` and `ColorPicker` are
+  filled with `fc-field`. `Checkbox` and `Radio` are 20px filled boxes, inverted to the accent when
+  checked, with the mark drawn as an SVG (the native input stays, `appearance-none`). `Switch`
+  is a filled track. `Dropzone`, the `outline` `Button`, the default `IconButton`, `Divider`,
+  `Table` row rules, `Badge`, the swatch pickers, `ProfileCard`'s identity dot and `Spinner` lose
+  their border or ring. A selected swatch scales up and shows a check mark. `Spinner` is an SVG
+  arc, so tint it with a text colour, not a border colour. `no-borders.test.ts` replaces
+  `no-decorative-border.test.ts` and has no allowlist.
+- `Select` renders a wrapper `<div>`: `class` lands on it, not on a `<select>`. Remaining props
+  still reach the (hidden) native select.
+- `Table` alternates row fills and lights the hovered row.
+- Chart grid lines use `fc-surface`.
+- `SpaceSwitcher` shares its flip-up arithmetic with `Select` and `Menu` (`placePopup`).
+- `Input`, `Textarea`, `Select`, `Checkbox`, `Radio` and `Switch` resolve their `Field` wiring
+  through `resolveField` instead of six copies.
+
+### Deprecated
+
+- `fc-border` is used by nothing in muse. It stays so consumer classes keep a colour. Use
+  `fc-surface` or `fc-field`.
+
+### Removed
+
+- The `--fc-select-chevron` custom property: `Select` draws a chevron `Icon`.
+
 ## v0.12.1 (2026-11-06)
 
 ### Fixed
