@@ -6,8 +6,9 @@
         /** Public catalog endpoint, fetched once on the client when `catalog` is not given. */
         catalogUrl?: string;
         /**
-         * A catalog body (`{ plans: [...] }`) loaded server side. Skips the fetch. Prefer it: the
-         * browser fetch needs the catalog to send `Access-Control-Allow-Origin` for the app's origin.
+         * A catalog body (`{ plans: [...] }`) loaded server side. Skips the fetch and renders in SSR.
+         * The browser fetch needs Ardoise v0.14.1+ (CORS `*`) and, under tronc's CSP,
+         * `connect-src https://api-ardoise.facile.studio`.
          */
         catalog?: unknown;
         /** Feature keys this app cares about, shown first on every card. */
@@ -15,6 +16,8 @@
         /** Where each card's button goes; `plan` and `interval` are added for a paid plan. */
         ctaHref?: string;
         interval?: BillingInterval;
+        /** Add a bare free card when the catalog lists no free plan. Off: muse never invents one. */
+        synthesizeFree?: boolean;
         title?: string;
         /** The section heading level; cards take the next one. */
         headingLevel?: 2 | 3;
@@ -38,6 +41,7 @@
         highlight = [],
         ctaHref,
         interval = $bindable('month'),
+        synthesizeFree = false,
         title,
         headingLevel = 2,
         timeoutMs,
@@ -50,7 +54,7 @@
     let fetched = $state<CatalogPlan[]>([]);
 
     const source = $derived(Array.isArray(catalog) ? { plans: catalog } : catalog);
-    const plans = $derived(withFreePlan(catalog === undefined ? fetched : parseCatalog(source)));
+    const plans = $derived(withFreePlan(catalog === undefined ? fetched : parseCatalog(source), synthesizeFree));
     const href = $derived(safeHref(ctaHref, 'https://sso.facile.studio/spaces'));
     const yearly = $derived(plans.some((p) => p.prices.some((q) => q.interval === 'year')));
     const monthly = $derived(plans.some((p) => p.prices.some((q) => q.interval === 'month')));
@@ -63,6 +67,7 @@
     ]);
 
     $effect(() => {
+        fetched = [];
         if (catalog !== undefined) return;
         const controller = new AbortController();
         fetchCatalog(catalogUrl, { signal: controller.signal, timeoutMs }).then((result) => {
@@ -74,7 +79,7 @@
 
 <!--
 @component
-Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offre, l'offre gratuite en premier, bascule mensuel / annuel. Ne rend rien si le catalogue est vide ou injoignable.
+Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offre, les offres gratuites en premier, bascule mensuel / annuel. Ne rend rien si le catalogue est vide ou injoignable.
 -->
 
 {#if plans.length}

@@ -36,7 +36,7 @@
     }: DownloadCtaProps = $props();
 
     const i18n = getI18n();
-    const known = $derived(platforms.filter((p, i) => p in PLATFORMS && platforms.indexOf(p) === i));
+    const known = $derived(platforms.filter((p, i) => Object.hasOwn(PLATFORMS, p) && platforms.indexOf(p) === i));
     const names = $derived(
         new Intl.ListFormat(i18n.locale, { type: 'conjunction' }).format(known.map((p) => PLATFORMS[p].name))
     );

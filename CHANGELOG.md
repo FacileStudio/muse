@@ -6,7 +6,7 @@
 
 - `PricingPlans`: Facile's plans from Ardoise's public catalog (`catalogUrl`, default
   `https://api-ardoise.facile.studio/api/catalog`, or a server-loaded `catalog`). One card per
-  plan with a free plan first (the catalog's own, or a synthetic one), a monthly/yearly radio
+  plan with the free plans first, a monthly/yearly radio
   group with the best yearly saving, prices through `Intl.NumberFormat` in the locale, and
   feature rows for `nuage.storage_gb`, `courrier.mailboxes`, `echo.max_call_minutes`,
   `echo.max_participants`, `echo.recording` and `glouton.access` (`-1` is unlimited, unknown
@@ -14,9 +14,13 @@
   (default `https://sso.facile.studio/spaces`, checked with `isSafeHref`) with `plan` and
   `interval` added for a paid plan. It renders nothing when the catalog is empty, malformed or
   unreachable: one request, a 5 s timeout, no retries.
-  Load the catalog server side and pass `catalog` where you can: as of 2026-11-06 the
-  catalog sends no `Access-Control-Allow-Origin`, so a browser fetch from an app is blocked
-  and the section stays empty.
+  The browser fetch works from Ardoise v0.14.1, which answers the catalog with
+  `Access-Control-Allow-Origin: *` (no credentials). An app that sends tronc's CSP must add
+  `connect-src https://api-ardoise.facile.studio`. Pass `catalog` (loaded in `+page.server.ts`)
+  to render the plans in SSR with no client request.
+- Free plans are the ones the catalog lists with no price or a zero price, and every one is
+  shown, first, in catalog order. A plan whose prices all fail validation is dropped, never
+  shown as free. `synthesizeFree` adds a bare free card when the catalog has none; it is off.
 - `parseCatalog`, `fetchCatalog` and the pricing helpers (`formatPrice`, `yearlySaving`,
   `featureRows`, `withFreePlan`...). Validation is strict: malformed plans, prices and features
   are dropped one by one.

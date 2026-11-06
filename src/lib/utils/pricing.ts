@@ -38,7 +38,7 @@ export function featureRows(plan: CatalogPlan, highlight: readonly string[] = []
         .map(({ row }) => row);
 }
 
-/** A plan with no price, or only zero prices. */
+/** A plan the catalog lists as free: no price at all (`parsePlan` drops broken ones), or only zero prices. */
 export const isFreePlan = (plan: CatalogPlan): boolean => plan.prices.every((p) => p.amount === 0);
 
 /** The price for `interval`, falling back to the plan's other interval. */
@@ -55,11 +55,13 @@ export function yearlySaving(plan: CatalogPlan): number {
     return saving > 0.005 ? saving : 0;
 }
 
-/** Paid plans as listed, with a free plan first: the catalog's own, or a synthetic one. */
-export function withFreePlan(plans: CatalogPlan[]): CatalogPlan[] {
-    if (plans.length === 0) return [];
+/**
+ * Every free plan the catalog lists, in catalog order, then the paid ones. With `synthesize`,
+ * a bare free card is added first when the catalog lists paid plans and no free one.
+ */
+export function withFreePlan(plans: CatalogPlan[], synthesize = false): CatalogPlan[] {
     const free = plans.filter(isFreePlan);
     const paid = plans.filter((p) => !isFreePlan(p));
-    const first = free[0] ?? { key: 'free', name: '', features: {}, prices: [] };
-    return [first, ...paid];
+    const extra = synthesize && free.length === 0 && paid.length > 0;
+    return [...(extra ? [{ key: 'free', name: '', features: {}, prices: [] }] : free), ...paid];
 }
