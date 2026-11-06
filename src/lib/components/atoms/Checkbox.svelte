@@ -11,7 +11,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { getFieldContext } from '../../utils/field.js';
+    import { getFieldContext, resolveField } from '../../utils/field.js';
 
     let {
         label,
@@ -36,9 +36,7 @@
      * and outside a Field the lookup is a no-op.
      */
     const field = getFieldContext();
-    const controlId = $derived(id ?? field?.().id);
-    const describes = $derived(describedBy ?? field?.().describedBy);
-    const isInvalid = $derived(invalid ?? (field?.().invalid ? 'true' : undefined));
+    const control = $derived(resolveField(field?.(), { id, describedBy, invalid }));
 
     const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
 </script>
@@ -52,9 +50,9 @@ Une case à cocher qui adopte l'identifiant de son `Field`. La boîte est un apl
     <span class="relative inline-flex size-5 shrink-0">
         <input
             type="checkbox"
-            id={controlId}
-            aria-describedby={describes}
-            aria-invalid={isInvalid}
+            id={control.id}
+            aria-describedby={control.describedBy}
+            aria-invalid={control.invalid}
             bind:checked
             class="peer size-5 shrink-0 cursor-pointer appearance-none rounded-fc-sm bg-fc-field transition-colors checked:bg-fc-accent aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_30%,var(--color-fc-field))] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
             {...rest}

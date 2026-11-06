@@ -9,7 +9,7 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { controlFill } from '../../utils/control.js';
-    import { getFieldContext } from '../../utils/field.js';
+    import { getFieldContext, resolveField } from '../../utils/field.js';
 
     let {
         value = $bindable(''),
@@ -22,9 +22,7 @@
     }: TextareaProps = $props();
 
     const field = getFieldContext();
-    const controlId = $derived(id ?? field?.().id);
-    const describes = $derived(describedBy ?? field?.().describedBy);
-    const isInvalid = $derived(invalid ?? (field?.().invalid ? 'true' : undefined));
+    const control = $derived(resolveField(field?.(), { id, describedBy, invalid }));
 
     const classes = $derived(twMerge('w-full resize-y px-3 py-2', controlFill, className));
 </script>
@@ -37,9 +35,9 @@ Une zone de texte multiligne, redimensionnable verticalement, qui adopte le cont
 <textarea
     bind:value
     {rows}
-    id={controlId}
-    aria-describedby={describes}
-    aria-invalid={isInvalid}
+    id={control.id}
+    aria-describedby={control.describedBy}
+    aria-invalid={control.invalid}
     class={classes}
     {...rest}
 ></textarea>
