@@ -31,6 +31,11 @@ describe('landingHref', () => {
         }
     });
 
+    test('rejects case, whitespace, control-character and slash tricks', () => {
+        const bad = ['JAVASCRIPT:alert(1)', ' javascript:1', 'java\tscript:1', 'java\u0000script:1', 'vbscript:x', '\u200bjavascript:1', '/\\evil.com', '/\t/evil.com', 'https:evil.com', '#a b'];
+        for (const raw of bad) expect(landingHref(raw)).toBeNull();
+    });
+
     test('safeLinks drops unsafe entries and keeps the rest in order', () => {
         const out = safeLinks([{ href: '/a' }, { href: 'javascript:1' }, { href: '#b' }]);
         expect(out.map((l) => l.href)).toEqual(['/a', '#b']);
