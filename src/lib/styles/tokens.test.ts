@@ -167,17 +167,30 @@ describe('form control fill (subtle by design, strict on text)', () => {
  * control edge. The forced-colors block is the one place muse draws a border.
  */
 describe('forced-colors', () => {
-    const block = css.slice(css.indexOf('@media (forced-colors: active)'));
+    const forced = css.slice(css.indexOf('@media (forced-colors: active)'));
 
-    test('every control kind gets a ButtonText boundary', () => {
-        for (const selector of ['input:not', 'textarea', 'select', "[role='combobox']", "[role='switch'] + span"]) {
-            expect(block).toContain(selector);
+    test('fields, boxes, the switch track, popups and the progress track get a CanvasText edge', () => {
+        for (const selector of ['input:not', 'textarea', 'select', "[role='switch'] + span", "[role='progressbar']", "[role='listbox']", "[role='menu']"]) {
+            expect(forced).toContain(selector);
         }
-        expect(block).toContain('border: 1px solid ButtonText');
+        expect(forced).toContain('border: 1px solid CanvasText');
     });
 
-    test('checked boxes and the switch use system colours', () => {
-        expect(block).toContain('Highlight');
-        expect(block).toContain('HighlightText');
+    test('triggers and buttons get a ButtonText edge', () => {
+        expect(forced).toContain("[role='combobox']");
+        expect(forced).toContain('border: 1px solid ButtonText');
+    });
+
+    test('checked and active states use Highlight', () => {
+        expect(forced).toContain('background-color: Highlight');
+        expect(forced).toContain("[role='option'][data-active='true']");
+        expect(forced).toContain('HighlightText');
+    });
+
+    test('forced-color-adjust is turned off for the switch thumb and the SVG marks only', () => {
+        const rules = forced.split('}').filter((rule) => rule.includes('forced-color-adjust: none'));
+        expect(rules).toHaveLength(2);
+        expect(rules.join(' ')).toContain("[role='switch'] + span > span");
+        expect(rules.join(' ')).toContain('+ svg');
     });
 });

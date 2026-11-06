@@ -1,5 +1,5 @@
 import { keyAction, type KeyAction } from './keys.js';
-import { moveActive, typeahead, type ListModel } from './listbox.js';
+import { moveActive, shouldNotify, typeahead, type ListModel } from './listbox.js';
 import { AnchoredPopup } from './popup.svelte.js';
 
 const NEED = 240;
@@ -45,9 +45,10 @@ export class SelectState extends AnchoredPopup {
     pick = (index: number): void => {
         const option = this.host.model().options[index];
         if (!option || option.disabled) return;
+        const notify = shouldNotify(this.host.value(), option.value);
         const native = this.host.native();
-        if (native && native.value !== option.value) {
-            native.value = option.value;
+        if (native) native.value = option.value;
+        if (native && notify) {
             native.dispatchEvent(new Event('input', { bubbles: true }));
             native.dispatchEvent(new Event('change', { bubbles: true }));
         }

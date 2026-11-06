@@ -7,7 +7,10 @@
 
     export interface SelectProps
         extends Omit<HTMLSelectAttributes, 'value' | 'children' | 'multiple' | 'size' | 'placeholder'> {
+        /** Lands on the visible control (the button), like the `<select>` it replaces. */
         class?: string;
+        /** Lands on the element around the control, which is otherwise layout-neutral. */
+        wrapperClass?: string;
         value?: string;
         placeholder?: string;
         options?: (SelectOption | SelectGroup)[];
@@ -34,6 +37,7 @@
         'aria-label': ariaLabel,
         'aria-labelledby': ariaLabelledby,
         class: className = '',
+        wrapperClass,
         placeholder,
         options,
         disabled = false,
@@ -97,6 +101,24 @@
     $effect(() => {
         if (disabled && select.open) select.hide();
     });
+
+    $effect(() => {
+        const el = native;
+        const own = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value');
+        if (!el || !own?.get || !own.set) return;
+        const { get, set } = own;
+        Object.defineProperty(el, 'value', {
+            configurable: true,
+            get: () => get.call(el),
+            set: (next: string) => {
+                set.call(el, next);
+                value = get.call(el);
+            }
+        });
+        return () => {
+            delete (el as { value?: string }).value;
+        };
+    });
 </script>
 
 <!--
@@ -118,8 +140,16 @@ Une liste déroulante au style de muse, jamais celle du système. Un bouton `com
     {/each}
 {/snippet}
 
-<div class={twMerge('relative w-full', className)}>
-    <select bind:this={native} bind:value {disabled} tabindex="-1" aria-hidden="true" class="sr-only" {...rest}>
+<div class={wrapperClass ? twMerge('relative', wrapperClass) : 'contents'}>
+    <select
+        bind:this={native}
+        bind:value
+        {disabled}
+        tabindex="-1"
+        aria-hidden="true"
+        class="pointer-events-none fixed size-px overflow-hidden opacity-0 [clip-path:inset(50%)]"
+        {...rest}
+    >
         {#if options}{@render native_options(options)}{:else if children}{@render children()}{/if}
     </select>
 
@@ -137,7 +167,7 @@ Une liste déroulante au style de muse, jamais celle du système. Un bouton `com
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
         {disabled}
-        class={twMerge(controlLine, 'group flex cursor-pointer items-center justify-between gap-2 text-left')}
+        class={twMerge(controlLine, 'group flex cursor-pointer items-center justify-between gap-2 text-left', className)}
         onclick={select.toggle}
         onkeydown={select.keydown}
         onblur={select.hide}
@@ -164,8 +194,8 @@ Une liste déroulante au style de muse, jamais celle du système. Un bouton `com
                 bottom={select.bottom}
                 width={select.width}
                 maxHeight={select.maxHeight}
-                label={ariaLabel ?? undefined}
-                labelledby={ariaLabelledby ?? undefined}
+                label={ariaLabel ?? (control.labelId ? undefined : placeholder)}
+                labelledby={ariaLabelledby ?? control.labelId}
                 onpick={select.pick}
                 onhover={(index) => (select.active = index)}
             />

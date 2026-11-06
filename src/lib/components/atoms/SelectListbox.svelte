@@ -64,11 +64,12 @@ La liste d'un `Select`, interne : un `listbox` dans la couche supérieure, qui s
         role="option"
         tabindex="-1"
         aria-selected={chosen}
+        data-active={index === active ? 'true' : undefined}
         aria-disabled={option.disabled ? 'true' : undefined}
         class={twMerge(
             base,
             chosen && 'font-medium',
-            index === active && 'bg-fc-surface',
+            index === active && 'bg-fc-accent text-fc-accent-fg',
             option.disabled && 'cursor-not-allowed opacity-50'
         )}
         onclick={() => onpick(index)}
@@ -99,9 +100,9 @@ La liste d'un `Select`, interne : un `listbox` dans la couche supérieure, qui s
     aria-labelledby={labelledby}
     class="fixed inset-auto m-0 overflow-y-auto overscroll-contain rounded-fc-md bg-fc-bg p-1 text-fc-fg shadow-lg"
     style:left="{left}px"
-    style:min-width="{width}px"
+    style:min-width="min({width}px, calc(100vw - 1rem))"
     style:width="max-content"
-    style:max-width="calc(100vw - {left}px - 0.5rem)"
+    style:max-width="min(calc(100vw - 1rem), calc(100vw - {left}px - 0.5rem))"
     style:top={up ? 'auto' : `${top}px`}
     style:bottom={up ? `${bottom}px` : 'auto'}
     style:max-height="{maxHeight}px"

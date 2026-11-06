@@ -1263,7 +1263,7 @@ tokens, tinted not solid; rows carry `role="progressbar"` with the file name in 
 combobox: a `button role="combobox"` with `aria-expanded`, `aria-controls` and
 `aria-activedescendant`, and a `role="listbox"` popup of `role="option"` rows (44px high). Arrows,
 Home, End, PageUp and PageDown move; Enter and Space pick; Escape closes; Tab picks and moves on;
-typing jumps to a match. The popup is a `popover="manual"` element, so it sits in the top layer
+typing jumps to a match. The active option is an inverted accent fill (the one `aria-activedescendant` marker). The popup is a `popover="manual"` element, so it sits in the top layer
 and works inside `Modal` and `Drawer`; it flips upward near the viewport edge and scrolls the
 active option into view. A visually hidden native `<select>` stays in the DOM, so `name`,
 `required`, `bind:value`, `onchange` and form submission behave as before. Children

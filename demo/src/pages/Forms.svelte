@@ -81,6 +81,13 @@
                         </Select>
                     </Field>
                     <Select disabled value="b" aria-label="Désactivé" options={[{ value: 'b', label: 'Désactivé' }]} />
+                    <Select
+                        class="h-9 w-36 text-fc-sm"
+                        aria-label="Compact"
+                        value="a"
+                        options={[{ value: 'a', label: 'Compact' }, { value: 'b', label: 'Autre' }]}
+                    />
+                    <Button type="button" variant="outline" class="self-start" onclick={() => (document.querySelector<HTMLSelectElement>('select[name=role]')!.value = 'admin')}>Écrire le select natif</Button>
                     <Button type="submit" class="self-start">Envoyer</Button>
                     <output data-testid="submitted" class="font-fc-mono text-fc-xs text-fc-fg-muted">{submitted}</output>
                     <Button type="button" variant="outline" class="self-start" onclick={() => (open = true)}>Dans une modale</Button>

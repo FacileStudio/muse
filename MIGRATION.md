@@ -429,14 +429,21 @@ every field needs a visible label (`Field label`). Text stays above 4.5:1, and W
    text-fc-fg placeholder:text-fc-fg-muted`, and keep a visible label on it.
 2. `fc-border` still exists, deprecated and unused. Replace `bg-fc-border` fills with
    `bg-fc-surface` or `bg-fc-field`.
-3. `Select`: the DOM is now `div > (hidden select + button[role=combobox]) + popover`. `class`
-   goes on the wrapper, so `w-48`, `max-w-xs` and `w-fit` still work, but a class that styled the
-   `<select>` itself (`text-fc-sm`, `pl-*`) no longer reaches the trigger. Tests that use
-   `selectOptions` or `page.selectOption` on the visible control must target the hidden
-   `select[name=...]` or click the combobox and then the option. `<option>` children,
-   `bind:value`, `onchange`, `name`, `required`, `disabled` and `Field` wiring are unchanged.
-   Server-rendered pages should pass `options` (or accept an empty label until hydration) because
-   `<option>` children are read after mount.
+3. `Select`: the DOM is now a hidden native `<select>` plus a `button[role=combobox]` and a popover.
+   - `class` lands on the visible control (the button), as it did on the `<select>`: `h-9 w-36
+     text-fc-sm rounded-fc-pill bg-fc-surface` all still work, and `twMerge` lets `h-9` beat the
+     default `h-11`. New `wrapperClass` styles the layout-neutral element around it (rarely needed).
+   - `bind:value`, `onchange`, `oninput`, `name`, `required`, `disabled`, `<option>` and
+     `<optgroup>` children and `Field` wiring are unchanged. A script that sets `select.value = 'x'`
+     from outside updates the display and the bound value.
+   - Playwright and Testing Library: `getByLabel(...).selectOption(...)` no longer works on the
+     visible control. Click the combobox (`getByRole('combobox', { name })`), then click
+     `getByRole('option', { name })`. The hidden `select[name=...]` still holds the value.
+   - `onfocus`, `onblur` and `autofocus` passed to `Select` reach the hidden `<select>`, not the
+     button. Listen on the wrapper (`focusin`) or put the handler on a parent.
+   - **Server rendering and no-JS:** `<option>` children are read after mount, so the trigger is
+     blank until hydration. Pass `options={[...]}` (and `placeholder`) wherever the first paint
+     matters; it renders the selected label on the server.
 4. `Spinner`: a consumer class that set `border-*` colours (`border-t-fc-accent-fg`) no longer
    tints it. Use `text-*`.
 5. `Button variant="outline"` and `IconButton variant="default"` keep their names but are

@@ -4,6 +4,7 @@ export type FieldContext = {
     id: string;
     describedBy: string | undefined;
     invalid: boolean;
+    labelId: string | undefined;
 };
 
 const KEY = Symbol.for('fc.field');
@@ -36,10 +37,16 @@ export function getFieldContext(): (() => FieldContext) | undefined {
 export function resolveField<Invalid>(
     context: FieldContext | undefined,
     own: { id?: string | null; describedBy?: string | null; invalid?: Invalid }
-): { id: string | undefined; describedBy: string | undefined; invalid: Invalid | 'true' | undefined } {
+): {
+    id: string | undefined;
+    describedBy: string | undefined;
+    invalid: Invalid | 'true' | undefined;
+    labelId: string | undefined;
+} {
     return {
         id: own.id ?? context?.id,
         describedBy: own.describedBy ?? context?.describedBy,
-        invalid: own.invalid ?? (context?.invalid ? 'true' : undefined)
+        invalid: own.invalid ?? (context?.invalid ? 'true' : undefined),
+        labelId: context?.labelId
     };
 }
