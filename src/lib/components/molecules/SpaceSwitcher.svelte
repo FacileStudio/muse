@@ -24,6 +24,7 @@
     import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { icons } from '../../icons.js';
+    import { placePopup } from '../../utils/placement.js';
 
     let {
         spaces = [],
@@ -56,10 +57,16 @@
     function place() {
         if (!triggerEl) return;
         const box = triggerEl.getBoundingClientRect();
-        const below = window.innerHeight - box.bottom - GAP - MARGIN;
-        const above = box.top - GAP - MARGIN;
-        dropUp = below < MIN_HEIGHT && above > below;
-        maxHeight = Math.max(MIN_HEIGHT, Math.floor(dropUp ? above : below));
+        const spot = placePopup({
+            triggerTop: box.top,
+            triggerBottom: box.bottom,
+            viewportHeight: window.innerHeight,
+            gap: GAP,
+            margin: MARGIN,
+            need: MIN_HEIGHT
+        });
+        dropUp = spot.up;
+        maxHeight = spot.maxHeight;
     }
 
     function select(id: string | null) {
