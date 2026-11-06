@@ -342,7 +342,7 @@ do not have, and nothing in the build disagreed.
 were relying on the English defaults, pass them explicitly. `no-orphan-strings.test.ts` fails
 the build on literal prose baked into markup, so this cannot come back.
 
-## 17. `Select` draws its own chevron
+## 17. `Select` draws its own chevron (superseded by §20)
 
 **Symptom before:** the dropdown arrow sat about 3px from the right border. Chrome paints the
 native `<select>` arrow at a fixed offset, so no `padding-right` could move it.
