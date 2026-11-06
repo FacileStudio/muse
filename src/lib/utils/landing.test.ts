@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { SCROLL_ENTER, SCROLL_LEAVE, landingHref, nextScrolled, safeLinks } from './landing.js';
+import { SCROLL_ENTER, SCROLL_LEAVE, landingHref, linkAttrs, nextScrolled, safeLinks } from './landing.js';
 
 describe('nextScrolled', () => {
     test('enters past the upper threshold and leaves below the lower one', () => {
@@ -52,5 +52,16 @@ describe('concentric rule', () => {
 
     test('the control height is the bar height minus the padding on both sides', () => {
         expect(css).toContain('--fc-ctl: calc(var(--fc-h) - 2 * var(--fc-pad));');
+    });
+});
+
+describe('linkAttrs', () => {
+    test('opens external links in a new tab without leaking the opener', () => {
+        expect(linkAttrs({ external: true })).toEqual({ target: '_blank', rel: 'noopener noreferrer' });
+    });
+
+    test('adds nothing to an internal link', () => {
+        expect(linkAttrs({})).toEqual({});
+        expect(linkAttrs({ external: false })).toEqual({});
     });
 });
