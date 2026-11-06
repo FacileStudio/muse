@@ -227,7 +227,7 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
         >
             {#if showHandle}
                 <div class="flex h-11 items-center justify-center" aria-hidden="true">
-                    <div class="h-1 w-10 rounded-fc-pill bg-fc-border"></div>
+                    <div class="h-1 w-10 rounded-fc-pill bg-fc-field"></div>
                 </div>
             {/if}
 

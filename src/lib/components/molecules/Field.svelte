@@ -24,6 +24,8 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { setFieldContext } from '../../utils/field.js';
+    import { icons } from '../../icons.js';
+    import Icon from '../atoms/Icon.svelte';
 
     let {
         label,
@@ -63,7 +65,10 @@ L'étiquetage d'un contrôle. Il rend un vrai `label for`, et les contrôles mus
     {#if label}<label for={id} class="text-fc-sm text-fc-fg">{label}</label>{/if}
     {@render children({ id, describedBy })}
     {#if error}
-        <span id={errorId} class="text-fc-xs text-fc-danger">{error}</span>
+        <span id={errorId} class="flex items-start gap-1.5 text-fc-xs text-fc-danger">
+            <Icon icon={icons.error} size={14} class="mt-0.5" />
+            <span>{error}</span>
+        </span>
     {:else if helper}
         <span id={helperId} class="text-fc-xs text-fc-fg-muted">{helper}</span>
     {/if}

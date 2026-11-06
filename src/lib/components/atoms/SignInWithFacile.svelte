@@ -101,7 +101,7 @@ Le bouton « Se connecter avec Facile », le seul : en pilule, la marque Facile 
         <Spinner
             size="sm"
             aria-hidden="true"
-            class="size-(--m) border-fc-accent-fg/30 border-t-fc-accent-fg"
+            class="size-(--m) text-fc-accent-fg"
         />
     {:else}
         <svg

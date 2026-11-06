@@ -124,12 +124,14 @@ Le choix dans une palette fixe — la couleur d'identité d'un membre, d'un cale
         >
             <span
                 class={twMerge(
-                    'flex items-center justify-center rounded-fc-pill border border-fc-border/60 transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+                    'flex items-center justify-center rounded-fc-pill transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
                     dots[size],
-                    selected && 'ring-2 ring-fc-ring ring-offset-2 ring-offset-fc-component'
+                    selected && 'scale-110'
                 )}
                 style:background-color={color}
-            ></span>
+            >
+                {#if selected}<svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 text-white mix-blend-difference" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10" /></svg>{/if}
+            </span>
             {#if showLabels}
                 <span class={twMerge('text-fc-xs', selected ? 'font-medium text-fc-fg' : 'text-fc-fg-muted')}>
                     {labelFor(color)}

@@ -76,7 +76,7 @@ Le bloc d'identité d'un membre : avatar, nom et actions de session.
             <Avatar src={avatar} alt={name} {name} size="lg" />
             {#if color}
                 <span
-                    class="absolute -right-0.5 -bottom-0.5 h-4 w-4 rounded-fc-pill border-2 border-fc-component"
+                    class="absolute -right-0.5 -bottom-0.5 h-4 w-4 rounded-fc-pill"
                     style:background-color={color}
                     aria-hidden="true"
                 ></span>

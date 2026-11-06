@@ -51,14 +51,24 @@ Un bouton radio. La validité appartient au groupe, pas au bouton, donc il ne po
 -->
 
 <label class={classes}>
-    <input
-        type="radio"
-        id={controlId}
-        aria-describedby={describes}
-        bind:group
-        {value}
-        class="h-4 w-4 accent-fc-accent disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
-        {...rest}
-    />
+    <span class="relative inline-flex size-5 shrink-0">
+        <input
+            type="radio"
+            id={controlId}
+            aria-describedby={describes}
+            bind:group
+            {value}
+            class="peer size-5 shrink-0 cursor-pointer appearance-none rounded-fc-full bg-fc-field transition-colors checked:bg-fc-accent disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+            {...rest}
+        />
+        <svg
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-0 size-5 text-fc-accent-fg opacity-0 transition-opacity peer-checked:opacity-100"
+            fill="currentColor"
+        >
+            <circle cx="10" cy="10" r="3.5" />
+        </svg>
+    </span>
     {#if label}<span>{label}</span>{/if}
 </label>

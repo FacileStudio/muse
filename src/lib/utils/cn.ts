@@ -11,6 +11,8 @@ const colors = [
     'fc-accent',
     'fc-accent-fg',
     'fc-border',
+    'fc-field',
+    'fc-field-hint',
     'fc-ring',
     'fc-scrim',
     'fc-danger',
