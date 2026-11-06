@@ -1,0 +1,79 @@
+import { keyAction, type KeyAction } from './keys.js';
+import { moveActive, typeahead } from './listbox.js';
+import { AnchoredPopup } from './popup.svelte.js';
+
+const NEED = 200;
+const TYPE_RESET_MS = 600;
+
+export type MenuHost = {
+    labels: () => string[];
+    disabled: () => boolean[];
+    trigger: () => HTMLElement | null;
+    items: () => HTMLElement[];
+};
+
+/**
+ * The state and key handling of one `Menu`. Unlike `Select`, a menu moves real DOM focus onto its
+ * items (the APG menu button pattern), so activation is the item's own click and the arrows wrap.
+ */
+export class MenuState extends AnchoredPopup {
+    active = $state(-1);
+    host: MenuHost;
+    buffer = '';
+    timer: ReturnType<typeof setTimeout> | undefined;
+
+    constructor(host: MenuHost) {
+        super(host.trigger, NEED);
+        this.host = host;
+    }
+
+    show = (at: 'first' | 'last' = 'first'): void => {
+        this.active = moveActive(this.host.disabled(), -1, at === 'last' ? 'ArrowUp' : 'ArrowDown');
+        this.place();
+        this.open = true;
+    };
+
+    hide = (refocus = false): void => {
+        this.open = false;
+        this.active = -1;
+        this.buffer = '';
+        if (refocus) this.host.trigger()?.focus();
+    };
+
+    toggle = (): void => {
+        if (this.open) this.hide();
+        else this.show();
+    };
+
+    focusActive = (): void => {
+        if (this.open && this.active >= 0) this.host.items()[this.active]?.focus();
+    };
+
+    type = (char: string): void => {
+        const found = typeahead(this.host.labels(), this.host.disabled(), this.active, this.buffer, char);
+        this.buffer = found.buffer;
+        if (found.index >= 0) this.active = found.index;
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => (this.buffer = ''), TYPE_RESET_MS);
+    };
+
+    run = (action: KeyAction): void => {
+        if (action.kind === 'move') this.active = moveActive(this.host.disabled(), this.active, action.key, true);
+        else if (action.kind === 'type') this.type(action.char);
+        else if (action.kind === 'close') this.hide(true);
+        else if (action.kind === 'tab') this.hide();
+    };
+
+    keydown = (event: KeyboardEvent): void => {
+        const action = keyAction(true, event, this.buffer !== '');
+        if (action.kind === 'ignore' || action.kind === 'commit') return;
+        if (action.kind !== 'tab') event.preventDefault();
+        this.run(action);
+    };
+
+    triggerKeydown = (event: KeyboardEvent): void => {
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        event.preventDefault();
+        this.show(event.key === 'ArrowUp' ? 'last' : 'first');
+    };
+}

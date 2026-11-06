@@ -2,7 +2,7 @@
     import type { HTMLSelectAttributes } from 'svelte/elements';
     import type { Locale } from '../../i18n/locale.js';
 
-    export interface LocaleSwitchProps extends Omit<HTMLSelectAttributes, 'value'> {
+    export interface LocaleSwitchProps extends Omit<HTMLSelectAttributes, 'value' | 'placeholder'> {
         /** Defaults to the locale set by `provideLocale`. */
         value?: Locale;
         /** Persist the choice here (cookie, Registre profile). The muse locale already follows it. */
@@ -38,7 +38,7 @@ Le choix de langue : les quatre langues de la suite, chacune écrite dans sa pro
 <Select
     aria-label={i18n.t('locale.label')}
     value={current}
-    class={twMerge('w-auto text-fc-sm', className)}
+    class={twMerge('w-fit', className)}
     {...rest}
     onchange={choose}
 >

@@ -34,7 +34,7 @@ export type { InputProps } from './components/atoms/Input.svelte';
 export { default as Radio } from './components/atoms/Radio.svelte';
 export type { RadioProps } from './components/atoms/Radio.svelte';
 export { default as Select } from './components/atoms/Select.svelte';
-export type { SelectProps } from './components/atoms/Select.svelte';
+export type { SelectProps, SelectOption, SelectGroup } from './components/atoms/Select.svelte';
 export { default as Skeleton } from './components/atoms/Skeleton.svelte';
 export type { SkeletonProps } from './components/atoms/Skeleton.svelte';
 export { default as Spinner } from './components/atoms/Spinner.svelte';
@@ -130,6 +130,7 @@ export type { SparklineProps } from './components/charts/Sparkline.svelte';
 export { prefersReducedMotion, isMobile } from './utils/motion.js';
 export { springPress } from './utils/press.js';
 export { getFieldContext } from './utils/field.js';
+export { controlFill, controlLine } from './utils/control.js';
 export type { FieldContext } from './utils/field.js';
 export {
     chartColor,
