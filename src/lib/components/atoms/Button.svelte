@@ -47,7 +47,7 @@
     const variants: Record<Variant, string> = {
         primary: 'bg-fc-accent text-fc-accent-fg hover:opacity-90',
         ghost: 'bg-transparent text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
-        outline: 'border border-fc-border bg-transparent text-fc-fg hover:bg-fc-surface',
+        outline: 'bg-fc-surface text-fc-fg hover:bg-fc-surface/60',
         danger: 'bg-fc-danger/10 text-fc-danger hover:bg-fc-danger/20',
         'ghost-danger': 'bg-transparent text-fc-fg-muted hover:bg-fc-danger/10 hover:text-fc-danger'
     };

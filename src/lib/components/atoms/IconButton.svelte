@@ -25,7 +25,7 @@
     }: IconButtonProps = $props();
 
     const variants: Record<Variant, string> = {
-        default: 'border border-fc-border text-fc-fg hover:bg-fc-surface',
+        default: 'bg-fc-surface text-fc-fg hover:bg-fc-surface/60',
         ghost: 'bg-transparent text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
         danger: 'bg-transparent text-fc-fg-muted hover:bg-fc-danger/10 hover:text-fc-danger'
     };

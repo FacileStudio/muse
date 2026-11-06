@@ -109,3 +109,48 @@ describe('the stock palette is deleted', () => {
         expect(kept.sort()).toEqual(['black', 'current', 'transparent', 'white']);
     });
 });
+
+function lightness(value: string): number {
+    const match = value.match(/oklch\(\s*([\d.]+)/);
+    if (!match) throw new Error(`not an oklch value: ${value}`);
+    return Number(match[1]);
+}
+
+function luminance(l: number): number {
+    const linear = l ** 3;
+    const encoded = linear <= 0.0031308 ? 12.92 * linear : 1.055 * linear ** (1 / 2.4) - 0.055;
+    return encoded <= 0.04045 ? encoded / 12.92 : ((encoded + 0.055) / 1.055) ** 2.4;
+}
+
+function contrast(a: string, b: string): number {
+    const [x, y] = [luminance(lightness(a)), luminance(lightness(b))].sort((p, q) => q - p);
+    return (x + 0.05) / (y + 0.05);
+}
+
+const themes = {
+    light: block('@theme {'),
+    dark: block(':root.dark')
+};
+
+function check(name: string, tokens: Record<string, string>): void {
+    const merged = { ...themes.light, ...tokens };
+    const ratio = (a: string, b: string) => contrast(merged[`--color-fc-${a}`], merged[`--color-fc-${b}`]);
+
+    test(`${name}: the field fill is 3:1 against page, card and surface`, () => {
+        const worst = Math.min(...['page', 'bg', 'component', 'surface'].map((n) => ratio('field', n)));
+        expect(worst).toBeGreaterThanOrEqual(3);
+    });
+
+    test(`${name}: text and hint are 4.5:1 on the field fill`, () => {
+        expect(Math.min(ratio('fg', 'field'), ratio('field-hint', 'field'))).toBeGreaterThanOrEqual(4.5);
+    });
+
+    test(`${name}: the accent fill is 3:1 against the field fill`, () => {
+        expect(ratio('accent', 'field')).toBeGreaterThanOrEqual(3);
+    });
+}
+
+describe('form control contrast (WCAG 1.4.11, no borders)', () => {
+    check('light', themes.light);
+    check('dark', themes.dark);
+});

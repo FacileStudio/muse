@@ -158,7 +158,7 @@ La confirmation d'une action destructive. Jamais une `Modal` nue avec deux bouto
                 onclick={confirm}
             >
                 {#if pending}
-                    <Spinner size="sm" class="border-current border-t-transparent" />
+                    <Spinner size="sm" class="text-current" />
                 {/if}
                 {confirmLabel ?? i18n.t('confirm.confirm')}
             </Button>

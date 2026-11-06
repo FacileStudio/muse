@@ -71,9 +71,9 @@ Un interrupteur. Dans une `SettingsRow` il prend `aria-label` et jamais de libel
         {...rest}
     />
     <span
-        class="relative h-6 w-11 shrink-0 rounded-fc-pill border border-fc-border bg-fc-surface transition-colors peer-checked:border-fc-accent peer-checked:bg-fc-accent peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fc-ring peer-checked:[&>span]:translate-x-5 peer-checked:[&>span]:bg-fc-accent-fg"
+        class="relative h-6 w-11 shrink-0 rounded-fc-pill bg-fc-field transition-colors peer-checked:bg-fc-accent peer-aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_30%,var(--color-fc-field))] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fc-ring peer-checked:[&>span]:translate-x-5 peer-checked:[&>span]:bg-fc-accent-fg"
     >
-        <span class="absolute top-[3px] left-[3px] h-4 w-4 rounded-fc-pill bg-fc-fg-muted transition-transform"></span>
+        <span class="absolute top-[3px] left-[3px] h-4 w-4 rounded-fc-pill bg-fc-page transition-transform"></span>
     </span>
     {#if label}<span>{label}</span>{/if}
 </label>

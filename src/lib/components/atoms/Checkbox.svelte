@@ -45,18 +45,32 @@
 
 <!--
 @component
-Une case à cocher qui adopte l'identifiant de son `Field`. La boîte fait 16px ; c'est le libellé qui porte la cible tactile.
+Une case à cocher qui adopte l'identifiant de son `Field`. La boîte est un aplat de 20px sans bordure, cochée en accent avec un tracé SVG ; c'est le libellé qui porte la cible tactile.
 -->
 
 <label class={classes}>
-    <input
-        type="checkbox"
-        id={controlId}
-        aria-describedby={describes}
-        aria-invalid={isInvalid}
-        bind:checked
-        class="h-4 w-4 rounded-fc-sm accent-fc-accent disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
-        {...rest}
-    />
+    <span class="relative inline-flex size-5 shrink-0">
+        <input
+            type="checkbox"
+            id={controlId}
+            aria-describedby={describes}
+            aria-invalid={isInvalid}
+            bind:checked
+            class="peer size-5 shrink-0 cursor-pointer appearance-none rounded-fc-sm bg-fc-field transition-colors checked:bg-fc-accent aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_30%,var(--color-fc-field))] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+            {...rest}
+        />
+        <svg
+            viewBox="0 0 20 20"
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-0 size-5 text-fc-accent-fg opacity-0 transition-opacity peer-checked:opacity-100 peer-disabled:opacity-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.25"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="m5.5 10.5 3 3 6-7" />
+        </svg>
+    </span>
     {#if label}<span>{label}</span>{/if}
 </label>

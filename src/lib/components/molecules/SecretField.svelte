@@ -121,7 +121,7 @@
     const describedBy = $derived(error ? errorId : helper ? helperId : undefined);
 
     const box =
-        'flex h-11 min-w-0 flex-1 items-center rounded-fc-md border border-fc-border bg-fc-bg px-3 font-fc-mono text-fc-sm';
+        'flex h-11 min-w-0 flex-1 items-center rounded-fc-md bg-fc-field px-3 font-fc-mono text-fc-sm';
 </script>
 
 <!--
@@ -151,14 +151,14 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                 aria-describedby={describedBy}
                 class={twMerge(
                     box,
-                    'text-fc-fg placeholder:font-sans placeholder:text-fc-fg-muted focus:outline-2 focus:outline-fc-ring disabled:opacity-50'
+                    'text-fc-fg placeholder:font-sans placeholder:text-fc-field-hint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_30%,var(--color-fc-field))] disabled:opacity-50'
                 )}
             />
         {:else}
             <output
                 {id}
                 aria-describedby={describedBy}
-                class={twMerge(box, empty ? 'text-fc-fg-muted' : 'text-fc-fg')}
+                class={twMerge(box, empty ? 'text-fc-field-hint' : 'text-fc-fg')}
                 title={visible || !sensitive ? value : undefined}
             >
                 <span class={visible || !sensitive ? 'truncate select-all' : 'truncate select-none'}
@@ -185,7 +185,7 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                 disabled={inert}
                 aria-label={i18n.t(sensitive ? 'secret.copySecretLabel' : 'secret.copyLabel')}
                 title={i18n.t('secret.copy')}
-                class={copied ? 'border-fc-success text-fc-success' : ''}
+                class={copied ? 'bg-fc-success/10 text-fc-success' : ''}
             >
                 <Icon icon={copied ? icons.check : icons.copy} size={18} />
             </IconButton>
@@ -195,7 +195,10 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
     </div>
 
     {#if error}
-        <span id={errorId} class="text-fc-xs text-fc-danger">{error}</span>
+        <span id={errorId} class="flex items-start gap-1.5 text-fc-xs text-fc-danger">
+            <Icon icon={icons.error} size={14} class="mt-0.5" />
+            <span>{error}</span>
+        </span>
     {:else if helper}
         <span id={helperId} class="text-fc-xs text-fc-fg-muted">{helper}</span>
     {/if}

@@ -16,6 +16,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { controlFill } from '../../utils/control.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import { parseHex } from '../../colors.js';
     import { getFieldContext } from '../../utils/field.js';
@@ -80,7 +81,7 @@
     }
 
     const box =
-        'h-11 rounded-fc-md border border-fc-border bg-fc-bg text-fc-md text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:opacity-50';
+        controlFill + ' h-11';
 </script>
 
 <!--
@@ -129,7 +130,7 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
                 if (parsed) commit(parsed);
             }}
             onblur={() => (typed = null)}
-            class={twMerge(box, 'w-full min-w-0 px-3 font-fc-mono placeholder:font-sans placeholder:text-fc-fg-muted')}
+            class={twMerge(box, 'w-full min-w-0 px-3 font-fc-mono placeholder:font-sans ')}
         />
     </div>
 
@@ -152,11 +153,13 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
                 >
                     <span
                         class={twMerge(
-                            'h-7 w-7 rounded-fc-pill border border-fc-border/60 transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
-                            active && 'ring-2 ring-fc-ring ring-offset-2 ring-offset-fc-component'
+                            'h-7 w-7 flex items-center justify-center rounded-fc-pill transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+                            active && 'scale-110'
                         )}
                         style:background-color={hex}
-                    ></span>
+                    >
+                        {#if active}<svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 text-white mix-blend-difference" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10" /></svg>{/if}
+                    </span>
                 </button>
             {/each}
         </div>

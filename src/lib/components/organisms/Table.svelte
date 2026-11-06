@@ -25,7 +25,7 @@ La surface d'un tableau de données. Le tri et la sélection appartiennent encor
 -->
 
 <div class={classes} {...rest}>
-    <table class="w-full border-collapse text-fc-sm text-fc-fg [&_th]:bg-fc-surface [&_th]:text-fc-fg-muted [&_th]:font-medium [&_th]:text-left [&_th]:px-3 [&_th]:py-2 [&_td]:px-3 [&_td]:py-2 [&_tbody_tr]:border-t [&_tbody_tr]:border-fc-border">
+    <table class="w-full border-collapse text-fc-sm text-fc-fg [&_th]:bg-fc-surface [&_th]:text-fc-fg-muted [&_th]:font-medium [&_th]:text-left [&_th]:px-3 [&_th]:py-2 [&_td]:px-3 [&_td]:py-2 [&_tbody_tr:nth-child(even)]:bg-fc-surface/40 [&_tbody_tr:hover]:bg-fc-surface">
         {@render children()}
     </table>
 </div>

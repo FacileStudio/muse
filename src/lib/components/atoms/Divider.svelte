@@ -14,7 +14,7 @@
         ...rest
     }: DividerProps = $props();
 
-    const classes = $derived(twMerge('border-0 border-t border-fc-border', className));
+    const classes = $derived(twMerge('m-0 h-px w-full shrink-0 border-0 bg-fc-surface', className));
 </script>
 
 <!--

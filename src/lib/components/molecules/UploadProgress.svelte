@@ -118,7 +118,7 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
                             <IconButton
                                 type="button"
                                 aria-label={i18n.t('upload.retry', { name: item.name })}
-                                class="border-transparent text-fc-fg-muted hover:text-fc-fg"
+                                class="text-fc-fg-muted hover:text-fc-fg"
                                 onclick={() => onRetry?.(item.id)}
                             >
                                 <Icon icon={icons.refresh} size={18} />
@@ -129,7 +129,7 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
                             <IconButton
                                 type="button"
                                 aria-label={i18n.t('upload.remove', { name: item.name })}
-                                class="border-transparent text-fc-fg-muted hover:text-fc-fg"
+                                class="text-fc-fg-muted hover:text-fc-fg"
                                 onclick={() => onCancel?.(item.id)}
                             >
                                 <Icon icon={icons.close} size={18} />
