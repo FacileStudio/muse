@@ -83,7 +83,44 @@ export const en = {
     'upload.failed': 'Failed',
     'upload.waiting': 'Waiting',
     'upload.retry': 'Retry {name}',
-    'upload.remove': 'Remove {name}'
+    'upload.remove': 'Remove {name}',
+    'download.title': 'Download the apps',
+    'download.platforms': 'Available for {platforms}',
+    'pricing.title': 'Plans',
+    'pricing.interval': 'Billing period',
+    'pricing.monthly': 'Monthly',
+    'pricing.yearly': 'Yearly',
+    'pricing.saveUpTo': 'Save up to {percent}',
+    'pricing.save': 'Save {percent}',
+    'pricing.perMonth': '/ month',
+    'pricing.perYear': '/ year',
+    'pricing.billedYearly': '{amount} a month, billed yearly',
+    'pricing.free': 'Free',
+    'pricing.choose': 'Choose {name}',
+    'pricing.startFree': 'Start for free',
+    'pricing.includes': 'Included in {name}',
+    'feature.storage': {
+        one: '{count} GB of storage',
+        other: '{count} GB of storage'
+    },
+    'feature.storageUnlimited': 'Unlimited storage',
+    'feature.mailboxes': {
+        one: '{count} mailbox',
+        other: '{count} mailboxes'
+    },
+    'feature.mailboxesUnlimited': 'Unlimited mailboxes',
+    'feature.callMinutes': {
+        one: 'Calls up to {count} minute',
+        other: 'Calls up to {count} minutes'
+    },
+    'feature.callMinutesUnlimited': 'Calls with no time limit',
+    'feature.participants': {
+        one: 'Up to {count} participant per call',
+        other: 'Up to {count} participants per call'
+    },
+    'feature.participantsUnlimited': 'Unlimited participants per call',
+    'feature.recording': 'Call recording',
+    'feature.glouton': 'Access to Glouton'
 } satisfies Record<string, Message>;
 
 export type MuseMessages = { [K in keyof typeof en]: Message };

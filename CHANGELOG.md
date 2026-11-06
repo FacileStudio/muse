@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.11.0 (unreleased)
+
+### Added
+
+- `PricingPlans`: Facile's plans from Ardoise's public catalog (`catalogUrl`, default
+  `https://api-ardoise.facile.studio/api/catalog`, or a server-loaded `catalog`). One card per
+  plan with a free plan first (the catalog's own, or a synthetic one), a monthly/yearly radio
+  group with the best yearly saving, prices through `Intl.NumberFormat` in the locale, and
+  feature rows for `nuage.storage_gb`, `courrier.mailboxes`, `echo.max_call_minutes`,
+  `echo.max_participants`, `echo.recording` and `glouton.access` (`-1` is unlimited, unknown
+  keys are skipped). `highlight` puts an app's own features first. Buttons go to `ctaHref`
+  (default `https://sso.facile.studio/spaces`, checked with `isSafeHref`) with `plan` and
+  `interval` added for a paid plan. It renders nothing when the catalog is empty, malformed or
+  unreachable: one request, a 5 s timeout, no retries.
+  Load the catalog server side and pass `catalog` where you can: as of 2026-11-06 the
+  catalog sends no `Access-Control-Allow-Origin`, so a browser fetch from an app is blocked
+  and the section stays empty.
+- `parseCatalog`, `fetchCatalog` and the pricing helpers (`formatPrice`, `yearlySaving`,
+  `featureRows`, `withFreePlan`...). Validation is strict: malformed plans, prices and features
+  are dropped one by one.
+- `DownloadCta`: a link to an app's downloads page with platform icons (`macos`, `windows`,
+  `linux`, `android`, `ios`) and "Download the apps" in four languages. An unsafe `href`
+  renders nothing.
+- `icons.apple`, `icons.windows`, `icons.linux` and `icons.android` (MDI, bundled).
+- Demo page "Tarifs" in four locales and both themes; docs examples for both components.
+
 ## v0.10.1 (2026-11-06)
 
 ### Fixed

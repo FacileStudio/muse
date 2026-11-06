@@ -83,5 +83,42 @@ export const de: MuseMessages = {
     'upload.failed': 'Fehlgeschlagen',
     'upload.waiting': 'Wartet',
     'upload.retry': '{name} erneut versuchen',
-    'upload.remove': '{name} entfernen'
+    'upload.remove': '{name} entfernen',
+    'download.title': 'Apps herunterladen',
+    'download.platforms': 'Verfügbar für {platforms}',
+    'pricing.title': 'Tarife',
+    'pricing.interval': 'Abrechnungszeitraum',
+    'pricing.monthly': 'Monatlich',
+    'pricing.yearly': 'Jährlich',
+    'pricing.saveUpTo': 'Bis zu {percent} sparen',
+    'pricing.save': '{percent} sparen',
+    'pricing.perMonth': '/ Monat',
+    'pricing.perYear': '/ Jahr',
+    'pricing.billedYearly': '{amount} pro Monat, jährlich abgerechnet',
+    'pricing.free': 'Kostenlos',
+    'pricing.choose': '{name} wählen',
+    'pricing.startFree': 'Kostenlos starten',
+    'pricing.includes': 'Enthalten in {name}',
+    'feature.storage': {
+        one: '{count} GB Speicher',
+        other: '{count} GB Speicher'
+    },
+    'feature.storageUnlimited': 'Unbegrenzter Speicher',
+    'feature.mailboxes': {
+        one: '{count} Postfach',
+        other: '{count} Postfächer'
+    },
+    'feature.mailboxesUnlimited': 'Unbegrenzte Postfächer',
+    'feature.callMinutes': {
+        one: 'Anrufe bis zu {count} Minute',
+        other: 'Anrufe bis zu {count} Minuten'
+    },
+    'feature.callMinutesUnlimited': 'Anrufe ohne Zeitlimit',
+    'feature.participants': {
+        one: 'Bis zu {count} Teilnehmer pro Anruf',
+        other: 'Bis zu {count} Teilnehmende pro Anruf'
+    },
+    'feature.participantsUnlimited': 'Unbegrenzte Teilnehmende pro Anruf',
+    'feature.recording': 'Anrufaufzeichnung',
+    'feature.glouton': 'Zugang zu Glouton'
 };

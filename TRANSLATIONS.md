@@ -21,6 +21,8 @@ Points to check first in es and de:
   terms of sale instead of "Verkaufsbedingungen".
 - `spaceSwitcher.*`: "espacio" and "Bereich" for a Facile space. Use whatever the apps say.
 - `planLimit.*`: "plan" (es) and "Tarif" (de) for the subscription tier.
+- `pricing.*`, `feature.*`, `download.*` (v0.11.0): plan and feature wording on the pricing
+  cards, including "Teilnehmende" (de) and "buzón de correo" (es).
 - Tone: es uses the informal "tú" ("Crea tu cuenta"), de uses the formal "Sie". Confirm both.
 
 ## Adding a string

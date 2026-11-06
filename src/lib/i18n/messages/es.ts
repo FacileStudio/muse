@@ -83,5 +83,42 @@ export const es: MuseMessages = {
     'upload.failed': 'Error',
     'upload.waiting': 'En espera',
     'upload.retry': 'Reintentar {name}',
-    'upload.remove': 'Quitar {name}'
+    'upload.remove': 'Quitar {name}',
+    'download.title': 'Descarga las aplicaciones',
+    'download.platforms': 'Disponible para {platforms}',
+    'pricing.title': 'Planes',
+    'pricing.interval': 'Periodo de facturación',
+    'pricing.monthly': 'Mensual',
+    'pricing.yearly': 'Anual',
+    'pricing.saveUpTo': 'Ahorra hasta un {percent}',
+    'pricing.save': 'Ahorra un {percent}',
+    'pricing.perMonth': '/ mes',
+    'pricing.perYear': '/ año',
+    'pricing.billedYearly': '{amount} al mes, facturado anualmente',
+    'pricing.free': 'Gratis',
+    'pricing.choose': 'Elegir {name}',
+    'pricing.startFree': 'Empieza gratis',
+    'pricing.includes': 'Incluido en {name}',
+    'feature.storage': {
+        one: '{count} GB de almacenamiento',
+        other: '{count} GB de almacenamiento'
+    },
+    'feature.storageUnlimited': 'Almacenamiento ilimitado',
+    'feature.mailboxes': {
+        one: '{count} buzón de correo',
+        other: '{count} buzones de correo'
+    },
+    'feature.mailboxesUnlimited': 'Buzones de correo ilimitados',
+    'feature.callMinutes': {
+        one: 'Llamadas de hasta {count} minuto',
+        other: 'Llamadas de hasta {count} minutos'
+    },
+    'feature.callMinutesUnlimited': 'Llamadas sin límite de duración',
+    'feature.participants': {
+        one: 'Hasta {count} participante por llamada',
+        other: 'Hasta {count} participantes por llamada'
+    },
+    'feature.participantsUnlimited': 'Participantes ilimitados por llamada',
+    'feature.recording': 'Grabación de llamadas',
+    'feature.glouton': 'Acceso a Glouton'
 };
