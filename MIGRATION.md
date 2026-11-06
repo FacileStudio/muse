@@ -408,3 +408,38 @@ sets. With no locale set it falls back to English.
 5. Put `LegalFooter` on public pages. Its links default to Registre's legal pages in the
    current locale.
 6. Move app strings to catalogs with `createTranslator`; see the "Langues" page on the docs site.
+
+## 20. No borders, and a custom `Select` (v0.13.0)
+
+**Symptom:** after the bump every form control is a filled box with no border, light mode shows
+a mid grey field (`fc-field`), `Checkbox`/`Radio` are 20px accent-inverted boxes, `Table` has no
+row rules, the `outline` `Button` and the default `IconButton` are filled, and `Select` opens
+muse's own list instead of the system one.
+
+**Why:** owner rule, no borders anywhere (CHARTE §5). Without an edge, a control's fill is its
+boundary, so `fc-field` is measured at 3:1 against the page, a card and `fc-surface`
+(WCAG 2.2 1.4.11). Light mode lands on a mid grey; that is what 3:1 costs.
+
+**Do:**
+
+1. Strip your own borders: `border`, `border-*`, `divide-*`, `ring-*` on controls, tables,
+   dividers and cards. Give a hand-rolled input `controlLine` (exported) or `bg-fc-field
+   text-fc-fg placeholder:text-fc-field-hint`. Placeholder and icon colour on a field is
+   `fc-field-hint`, not `fc-fg-muted` (1.71:1 there).
+2. `fc-border` still exists, deprecated and unused. Replace `bg-fc-border` fills with
+   `bg-fc-surface` or `bg-fc-field`.
+3. `Select`: the DOM is now `div > (hidden select + button[role=combobox]) + popover`. `class`
+   goes on the wrapper, so `w-48`, `max-w-xs` and `w-fit` still work, but a class that styled the
+   `<select>` itself (`text-fc-sm`, `pl-*`) no longer reaches the trigger. Tests that use
+   `selectOptions` or `page.selectOption` on the visible control must target the hidden
+   `select[name=...]` or click the combobox and then the option. `<option>` children,
+   `bind:value`, `onchange`, `name`, `required`, `disabled` and `Field` wiring are unchanged.
+   Server-rendered pages should pass `options` (or accept an empty label until hydration) because
+   `<option>` children are read after mount.
+4. `Spinner`: a consumer class that set `border-*` colours (`border-t-fc-accent-fg`) no longer
+   tints it. Use `text-*`.
+5. `Button variant="outline"` and `IconButton variant="default"` keep their names but are
+   `fc-surface` fills now.
+6. Tests that grepped muse for `border` should use `no-borders.test.ts` as the model: the
+   only allowed matches are `border-0`, `border-none` and the focus `outline`.
+
