@@ -21,6 +21,8 @@
         title?: string;
         /** The section heading level; cards take the next one. */
         headingLevel?: 2 | 3;
+        /** Classes merged onto the section heading, to match the host page's own headings. */
+        headingClass?: string;
         timeoutMs?: number;
         class?: string;
     }
@@ -44,6 +46,7 @@
         synthesizeFree = false,
         title,
         headingLevel = 2,
+        headingClass = '',
         timeoutMs,
         class: className = '',
         ...rest
@@ -85,7 +88,7 @@ Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offr
 {#if plans.length}
     <section aria-labelledby="{uid}-title" class={twMerge('flex flex-col gap-6', className)} {...rest}>
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <svelte:element this={heading} id="{uid}-title" class="text-fc-xl font-semibold text-fc-fg">
+            <svelte:element this={heading} id="{uid}-title" class={twMerge('text-fc-xl font-semibold text-fc-fg', headingClass)}>
                 {title ?? i18n.t('pricing.title')}
             </svelte:element>
             {#if yearly && monthly}

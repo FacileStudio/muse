@@ -13,7 +13,7 @@
 <script lang="ts">
     import { getI18n } from '../../i18n/context.svelte.js';
     import { withParam } from '../../utils/href.js';
-    import { featureRows, isFreePlan, priceFor, yearlySaving } from '../../utils/pricing.js';
+    import { featureRows, isFreeLabel, isFreePlan, priceFor, yearlySaving } from '../../utils/pricing.js';
     import { formatPercent, formatPrice } from '../../utils/money.js';
     import Badge from '../atoms/Badge.svelte';
     import Button from '../atoms/Button.svelte';
@@ -25,6 +25,7 @@
     const i18n = getI18n();
     const free = $derived(isFreePlan(plan));
     const name = $derived(plan.name || i18n.t('pricing.free'));
+    const nameIsFree = $derived(free && isFreeLabel(name));
     const price = $derived(free ? undefined : priceFor(plan, interval));
     const saving = $derived(price?.interval === 'year' ? yearlySaving(plan) : 0);
     const rows = $derived(featureRows(plan, highlight));
@@ -58,7 +59,7 @@ Une offre du catalogue : nom, prix dans la période choisie, fonctionnalités co
                     })}
                 </p>
             {/if}
-        {:else}
+        {:else if !nameIsFree}
             <p class="text-fc-2xl font-semibold text-fc-fg">{i18n.t('pricing.free')}</p>
         {/if}
         {#if saving}

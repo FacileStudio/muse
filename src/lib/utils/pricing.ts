@@ -1,4 +1,4 @@
-import type { MuseKey } from '../i18n/messages/index.js';
+import { museMessages, type MuseKey } from '../i18n/messages/index.js';
 import type { BillingInterval, CatalogPlan, CatalogPrice, FeatureValue } from './catalog.js';
 
 type FeatureLabel = { count?: MuseKey; unlimited?: MuseKey; on?: MuseKey };
@@ -40,6 +40,12 @@ export function featureRows(plan: CatalogPlan, highlight: readonly string[] = []
 
 /** A plan the catalog lists as free: no price at all (`parsePlan` drops broken ones), or only zero prices. */
 export const isFreePlan = (plan: CatalogPlan): boolean => plan.prices.every((p) => p.amount === 0);
+
+/** Whether a plan name is just the word "free" in any muse locale, so the card must not repeat it as a price. */
+export function isFreeLabel(name: string): boolean {
+    const value = name.trim().toLocaleLowerCase();
+    return Object.values(museMessages).some((m) => String(m['pricing.free']).toLocaleLowerCase() === value);
+}
 
 /** The price for `interval`, falling back to the plan's other interval. */
 export function priceFor(plan: CatalogPlan, interval: BillingInterval): CatalogPrice | undefined {

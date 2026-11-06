@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.11.1 (unreleased)
+
+### Added
+
+- `PricingPlans`: `headingClass` merges classes onto the section heading so a landing page can
+  match its own headings. The default output is unchanged.
+
+### Fixed
+
+- `PricingPlans`: a free plan whose name is the word "free" in any locale (Gratuit, Free, Gratis,
+  Kostenlos) showed it twice, as the card title and as the price. The price line is now dropped
+  in that case; a differently named free plan still shows its "free" price.
+
 ## v0.11.0 (2026-11-06)
 
 ### Added
