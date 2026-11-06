@@ -120,5 +120,13 @@ export const de: MuseMessages = {
     },
     'feature.participantsUnlimited': 'Unbegrenzte Teilnehmende pro Anruf',
     'feature.recording': 'Anrufaufzeichnung',
+    'landing.menu.open': 'Menü öffnen',
+    'landing.menu.close': 'Menü schließen',
+    'landing.menu.title': 'Menü',
+    'landing.primary': 'Hauptnavigation',
+    'landing.home': 'Startseite',
+    'landing.skip': 'Zum Inhalt springen',
+    'landing.newTab': '(öffnet in einem neuen Tab)',
+    'landing.copyright': '© {year} {name}',
     'feature.glouton': 'Zugang zu Glouton'
 };

@@ -25,7 +25,7 @@ muse/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map (47 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
-    components/               61 Svelte components (layout/ atoms/ molecules/ organisms/ charts/ motion/)
+    components/               63 Svelte components (layout/ atoms/ molecules/ organisms/ charts/ motion/)
     i18n/                     Message helper, locale context (provideLocale/getI18n), fr/en/es/de catalogs
     fonts/                    Bundled Goga font files (.otf)
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
@@ -34,12 +34,13 @@ muse/
     utils/press.ts            springPress — the one gsap press curve, as a use: action
     utils/field.ts            Field ↔ control context (id, describedBy, invalid)
     utils/dialog.ts           Shared Modal/Drawer controller — internal, not re-exported
+    utils/landing.ts          LandingHeader/Footer helpers: scroll state, safe hrefs, scroll watcher
     utils/chart.ts            scales, paths, arcs, resize action — shared by charts/
     utils/secret.ts           REDACTED wire contract, isRedacted, maskSecret
     utils/toast.svelte.ts     Module-scope toast queue behind Toaster — toast, toasts
 ```
 
-Tier counts: 5 layout, 19 atoms, 18 molecules, 11 organisms, 6 charts, 2 motion. `ChartTable.svelte`,
+Tier counts: 5 layout, 19 atoms, 18 molecules, 13 organisms, 6 charts, 2 motion. `ChartTable.svelte`,
 `components/charts/entry.ts` and `organisms/PricingCard.svelte` are internal and not exported.
 
 ## Key commands

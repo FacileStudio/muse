@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.12.0 (unreleased)
+
+### Added
+
+- `LandingHeader`: the landing-page top bar. It sticks to the top, shrinks into a floating pill
+  on scroll (width, radius, blur and offset on `--ease-fc`, no layout shift, off under reduced
+  motion), slides an active pill between `links`, and turns into a right-hand drawer under 64rem
+  (native dialog: focus trap, Escape, focus back on the menu button, `aria-expanded`,
+  `aria-controls`, `100dvh`). Props: `appName`, `icon`, `brand`, `homeHref`, `links`, `actions`
+  (defaults to `SignInWithFacile`), `skipHref`. Unsafe hrefs are dropped.
+- `LandingFooter`: brand, tagline, link `columns` that stack on a phone, and a strip with the
+  copyright and the `LegalFooter`. Props: `appName`, `icon`, `brand`, `homeHref`, `tagline`,
+  `columns`, `legal`, `copyright`.
+- Concentric radii: the `fc-chrome`, `rounded-fc-outer` and `rounded-fc-inner` utilities encode
+  `r_inner = r_outer - padding` once (CHARTE section 5).
+- `icons.menu`, `LandingLink`, and `landing.*` strings in fr, en, es and de.
+
+### Changed
+
+- `SignInWithFacile`: always a pill with the Facile mark at equal inline padding. While loading
+  the spinner takes the mark's place at the same size and the label stays, so the width does not
+  jump (the loading text moves to a screen-reader-only span). `label` is deprecated but still
+  works. The four catalogs already agreed on the canonical label.
+
 ## v0.11.1 (2026-11-06)
 
 ### Added

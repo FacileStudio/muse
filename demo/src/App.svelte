@@ -12,6 +12,7 @@
     import Dashboard from './pages/Dashboard.svelte';
     import Launch from './pages/Launch.svelte';
     import Pricing from './pages/Pricing.svelte';
+    import Landing from './pages/Landing.svelte';
     import Motion from './pages/Motion.svelte';
     import Rhythm from './pages/Rhythm.svelte';
     import Projects from './pages/Projects.svelte';
@@ -29,6 +30,7 @@
         '#/motion': Motion,
         '#/launch': Launch,
         '#/pricing': Pricing,
+        '#/landing': Landing,
         '#/settings': Settings
     };
 
@@ -87,7 +89,8 @@
         { href: '#/rythme', label: 'Rythme', icon: icons.palette },
         { href: '#/motion', label: 'Motion', icon: icons.bolt },
         { href: '#/launch', label: 'Lancement', icon: icons.key },
-        { href: '#/pricing', label: 'Tarifs', icon: icons.download }
+        { href: '#/pricing', label: 'Tarifs', icon: icons.download },
+        { href: '#/landing', label: 'Landing', icon: icons.compass }
     ];
 
     const navPages = $derived(links.map((l) => ({ ...l, active: l.href === root })));

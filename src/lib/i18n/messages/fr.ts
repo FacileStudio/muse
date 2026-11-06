@@ -120,5 +120,13 @@ export const fr: MuseMessages = {
     },
     'feature.participantsUnlimited': 'Participants illimités par appel',
     'feature.recording': 'Enregistrement des appels',
+    'landing.menu.open': 'Ouvrir le menu',
+    'landing.menu.close': 'Fermer le menu',
+    'landing.menu.title': 'Menu',
+    'landing.primary': 'Principale',
+    'landing.home': 'Accueil',
+    'landing.skip': 'Aller au contenu',
+    'landing.newTab': "(s'ouvre dans un nouvel onglet)",
+    'landing.copyright': '© {year} {name}',
     'feature.glouton': 'Accès à Glouton'
 };

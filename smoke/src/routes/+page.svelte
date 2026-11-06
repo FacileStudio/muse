@@ -15,6 +15,8 @@
 		Checkbox,
 		DonutChart,
 		DownloadCta,
+		LandingFooter,
+		LandingHeader,
 		Field,
 		Input,
 		LineChart,
@@ -155,6 +157,8 @@
 
 					<PricingPlans {catalog} data-smoke-pricing />
 					<DownloadCta href="/downloads" data-smoke-download />
+					<LandingHeader appName="Smoke" links={[{ href: '#a', label: 'A' }]} data-smoke-landing-header />
+					<LandingFooter appName="Smoke" data-smoke-landing-footer />
 
 					<section class="flex flex-col gap-4">
 						<Table>

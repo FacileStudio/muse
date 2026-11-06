@@ -14,7 +14,10 @@
         fullWidth?: boolean;
         /** Shows the spinner and stops a second navigation. Also set by the first click. */
         loading?: boolean;
-        /** Overrides the canonical label. Leave it unset: the label is part of the mark. */
+        /**
+         * @deprecated Every Facile sign-in says the same thing. Leave it unset: the label is part of the mark.
+         * Still honoured until the next major.
+         */
         label?: string;
         class?: string;
     }
@@ -45,14 +48,14 @@
     const name = $derived(label ?? i18n.t('signIn.label'));
 
     const sizes: Record<SignInSize, { box: string; mark: number }> = {
-        sm: { box: 'h-10 gap-2 px-4 text-fc-sm', mark: 16 },
-        md: { box: 'h-11 gap-2.5 px-5 text-fc-sm', mark: 18 },
-        lg: { box: 'h-12 gap-3 px-6 text-fc-md', mark: 20 }
+        sm: { box: '[--h:2.5rem] [--m:16px] gap-2 text-fc-sm', mark: 16 },
+        md: { box: '[--h:2.75rem] [--m:18px] gap-2.5 text-fc-sm', mark: 18 },
+        lg: { box: '[--h:3rem] [--m:20px] gap-3 text-fc-md', mark: 20 }
     };
 
     const classes = $derived(
         twMerge(
-            'inline-flex shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent font-semibold whitespace-nowrap text-fc-accent-fg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-busy:cursor-progress aria-busy:opacity-80',
+            'inline-flex h-(--h) ps-[calc((var(--h)-var(--m))/2)] pe-[calc(var(--h)-var(--m))] shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent font-semibold whitespace-nowrap text-fc-accent-fg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-busy:cursor-progress aria-busy:opacity-80',
             sizes[size].box,
             fullWidth && 'w-full',
             className
@@ -81,7 +84,7 @@
 
 <!--
 @component
-Le bouton « Se connecter avec Facile », le seul : la marque, le libellé canonique dans la langue de la session, un lien vers la route `/auth/oidc` de porte.
+Le bouton « Se connecter avec Facile », le seul : en pilule, la marque Facile toujours présente, le libellé canonique dans la langue de la session, un lien vers la route `/auth/oidc` de porte. Toute connexion Facile passe par lui, jamais par un bouton refait à la main.
 -->
 
 <a
@@ -95,7 +98,11 @@ Le bouton « Se connecter avec Facile », le seul : la marque, le libellé canon
     {...rest}
 >
     {#if busy}
-        <Spinner size="sm" aria-hidden="true" class="border-fc-accent-fg/30 border-t-fc-accent-fg" />
+        <Spinner
+            size="sm"
+            aria-hidden="true"
+            class="size-(--m) border-fc-accent-fg/30 border-t-fc-accent-fg"
+        />
     {:else}
         <svg
             width={sizes[size].mark}
@@ -111,5 +118,6 @@ Le bouton « Se connecter avec Facile », le seul : la marque, le libellé canon
             <path d="M179.198 223.502V186.902H216.098V223.502H179.198Z" />
         </svg>
     {/if}
-    <span>{busy ? i18n.t('signIn.loading') : name}</span>
+    <span>{name}</span>
+    {#if busy}<span class="sr-only">{i18n.t('signIn.loading')}</span>{/if}
 </a>
