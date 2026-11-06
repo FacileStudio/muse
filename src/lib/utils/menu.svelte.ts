@@ -61,7 +61,7 @@ export class MenuState extends AnchoredPopup {
         if (action.kind === 'move') this.active = moveActive(this.host.disabled(), this.active, action.key, true);
         else if (action.kind === 'type') this.type(action.char);
         else if (action.kind === 'close') this.hide(true);
-        else if (action.kind === 'tab') this.hide();
+        else if (action.kind === 'tab') this.hide(true);
     };
 
     keydown = (event: KeyboardEvent): void => {

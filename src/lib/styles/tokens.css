@@ -279,29 +279,48 @@
 /*
  * Windows high contrast. `forced-colors` replaces every author colour, so a borderless fill
  * vanishes and a control has no visible edge. This is the one place muse draws a border: it is
- * a platform requirement, not a style, and it uses system colours only.
+ * a platform requirement, not a style, and it uses system colours only. The block sits in
+ * `tokens.css`, outside the `no-borders.test.ts` scan.
  */
 @media (forced-colors: active) {
   input:not([type='hidden'], [type='file'], [type='color']),
   textarea,
   select,
+  [role='switch'] + span,
+  [role='progressbar'],
+  [role='listbox'],
+  [role='menu'] {
+    border: 1px solid CanvasText;
+  }
+
   [role='combobox'],
-  [role='switch'] + span {
+  button,
+  a[class~='inline-flex'] {
     border: 1px solid ButtonText;
   }
 
   input[type='checkbox']:checked,
   input[type='radio']:checked,
-  [role='switch']:checked + span {
-    forced-color-adjust: none;
+  [role='switch']:checked + span,
+  [role='progressbar'] > div {
     background-color: Highlight;
     border-color: Highlight;
   }
 
+  [role='option'][data-active='true'] {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+
   input[type='checkbox']:checked + svg,
-  input[type='radio']:checked + svg {
+  input[type='radio']:checked + svg,
+  [role='option'] > svg {
     forced-color-adjust: none;
     color: HighlightText;
+  }
+
+  [role='option']:not([data-active='true']) > svg {
+    color: CanvasText;
   }
 
   [role='switch'] + span > span {

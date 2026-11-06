@@ -19,7 +19,8 @@
   WCAG 1.4.11's 3:1, so every field needs a visible label. Text stays strict: `fc-fg` 15.15:1 and
   `fc-fg-muted` 4.59:1 on it in light, 14.88:1 and 4.62:1 in dark. `tokens.test.ts` recomputes it.
 - `@media (forced-colors: active)` in `tokens.css` gives every control a 1px `ButtonText` boundary
-  and `Highlight` checked states, for Windows high contrast. An invalid control's placeholder
+  and `Highlight` checked and active states, for Windows high contrast. It covers controls, boxes,
+  the switch track, the `Select` and `Menu` popups, the progress track and buttons. An invalid control's placeholder
   switches to `fc-fg`, so it stays above 4.5:1 on the tinted fill.
 - `controlFill` and `controlLine` exports, the one look of a text-like control, and
   `resolveField`, the one place a control merges its own ids with its `Field`.
@@ -36,8 +37,13 @@
   their border or ring. A selected swatch scales up and shows a check mark. `Spinner` is an SVG
   arc, so tint it with a text colour, not a border colour. `no-borders.test.ts` replaces
   `no-decorative-border.test.ts` and has no allowlist.
-- `Select` renders a wrapper `<div>`: `class` lands on it, not on a `<select>`. Remaining props
-  still reach the (hidden) native select.
+- `Select` `class` lands on the visible button, like the `<select>` it replaces; `wrapperClass`
+  styles the layout-neutral element around it. Remaining props reach the hidden native select.
+  An outside `select.value = ...` updates the display and the bound value. The active option is an
+  inverted accent fill, and the listbox is named by the `Field` label (`labelId` in the field
+  context). Children `<option>`s are read after mount: prefer `options` for server rendering.
+- `Menu`: Tab returns focus to the trigger before closing, focus leaving the menu closes it, and
+  Space activates link items.
 - `Table` alternates row fills and lights the hovered row.
 - Chart grid lines use `fc-surface`.
 - `SpaceSwitcher` shares its flip-up arithmetic with `Select` and `Menu` (`placePopup`).

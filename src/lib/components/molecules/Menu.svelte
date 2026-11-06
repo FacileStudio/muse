@@ -63,6 +63,17 @@
         if (node.showPopover && !node.matches(':popover-open')) node.showPopover();
     }
 
+    function leave(event: FocusEvent) {
+        const next = event.relatedTarget as Node | null;
+        if (next && !menuEl?.contains(next) && next !== triggerEl) menu.hide();
+    }
+
+    function space(event: KeyboardEvent) {
+        if (event.key !== ' ' || menu.buffer !== '') return;
+        event.preventDefault();
+        (event.currentTarget as HTMLElement).click();
+    }
+
     function choose(action: MenuAction) {
         if (action.disabled) return;
         action.onselect?.();
@@ -114,6 +125,7 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
             style:bottom={menu.up ? `${menu.bottom}px` : 'auto'}
             style:max-height="{menu.maxHeight}px"
             onkeydown={menu.keydown}
+            onfocusout={leave}
             use:present
         >
             {#each items as entry, i (i)}
@@ -129,6 +141,7 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
                             href={entry.href}
                             class={twMerge(row, tone)}
                             onclick={() => choose(entry)}
+                            onkeydown={space}
                             onpointermove={() => (menu.active = index)}
                         >
                             {#if entry.icon}<Icon icon={entry.icon} size={16} />{/if}

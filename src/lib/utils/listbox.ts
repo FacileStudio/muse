@@ -100,3 +100,12 @@ export function typeahead(
     }
     return { buffer: next, index: -1 };
 }
+
+/**
+ * Whether picking `optionValue` must tell the form. The comparison is against the bound prop, not
+ * the native element: an outside script that set `select.value` has already moved the element, and
+ * comparing against it would swallow the next pick of that same option.
+ */
+export function shouldNotify(propValue: string, optionValue: string): boolean {
+    return propValue !== optionValue;
+}

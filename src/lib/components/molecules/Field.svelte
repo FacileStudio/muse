@@ -51,7 +51,9 @@
     const helperId = `${uid}-helper`;
     const describedBy = $derived(error ? errorId : helper ? helperId : undefined);
 
-    setFieldContext(() => ({ id, describedBy, invalid: Boolean(error) }));
+    const labelId = $derived(label ? `${uid}-label` : undefined);
+
+    setFieldContext(() => ({ id, describedBy, invalid: Boolean(error), labelId }));
 
     const classes = $derived(twMerge('flex flex-col gap-1.5', className));
 </script>
@@ -62,7 +64,7 @@ L'étiquetage d'un contrôle. Le champ n'a plus de bordure : son libellé visibl
 -->
 
 <div class={classes} {...rest}>
-    {#if label}<label for={id} class="text-fc-sm text-fc-fg">{label}</label>{/if}
+    {#if label}<label id={labelId} for={id} class="text-fc-sm text-fc-fg">{label}</label>{/if}
     {@render children({ id, describedBy })}
     {#if error}
         <span id={errorId} class="flex items-start gap-1.5 text-fc-xs text-fc-danger">

@@ -172,7 +172,7 @@ A select-only combobox (WAI-ARIA APG): a `button[role=combobox]` opens a `listbo
 drawn by muse, never the operating system's list. The popup is a top-layer `popover`, so it works
 inside `Modal` and `Drawer`, flips upward near the viewport edge and scrolls the active option into
 view. A hidden native `<select>` carries `name`, `required`, `bind:value` and form submission, and
-receives the remaining props (`HTMLSelectAttributes`). `class` lands on the wrapper. Adopts `Field`
+receives the remaining props (`HTMLSelectAttributes`). `class` lands on the visible button (`wrapperClass` on the element around it). `<option>` children are read after mount, so pass `options` when the server-rendered label matters. Adopts `Field`
 context exactly like `Input`. Keys: arrows, Home, End, PageUp, PageDown, Enter, Space, Escape, Tab,
 type-ahead.
 

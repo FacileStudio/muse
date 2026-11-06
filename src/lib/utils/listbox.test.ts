@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { moveActive, parseOptions, typeahead, type RawNode } from './listbox.js';
+import { moveActive, parseOptions, shouldNotify, typeahead, type RawNode } from './listbox.js';
 
 const option = (value: string, text: string, disabled = false): RawNode => ({ tagName: 'OPTION', value, text, disabled });
 
@@ -78,5 +78,19 @@ describe('typeahead', () => {
     test('disabled options never match and no match is -1', () => {
         expect(typeahead(labels, [true, ...off.slice(1)], -1, '', 'a').index).toBe(1);
         expect(typeahead(labels, off, 0, '', 'z').index).toBe(-1);
+    });
+});
+
+describe('shouldNotify', () => {
+    test('a different option notifies', () => {
+        expect(shouldNotify('a', 'b')).toBe(true);
+    });
+
+    test('the bound value decides, not the native element', () => {
+        expect(shouldNotify('a', 'a')).toBe(false);
+    });
+
+    test('after an outside write synced the prop, the other option still notifies', () => {
+        expect(shouldNotify('x', 'y')).toBe(true);
     });
 });
