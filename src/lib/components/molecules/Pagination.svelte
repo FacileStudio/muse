@@ -65,7 +65,7 @@ La pagination d'une liste : précédent, suivant et une plage de pages avec des 
 
         {#each items as item, i (i)}
             {#if item === 'gap'}
-                <span aria-hidden="true" class="inline-flex h-11 min-w-8 items-center justify-center text-fc-fg-muted">&hellip;</span>
+                <span aria-hidden="true" class="inline-flex h-11 min-w-8 items-center justify-center text-fc-fg-muted">{'…'}</span>
             {:else}
                 <button
                     type="button"
