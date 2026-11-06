@@ -41,7 +41,7 @@ muse/
 ```
 
 Tier counts: 5 layout, 19 atoms, 18 molecules, 13 organisms, 6 charts, 2 motion. `ChartTable.svelte`,
-`components/charts/entry.ts` and `organisms/PricingCard.svelte` are internal and not exported.
+`components/charts/entry.ts` and `organisms/PricingCard.svelte` and `organisms/LandingDrawer.svelte` are internal and not exported.
 
 ## Key commands
 

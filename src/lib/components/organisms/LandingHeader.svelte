@@ -14,7 +14,7 @@
         homeHref?: string;
         /** Section or page links. Unsafe hrefs are dropped; `active` marks the current one. */
         links?: LandingLink[];
-        /** The bar's right side and the foot of the drawer. Defaults to `SignInWithFacile`. */
+        /** The bar's right side and the foot of the drawer. Defaults to `SignInWithFacile`. Rendered in the bar and in the drawer: do not put ids in it. */
         actions?: Snippet;
         /** An in-page target (`#main`). When set, a skip link is the first thing a keyboard reaches. */
         skipHref?: string;
@@ -23,16 +23,14 @@
 </script>
 
 <script lang="ts">
-    import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import { icons } from '../../icons.js';
-    import { createDialog } from '../../utils/dialog.js';
-    import { landingHref, safeLinks, watchScrolled } from '../../utils/landing.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
+    import { landingHref, linkAttrs, safeLinks, watchScrolled } from '../../utils/landing.js';
     import Icon from '../atoms/Icon.svelte';
     import IconButton from '../atoms/IconButton.svelte';
     import SignInWithFacile from '../atoms/SignInWithFacile.svelte';
+    import LandingDrawer from './LandingDrawer.svelte';
 
     let {
         appName,
@@ -56,42 +54,12 @@
     let scrolled = $state(false);
     let open = $state(false);
     let trigger: HTMLButtonElement | null = null;
-    let dialogEl: HTMLDialogElement | null = $state(null);
-    let panel: HTMLDivElement | null = $state(null);
-    let tween: ReturnType<typeof gsap.to> | null = null;
 
     let navEl: HTMLElement | null = $state(null);
     let items: HTMLAnchorElement[] = $state([]);
     let pill = $state<{ x: number; w: number } | null>(null);
     let glide = $state(false);
     const current = $derived(links.findIndex((l) => l.active));
-
-    const dialog = createDialog({
-        element: () => dialogEl,
-        open: () => open,
-        setOpen: (value) => (open = value),
-        surface: () => panel,
-        enter(_el, fresh) {
-            tween?.kill();
-            tween = null;
-            panel?.querySelector('button')?.focus();
-            if (!panel || prefersReducedMotion()) return;
-            if (fresh) gsap.set(panel, { xPercent: 110 });
-            tween = gsap.to(panel, { xPercent: 0, duration: 0.34, ease: 'power3.out' });
-        },
-        exit(_el, done) {
-            tween?.kill();
-            tween = null;
-            if (!panel || prefersReducedMotion()) return done();
-            tween = gsap.to(panel, { xPercent: 110, duration: 0.26, ease: 'power3.in', onComplete: done });
-        },
-        closed() {
-            tween?.kill();
-            tween = null;
-            if (panel) gsap.set(panel, { xPercent: 0 });
-            trigger?.focus();
-        }
-    });
 
     function openDrawer(event: MouseEvent & { currentTarget: HTMLButtonElement }) {
         trigger = event.currentTarget;
@@ -103,15 +71,15 @@
         pill = el && el.offsetWidth > 0 ? { x: el.offsetLeft, w: el.offsetWidth } : null;
     }
 
-    $effect(() => dialog.sync());
-
     $effect(() => (wrapper ? watchScrolled(wrapper, (value) => (scrolled = value)) : undefined));
 
     $effect(() => {
         void links;
         void current;
         measure();
-        if (!glide) requestAnimationFrame(() => (glide = true));
+        if (glide) return;
+        const frame = requestAnimationFrame(() => (glide = true));
+        return () => cancelAnimationFrame(frame);
     });
 
     $effect(() => {
@@ -204,10 +172,12 @@ La barre du haut d'une page d'atterrissage : collée en haut, elle se resserre e
                     bind:this={items[i]}
                     href={link.href}
                     aria-current={link.active ? 'location' : undefined}
+                    {...linkAttrs(link)}
                     class="{linkBase} {linkTone(link.active)}"
                 >
                     {#if link.icon}<Icon icon={link.icon} size={16} />{/if}
                     <span>{link.label}</span>
+                    {#if link.external}<span class="sr-only">{i18n.t('landing.newTab')}</span>{/if}
                 </a>
             {/each}
         </nav>
@@ -229,46 +199,15 @@ La barre du haut d'une page d'atterrissage : collée en haut, elle se resserre e
     </header>
 </div>
 
-<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
-<dialog
-    bind:this={dialogEl}
+<LandingDrawer
     id={drawerId}
-    aria-label={i18n.t('landing.menu.title')}
-    class="fc-chrome m-0 h-dvh max-h-none w-full max-w-none bg-transparent p-3 text-fc-fg backdrop:bg-fc-scrim backdrop:backdrop-blur-xs lg:hidden"
-    {...dialog.handlers}
->
-    <div
-        bind:this={panel}
-        class="ml-auto flex h-full w-72 max-w-full flex-col justify-between gap-6 overflow-y-auto rounded-fc-outer bg-fc-component/95 p-(--fc-pad) backdrop-blur-xl"
-    >
-        <div class="flex flex-col gap-6">
-            <div class="flex items-center justify-between gap-(--fc-pad)">
-                <a href={home} aria-label={appName ? undefined : i18n.t('landing.home')} class={brandClasses} onclick={() => (open = false)}>
-                    {@render brandView()}
-                </a>
-                <IconButton
-                    variant="ghost"
-                    class={roundClasses}
-                    aria-label={i18n.t('landing.menu.close')}
-                    onclick={() => (open = false)}
-                >
-                    <Icon icon={icons.close} size={18} />
-                </IconButton>
-            </div>
-            <nav aria-label={i18n.t('landing.primary')} class="flex flex-col gap-(--fc-pad)">
-                {#each links as link (link.href + link.label)}
-                    <a
-                        href={link.href}
-                        aria-current={link.active ? 'location' : undefined}
-                        onclick={() => (open = false)}
-                        class="inline-flex h-(--fc-ctl) items-center gap-2.5 rounded-fc-inner px-4 text-fc-sm font-medium transition-colors {FOCUS} {link.active ? 'bg-fc-accent text-fc-accent-fg' : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg'}"
-                    >
-                        {#if link.icon}<Icon icon={link.icon} size={18} />{/if}
-                        <span>{link.label}</span>
-                    </a>
-                {/each}
-            </nav>
-        </div>
-        <div class="flex flex-col gap-(--fc-pad) [&>*]:w-full">{@render actionsView()}</div>
-    </div>
-</dialog>
+    bind:open
+    {links}
+    {home}
+    {appName}
+    {brandView}
+    {actionsView}
+    {brandClasses}
+    {roundClasses}
+    onClosed={(restore) => restore && trigger?.focus()}
+/>

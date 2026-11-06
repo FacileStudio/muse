@@ -26,6 +26,8 @@
         legal?: LegalFooterProps;
         /** Overrides the default "(c) year appName" line. */
         copyright?: string;
+        /** Year in the default copyright line. Without it the year appears after mount, so server and client markup match. */
+        year?: number | string;
         class?: string;
     }
 </script>
@@ -46,6 +48,7 @@
         columns = [],
         legal = {},
         copyright,
+        year,
         class: className = '',
         ...rest
     }: LandingFooterProps = $props();
@@ -53,8 +56,12 @@
     const i18n = getI18n();
     const uid = $props.id();
     const home = $derived(landingHref(homeHref) ?? '/');
+    let mountedYear = $state('');
+    $effect(() => {
+        if (year === undefined) mountedYear = String(new Date().getFullYear());
+    });
     const line = $derived(
-        copyright ?? (appName ? i18n.t('landing.copyright', { year: String(new Date().getFullYear()), name: appName }) : '')
+        copyright ?? (appName ? i18n.t('landing.copyright', { year: String(year ?? mountedYear), name: appName }).replace(/\s+/g, ' ') : '')
     );
     const groups = $derived(
         columns
@@ -75,7 +82,7 @@
 
 <!--
 @component
-Le pied de page d'une page d'atterrissage : la marque, des colonnes de liens qui s'empilent sur mobile, puis une bande avec le copyright et le pied légal.
+Le pied de page d'une page d'atterrissage : la marque, des colonnes de liens qui s'empilent sur mobile, puis une bande avec le copyright et le pied légal. La bande légale porte le repère contentinfo (le `<footer>` de `LegalFooter`) : ne pas ajouter un second `<footer>` autour.
 -->
 
 <div class={classes} {...rest}>

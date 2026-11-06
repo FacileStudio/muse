@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `LandingHeader`: following a drawer link no longer moves focus back to the menu button, so the
+  anchor target keeps focus. Escape and the close button still restore it. The pending
+  animation frame is cancelled on destroy.
+- `LandingHeader` and its drawer honour `LandingLink.external` like the footer: new tab,
+  `rel="noopener noreferrer"`, and the screen-reader note.
+- `LandingFooter`: new `year` prop. Without it the default copyright year appears after mount,
+  so server and client markup cannot differ.
+
+### Changed
+
+- The drawer moved into an internal `LandingDrawer`, with no behaviour change. `actions` renders
+  in the bar and in the drawer: do not put ids in it.
+
 ## v0.12.0 (2026-11-06)
 
 ### Added

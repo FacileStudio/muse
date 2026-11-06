@@ -15,6 +15,10 @@ export interface LandingLink {
     external?: boolean;
 }
 
+export function linkAttrs(link: { external?: boolean }): { target?: '_blank'; rel?: string } {
+    return link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+}
+
 export function nextScrolled(y: number, was: boolean): boolean {
     return y > (was ? SCROLL_LEAVE : SCROLL_ENTER);
 }
