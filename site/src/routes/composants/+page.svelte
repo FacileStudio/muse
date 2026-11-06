@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Badge, Card, Inline, Section, Stack, Toaster } from '@facile/muse';
+    import { Badge, Card, Inline, Section, Stack, Toaster, controlLine, twMerge } from '@facile/muse';
     import docs from '$lib/generated/components.json';
     import Layout from '$lib/demos/Layout.svelte';
     import Atoms from '$lib/demos/Atoms.svelte';
@@ -59,7 +59,7 @@
         bind:value={query}
         type="search"
         placeholder="Stack, secret, graphique…"
-        class="h-11 w-full max-w-sm rounded-fc-md border border-fc-border bg-fc-bg px-3 text-fc-md text-fc-fg placeholder:text-fc-fg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+        class={twMerge(controlLine, "max-w-sm")}
     />
 </label>
 
@@ -100,14 +100,14 @@
                             <div class="overflow-x-auto">
                                 <table class="w-full text-fc-xs">
                                     <thead>
-                                        <tr class="border-b border-fc-border">
+                                        <tr class="bg-fc-surface">
                                             <th class="py-1.5 pr-3 text-left font-semibold text-fc-fg">Prop</th>
                                             <th class="py-1.5 pr-3 text-left font-semibold text-fc-fg">Type</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {#each c.props as p (p.name)}
-                                            <tr class="border-b border-fc-border/60 align-top">
+                                            <tr class="align-top odd:bg-fc-component">
                                                 <td class="py-1.5 pr-3 whitespace-nowrap">
                                                     <code class="font-fc-mono text-fc-fg">{p.name}</code>
                                                     {#if !p.optional}<span class="text-fc-danger">*</span>{/if}

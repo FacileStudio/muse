@@ -125,19 +125,23 @@
         font-weight: 600;
         color: var(--color-fc-fg);
         padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
-        border-bottom: 1px solid var(--color-fc-border);
+        background: var(--color-fc-surface);
     }
 
     .fc-prose :global(td) {
         color: var(--color-fc-fg-muted);
         padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
-        border-bottom: 1px solid var(--color-fc-border);
         vertical-align: top;
     }
 
+    .fc-prose :global(tbody tr:nth-child(even)) {
+        background: var(--color-fc-component);
+    }
+
     .fc-prose :global(blockquote) {
-        border-left: 2px solid var(--color-fc-border);
-        padding-left: calc(var(--spacing) * 4);
+        background: var(--color-fc-component);
+        border-radius: var(--radius-fc-md);
+        padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
         color: var(--color-fc-fg-muted);
     }
 </style>
