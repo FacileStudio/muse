@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { museMessages } from '../i18n/messages/index.js';
 import { createTranslator } from '../i18n/translate.js';
 import { fetchCatalog, parseCatalog } from './catalog.js';
-import { featureRows, withFreePlan, yearlySaving } from './pricing.js';
+import { featureRows, isFreeLabel, withFreePlan, yearlySaving } from './pricing.js';
 import { formatPrice } from './money.js';
 
 const pro = {
@@ -127,5 +127,14 @@ describe('fetchCatalog', () => {
         }) as unknown as typeof fetch;
         expect(await fetchCatalog('https://x.test/c', { fetch: counting, signal: AbortSignal.abort() })).toEqual([]);
         expect(sent).toBe(0);
+    });
+});
+
+describe('isFreeLabel', () => {
+    test('matches the free word of every locale, ignoring case and spaces', () => {
+        for (const word of ['Gratuit', ' free ', 'GRATIS', 'Kostenlos']) expect(isFreeLabel(word)).toBe(true);
+    });
+    test('rejects real plan names', () => {
+        for (const word of ['Découverte', 'Pro', '']) expect(isFreeLabel(word)).toBe(false);
     });
 });

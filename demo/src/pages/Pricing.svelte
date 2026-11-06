@@ -37,6 +37,14 @@
         </Card>
     </Section>
 
+    <Section title="Titre personnalisé" description="headingClass se fusionne sur le titre de section ; une offre nommée comme son prix (Gratuit) ne l'affiche qu'une fois.">
+        <PricingPlans
+            catalog={{ plans: [{ key: 'free', name: 'Gratuit', features: { 'nuage.storage_gb': 5 }, prices: [] }] }}
+            title="Nos offres"
+            headingClass="text-fc-2xl text-fc-accent"
+        />
+    </Section>
+
     {#each LOCALES as locale (locale)}
         <Section title={locale.toUpperCase()}>
             <Scoped {locale}>
