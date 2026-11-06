@@ -48,16 +48,15 @@
      that still writes `border-fc-border`, or paints a handle with `bg-fc-border`, keeps a
      defined colour instead of falling back to currentColor. Use `fc-surface` or `fc-field`. */
   --color-fc-border: oklch(0.9 0 0);
-  /* The fill of every form control (input, textarea, select, checkbox, radio, switch track).
-     With no border, the fill is the control's only boundary, so WCAG 2.2 1.4.11 asks for 3:1
-     against what surrounds it. Measured against the lightest neighbour that is binding, the
-     `fc-surface` step: light 3.02:1 (3.50 on the page, 3.26 on a card), dark 3.08:1 (3.60 on
-     the page, 3.38 on a card). `tokens.test.ts` recomputes these, so moving the value to a
-     lighter step fails the build. Text on it: fc-fg is 5.66:1 light, 5.51:1 dark. */
-  --color-fc-field: oklch(0.63 0 0);
-  /* Placeholder and icon colour on `fc-field`: 4.57:1 light, 4.54:1 dark. `fc-fg-muted` is
-     only 1.71:1 on the field fill, which is why it cannot be reused here. */
-  --color-fc-field-hint: oklch(0.25 0 0);
+  /* The fill of every form control (input, textarea, select, checkbox, radio, switch track):
+     one subtle step darker than the surfaces it sits on (light) or lighter (dark), the Notion
+     and Linear look. The owner chose this over WCAG 2.2 1.4.11's 3:1 boundary contrast, so a
+     control is identified by its label, its placeholder and the focus ring, and `forced-colors`
+     restores a real boundary below. Against page / card / surface: light 1.31 / 1.22 / 1.13,
+     dark 1.33 / 1.25 / 1.14. Text stays strict: `fc-fg` on it is 15.15:1 light, 14.88:1 dark,
+     and `fc-fg-muted` (placeholder, icons) is 4.59:1 light, 4.62:1 dark.
+     `tokens.test.ts` recomputes all of it. */
+  --color-fc-field: oklch(0.91 0 0);
   --color-fc-ring: oklch(0.4 0 0);
   --color-fc-danger: oklch(0.54 0.22 29);
   --color-fc-danger-fg: oklch(1 0 0);
@@ -231,8 +230,7 @@
     --color-fc-accent: oklch(0.985 0 0);
     --color-fc-accent-fg: oklch(0.09 0 0);
     --color-fc-border: oklch(1 0 0 / 10%);
-    --color-fc-field: oklch(0.51 0 0);
-    --color-fc-field-hint: oklch(0.92 0 0);
+    --color-fc-field: oklch(0.26 0 0);
     --color-fc-ring: oklch(0.6 0 0);
     --color-fc-danger: oklch(0.65 0.22 29);
     --color-fc-success: oklch(0.72 0.14 150);
@@ -262,8 +260,7 @@
   --color-fc-accent: oklch(0.985 0 0);
   --color-fc-accent-fg: oklch(0.09 0 0);
   --color-fc-border: oklch(1 0 0 / 10%);
-  --color-fc-field: oklch(0.51 0 0);
-  --color-fc-field-hint: oklch(0.92 0 0);
+  --color-fc-field: oklch(0.26 0 0);
   --color-fc-ring: oklch(0.6 0 0);
   --color-fc-danger: oklch(0.65 0.22 29);
   --color-fc-success: oklch(0.72 0.14 150);
@@ -277,6 +274,44 @@
   --color-fc-chart-4: oklch(0.55 0.16 15);
   --color-fc-chart-5: oklch(0.64 0.15 135);
   --color-fc-chart-6: oklch(0.62 0.14 339);
+}
+
+/*
+ * Windows high contrast. `forced-colors` replaces every author colour, so a borderless fill
+ * vanishes and a control has no visible edge. This is the one place muse draws a border: it is
+ * a platform requirement, not a style, and it uses system colours only.
+ */
+@media (forced-colors: active) {
+  input:not([type='hidden'], [type='file'], [type='color']),
+  textarea,
+  select,
+  [role='combobox'],
+  [role='switch'] + span {
+    border: 1px solid ButtonText;
+  }
+
+  input[type='checkbox']:checked,
+  input[type='radio']:checked,
+  [role='switch']:checked + span {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    border-color: Highlight;
+  }
+
+  input[type='checkbox']:checked + svg,
+  input[type='radio']:checked + svg {
+    forced-color-adjust: none;
+    color: HighlightText;
+  }
+
+  [role='switch'] + span > span {
+    forced-color-adjust: none;
+    background-color: ButtonText;
+  }
+
+  [role='switch']:checked + span > span {
+    background-color: HighlightText;
+  }
 }
 
 @layer base {

@@ -13,9 +13,14 @@
   `options` (also renders the label on the server) and `placeholder`.
 - `Menu` (action menu, APG menu button), `Progress`, `Breadcrumb` and `Pagination`, replacing
   hand-rolled copies in Bulle, Courrier, Nuage and Glouton.
-- Tokens `fc-field` (the fill of every form control, 3:1 against the page, a card and
-  `fc-surface`) and `fc-field-hint` (placeholder and icons on it, 4.5:1), in both dark blocks and
-  in `cn.ts`. `tokens.test.ts` recomputes the contrast ratios.
+- Token `fc-field`, the fill of every form control: a light step (`oklch(0.91)` light,
+  `oklch(0.26)` dark), 1.13 to 1.31:1 off the page, a card and `fc-surface` in light and 1.14 to
+  1.33:1 in dark, in both dark blocks and in `cn.ts`. The owner chose this subtle fill over
+  WCAG 1.4.11's 3:1, so every field needs a visible label. Text stays strict: `fc-fg` 15.15:1 and
+  `fc-fg-muted` 4.59:1 on it in light, 14.88:1 and 4.62:1 in dark. `tokens.test.ts` recomputes it.
+- `@media (forced-colors: active)` in `tokens.css` gives every control a 1px `ButtonText` boundary
+  and `Highlight` checked states, for Windows high contrast. An invalid control's placeholder
+  switches to `fc-fg`, so it stays above 4.5:1 on the tinted fill.
 - `controlFill` and `controlLine` exports, the one look of a text-like control, and
   `resolveField`, the one place a control merges its own ids with its `Field`.
 - `Field` and `SecretField` put an icon before the error message, so an invalid state never
@@ -23,7 +28,7 @@
 
 ### Changed
 
-- **No borders anywhere.** `Input`, `Textarea`, `Select`, `SecretField` and `ColorPicker` are
+- **No borders anywhere** (but the `forced-colors` rules). `Input`, `Textarea`, `Select`, `SecretField` and `ColorPicker` are
   filled with `fc-field`. `Checkbox` and `Radio` are 20px filled boxes, inverted to the accent when
   checked, with the mark drawn as an SVG (the native input stays, `appearance-none`). `Switch`
   is a filled track. `Dropzone`, the `outline` `Button`, the default `IconButton`, `Divider`,

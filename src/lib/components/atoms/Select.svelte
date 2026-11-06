@@ -137,16 +137,16 @@ Une liste déroulante au style de muse, jamais celle du système. Un bouton `com
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
         {disabled}
-        class={twMerge(controlLine, 'flex cursor-pointer items-center justify-between gap-2 text-left')}
+        class={twMerge(controlLine, 'group flex cursor-pointer items-center justify-between gap-2 text-left')}
         onclick={select.toggle}
         onkeydown={select.keydown}
         onblur={select.hide}
     >
-        <span class={twMerge('min-w-0 flex-1 truncate', showPlaceholder && 'text-fc-field-hint')}>{shown}</span>
+        <span class={twMerge('min-w-0 flex-1 truncate', showPlaceholder && 'text-fc-fg-muted group-aria-invalid:text-fc-fg')}>{shown}</span>
         <Icon
             icon={icons.chevronDown}
             size={16}
-            class={twMerge('text-fc-field-hint transition-transform motion-reduce:transition-none', select.open && 'rotate-180')}
+            class={twMerge('text-fc-fg-muted transition-transform motion-reduce:transition-none', select.open && 'rotate-180')}
         />
     </button>
 

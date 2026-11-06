@@ -35,8 +35,7 @@ CSS custom properties. Source of truth: `src/lib/styles/tokens.css`.
 | `--fc-fg-muted`       | `oklch(0.5 0 0)`    | `oklch(0.64 0 0)`      | secondary text               |
 | `--fc-accent`         | `oklch(0.145 0 0)`  | `oklch(0.985 0 0)`     | primary action — same as fg, **inverted not tinted** |
 | `--fc-accent-fg`      | `oklch(1 0 0)`      | `oklch(0.09 0 0)`      | text on accent               |
-| `--fc-field`          | `oklch(0.63 0 0)`   | `oklch(0.51 0 0)`      | fill of every form control: 3:1 against page, card and `fc-surface` (WCAG 1.4.11) |
-| `--fc-field-hint`     | `oklch(0.25 0 0)`   | `oklch(0.92 0 0)`      | placeholder and icons on `fc-field`, 4.5:1 |
+| `--fc-field`          | `oklch(0.91 0 0)`   | `oklch(0.26 0 0)`      | fill of every form control: one subtle step off page, card and `fc-surface` (1.13 to 1.31:1 light, 1.14 to 1.33:1 dark) |
 | `--fc-border`         | `oklch(0.9 0 0)`    | `oklch(1 0 0 / 10%)`   | **deprecated**: muse draws no borders and uses it nowhere; kept so consumer classes keep a colour |
 | `--fc-ring`           | `oklch(0.4 0 0)`    | `oklch(0.6 0 0)`       | focus rings                   |
 | `--fc-scrim`          | `oklch(0 0 0 / 50%)` | `oklch(0 0 0 / 50%)`  | overlay backdrops — same in both modes |
@@ -356,7 +355,7 @@ Container max-widths:
 - No shadows beyond `shadow-sm`/`shadow-lg` on floating/overlay surfaces (dropdowns, Modal, Drawer, MobileNav bar).
 
 **No borders.** Separation comes from fill steps, spacing and shadows (floating surfaces only).
-There is no allowlist. `Card`, `Table`, `Divider`, every form control (`Input`, `Textarea`,
+There is no allowlist, but for the `forced-colors` rules in `tokens.css`. `Card`, `Table`, `Divider`, every form control (`Input`, `Textarea`,
 `Select`, `Checkbox`, `Radio`, `Switch`, `SecretField`, `ColorPicker`, `Dropzone`), `Modal`,
 `Drawer`, `Toast`, menus, popovers, `LandingHeader`, `LandingFooter` and `SignInWithFacile` carry no
 `border`, no `divide-*`, no `ring` and no `outline` other than the focus ring.
@@ -370,10 +369,15 @@ There is no allowlist. `Card`, `Table`, `Divider`, every form control (`Input`, 
   `fc-surface` fills and lights the hovered row. A `Divider` is a 1px `bg-fc-surface` bar.
 - **Floating surfaces** (`Modal`, `Drawer`, `Select` and `Menu` lists, `Toast`, `MobileNav`,
   `ChartTooltip`) take an opaque fill plus `shadow-lg`. The shadow lifts them; the scrim does the rest.
-- **Form controls** have no edge, so their fill is the boundary: `bg-fc-field`, measured at 3:1
-  against the page, a card and `fc-surface` (WCAG 2.2 1.4.11 non-text contrast), with text at
-  4.5:1 on it. `tokens.test.ts` recomputes the ratios, so lightening the token fails the build.
-  Light mode lands on a mid grey, which is what 3:1 costs without a border.
+- **Form controls** have no edge, so a light fill is the boundary: `bg-fc-field`, one subtle step
+  off the surface (about 1.2:1), the Notion and Linear look. The owner chose this over WCAG 2.2
+  1.4.11's 3:1 boundary contrast, so a control is identified by its **label**, its placeholder and
+  the focus ring, and **a visible label is mandatory on every field**: use `Field label=...` (or a
+  visible `<label>`); an `aria-label` alone is for controls inside a row that already names them.
+  Text stays strict: `fc-fg` is 15.15:1 light and 14.88:1 dark on the fill, and `fc-fg-muted`
+  (placeholder, icons) is 4.59:1 and 4.62:1. `@media (forced-colors: active)` in `tokens.css`
+  restores a 1px `ButtonText` boundary for every control: that is the one border muse draws, a
+  Windows high contrast requirement and not a style. `tokens.test.ts` recomputes the ratios.
 - **Checkbox and radio** are a filled box, inverted to `fc-accent` when checked, with the mark
   drawn as an SVG. The native input stays (`appearance-none`) for forms, focus and assistive tech.
 - **Invalid** mixes the danger hue into the field fill, and `Field` adds an icon and the message.
@@ -618,7 +622,8 @@ MDI (plus, close, chevrons — Solar's read muddy at small sizes):
 
 ## 9. Accessibility
 
-- **Contrast ≥ WCAG AA** — 4.5:1 body text, 3:1 large text and non-text. Every semantic token
+- **Contrast ≥ WCAG AA** — 4.5:1 body text, 3:1 large text and non-text. One owner-approved
+  exception: a form control's fill is not held to the 3:1 boundary contrast of 1.4.11 (see §5). Every semantic token
   is measured against its own 10% tint (§2), not against white, because that is how they are
   actually used. The documented exception is the chart palette in light mode, which trades
   3:1 for the pastel look and pays for it with the relief rule (§12).

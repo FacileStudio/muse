@@ -25,7 +25,7 @@ séries de graphiques.
 | Surface de conteneur | `bg-fc-component` |
 | Encre | `text-fc-fg`, `text-fc-fg-muted` |
 | Accent | `bg-fc-accent` / `text-fc-accent-fg` |
-| Remplissage d'un contrôle de formulaire (3:1 sur la page, une carte et `fc-surface`) | `bg-fc-field`, `text-fc-field-hint` |
+| Remplissage d'un contrôle de formulaire (une marche au-dessus de la surface) | `bg-fc-field`, `text-fc-fg-muted` |
 | Anneau de focus | `outline-fc-ring` |
 
 ## Inversé, jamais teinté
@@ -47,10 +47,12 @@ panneau, une liste, un tableau, un séparateur, un menu, un toast, une modale, n
 - Un plateau à l'intérieur d'une carte prend `bg-fc-surface`.
 - Les lignes d'une liste se séparent par leur padding vertical, un tableau alterne ses fonds.
 - Une surface flottante prend un fond opaque et `shadow-lg`.
-- Un contrôle de formulaire n'a que son fond pour frontière, donc `bg-fc-field`, mesuré à 3:1 contre
-  la page, une carte et `fc-surface` (WCAG 2.2, 1.4.11). Cases et boutons radio sont des aplats
-  inversés en accent une fois cochés, avec un tracé SVG ; un champ invalide mêle du rouge à son fond
-  et `Field` ajoute une icône et le message, pour que l'état ne tienne jamais à la couleur seule.
+- Un contrôle de formulaire n'a que son fond, un aplat léger `bg-fc-field` (environ 1,2:1 contre la
+  surface). Le propriétaire a préféré cela au contraste de 3:1 de WCAG 2.2 (1.4.11) : le champ est
+  identifié par son **libellé** (obligatoire, visible), son placeholder et l'anneau de focus, et le
+  texte reste à plus de 4,5:1. En contraste élevé Windows (`forced-colors`), une bordure système est
+  rétablie. Cases et boutons radio sont des aplats inversés en accent une fois cochés, avec un tracé
+  SVG ; un champ invalide mêle du rouge à son fond et `Field` ajoute une icône et le message.
 - Le focus reste l'unique anneau, un `outline`, jamais une bordure.
 
 `no-borders.test.ts` fait échouer le build sur toute bordure, tout `divide-*`, tout `ring` et tout

@@ -151,14 +151,14 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                 aria-describedby={describedBy}
                 class={twMerge(
                     box,
-                    'text-fc-fg placeholder:font-sans placeholder:text-fc-field-hint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_30%,var(--color-fc-field))] disabled:opacity-50'
+                    'text-fc-fg placeholder:font-sans placeholder:text-fc-fg-muted aria-invalid:placeholder:text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_18%,var(--color-fc-field))] disabled:opacity-50'
                 )}
             />
         {:else}
             <output
                 {id}
                 aria-describedby={describedBy}
-                class={twMerge(box, empty ? 'text-fc-field-hint' : 'text-fc-fg')}
+                class={twMerge(box, empty ? 'text-fc-fg-muted' : 'text-fc-fg')}
                 title={visible || !sensitive ? value : undefined}
             >
                 <span class={visible || !sensitive ? 'truncate select-all' : 'truncate select-none'}

@@ -21,7 +21,7 @@
 <Page>
     <PageHeader title="Formulaires" description="Des aplats sans bordure : champs, listes, cases, interrupteurs, et leurs états." />
 
-    <Section title="Champs" description="Remplis en fc-field, 3:1 contre la page. Le focus reste l'unique anneau.">
+    <Section title="Champs" description="Un aplat léger, une marche au-dessus de la surface. Le libellé, le placeholder et l'anneau de focus identifient le champ.">
         <Card>
             <Stack>
                 <Field label="Nom" helper="Visible par votre équipe.">
