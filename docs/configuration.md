@@ -37,14 +37,16 @@ Chroma-zero OKLCH throughout except the semantic and chart tokens. Every value s
 | Token | Light | Dark | Used by |
 |---|---|---|---|
 | `--color-fc-page` | `oklch(1 0 0)` | `oklch(0.09 0 0)` | the document canvas — set on `body` by the base layer, used by no component |
-| `--color-fc-bg` | `oklch(1 0 0)` | `oklch(0.09 0 0)` | `Input`, `Select`, `Textarea`, `SecretField`, `Dropzone`, `OptionCards`, `UploadProgress`, plus the `Topbar` and `MobileNav` glass |
+| `--color-fc-bg` | `oklch(1 0 0)` | `oklch(0.09 0 0)` | `OptionCards`, `UploadProgress`, plus the `Topbar` and `MobileNav` glass |
 | `--color-fc-surface` | `oklch(0.95 0 0)` | `oklch(0.21 0 0)` | every hover state, `Badge` neutral, `Alert` neutral, `Skeleton`, `Switch` track, `Table` headers, `SpaceSwitcher` trigger, `BarChart` hover band |
 | `--color-fc-component` | `oklch(0.975 0 0)` | `oklch(0.16 0 0)` | container surfaces — `Card` (and therefore `StatCard`, `SettingsSection`, `ProfileCard`), `Table`, `SideBar`, `Modal`, `Drawer` panel, `SpaceSwitcher` dropdown, `ChartTooltip` |
 | `--color-fc-fg` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` | primary text |
 | `--color-fc-fg-muted` | `oklch(0.5 0 0)` | `oklch(0.64 0 0)` | placeholders, labels, inactive nav rows, `StatusDot` neutral |
 | `--color-fc-accent` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` | `Button` primary, active nav, `Avatar`, `Switch` on-state, the `Tabs` pill — **equals `fg`, so accent surfaces are inverted, not tinted** |
 | `--color-fc-accent-fg` | `oklch(1 0 0)` | `oklch(0.09 0 0)` | text on accent |
-| `--color-fc-border` | `oklch(0.9 0 0)` | `oklch(1 0 0 / 10%)` | the meaningful borders only: form controls, `Table` row rules, `Divider`, `Dropzone` |
+| `--color-fc-field` | `oklch(0.63 0 0)` | `oklch(0.51 0 0)` | fill of every form control, 3:1 against page, card and `fc-surface` |
+| `--color-fc-field-hint` | `oklch(0.25 0 0)` | `oklch(0.92 0 0)` | placeholder and icons on a field, 4.5:1 |
+| `--color-fc-border` | `oklch(0.9 0 0)` | `oklch(1 0 0 / 10%)` | deprecated, used by no component |
 | `--color-fc-ring` | `oklch(0.4 0 0)` | `oklch(0.6 0 0)` | the single `focus-visible` outline |
 | `--color-fc-danger` | `oklch(0.54 0.22 29)` | `oklch(0.65 0.22 29)` | `Button` danger and ghost-danger, `Alert`/`Badge`/`StatusDot` danger, `Field` error text, `ConfirmModal` danger badge |
 | `--color-fc-danger-fg` | `oklch(1 0 0)` | `oklch(1 0 0)` | text on a solid danger fill. **Published but unused** — the library has no solid danger fill; it is here for consumers that need one |

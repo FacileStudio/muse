@@ -223,8 +223,8 @@ background and foreground on `body`, the title face on `h1`–`h6`, the global s
 suppression, and the reduced-motion rule. Importing the styles therefore establishes base page
 behaviour, not only utility classes.
 
-Borders use a single `--color-fc-border` token (`oklch(0.9 0 0)` light, `oklch(1 0 0 / 10%)`
-dark) across the whole library.
+muse draws no borders. Form controls are filled with `--color-fc-field` (3:1 against the page, a
+card and `fc-surface`); `--color-fc-border` is deprecated and used by nothing.
 
 ## Relationship to the rest of the suite
 

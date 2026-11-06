@@ -130,9 +130,9 @@ custom namespace, so it classifies **`text-fc-sm` as a text _colour_**, not a fo
 The consequence is silent and vicious. Given a component that merges a variant and a size:
 
 ```js
-twMerge('border border-fc-border text-fc-fg', 'h-9 px-4 text-fc-sm')
-// stock tailwind-merge → 'border border-fc-border h-9 px-4 text-fc-sm'
-//                                        text-fc-fg is GONE
+twMerge('bg-fc-surface text-fc-fg', 'h-9 px-4 text-fc-sm')
+// stock tailwind-merge → 'bg-fc-surface h-9 px-4 text-fc-sm'
+//                                         text-fc-fg is GONE
 ```
 
 Two "colours" collided, so the later one won and the real colour was dropped. In practice
@@ -188,8 +188,8 @@ The tiers are import paths only; `index.ts` re-exports everything flat.
    `twMerge(defaults, className)`. `className` goes last. **Import `twMerge` from
    `../../utils/cn.js`, never from `tailwind-merge` directly.**
 4. Style with `fc-*` utilities only. No raw hex, no arbitrary pixel values outside the token
-   scale. Borders use `border-fc-border`, and container surfaces get **no** border — the
-   `bg-fc-component` fill is the separation.
+   scale. No borders anywhere: containers use the `bg-fc-component` fill, form
+   controls `bg-fc-field`.
 5. Every `<button>` declares `type` — an undeclared button inside a form submits it. Every
    focusable control carries the one ring:
    `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring`.

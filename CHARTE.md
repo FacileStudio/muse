@@ -35,7 +35,9 @@ CSS custom properties. Source of truth: `src/lib/styles/tokens.css`.
 | `--fc-fg-muted`       | `oklch(0.5 0 0)`    | `oklch(0.64 0 0)`      | secondary text               |
 | `--fc-accent`         | `oklch(0.145 0 0)`  | `oklch(0.985 0 0)`     | primary action — same as fg, **inverted not tinted** |
 | `--fc-accent-fg`      | `oklch(1 0 0)`      | `oklch(0.09 0 0)`      | text on accent               |
-| `--fc-border`         | `oklch(0.9 0 0)`    | `oklch(1 0 0 / 10%)`   | form control edges, table row rules, `Divider` |
+| `--fc-field`          | `oklch(0.63 0 0)`   | `oklch(0.51 0 0)`      | fill of every form control: 3:1 against page, card and `fc-surface` (WCAG 1.4.11) |
+| `--fc-field-hint`     | `oklch(0.25 0 0)`   | `oklch(0.92 0 0)`      | placeholder and icons on `fc-field`, 4.5:1 |
+| `--fc-border`         | `oklch(0.9 0 0)`    | `oklch(1 0 0 / 10%)`   | **deprecated**: muse draws no borders and uses it nowhere; kept so consumer classes keep a colour |
 | `--fc-ring`           | `oklch(0.4 0 0)`    | `oklch(0.6 0 0)`       | focus rings                   |
 | `--fc-scrim`          | `oklch(0 0 0 / 50%)` | `oklch(0 0 0 / 50%)`  | overlay backdrops — same in both modes |
 | `--fc-danger`         | `oklch(0.54 0.22 29)`| `oklch(0.65 0.22 29)` | destructive                    |
@@ -47,7 +49,7 @@ CSS custom properties. Source of truth: `src/lib/styles/tokens.css`.
 | `--fc-admin`          | `oklch(0.5 0.16 292)`| `oklch(0.75 0.14 292)` | `admin` role pill              |
 
 **Chrome is chroma-zero; chroma is reserved for meaning.** Everything structural — page,
-surface, component, foreground, accent, border, ring — sits at chroma 0. Colour appears only
+surface, component, field, foreground, accent, ring — sits at chroma 0. Colour appears only
 where it carries information: the five status tokens (`danger`, `success`, `info`, `warning`),
 the two role pills (`owner`, `admin`), and the six chart series slots. Nothing else.
 
@@ -139,7 +141,7 @@ Rules:
   are never series slots.
 - Recommended ceiling is **6 series**; past that `chartColor()` wraps, so fold the tail into
   an "Other" bucket or facet into small multiples instead.
-- Grid and axis lines are `fc-border`; tick labels are `fc-fg-muted` at `text-fc-xs`. Value
+- Grid and axis lines are `fc-surface` (a stroke, not a border); tick labels are `fc-fg-muted` at `text-fc-xs`. Value
   and label text never wears the series colour — the mark beside it carries identity.
 
 ### Destructive actions
@@ -353,33 +355,30 @@ Container max-widths:
 - `--radius-fc-xs` 4px, `--radius-fc-sm` 6px, `--radius-fc-md` 8px, `--radius-fc-lg` 12px, `--radius-fc-pill`/`--radius-fc-full` 999px
 - No shadows beyond `shadow-sm`/`shadow-lg` on floating/overlay surfaces (dropdowns, Modal, Drawer, MobileNav bar).
 
-**No decorative borders.** muse separates surfaces by **fill and spacing**, never by a line.
-`Card`, `StatCard`, `Section card`, `SettingsSection`, `ProfileCard`, `Table`, `SideBar`,
-`Topbar`, `Modal`, `Drawer`, `Toast`, dropdowns, list rows, empty states and page containers
-carry no border, no `divide-*`, no decorative `ring` and no decorative `outline`. A 1px box
-drawn around every panel reads as clutter once a page has more than two of them. Do not add
-`border border-fc-border` back to a card, a chart wrapper, a panel, a list container or a
-header strip, and do not put a `Divider` between a header and its content: give it a `gap`.
+**No borders.** Separation comes from fill steps, spacing and shadows (floating surfaces only).
+There is no allowlist. `Card`, `Table`, `Divider`, every form control (`Input`, `Textarea`,
+`Select`, `Checkbox`, `Radio`, `Switch`, `SecretField`, `ColorPicker`, `Dropzone`), `Modal`,
+`Drawer`, `Toast`, menus, popovers, `LandingHeader`, `LandingFooter` and `SignInWithFacile` carry no
+`border`, no `divide-*`, no `ring` and no `outline` other than the focus ring.
+`no-borders.test.ts` fails the build on any of them in `src/lib/components`; only the resets
+`border-0` and `border-none` pass.
 
 - **Containers** take `bg-fc-component` against `bg-fc-page`.
 - **Something inside a card** that needs its own plate (an upload row, a code sample, the
-  `SpaceSwitcher` trigger, an unselected `OptionCards` choice) takes `bg-fc-surface`.
-- **Rows in a list** separate by vertical padding (`SettingsRow` is `py-4`, `ProfileCard` meta
-  rows are `py-2`), not by a rule.
-- **Floating surfaces** (`Modal`, `Drawer`, dropdowns, `Toast`, `MobileNav`, `ChartTooltip`)
-  take an opaque fill plus `shadow-lg`. The shadow lifts them; the scrim, when there is one,
-  does the rest.
-
-A border stays only where it carries meaning, and `no-decorative-border.test.ts` names every
-component allowed one, so adding another is a reviewed decision:
-- **form controls**, which need a visible edge to read as editable: `Input`, `Select`,
-  `Textarea`, `SecretField`, `ColorPicker`, `Switch`, and the `outline` `Button` and default
-  `IconButton` variants;
-- **`Dropzone`**, whose dashed outline *is* the affordance;
-- **`Table` row rules**, because a wide data table is unreadable without them;
-- **`Divider`**, the explicit rule a caller places for a real semantic break, never as
-  decoration between a heading and its body;
-- **focus rings** (`outline-fc-ring`) and the ring around a selected swatch, which are state.
+  `SpaceSwitcher` trigger, an unselected `OptionCards` choice, `Dropzone`) takes `bg-fc-surface`.
+- **Rows in a list** separate by vertical padding (`SettingsRow` is `py-4`). A `Table` alternates
+  `fc-surface` fills and lights the hovered row. A `Divider` is a 1px `bg-fc-surface` bar.
+- **Floating surfaces** (`Modal`, `Drawer`, `Select` and `Menu` lists, `Toast`, `MobileNav`,
+  `ChartTooltip`) take an opaque fill plus `shadow-lg`. The shadow lifts them; the scrim does the rest.
+- **Form controls** have no edge, so their fill is the boundary: `bg-fc-field`, measured at 3:1
+  against the page, a card and `fc-surface` (WCAG 2.2 1.4.11 non-text contrast), with text at
+  4.5:1 on it. `tokens.test.ts` recomputes the ratios, so lightening the token fails the build.
+  Light mode lands on a mid grey, which is what 3:1 costs without a border.
+- **Checkbox and radio** are a filled box, inverted to `fc-accent` when checked, with the mark
+  drawn as an SVG. The native input stays (`appearance-none`) for forms, focus and assistive tech.
+- **Invalid** mixes the danger hue into the field fill, and `Field` adds an icon and the message.
+  The state never rests on colour alone.
+- **Focus** is the one `outline` ring, never a border.
 
 Keep container padding generous: the whitespace is doing the work the border used to. `Card` is **`p-5`**
 (20px); it was `p-4` and read cramped against its own fill.
@@ -497,7 +496,7 @@ gesture reaches the document and rubber-bands the shell.
   as a mistake. This is the case the exception above does not cover, and muse's own invite form
   got it wrong until v1.0. The rule is only about *siblings on one line* — a button under a
   stacked field keeps the default.
-  `Checkbox` and `Radio` are 16px boxes by design and must be wrapped in a `<label>` with
+  `Checkbox` and `Radio` are 20px boxes by design and must be wrapped in a `<label>` with
   padding so the *label* carries the target.
 - No fixed pixel heights for content areas; use `min-h-*` instead.
 - Test at: 360, 414, 768, 1024, 1440.
@@ -1223,7 +1222,7 @@ the same thing. Display only — the consumer owns saving.
 | `name` | `string` | required | Truncates |
 | `email` | `string` | — | Truncates |
 | `avatar` | `string` | — | Falls back to `Avatar`'s initial |
-| `color` | `string` | — | Identity dot on the avatar, ringed in `fc-component` |
+| `color` | `string` | — | Identity dot on the avatar |
 | `role` | `string` | — | `Badge`; `owner`/`admin` map to those tones, else `neutral` |
 | `meta` | `{ label, value }[]` | `[]` | Generic key/value rows — rates, member-since, … |
 | `actions` | `Snippet` | — | Right-aligned button area |
@@ -1252,6 +1251,24 @@ tokens, tinted not solid; rows carry `role="progressbar"` with the file name in 
 `aria-label`, and a `pending` row omits `aria-valuenow` so it reads as indeterminate.
 
 ---
+
+### Select, Menu, Progress, Breadcrumb, Pagination
+
+**`Select` never shows the operating system's option list.** It is the WAI-ARIA APG select-only
+combobox: a `button role="combobox"` with `aria-expanded`, `aria-controls` and
+`aria-activedescendant`, and a `role="listbox"` popup of `role="option"` rows (44px high). Arrows,
+Home, End, PageUp and PageDown move; Enter and Space pick; Escape closes; Tab picks and moves on;
+typing jumps to a match. The popup is a `popover="manual"` element, so it sits in the top layer
+and works inside `Modal` and `Drawer`; it flips upward near the viewport edge and scrolls the
+active option into view. A visually hidden native `<select>` stays in the DOM, so `name`,
+`required`, `bind:value`, `onchange` and form submission behave as before. Children
+`<option>`/`<optgroup>` and the `options` prop both work; `options` also renders the label on the
+server. `appearance: base-select` is not used: it is Chrome-led and would give two looks.
+
+`Menu` is the action menu (APG menu button): real focus moves onto the items, arrows wrap, typing
+jumps, Escape returns focus to the trigger. `Progress` is a `role="progressbar"` fill, pulsing
+when `value` is absent. `Breadcrumb` is a `nav` with `aria-current="page"` on the last item.
+`Pagination` shows first, last, the current page and its siblings with gaps, at 44px a cell.
 
 ## 14. Settings
 

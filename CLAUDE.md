@@ -25,7 +25,7 @@ muse/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map (47 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
-    components/               63 Svelte components (layout/ atoms/ molecules/ organisms/ charts/ motion/)
+    components/               67 Svelte components (layout/ atoms/ molecules/ organisms/ charts/ motion/)
     i18n/                     Message helper, locale context (provideLocale/getI18n), fr/en/es/de catalogs
     fonts/                    Bundled Goga font files (.otf)
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
@@ -40,8 +40,8 @@ muse/
     utils/toast.svelte.ts     Module-scope toast queue behind Toaster — toast, toasts
 ```
 
-Tier counts: 5 layout, 19 atoms, 18 molecules, 13 organisms, 6 charts, 2 motion. `ChartTable.svelte`,
-`components/charts/entry.ts` and `organisms/PricingCard.svelte` and `organisms/LandingDrawer.svelte` are internal and not exported.
+Tier counts: 5 layout, 20 atoms, 21 molecules, 13 organisms, 6 charts, 2 motion. `ChartTable.svelte`,
+`components/charts/entry.ts`, `atoms/SelectListbox.svelte`, `organisms/PricingCard.svelte` and `organisms/LandingDrawer.svelte` are internal and not exported.
 
 ## Key commands
 
@@ -84,7 +84,7 @@ import '@facile/muse/styles';
 
 The palette is **chroma-zero OKLCH**, matching the shipped suite apps. Namespaces: `fc-page`,
 `fc-bg`, `fc-surface`, `fc-component`, `fc-fg`, `fc-fg-muted`, `fc-accent`, `fc-accent-fg`,
-`fc-border`, `fc-ring`, `fc-scrim`, `fc-danger`, `fc-danger-fg`, `fc-success`, `fc-info`,
+`fc-field`, `fc-field-hint`, `fc-ring`, `fc-scrim`, `fc-danger`, `fc-danger-fg`, `fc-success`, `fc-info`,
 `fc-warning`, `fc-owner`, `fc-admin`, plus `fc-chart-1`…`fc-chart-6` for categorical chart
 series (Sablier's identity palette, deepened for legibility). Use via Tailwind utilities like
 `bg-fc-bg`, `text-fc-fg`, `rounded-fc-md`.
@@ -127,11 +127,11 @@ byte-identical duplicates on purpose — **edit both or neither**.
 - **Never show scrollbars.** `tokens.css` hides them globally in the base layer; scrolling
   still works everywhere. A visible scrollbar takes layout width and shifts content sideways.
   Don't re-enable them, and don't add `[scrollbar-width:none]` utilities — already handled.
-- Container surfaces (`Card`, `StatCard`, `Table`) carry **no border** — the `bg-fc-component`
-  fill separates them. 1px `border-fc-border` is for separation *inside* a container, form
-  controls, `Dropzone`, and floating surfaces. Shadows only on floating things. `ChartTooltip`
-  is the one floating surface with no border: it is 60px wide and lives inside a card, so a
-  step of fill plus the shadow is enough. A `Toast` keeps its border — nothing frames it.
+- **No borders, anywhere** (owner rule, v0.13.0). Containers (`Card`, `StatCard`, `Table`) are
+  separated by the `bg-fc-component` fill; form controls by `bg-fc-field`, the fill measured at
+  3:1 against page, card and `fc-surface`; floating surfaces by an opaque fill plus `shadow-lg`.
+  `no-borders.test.ts` fails on `border-*`, `divide-*`, `ring-*` and non-focus `outline-*` in
+  `src/lib/components`. `fc-border` is deprecated and unused.
 - Dashboard spacing is ranked, not per-component: `gap-4` inside a card, `p-5` card padding,
   `gap-4` between cards, `gap-10` between sections. A gutter is never tighter than the
   padding of the cards it separates. See CHARTE §4.
