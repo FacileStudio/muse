@@ -14,10 +14,12 @@
 		Card,
 		Checkbox,
 		DonutChart,
+		DownloadCta,
 		Field,
 		Input,
 		LineChart,
 		MobileNav,
+		PricingPlans,
 		PageTransition,
 		SecretField,
 		SideBar,
@@ -42,6 +44,20 @@
 
 	const series = [{ name: 'Visits', data: [12, 18, 9, 24, 30, 21, 27] }];
 	const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+	const catalog = {
+		plans: [
+			{ key: 'starter', name: 'Starter', features: { 'courrier.mailboxes': 1 } },
+			{
+				key: 'pro',
+				name: 'Pro',
+				features: { 'nuage.storage_gb': 200 },
+				prices: [
+					{ interval: 'month', amount: 900, currency: 'eur', lookup_key: 'pro_month' },
+					{ interval: 'year', amount: 9000, currency: 'eur', lookup_key: 'pro_year' }
+				]
+			}
+		]
+	};
 	const slices = [
 		{ label: 'Desktop', value: 62 },
 		{ label: 'Mobile', value: 31 },
@@ -136,6 +152,9 @@
 							<SecretField value="fc_rw_9f3c2ab1d4e5" label="API key" />
 						</Card>
 					</section>
+
+					<PricingPlans {catalog} data-smoke-pricing />
+					<DownloadCta href="/downloads" data-smoke-download />
 
 					<section class="flex flex-col gap-4">
 						<Table>

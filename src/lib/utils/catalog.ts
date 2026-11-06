@@ -19,6 +19,8 @@ const isRecord = (value: unknown): value is Raw =>
 
 const KEY = /^[a-z0-9][a-z0-9_.-]{0,63}$/i;
 
+const LOOKUP_KEY = /^[a-z0-9][a-z0-9_.-]{0,99}$/i;
+
 const isName = (value: unknown): value is string =>
     typeof value === 'string' && value.trim() !== '' && value.length <= 80;
 
@@ -29,7 +31,7 @@ export function parsePrice(raw: unknown): CatalogPrice | null {
     if (interval !== 'month' && interval !== 'year') return null;
     if (typeof amount !== 'number' || !Number.isSafeInteger(amount) || amount < 0) return null;
     if (typeof currency !== 'string' || !/^[a-z]{3}$/i.test(currency)) return null;
-    if (typeof lookup_key !== 'string' || !KEY.test(lookup_key)) return null;
+    if (typeof lookup_key !== 'string' || !LOOKUP_KEY.test(lookup_key)) return null;
     return { interval, amount, currency: currency.toUpperCase(), lookup_key };
 }
 
@@ -44,12 +46,17 @@ export function parseFeatures(raw: unknown): Record<string, FeatureValue> {
     return out;
 }
 
-/** One plan, or `null` when its key or name is unusable. Malformed prices are dropped. */
+/**
+ * One plan, or `null` when its key or name is unusable, when `prices` is present but not an
+ * array, or when it lists prices and none of them is valid. Only an absent or empty `prices`
+ * yields a plan with no price, so a paid plan with broken prices never passes for free.
+ */
 export function parsePlan(raw: unknown): CatalogPlan | null {
     if (!isRecord(raw) || typeof raw.key !== 'string' || !KEY.test(raw.key) || !isName(raw.name)) return null;
-    const prices = (Array.isArray(raw.prices) ? raw.prices : [])
-        .map(parsePrice)
-        .filter((p): p is CatalogPrice => p !== null);
+    if (raw.prices !== undefined && !Array.isArray(raw.prices)) return null;
+    const listed: unknown[] = raw.prices ?? [];
+    const prices = listed.map(parsePrice).filter((p): p is CatalogPrice => p !== null);
+    if (listed.length > 0 && prices.length === 0) return null;
     const once = prices.filter((p, i) => prices.findIndex((q) => q.interval === p.interval) === i);
     return { key: raw.key, name: raw.name.trim(), features: parseFeatures(raw.features), prices: once };
 }
@@ -68,7 +75,7 @@ export type FetchCatalogOptions = { timeoutMs?: number; signal?: AbortSignal; fe
  * a failure, a timeout, a non-2xx status or an unsafe URL all come back as `[]`.
  */
 export async function fetchCatalog(url: string = CATALOG_URL, options: FetchCatalogOptions = {}): Promise<CatalogPlan[]> {
-    if (!isSafeHref(url)) return [];
+    if (!isSafeHref(url) || options.signal?.aborted) return [];
     const timeout = new AbortController();
     const timer = setTimeout(() => timeout.abort(), options.timeoutMs ?? CATALOG_TIMEOUT_MS);
     const abort = () => timeout.abort();
