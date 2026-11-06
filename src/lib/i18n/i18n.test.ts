@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { LOCALES, resolveLocale } from './locale.js';
+import { LOCALES, matchLocale, resolveLocale } from './locale.js';
 import { museMessages } from './messages/index.js';
 import { createTranslator, type Message } from './translate.js';
 
@@ -13,6 +13,15 @@ describe('resolveLocale', () => {
         expect(resolveLocale('es_MX')).toBe('es');
         expect(resolveLocale('it')).toBe('en');
         expect(resolveLocale(undefined)).toBe('en');
+    });
+
+    test('reads every Accept-Language tag by q, not only the first', () => {
+        expect(resolveLocale('it-IT,it;q=0.9,de;q=0.8,en;q=0.7')).toBe('de');
+        expect(resolveLocale('en;q=0.2, fr;q=0.9')).toBe('fr');
+        expect(resolveLocale('es;q=0, de')).toBe('de');
+        expect(resolveLocale('es-419, fr')).toBe('es');
+        expect(matchLocale('it, pt')).toBeNull();
+        expect(matchLocale('')).toBeNull();
     });
 });
 
@@ -61,6 +70,19 @@ describe('muse catalogs', () => {
                 );
             }
         }
+    });
+
+    test('French puts a non-breaking space before : ? ! ;', () => {
+        const strings = Object.values(museMessages.fr).flatMap((m) => (typeof m === 'string' ? [m] : Object.values(m)));
+        const bad = strings.filter((m) => /(^|[^\u00a0\u202f])[:?!;]/.test(m));
+        expect(bad).toEqual([]);
+    });
+
+    test('upload.complete agrees with the done count', () => {
+        const fr = createTranslator(museMessages, 'fr');
+        expect(fr('upload.complete', { count: 1, total: 3 })).toBe('1 sur 3 terminé');
+        expect(fr('upload.complete', { count: 2, total: 3 })).toBe('2 sur 3 terminés');
+        expect(createTranslator(museMessages, 'es')('upload.complete', { count: 1, total: 2 })).toBe('1 de 2 completado');
     });
 
     test('the sign-in button says the canonical sentence', () => {

@@ -23,3 +23,15 @@ export function isSafeHref(raw: unknown): raw is string {
 export function safeHref(href: unknown, fallback: string): string {
     return isSafeHref(href) ? href : fallback;
 }
+
+/**
+ * `href` with `key=value` added to its query, unless the query already has `key`.
+ * Works on same-origin paths and absolute URLs alike, and keeps the fragment.
+ */
+export function withParam(href: string, key: string, value: string): string {
+    const relative = href.startsWith('/');
+    const url = new URL(href, 'https://relative.invalid');
+    if (url.searchParams.has(key)) return href;
+    url.searchParams.set(key, value);
+    return relative ? `${url.pathname}${url.search}${url.hash}` : url.toString();
+}

@@ -75,7 +75,10 @@ export const es: MuseMessages = {
     'toast.dismiss': 'Cerrar la notificación',
     'upload.total': 'Progreso total de la subida',
     'upload.progressFor': 'Progreso de la subida de {name}',
-    'upload.complete': '{done} de {count} completados',
+    'upload.complete': {
+        one: '{count} de {total} completado',
+        other: '{count} de {total} completados'
+    },
     'upload.done': 'Completado',
     'upload.failed': 'Error',
     'upload.waiting': 'En espera',

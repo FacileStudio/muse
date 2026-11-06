@@ -161,7 +161,7 @@ L'avancement d'un envoi de fichiers, par élément, avec ses états de reprise e
         {#if showTotal}
             <div class="flex flex-col gap-1.5 pt-1">
                 <div class="flex items-baseline justify-between gap-3 text-fc-xs text-fc-fg-muted">
-                    <span>{i18n.t('upload.complete', { done: doneCount, count: items.length })}</span>
+                    <span>{i18n.t('upload.complete', { count: doneCount, total: items.length })}</span>
                     <span>{total}%</span>
                 </div>
                 <div

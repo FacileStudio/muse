@@ -4,7 +4,10 @@
     export type SignInSize = 'sm' | 'md' | 'lg';
 
     export interface SignInWithFacileProps extends Omit<HTMLAnchorAttributes, 'href'> {
-        /** The app's porte sign-in route. Anything but a same-origin path or https URL falls back to `/auth/oidc`. */
+        /**
+         * The app's porte sign-in route. Anything but a same-origin path or https URL falls back to
+         * `/auth/oidc`. When the locale is known it gains `ui_locales=<locale>` for porte to forward.
+         */
         href?: string;
         size?: SignInSize;
         /** Stretch to the width of the container. */
@@ -20,7 +23,7 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
-    import { safeHref } from '../../utils/href.js';
+    import { safeHref, withParam } from '../../utils/href.js';
     import Spinner from './Spinner.svelte';
 
     let {
@@ -35,7 +38,8 @@
     }: SignInWithFacileProps = $props();
 
     const i18n = getI18n();
-    const href = $derived(safeHref(hrefProp, '/auth/oidc'));
+    const safe = $derived(safeHref(hrefProp, '/auth/oidc'));
+    const href = $derived(i18n.known ? withParam(safe, 'ui_locales', i18n.locale) : safe);
     let pending = $state(false);
     const busy = $derived(loading || pending);
     const name = $derived(label ?? i18n.t('signIn.label'));
@@ -62,7 +66,8 @@
         }
         onclick?.(event);
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
-        if (!event.defaultPrevented && !modified) pending = true;
+        const elsewhere = Boolean(rest.target) && rest.target !== '_self';
+        if (!event.defaultPrevented && !modified && !elsewhere) pending = true;
     }
 
     $effect(() => {
@@ -84,6 +89,7 @@ Le bouton « Se connecter avec Facile », le seul : la marque, le libellé canon
     rel="external"
     data-sveltekit-reload
     aria-busy={busy ? 'true' : undefined}
+    aria-disabled={busy ? 'true' : undefined}
     class={classes}
     onclick={handleClick}
     {...rest}

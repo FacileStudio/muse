@@ -39,7 +39,7 @@
 
     const i18n = getI18n();
 
-    const link = (doc: LegalDoc, href: string | undefined) => safeHref(href, legalUrl(doc, i18n.locale, base));
+    const link = (doc: LegalDoc, href: string | undefined) => safeHref(href, legalUrl(doc, i18n.known ? i18n.locale : null, base));
 
     const links = $derived([
         { href: link('cgu', cgu), label: i18n.t('legal.cgu') },

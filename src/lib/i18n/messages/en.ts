@@ -75,7 +75,10 @@ export const en = {
     'toast.dismiss': 'Dismiss notification',
     'upload.total': 'Total upload progress',
     'upload.progressFor': 'Upload progress for {name}',
-    'upload.complete': '{done} of {count} complete',
+    'upload.complete': {
+        one: '{count} of {total} complete',
+        other: '{count} of {total} complete'
+    },
     'upload.done': 'Done',
     'upload.failed': 'Failed',
     'upload.waiting': 'Waiting',
