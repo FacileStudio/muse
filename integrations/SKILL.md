@@ -46,8 +46,8 @@ Import everything flat from `@facile/muse`; the tier directories are import path
 | Tier | Components |
 |---|---|
 | **Layout** | `Page` `PageHeader` `Section` `Stack` `Inline` |
-| Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `ColorPicker` `Divider` `IconButton` `Input` `Radio` `Select` `Skeleton` `Spinner` `StatusDot` `Switch` `Textarea` |
-| Molecules | `Dropzone` `EmptyState` `Field` `NavButton` `OptionCards` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `SwatchPicker` `Tabs` `Toast` `UploadProgress` |
+| Atoms | `Alert` `Avatar` `Badge` `Button` `Card` `Checkbox` `ColorPicker` `Divider` `IconButton` `Input` `Progress` `Radio` `Select` `Skeleton` `Spinner` `StatusDot` `Switch` `Textarea` |
+| Molecules | `Breadcrumb` `Dropzone` `EmptyState` `Field` `Menu` `NavButton` `OptionCards` `Pagination` `SecretField` `SettingsRow` `SettingsSection` `SpaceSwitcher` `StatCard` `SwatchPicker` `Tabs` `Toast` `UploadProgress` |
 | Organisms | `ConfirmModal` `Drawer` `MobileNav` `Modal` `ProfileCard` `SideBar` `Table` `Toaster` `Topbar` |
 | Charts | `BarChart` `ChartLegend` `ChartTooltip` `DonutChart` `LineChart` `Sparkline` |
 | Motion | `PageTransition` `TextElevate` |
@@ -120,7 +120,7 @@ Colours are **chroma-zero OKLCH** — the palette is greyscale except `fc-danger
 `fc-success`, `fc-info`, `fc-warning`, `fc-owner`, `fc-admin`, and the six chart series slots.
 
 `bg-fc-page` `bg-fc-bg` `bg-fc-surface` `bg-fc-component` · `text-fc-fg` `text-fc-fg-muted`
-`bg-fc-accent` / `text-fc-accent-fg` · `border-fc-border` · `outline-fc-ring` ·
+`bg-fc-accent` / `text-fc-accent-fg` · `bg-fc-field` / `text-fc-field-hint` (form controls) · `outline-fc-ring` ·
 `text-fc-danger` `text-fc-success` `text-fc-info` `text-fc-warning` · `bg-fc-scrim`
 
 ### Spacing — do not type it by hand
@@ -183,13 +183,12 @@ Five house rules that make generated UI look like the suite rather than generic 
    — `fc-accent` deliberately equals `fc-fg`, so a selected nav row is a solid inverted slab.
 2. **Semantic fills are tinted, not solid.** `bg-fc-danger/10 text-fc-danger`, matching the
    suite's `bg-destructive/10`. A solid saturated block is wrong.
-3. **No decorative borders.** Surfaces separate by fill and spacing, never by a line. Cards,
-   sections, panels, page containers, list rows, empty states, headers, sidebars, modals,
-   drawers, dropdowns and toasts carry no `border`, `divide-*`, decorative `ring` or
-   decorative `outline`. Containers take `bg-fc-component`; a plate inside a card takes
-   `bg-fc-surface`; list rows separate by padding; floating surfaces take an opaque fill plus
-   `shadow-lg`. Borders stay only where they carry meaning: form controls, `Dropzone`'s dashed
-   outline, `Table` row rules, an explicit `Divider`, and focus rings.
+3. **No borders.** Separation comes from fill steps, spacing and shadows (floating surfaces
+   only). No `border`, `divide-*` or `ring`, on any element, including inputs, textareas,
+   selects, checkboxes, radios, switches, tables, dividers and toasts; only `border-0` and
+   `border-none` resets and the focus `outline` pass. Containers take `bg-fc-component`; a plate
+   inside a card takes `bg-fc-surface`; list rows separate by padding; floating surfaces take an
+   opaque fill plus `shadow-lg`; form controls take `bg-fc-field`, the fill measured at 3:1.
 4. **Never show scrollbars.** `tokens.css` hides them globally; scrolling still works. Do not
    re-enable them and do not add `[scrollbar-width:none]` utilities — already handled.
 5. **Never put a border or ring on an avatar.**

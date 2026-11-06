@@ -96,8 +96,8 @@ is set.
 | `children` | `Snippet` | — | Optional — an icon-only button is legal |
 
 `primary` fills with `bg-fc-accent` — which equals the foreground colour, so it reads as an
-inverted slab. `ghost` is transparent with a `bg-fc-surface` hover. `outline` adds
-`border-fc-border`. `danger` is **tinted, not solid** (`bg-fc-danger/10 text-fc-danger`).
+inverted slab. `ghost` is transparent with a `bg-fc-surface` hover. `outline` is a quiet
+`bg-fc-surface` fill. `danger` is **tinted, not solid** (`bg-fc-danger/10 text-fc-danger`).
 `ghost-danger` is muted at rest and turns red on hover — the variant for a destructive row
 action inside a table or member list.
 
@@ -119,7 +119,7 @@ Round 44px icon button carrying the house press (`use:springPress`). Spreads to
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `variant` | `'default' \| 'ghost' \| 'danger'` | `'default'` | `default` is bordered; the other two are transparent until hover |
+| `variant` | `'default' \| 'ghost' \| 'danger'` | `'default'` | `default` is a `bg-fc-surface` fill; the other two are transparent until hover |
 | `type` | `string` | `'button'` | |
 | `children` | `Snippet` | — | Required — the glyph |
 
@@ -144,8 +144,8 @@ Children can react to the hover through `group-hover:`. Without it nothing chang
 
 ### `Input`
 
-Spreads to `<input>` (`HTMLInputAttributes`). `h-11`, full width, `border-fc-border`,
-`bg-fc-bg`.
+Spreads to `<input>` (`HTMLInputAttributes`). `h-11`, full width, `bg-fc-field` fill with no border,
+`placeholder:text-fc-field-hint`.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
@@ -168,13 +168,21 @@ Spreads to `<textarea>` (`HTMLTextareaAttributes`). Vertically resizable, full w
 
 ### `Select`
 
-Spreads to `<select>` (`HTMLSelectAttributes`). Native control, `h-11`, full width. Adopts
-`Field` context exactly like `Input`.
+A select-only combobox (WAI-ARIA APG): a `button[role=combobox]` opens a `listbox` of `option` rows
+drawn by muse, never the operating system's list. The popup is a top-layer `popover`, so it works
+inside `Modal` and `Drawer`, flips upward near the viewport edge and scrolls the active option into
+view. A hidden native `<select>` carries `name`, `required`, `bind:value` and form submission, and
+receives the remaining props (`HTMLSelectAttributes`). `class` lands on the wrapper. Adopts `Field`
+context exactly like `Input`. Keys: arrows, Home, End, PageUp, PageDown, Enter, Space, Escape, Tab,
+type-ahead.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
 | `value` | `string` | `''` | **bindable** |
-| `children` | `Snippet` | — | Required. Supply the `<option>` elements |
+| `options` | `(SelectOption \| SelectGroup)[]` | — | Alternative to children. Also renders the label on the server |
+| `children` | `Snippet` | — | `<option>` and `<optgroup>` elements, read from the hidden select after mount |
+| `placeholder` | `string` | — | Shown, muted, while `value` matches no option |
+| `disabled` | `boolean` | `false` | |
 
 ### `Checkbox`
 
@@ -215,7 +223,7 @@ or the row passes `for` and you give the switch a matching `id`.
 
 ### `Badge`
 
-Inline pill, `rounded-fc-pill`, `text-fc-xs`, transparent border. Spreads to `<span>`.
+Inline pill, `rounded-fc-pill`, `text-fc-xs`, no border. Spreads to `<span>`.
 
 | Prop | Type | Default |
 |---|---|---|
@@ -258,7 +266,7 @@ The initial and the label are `$derived`, so a `name` that changes after mount u
 
 ### `Spinner`
 
-`role="status"` border spinner with a `border-t-fc-fg` arc. Halts under `motion-reduce`.
+`role="status"` SVG spinner: a faint track and a `currentColor` arc. Halts under `motion-reduce`.
 Spreads to `<span>`.
 
 | Prop | Type | Default | Notes |
@@ -284,9 +292,20 @@ Coloured dot plus optional text, for connection and health state. Spreads to `<s
 Reserve `pulse` for genuinely in-flight states (connecting, reconnecting) — a permanently
 pulsing dot is just noise.
 
+### `Progress`
+
+`role="progressbar"` fill on a `bg-fc-surface` track, no border. Spreads to `<div>`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `value` | `number \| null` | `null` | `0` to `max`. `null` is an unknown duration: the bar pulses |
+| `max` | `number` | `100` | |
+| `tone` | `'accent' \| 'success' \| 'warning' \| 'danger'` | `'accent'` | |
+| `label` | `string` | translated | The accessible name |
+
 ### `Divider`
 
-`<hr>` with `border-0 border-t border-fc-border`. Spreads to `<hr>`.
+`<hr>` drawn as a 1px `bg-fc-surface` bar. Spreads to `<hr>`.
 
 Carries **no margin**. Its breathing room comes from the parent's `gap`, like every other
 sibling relationship in the system — put it inside a `flex flex-col gap-4` (or wider) rather
@@ -573,10 +592,46 @@ The height is deliberate: a two-line card where a list should be reads as a rend
 failure. Title and description are one `gap-1` block inside the outer `gap-4` so the
 description binds to the title rather than floating between it and the action.
 
+### `Breadcrumb`
+
+A `<nav>` landmark with an ordered list. The last item is the current page (`aria-current="page"`).
+Spreads to `<nav>`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `items` | `{ label: string; href?: string }[]` | required | |
+| `label` | `string` | translated | The landmark name |
+
+### `Pagination`
+
+Previous, next and a page range with gaps. Cells are 44px, the current page is inverted and carries
+`aria-current="page"`. Renders nothing when `pageCount` is 1 or less. Spreads to `<nav>`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `page` | `number` | `1` | **bindable**, from 1 |
+| `pageCount` | `number` | required | |
+| `siblings` | `number` | `1` | Pages shown on each side of the current one |
+| `onChange` | `(page: number) => void` | — | |
+| `label` | `string` | translated | The landmark name |
+
+### `Menu`
+
+An action menu (APG menu button). Focus moves onto the items, the arrows wrap, typing jumps to a
+match, Escape closes and returns focus to the trigger. The list is a top-layer `popover` with the
+same flip as `Select`. Spreads to the wrapper `<div>`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `items` | `(MenuAction \| { separator: true })[]` | required | `MenuAction`: `label`, `onselect`, `href`, `icon`, `tone: 'default' \| 'danger'`, `disabled` |
+| `label` | `string` | required | Name of the trigger and of the menu |
+| `trigger` | `Snippet` | — | Replaces the default text and chevron |
+| `align` | `'start' \| 'end'` | `'start'` | Which edge of the trigger the list lines up with |
+
 ### `Dropzone`
 
 Drag-and-drop file intake wrapping a visually hidden `<input type="file">`, so the whole zone
-is one big label and keyboard-reachable for free. Dashed `border-fc-border` on `bg-fc-bg`.
+is one big label and keyboard-reachable for free. A `bg-fc-surface` plate, no border.
 Spreads to `<label>` (`HTMLLabelAttributes`); the drag handlers are attached after the spread.
 
 | Prop | Type | Default | Notes |
@@ -771,8 +826,7 @@ Styled wrapper around a native `<table>`, inside an `overflow-x-auto` box on
 |---|---|---|
 | `children` | `Snippet` | — (required) |
 
-Row separation comes from `[&_tbody_tr]:border-t border-fc-border` — a rule *inside* the
-container, which is the one place 1px borders belong.
+Rows alternate `bg-fc-surface/40` and light up on hover; there are no row rules.
 
 ### `Modal`
 
