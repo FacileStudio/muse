@@ -136,13 +136,16 @@ function check(name: string, tokens: Record<string, string>): void {
     const merged = { ...themes.light, ...tokens };
     const ratio = (a: string, b: string) => contrast(merged[`--color-fc-${a}`], merged[`--color-fc-${b}`]);
 
-    test(`${name}: the field fill is 3:1 against page, card and surface`, () => {
-        const worst = Math.min(...['page', 'bg', 'component', 'surface'].map((n) => ratio('field', n)));
-        expect(worst).toBeGreaterThanOrEqual(3);
+    test(`${name}: the field fill is visibly off page, card and surface (1.1 to 1.5:1)`, () => {
+        for (const neighbour of ['page', 'bg', 'component', 'surface']) {
+            expect(ratio('field', neighbour)).toBeGreaterThanOrEqual(1.1);
+            expect(ratio('field', neighbour)).toBeLessThanOrEqual(1.5);
+        }
     });
 
-    test(`${name}: text and hint are 4.5:1 on the field fill`, () => {
-        expect(Math.min(ratio('fg', 'field'), ratio('field-hint', 'field'))).toBeGreaterThanOrEqual(4.5);
+    test(`${name}: text, placeholder and icons clear 4.5:1 on the field fill`, () => {
+        expect(ratio('fg', 'field')).toBeGreaterThanOrEqual(4.5);
+        expect(ratio('fg-muted', 'field')).toBeGreaterThanOrEqual(4.5);
     });
 
     test(`${name}: the accent fill is 3:1 against the field fill`, () => {
@@ -150,7 +153,31 @@ function check(name: string, tokens: Record<string, string>): void {
     });
 }
 
-describe('form control contrast (WCAG 1.4.11, no borders)', () => {
+describe('form control fill (subtle by design, strict on text)', () => {
     check('light', themes.light);
     check('dark', themes.dark);
+
+    test('there is no separate hint token: fc-fg-muted passes on the field', () => {
+        expect(themes.light['--color-fc-field-hint']).toBeUndefined();
+    });
+});
+
+/*
+ * With the fill this close to its surroundings, a Windows high contrast user would lose every
+ * control edge. The forced-colors block is the one place muse draws a border.
+ */
+describe('forced-colors', () => {
+    const block = css.slice(css.indexOf('@media (forced-colors: active)'));
+
+    test('every control kind gets a ButtonText boundary', () => {
+        for (const selector of ['input:not', 'textarea', 'select', "[role='combobox']", "[role='switch'] + span"]) {
+            expect(block).toContain(selector);
+        }
+        expect(block).toContain('border: 1px solid ButtonText');
+    });
+
+    test('checked boxes and the switch use system colours', () => {
+        expect(block).toContain('Highlight');
+        expect(block).toContain('HighlightText');
+    });
 });

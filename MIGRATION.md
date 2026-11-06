@@ -411,21 +411,22 @@ sets. With no locale set it falls back to English.
 
 ## 20. No borders, and a custom `Select` (v0.13.0)
 
-**Symptom:** after the bump every form control is a filled box with no border, light mode shows
-a mid grey field (`fc-field`), `Checkbox`/`Radio` are 20px accent-inverted boxes, `Table` has no
+**Symptom:** after the bump every form control is a filled box with no border, form controls are a
+light fill (`fc-field`), `Checkbox`/`Radio` are 20px accent-inverted boxes, `Table` has no
 row rules, the `outline` `Button` and the default `IconButton` are filled, and `Select` opens
 muse's own list instead of the system one.
 
-**Why:** owner rule, no borders anywhere (CHARTE §5). Without an edge, a control's fill is its
-boundary, so `fc-field` is measured at 3:1 against the page, a card and `fc-surface`
-(WCAG 2.2 1.4.11). Light mode lands on a mid grey; that is what 3:1 costs.
+**Why:** owner rule, no borders anywhere (CHARTE §5). A control's fill is its edge, so `fc-field` is a
+light step off the surface (`oklch(0.91)` light, `oklch(0.26)` dark, about 1.2:1), chosen by the
+owner over WCAG 1.4.11's 3:1. Controls are identified by their label, placeholder and focus ring, so
+every field needs a visible label (`Field label`). Text stays above 4.5:1, and Windows high contrast
+(`forced-colors`) gets a real boundary from `tokens.css`.
 
 **Do:**
 
 1. Strip your own borders: `border`, `border-*`, `divide-*`, `ring-*` on controls, tables,
    dividers and cards. Give a hand-rolled input `controlLine` (exported) or `bg-fc-field
-   text-fc-fg placeholder:text-fc-field-hint`. Placeholder and icon colour on a field is
-   `fc-field-hint`, not `fc-fg-muted` (1.71:1 there).
+   text-fc-fg placeholder:text-fc-fg-muted`, and keep a visible label on it.
 2. `fc-border` still exists, deprecated and unused. Replace `bg-fc-border` fills with
    `bg-fc-surface` or `bg-fc-field`.
 3. `Select`: the DOM is now `div > (hidden select + button[role=combobox]) + popover`. `class`

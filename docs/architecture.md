@@ -223,8 +223,8 @@ background and foreground on `body`, the title face on `h1`–`h6`, the global s
 suppression, and the reduced-motion rule. Importing the styles therefore establishes base page
 behaviour, not only utility classes.
 
-muse draws no borders. Form controls are filled with `--color-fc-field` (3:1 against the page, a
-card and `fc-surface`); `--color-fc-border` is deprecated and used by nothing.
+muse draws no borders. Form controls are filled with `--color-fc-field` (a light fill about 1.2:1 off
+its surface; `forced-colors` adds an edge); `--color-fc-border` is deprecated and used by nothing.
 
 ## Relationship to the rest of the suite
 

@@ -144,8 +144,8 @@ Children can react to the hover through `group-hover:`. Without it nothing chang
 
 ### `Input`
 
-Spreads to `<input>` (`HTMLInputAttributes`). `h-11`, full width, `bg-fc-field` fill with no border,
-`placeholder:text-fc-field-hint`.
+Spreads to `<input>` (`HTMLInputAttributes`). `h-11`, full width, `bg-fc-field` light fill with no border,
+`placeholder:text-fc-fg-muted`.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|

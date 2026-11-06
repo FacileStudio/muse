@@ -7,8 +7,9 @@ import { join } from 'node:path';
  * popovers and toasts separate by fill step, spacing and, on floating surfaces only, a shadow.
  * There is no allowlist: a component that wants an edge gets a fill instead.
  *
- * Allowed: the resets `border-0` and `border-none`, `border-collapse`, and the one focus
- * outline, which must sit behind a focus variant.
+ * Allowed: the resets `border-0` and `border-none`, `border-collapse`, the one focus outline,
+ * which must sit behind a focus variant, and a border behind a `forced-colors:` variant, the
+ * Windows high contrast requirement.
  */
 
 const ROOT = import.meta.dir;
@@ -45,6 +46,7 @@ function violations(source: string): string[] {
         .split(/[\s'"`{}(),;=]+/)
         .filter((token) => {
             const { variants, utility } = split(token);
+            if (variants.includes('forced-colors:')) return false;
             return isBorder(utility) || isStrayOutline(variants, utility);
         });
 }
@@ -75,6 +77,10 @@ describe('no borders', () => {
             'ring-2',
             'outline-2'
         ]);
+    });
+
+    test('the scan lets a forced-colors border through', () => {
+        expect(violations('<div class="forced-colors:border forced-colors:border-[ButtonText]">')).toEqual([]);
     });
 
     test('the scan lets resets and the focus outline through', () => {

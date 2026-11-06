@@ -84,7 +84,7 @@ import '@facile/muse/styles';
 
 The palette is **chroma-zero OKLCH**, matching the shipped suite apps. Namespaces: `fc-page`,
 `fc-bg`, `fc-surface`, `fc-component`, `fc-fg`, `fc-fg-muted`, `fc-accent`, `fc-accent-fg`,
-`fc-field`, `fc-field-hint`, `fc-ring`, `fc-scrim`, `fc-danger`, `fc-danger-fg`, `fc-success`, `fc-info`,
+`fc-field`, `fc-ring`, `fc-scrim`, `fc-danger`, `fc-danger-fg`, `fc-success`, `fc-info`,
 `fc-warning`, `fc-owner`, `fc-admin`, plus `fc-chart-1`…`fc-chart-6` for categorical chart
 series (Sablier's identity palette, deepened for legibility). Use via Tailwind utilities like
 `bg-fc-bg`, `text-fc-fg`, `rounded-fc-md`.
@@ -128,8 +128,8 @@ byte-identical duplicates on purpose — **edit both or neither**.
   still works everywhere. A visible scrollbar takes layout width and shifts content sideways.
   Don't re-enable them, and don't add `[scrollbar-width:none]` utilities — already handled.
 - **No borders, anywhere** (owner rule, v0.13.0). Containers (`Card`, `StatCard`, `Table`) are
-  separated by the `bg-fc-component` fill; form controls by `bg-fc-field`, the fill measured at
-  3:1 against page, card and `fc-surface`; floating surfaces by an opaque fill plus `shadow-lg`.
+  separated by the `bg-fc-component` fill; form controls by `bg-fc-field`, a light fill one step
+  off the surface (owner's call over WCAG 1.4.11; every field needs a visible label; `forced-colors` restores edges); floating surfaces by an opaque fill plus `shadow-lg`.
   `no-borders.test.ts` fails on `border-*`, `divide-*`, `ring-*` and non-focus `outline-*` in
   `src/lib/components`. `fc-border` is deprecated and unused.
 - Dashboard spacing is ranked, not per-component: `gap-4` inside a card, `p-5` card padding,

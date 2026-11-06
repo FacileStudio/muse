@@ -54,7 +54,7 @@ Une case à cocher qui adopte l'identifiant de son `Field`. La boîte est un apl
             aria-describedby={control.describedBy}
             aria-invalid={control.invalid}
             bind:checked
-            class="peer size-5 shrink-0 cursor-pointer appearance-none rounded-fc-sm bg-fc-field transition-colors checked:bg-fc-accent aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_30%,var(--color-fc-field))] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+            class="peer size-5 shrink-0 cursor-pointer appearance-none rounded-fc-sm bg-fc-field transition-colors checked:bg-fc-accent aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_18%,var(--color-fc-field))] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
             {...rest}
         />
         <svg

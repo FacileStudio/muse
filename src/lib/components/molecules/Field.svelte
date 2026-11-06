@@ -58,7 +58,7 @@
 
 <!--
 @component
-L'étiquetage d'un contrôle. Il rend un vrai `label for`, et les contrôles muse adoptent son identifiant par contexte, sans câblage.
+L'étiquetage d'un contrôle. Le champ n'a plus de bordure : son libellé visible est obligatoire, c'est lui qui l'identifie avec le placeholder et l'anneau de focus. Il rend un vrai `label for`, et les contrôles muse adoptent son identifiant par contexte, sans câblage.
 -->
 
 <div class={classes} {...rest}>

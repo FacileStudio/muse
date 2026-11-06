@@ -120,7 +120,7 @@ Colours are **chroma-zero OKLCH** — the palette is greyscale except `fc-danger
 `fc-success`, `fc-info`, `fc-warning`, `fc-owner`, `fc-admin`, and the six chart series slots.
 
 `bg-fc-page` `bg-fc-bg` `bg-fc-surface` `bg-fc-component` · `text-fc-fg` `text-fc-fg-muted`
-`bg-fc-accent` / `text-fc-accent-fg` · `bg-fc-field` / `text-fc-field-hint` (form controls) · `outline-fc-ring` ·
+`bg-fc-accent` / `text-fc-accent-fg` · `bg-fc-field` (form controls, a light fill) · `outline-fc-ring` ·
 `text-fc-danger` `text-fc-success` `text-fc-info` `text-fc-warning` · `bg-fc-scrim`
 
 ### Spacing — do not type it by hand
@@ -188,7 +188,7 @@ Five house rules that make generated UI look like the suite rather than generic 
    selects, checkboxes, radios, switches, tables, dividers and toasts; only `border-0` and
    `border-none` resets and the focus `outline` pass. Containers take `bg-fc-component`; a plate
    inside a card takes `bg-fc-surface`; list rows separate by padding; floating surfaces take an
-   opaque fill plus `shadow-lg`; form controls take `bg-fc-field`, the fill measured at 3:1.
+   opaque fill plus `shadow-lg`; form controls take `bg-fc-field`, a light fill; every field needs a visible label.
 4. **Never show scrollbars.** `tokens.css` hides them globally; scrolling still works. Do not
    re-enable them and do not add `[scrollbar-width:none]` utilities — already handled.
 5. **Never put a border or ring on an avatar.**
