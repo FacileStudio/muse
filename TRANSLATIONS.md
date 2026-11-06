@@ -23,6 +23,7 @@ Points to check first in es and de:
 - `planLimit.*`: "plan" (es) and "Tarif" (de) for the subscription tier.
 - `pricing.*`, `feature.*`, `download.*` (v0.11.0): plan and feature wording on the pricing
   cards, including "Teilnehmende" (de) and "buzón de correo" (es).
+- `landing.*` (v0.12.0): menu, skip link and "opens in a new tab" wording for the landing header and footer.
 - Tone: es uses the informal "tú" ("Crea tu cuenta"), de uses the formal "Sie". Confirm both.
 
 ## Adding a string

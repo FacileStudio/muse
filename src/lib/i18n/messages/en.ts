@@ -120,6 +120,14 @@ export const en = {
     },
     'feature.participantsUnlimited': 'Unlimited participants per call',
     'feature.recording': 'Call recording',
+    'landing.menu.open': 'Open menu',
+    'landing.menu.close': 'Close menu',
+    'landing.menu.title': 'Menu',
+    'landing.primary': 'Primary',
+    'landing.home': 'Home',
+    'landing.skip': 'Skip to content',
+    'landing.newTab': '(opens in a new tab)',
+    'landing.copyright': '© {year} {name}',
     'feature.glouton': 'Access to Glouton'
 } satisfies Record<string, Message>;
 

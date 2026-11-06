@@ -27,7 +27,7 @@ const colors = [
     'fc-chart-5',
     'fc-chart-6'
 ];
-const radii = ['fc-xs', 'fc-sm', 'fc-md', 'fc-lg', 'fc-pill', 'fc-full'];
+const radii = ['fc-xs', 'fc-sm', 'fc-md', 'fc-lg', 'fc-pill', 'fc-full', 'fc-outer', 'fc-inner'];
 
 /* Container and nav tokens are not on any scale tailwind-merge knows, so without these it
    cannot tell that a consumer's `max-w-4xl` conflicts with `Page`'s `max-w-fc-lg` — both

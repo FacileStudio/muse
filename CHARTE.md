@@ -384,6 +384,20 @@ component allowed one, so adding another is a reviewed decision:
 Keep container padding generous: the whitespace is doing the work the border used to. `Card` is **`p-5`**
 (20px); it was `p-4` and read cramped against its own fill.
 
+### Concentric radii: inner = outer minus padding
+
+Wherever a rounded surface holds another rounded surface, the inner radius is the outer radius
+minus the padding between them: `r_inner = r_outer - padding`. Equal gaps look even along the
+curve and unequal ones look pinched at the corners. It is encoded once, in `tokens.css`, as the
+`fc-chrome` utility: `--fc-h` (bar height), `--fc-pad`, `--fc-r` (`--fc-h / 2`), `--fc-ctl`
+(`--fc-h - 2 * --fc-pad`, the 44px hit target) and `--fc-r-in` (`max(0px, --fc-r - --fc-pad)`).
+Put `fc-chrome` on the container, then `rounded-fc-outer` on it and `rounded-fc-inner` on what
+it holds. Never write a radius number per element. `LandingHeader`, its drawer and
+`LandingFooter` all work this way: 56px bar, 6px padding, 44px controls, 22px inner radius.
+
+**Every Facile sign-in uses muse `SignInWithFacile`; never hand-roll it.** One pill, one mark,
+one label per locale, `md` by default.
+
 ---
 
 ## 6. Motion

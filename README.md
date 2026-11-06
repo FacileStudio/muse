@@ -14,12 +14,12 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 
 ## What it does
 
-- Exports 61 Svelte 5 components: 5 layout primitives, 19 atoms, 18 molecules, 11 organisms,
+- Exports 63 Svelte 5 components: 5 layout primitives, 19 atoms, 18 molecules, 13 organisms,
   6 charts, 2 motion pieces
 - Speaks fr, en, es and de: a dependency-free message helper (`provideLocale`, `createTranslator`)
   drives every muse string, and apps reuse it for their own catalogs
 - Ships the launch surfaces every app shares: `SignInWithFacile`, `AuthScreen`, `PlanLimit`,
-  `LegalFooter`, `LocaleSwitch`, `PricingPlans` and `DownloadCta`
+  `LegalFooter`, `LocaleSwitch`, `PricingPlans`, `DownloadCta`, `LandingHeader` and `LandingFooter`
 - Standardises the settings page — `Tabs`, `SettingsSection`, `SettingsRow`, and a
   `SecretField` that masks, reveals-then-re-hides, and copies credentials the same way in
   every app

@@ -188,6 +188,22 @@
  * they stay identical, so drifting one is a test failure rather than a dark-mode bug nobody
  * notices for a month.
  */
+@utility fc-chrome {
+  --fc-h: 3.5rem;
+  --fc-pad: 0.375rem;
+  --fc-r: calc(var(--fc-h) / 2);
+  --fc-ctl: calc(var(--fc-h) - 2 * var(--fc-pad));
+  --fc-r-in: max(0px, calc(var(--fc-r) - var(--fc-pad)));
+}
+
+@utility rounded-fc-outer {
+  border-radius: var(--fc-r);
+}
+
+@utility rounded-fc-inner {
+  border-radius: var(--fc-r-in);
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @media (prefers-color-scheme: dark) {
