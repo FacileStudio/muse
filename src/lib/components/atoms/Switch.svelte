@@ -12,7 +12,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { getFieldContext } from '../../utils/field.js';
+    import { getFieldContext, resolveField } from '../../utils/field.js';
 
     let {
         label,
@@ -38,9 +38,7 @@
      * and outside a Field the lookup is a no-op.
      */
     const field = getFieldContext();
-    const controlId = $derived(id ?? field?.().id);
-    const describes = $derived(describedBy ?? field?.().describedBy);
-    const isInvalid = $derived(invalid ?? (field?.().invalid ? 'true' : undefined));
+    const control = $derived(resolveField(field?.(), { id, describedBy, invalid }));
 
     /*
         `relative` is load-bearing, not decoration: `sr-only` is `position: absolute`, and an
@@ -62,9 +60,9 @@ Un interrupteur. Dans une `SettingsRow` il prend `aria-label` et jamais de libel
     <input
         type="checkbox"
         role="switch"
-        id={controlId}
-        aria-describedby={describes}
-        aria-invalid={isInvalid}
+        id={control.id}
+        aria-describedby={control.describedBy}
+        aria-invalid={control.invalid}
         bind:checked
         {disabled}
         class="peer sr-only"

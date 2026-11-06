@@ -11,7 +11,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { getFieldContext } from '../../utils/field.js';
+    import { getFieldContext, resolveField } from '../../utils/field.js';
 
     let {
         label,
@@ -39,8 +39,7 @@
      * not of one button in it, and `role="radio"` does not support the attribute.
      */
     const field = getFieldContext();
-    const controlId = $derived(id ?? field?.().id);
-    const describes = $derived(describedBy ?? field?.().describedBy);
+    const control = $derived(resolveField(field?.(), { id, describedBy }));
 
     const classes = $derived(twMerge('inline-flex items-center gap-2 cursor-pointer text-fc-sm text-fc-fg', className));
 </script>
@@ -54,8 +53,8 @@ Un bouton radio. La validité appartient au groupe, pas au bouton, donc il ne po
     <span class="relative inline-flex size-5 shrink-0">
         <input
             type="radio"
-            id={controlId}
-            aria-describedby={describes}
+            id={control.id}
+            aria-describedby={control.describedBy}
             bind:group
             {value}
             class="peer size-5 shrink-0 cursor-pointer appearance-none rounded-fc-full bg-fc-field transition-colors checked:bg-fc-accent disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"

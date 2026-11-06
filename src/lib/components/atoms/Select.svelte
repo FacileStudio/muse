@@ -18,7 +18,7 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { controlLine } from '../../utils/control.js';
-    import { getFieldContext } from '../../utils/field.js';
+    import { getFieldContext, resolveField } from '../../utils/field.js';
     import { parseOptions, type ListModel, type RawNode } from '../../utils/listbox.js';
     import { watchPopup } from '../../utils/popup.svelte.js';
     import { SelectState } from '../../utils/select.svelte.js';
@@ -42,9 +42,7 @@
     }: SelectProps = $props();
 
     const field = getFieldContext();
-    const controlId = $derived(id ?? field?.().id);
-    const describes = $derived(describedBy ?? field?.().describedBy);
-    const isInvalid = $derived(invalid ?? (field?.().invalid ? 'true' : undefined));
+    const control = $derived(resolveField(field?.(), { id, describedBy, invalid }));
 
     const uid = $props.id();
     const listId = `${uid}-list`;
@@ -129,13 +127,13 @@ Une liste déroulante au style de muse, jamais celle du système. Un bouton `com
         bind:this={trigger}
         type="button"
         role="combobox"
-        id={controlId}
+        id={control.id}
         aria-haspopup="listbox"
         aria-expanded={select.open}
         aria-controls={select.open ? listId : undefined}
         aria-activedescendant={select.open && select.active >= 0 ? optionId(select.active) : undefined}
-        aria-describedby={describes}
-        aria-invalid={isInvalid}
+        aria-describedby={control.describedBy}
+        aria-invalid={control.invalid}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
         {disabled}

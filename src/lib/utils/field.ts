@@ -27,3 +27,19 @@ export function setFieldContext(read: () => FieldContext): void {
 export function getFieldContext(): (() => FieldContext) | undefined {
     return getContext<(() => FieldContext) | undefined>(KEY);
 }
+
+/**
+ * Merges a control's own `id`, `aria-describedby` and `aria-invalid` with the ones its `Field`
+ * published. An explicit prop always wins, and outside a `Field` the context is `undefined`.
+ * Every muse form control resolves its wiring here, so the rule lives in one place.
+ */
+export function resolveField<Invalid>(
+    context: FieldContext | undefined,
+    own: { id?: string | null; describedBy?: string | null; invalid?: Invalid }
+): { id: string | undefined; describedBy: string | undefined; invalid: Invalid | 'true' | undefined } {
+    return {
+        id: own.id ?? context?.id,
+        describedBy: own.describedBy ?? context?.describedBy,
+        invalid: own.invalid ?? (context?.invalid ? 'true' : undefined)
+    };
+}

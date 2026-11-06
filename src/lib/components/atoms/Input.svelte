@@ -9,7 +9,7 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { controlLine } from '../../utils/control.js';
-    import { getFieldContext } from '../../utils/field.js';
+    import { getFieldContext, resolveField } from '../../utils/field.js';
 
     let {
         value = $bindable(''),
@@ -23,9 +23,7 @@
     /* Inside a `Field`, adopt the ids it generated so the label actually points here.
        An explicit prop always wins, and outside a Field this is a no-op. */
     const field = getFieldContext();
-    const controlId = $derived(id ?? field?.().id);
-    const describes = $derived(describedBy ?? field?.().describedBy);
-    const isInvalid = $derived(invalid ?? (field?.().invalid ? 'true' : undefined));
+    const control = $derived(resolveField(field?.(), { id, describedBy, invalid }));
 
     const classes = $derived(twMerge(controlLine, className));
 </script>
@@ -37,9 +35,9 @@ Un champ de saisie en 44px de haut. Dans un `Field`, il adopte l'identifiant, la
 
 <input
     bind:value
-    id={controlId}
-    aria-describedby={describes}
-    aria-invalid={isInvalid}
+    id={control.id}
+    aria-describedby={control.describedBy}
+    aria-invalid={control.invalid}
     class={classes}
     {...rest}
 />
