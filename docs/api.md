@@ -628,6 +628,51 @@ same flip as `Select`. Spreads to the wrapper `<div>`.
 | `trigger` | `Snippet` | — | Replaces the default text and chevron |
 | `align` | `'start' \| 'end'` | `'start'` | Which edge of the trigger the list lines up with |
 
+### `UserMenu`
+
+The menu behind the sidebar's user card (`trigger="card"`) and the mobile avatar (`trigger="avatar"`
+with `presentation="sheet"`). `SideBar` and `MobileNav` mount it for you; their `userMenu` prop is the
+`UserMenuOptions` below. APG menu button, top-layer popover, no border. Rows in order: Account, `items`,
+Settings, Subscription, Language, Theme, Help, Sign out. A row with no link or handler is not drawn.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `user` | `{ name, avatar?, email?, secondary? }` | required | The second line is `secondary`, else `email` |
+| `trigger` | `'card' \| 'avatar'` | `'card'` | |
+| `presentation` | `'popover' \| 'sheet'` | `'popover'` | `sheet` is a bottom `Drawer` |
+| `narrow` | `boolean` | `false` | The collapsed rail: avatar only |
+| `active` | `boolean` | `false` | Surface fill (card) or inverted pill (avatar) |
+| `items` | `UserMenuItem[]` | — | App rows before Settings: `label`, `icon`, `href` or `onSelect`, `tone` |
+| `accountHref` | `string \| null` | `ACCOUNT_URL` | `null` hides the row |
+| `settingsHref` | `string \| null` | — | |
+| `subscription` | `{ plan, href, label? } \| null` | — | |
+| `helpHref` | `string \| null` | — | |
+| `onSignOut` | `() => void \| null` | — | |
+| `showLanguage`, `showTheme` | `boolean` | `true` | |
+| `locale`, `onLocaleChange` | `Locale`, `(l) => void` | context locale | `i18n.set` is always called |
+| `theme`, `onThemeChange` | `Theme`, `(t) => void` | read from `<html>` | Without a handler muse calls `applyTheme` |
+| `labels` | `Partial<UserMenuLabels>` | translated | Overrides any string |
+
+### `SettingsLayout`
+
+Left section nav from 64rem; a stacked list that drills into the panel under it. `children` is a
+snippet receiving the current section id.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `sections` | `{ id, label, icon?, href }[]` | required | |
+| `active` | `string` | — | The section in the URL. Omit it on the bare address |
+| `backHref` | `string` | required | The bare settings address |
+| `title`, `description`, `backLabel`, `navLabel` | `string` | translated | |
+| `ordered` | `boolean` | `true` | Applies `orderSections` |
+
+`ProfileSection` (`name`, `email`, `avatar`, `color`, `role`, `manageHref`, `manageLabel`, `actions`,
+children), `PreferencesSection` (`showLanguage`, `onLocaleChange`, `showTheme`, `theme`, `onThemeChange`,
+children), `NotificationsSection`, `SubscriptionSection` (`plan`, `manageHref`, `upgradeHref`, `usage`,
+`limit`, children), `TokensSection` (`tokens`, `onCreate(draft) => Promise<secret>`, `onRevoke(token)`,
+`scopes`, `expiryDays`) and `DangerZone` (`title`, `description`, children) each take `title` and
+`description` overrides and spread the rest onto their `SettingsSection`.
+
 ### `Dropzone`
 
 Drag-and-drop file intake wrapping a visually hidden `<input type="file">`, so the whole zone

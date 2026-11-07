@@ -1,5 +1,44 @@
 # Changelog
 
+## v0.14.0 (unreleased)
+
+### Added
+
+- `UserMenu`, the one menu behind the sidebar's user card and the mobile avatar. A borderless
+  APG menu button in the top layer (`shadow-lg`, no border, spacing instead of a rule). Canonical
+  rows in order: Account ("Gérer mon compte Facile", `https://sso.facile.studio/account`), app
+  `items`, Settings, Subscription (plan name and "Gérer l'abonnement"), Language (fr, en, es,
+  de), Theme (system, light, dark), Help, Sign out. Language and Theme open a one-level radio
+  view (Right arrow in, Left arrow or Escape out). Every string is in the four catalogs and
+  `labels` overrides any of them. Props: `user`, `trigger` (`card` or `avatar`), `presentation`
+  (`popover` or `sheet`), `narrow`, `active`, plus `UserMenuOptions`: `items`, `accountHref`,
+  `settingsHref`, `subscription`, `helpHref`, `onSignOut`, `showLanguage`, `locale`,
+  `onLocaleChange`, `showTheme`, `theme`, `onThemeChange`, `labels`.
+- `SettingsLayout`: a left section nav from 64rem, a stacked list with drill-in and a back link
+  under it. The section lives in the URL. `orderSections` applies the canonical order (Profile,
+  Preferences, Notifications, app sections, API tokens, Subscription, Advanced) and
+  `settingsRoute` resolves the request.
+- Canonical sections: `ProfileSection` (read-only identity from Facile with "Gérer sur Facile"),
+  `PreferencesSection` (language, theme), `NotificationsSection`, `TokensSection` (list, create in
+  a drawer with a required expiry and a reveal-once `SecretField`, confirmed revoke),
+  `SubscriptionSection` (plan, manage and upgrade links, usage, `PlanLimit`) and `DangerZone`
+  (tinted fill, no border).
+- `THEMES`, `isTheme`, `readTheme` and `applyTheme`; `ACCOUNT_URL`; `icons.help` and
+  `icons.external`; `userMenu.*`, `theme.*` and `settings.*` strings in fr, en, es and de.
+
+### Changed
+
+- `SideBar`: the user card shows the avatar, the name and a secondary line (`user.secondary`,
+  else `user.email`, else the active space) with no trailing icon, and always opens the user
+  menu. `userHref` is now the Settings row. `userMenu` is a `UserMenuOptions` object, not an array.
+- `MobileNav`: the avatar opens the same menu as a bottom sheet. New `userMenu` prop; `profileHref`
+  is the Settings row.
+- `User` gains `email` and `secondary`.
+
+### Removed
+
+- The `mobileNav.profile` string and the settings cog on the user card.
+
 ## v0.13.0 (2026-11-07)
 
 ### Added

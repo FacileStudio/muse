@@ -451,3 +451,72 @@ every field needs a visible label (`Field label`). Text stays above 4.5:1, and W
 6. Tests that grepped muse for `border` should use `no-borders.test.ts` as the model: the
    only allowed matches are `border-0`, `border-none` and the focus `outline`.
 
+
+## 21. One user menu and one settings shell (v0.14.0)
+
+**Symptom:** after the bump the sidebar's user card opens a menu instead of navigating to
+settings, the cog on the card is gone, the card has a second line, and `MobileNav`'s avatar
+opens a bottom sheet instead of linking. `SideBar`'s `userMenu` is an object, not an array.
+
+**Why:** owner request, 2026-11-07. Every app had invented its own footer: a cog link
+(Antenne, Casier, Journal, Mycelium, Nuage, Plume, Prisme, Sonde, Vision, Glouton, Ardoise), an
+array menu (Sablier), a hand-rolled popover with a drawn rule (Courrier), a shadcn dropdown
+(Agenda) and Bulle's `ProfileMenu`. One component now owns the card, the menu and the sheet
+(CHARTE §14). Echo keeps its own design and does not adopt this.
+
+**Do, in the layout that mounts the rail:**
+
+1. Keep `user` and `userHref="/settings"`; add what the card can now show:
+   `user={{ name, email, avatar }}`. The second line is `email`, else `secondary`, else the
+   active space name.
+2. Build one options object and hand it to both `SideBar` and `MobileNav`:
+
+   ```svelte
+   const menu = $derived({
+     subscription: plan ? { plan: plan.name, href: billingPortalUrl } : null,
+     helpHref: 'https://facile.studio/docs/<app>',
+     onSignOut: signOut,
+     items: [{ label: 'Downloads', icon: icons.download, href: '/downloads' }]
+   });
+   <SideBar {user} userHref="/settings" userMenu={menu} ... />
+   <MobileNav {user} profileHref="/settings" userMenu={menu} ... />
+   ```
+
+3. Delete the local chrome: Courrier's `SidebarFooter.svelte`, Agenda's `UserMenu.svelte` and its
+   `bits-ui` dropdown, Bulle's `ProfileMenu.svelte`, any `DropdownMenu` around the avatar,
+   and the app's own sign-out button inside Settings. Move its rows into `items` (they render
+   before Settings) or drop them if the canonical row already covers them.
+4. `userMenu` as an array (Sablier) becomes `userMenu={{ items: [...], onSignOut }}`. The
+   `UserMenuItem` type is unchanged. `UserMenuItem` is now exported from the util module, same
+   name.
+5. Theme: pass `theme` and `onThemeChange` if the app stores the preference itself
+   (`theme.set`). Without them muse toggles `.dark` and `.light` on `<html>` and nothing else.
+   Language: `onLocaleChange` is where the app persists the choice; `i18n.set` is already called.
+6. Remove the app's own "Appearance" language and theme rows once `PreferencesSection` is in.
+
+**Settings pages.**
+
+1. Replace the `Tabs` strip in `settings/+layout.svelte` (or the `[[section]]` page) with
+   `SettingsLayout`. Pass `sections` as `{ id, label, icon, href }`, `active` from the route
+   param (`undefined` on `/settings`) and `backHref="/settings"`. The panel is the `children`
+   snippet, which receives the current id. Unknown ids come back from `settingsRoute` with
+   `known: false`: redirect them.
+2. Swap the hand-rolled panels for the blocks, and delete the copies:
+   - Profile: `ProfileSection` (name, photo and email read-only from the session, with
+     "Gérer sur Facile"). Remove every name, email and avatar form. Registre owns identity.
+     Keep app-only fields (identity colour, rates) as `children`.
+   - Appearance: `PreferencesSection`, extra rows as `children`. The section id is
+     `preferences`, not `appearance`; keep a redirect from the old address.
+   - Notifications: `NotificationsSection` around the app's rows.
+   - API: `TokensSection` replaces the table, the create drawer and the revoke dialog. Provide
+     `onCreate(draft) => Promise<secret>` and `onRevoke(token)`.
+   - Subscription (new for apps with a plan): `SubscriptionSection` with the plan from the
+     entitlements and `manageHref` from the Ardoise billing portal.
+   - Advanced: end it with `DangerZone`. Delete any `border-fc-danger` card.
+3. Section order is applied for you (`orderSections`); do not hand-order it. Pass
+   `ordered={false}` only with a reason.
+4. Apps with one settings page (Prisme, Glouton) still use `SettingsLayout` with the sections
+   they have; one section is allowed.
+
+**Strings:** all `userMenu.*`, `theme.*` and `settings.*` keys exist in fr, en, es and de. The
+`mobileNav.profile` key is removed.

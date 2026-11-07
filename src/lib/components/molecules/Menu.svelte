@@ -130,7 +130,7 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
         >
             {#each items as entry, i (i)}
                 {#if 'separator' in entry}
-                    <div role="separator" class="mx-1 my-1 h-px bg-fc-surface"></div>
+                    <div role="separator" class="h-2"></div>
                 {:else}
                     {@const index = actions.indexOf(entry)}
                     {@const tone = entry.tone === 'danger' ? 'text-fc-danger' : 'text-fc-fg'}

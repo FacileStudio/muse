@@ -3,6 +3,7 @@
         Alert,
         Button,
         ConfirmModal,
+        DangerZone,
         icons,
         SecretField,
         SettingsRow,
@@ -66,30 +67,12 @@
         </SettingsRow>
     </SettingsSection>
 
-    <!--
-        Danger zone is its own section at the end of the last tab, never a tab of its own: a
-        destructive action deserves a scroll and a heading, not a place in the top-level
-        navigation where it sits one mis-click away all day.
-    -->
-    <SettingsSection
-        title="Danger zone"
-        description="Irreversible, and nobody can undo it for you."
-    >
-        <SettingsRow
-            label="Delete this account"
-            description="Removes you from every space and deletes your tracked time, invoices and files."
-        >
-            <Button variant="danger" icon={icons.remove} onclick={() => (deleteOpen = true)}>
-                Delete account
-            </Button>
-        </SettingsRow>
-
+    <DangerZone description="Irreversible, and nobody can undo it for you.">
+        <Button variant="danger" icon={icons.remove} onclick={() => (deleteOpen = true)}>Delete account</Button>
         {#if deleteScheduled}
-            <Alert tone="danger">
-                Deletion scheduled. You have 30 days to sign back in and cancel it.
-            </Alert>
+            <Alert tone="danger">Deletion scheduled. You have 30 days to sign back in and cancel it.</Alert>
         {/if}
-    </SettingsSection>
+    </DangerZone>
 </Stack>
 
 <ConfirmModal

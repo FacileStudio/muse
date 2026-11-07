@@ -81,6 +81,16 @@ export { default as SecretField } from './components/molecules/SecretField.svelt
 export type { SecretFieldProps } from './components/molecules/SecretField.svelte';
 export { default as SettingsRow } from './components/molecules/SettingsRow.svelte';
 export type { SettingsRowProps } from './components/molecules/SettingsRow.svelte';
+export { default as ProfileSection } from './components/molecules/ProfileSection.svelte';
+export type { ProfileSectionProps } from './components/molecules/ProfileSection.svelte';
+export { default as PreferencesSection } from './components/molecules/PreferencesSection.svelte';
+export type { PreferencesSectionProps } from './components/molecules/PreferencesSection.svelte';
+export { default as NotificationsSection } from './components/molecules/NotificationsSection.svelte';
+export type { NotificationsSectionProps } from './components/molecules/NotificationsSection.svelte';
+export { default as SubscriptionSection } from './components/molecules/SubscriptionSection.svelte';
+export type { SubscriptionSectionProps, PlanUsage } from './components/molecules/SubscriptionSection.svelte';
+export { default as DangerZone } from './components/molecules/DangerZone.svelte';
+export type { DangerZoneProps } from './components/molecules/DangerZone.svelte';
 export { default as SettingsSection } from './components/molecules/SettingsSection.svelte';
 export type { SettingsSectionProps } from './components/molecules/SettingsSection.svelte';
 export { default as SpaceSwitcher } from './components/molecules/SpaceSwitcher.svelte';
@@ -109,7 +119,14 @@ export type { ProfileCardProps } from './components/organisms/ProfileCard.svelte
 export { default as Modal } from './components/organisms/Modal.svelte';
 export type { ModalProps } from './components/organisms/Modal.svelte';
 export { default as SideBar } from './components/organisms/SideBar.svelte';
-export type { SideBarProps, UserMenuItem } from './components/organisms/SideBar.svelte';
+export type { SideBarProps } from './components/organisms/SideBar.svelte';
+export { default as UserMenu } from './components/organisms/UserMenu.svelte';
+export type { UserMenuProps, UserMenuUser } from './components/organisms/UserMenu.svelte';
+export { default as SettingsLayout } from './components/organisms/SettingsLayout.svelte';
+export type { SettingsLayoutProps, SettingsNavItem } from './components/organisms/SettingsLayout.svelte';
+export { default as TokensSection } from './components/organisms/TokensSection.svelte';
+export type { TokensSectionProps, TokenItem } from './components/organisms/TokensSection.svelte';
+export type { TokenDraft } from './components/organisms/TokenCreate.svelte';
 export { default as Table } from './components/organisms/Table.svelte';
 export type { TableProps } from './components/organisms/Table.svelte';
 export { default as Toaster } from './components/organisms/Toaster.svelte';
@@ -137,6 +154,17 @@ export type { SparklineProps } from './components/charts/Sparkline.svelte';
 
 export { prefersReducedMotion, isMobile } from './utils/motion.js';
 export { springPress } from './utils/press.js';
+export { THEMES, isTheme, readTheme, applyTheme } from './utils/theme.js';
+export type { Theme } from './utils/theme.js';
+export { ACCOUNT_URL } from './utils/user-menu.js';
+export type {
+    UserMenuItem,
+    UserMenuLabels,
+    UserMenuOptions,
+    UserMenuSubscription
+} from './utils/user-menu.js';
+export { CANONICAL_SECTIONS, orderSections, settingsRoute, sectionHref } from './utils/settings-nav.js';
+export type { SettingsRoute } from './utils/settings-nav.js';
 export { getFieldContext } from './utils/field.js';
 export { controlFill, controlLine } from './utils/control.js';
 export type { FieldContext } from './utils/field.js';

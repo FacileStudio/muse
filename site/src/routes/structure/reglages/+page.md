@@ -7,43 +7,37 @@ différemment : neuf coquilles de réglages, cinq espacements de premier niveau 
 
 ```svelte
 <Page>
-  <PageHeader title="Réglages" description="Votre identité, cet espace, et tout ce qui y est branché." />
-
-  <Stack gap="content">
-    <Tabs items={sections.map((s) => ({ ...s, href: `/settings/${s.id}` }))} value={active} />
-    <Divider />
-  </Stack>
-
-  <PageTransition key={active}>
-    {@render children()}
-  </PageTransition>
+  <SettingsLayout {sections} active={params.section} backHref="/settings">
+    {#snippet children(current)}
+      <Panel id={current} />
+    {/snippet}
+  </SettingsLayout>
 </Page>
 ```
 
-Ce `Stack gap="content"` est **porteur**. `Divider` ne porte aucune marge, donc le gap du parent
-est la seule chose qui donne de l'air au trait. Serré contre la bande d'onglets, il se lit comme
-un soulignement soudé à la pastille active et se bat avec sa forme.
+`SettingsLayout` porte l'en-tête, la navigation et le panneau. À partir de 64rem, la navigation
+par sections est à gauche. En dessous, l'adresse nue `/settings` montre les sections en liste, et
+en choisir une ouvre son panneau avec un lien de retour.
 
 ## Trois règles que les agents cassent
 
-**1. Jamais d'entrée Réglages dans la nav du rail.** La carte utilisateur en bas du rail est la
-seule entrée. La déconnexion vit dans les réglages, dans une section Session de l'onglet Profil.
+**1. Jamais d'entrée Réglages dans la nav du rail.** La carte utilisateur en bas du rail ouvre le
+menu utilisateur, et Réglages en est la deuxième ligne. La déconnexion est dans ce menu, pas dans
+les réglages. La carte n'a aucune icône à droite et le menu n'a aucune bordure.
 
-**2. Les sections sont des `Tabs` avec des `href`**, donc `/settings/api` est une vraie route :
-elle survit au rechargement et le bouton retour parcourt les sections. Un `Tabs` porteur de
-`href` **n'écrit jamais dans `value`** — l'URL est la source de vérité, et le consommateur
-dérive `value` de `page.url.pathname`. Un `$state` local se désynchronise à la première
-navigation arrière.
+**2. Les sections sont de vraies routes.** Chaque entrée porte son `href`, donc `/settings/tokens`
+survit au rechargement et le bouton retour parcourt les sections. `settingsRoute` lit l'adresse :
+une section inconnue revient avec `known: false`, à rediriger.
 
-**3. La zone de danger n'est jamais son propre onglet.** Elle est en bas d'Avancé.
+**3. La zone de danger n'est jamais sa propre section.** `DangerZone` est en bas d'Avancé.
 
 ## L'ordre canonique
 
-Profil · Apparence · Notifications · API · Pool · Membres · Avancé
+Profil · Préférences · Notifications · sections de l'app · Jetons d'API · Abonnement · Avancé
 
-Le thème vit dans Apparence, comme toute autre préférence — pas en bascule flottante au-dessus
-de chaque page. Un contrôle qui suit l'utilisateur partout est une chose de plus en concurrence
-avec les actions de la page.
+`orderSections` l'applique. Profil est en lecture seule : le nom, la photo et l'e-mail viennent de
+Facile (`ProfileSection`, lien « Gérer sur Facile »). Le thème et la langue vivent dans Préférences
+(`PreferencesSection`) et dans le menu utilisateur, jamais en bascule flottante.
 
 ## Les lignes
 

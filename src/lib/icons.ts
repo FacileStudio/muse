@@ -58,6 +58,8 @@ export const icons = {
   text:          'solar:text-linear',
   widget:        'solar:widget-linear',
   layers:        'solar:layers-linear',
+  help:          'solar:question-circle-linear',
+  external:      'solar:arrow-right-up-linear',
 } as const;
 
 export type IconKey = keyof typeof icons;

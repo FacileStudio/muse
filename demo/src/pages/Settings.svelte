@@ -1,66 +1,44 @@
 <script lang="ts">
-    import {
-        icons,
-        Page,
-        PageHeader,
-        PageTransition,
-        Tabs
-    } from '@facile/muse';
+    import { icons, Page, PageTransition, SettingsLayout, sectionHref, settingsRoute } from '@facile/muse';
     import Profile from './settings/Profile.svelte';
-    import Appearance from './settings/Appearance.svelte';
+    import Preferences from './settings/Preferences.svelte';
     import Notifications from './settings/Notifications.svelte';
-    import Api from './settings/Api.svelte';
+    import Tokens from './settings/Tokens.svelte';
     import Pool from './settings/Pool.svelte';
     import Members from './settings/Members.svelte';
+    import Subscription from './settings/Subscription.svelte';
     import Advanced from './settings/Advanced.svelte';
     import { router, segment } from '../router.svelte.js';
 
-    const sections = [
+    const panels = [
         { id: 'profile', label: 'Profile', icon: icons.userCircle, Panel: Profile },
-        { id: 'appearance', label: 'Appearance', icon: icons.palette, Panel: Appearance },
+        { id: 'preferences', label: 'Preferences', icon: icons.palette, Panel: Preferences },
         { id: 'notifications', label: 'Notifications', icon: icons.notification, Panel: Notifications },
-        { id: 'api', label: 'API', icon: icons.key, Panel: Api },
         { id: 'pool', label: 'Pool', icon: icons.plug, Panel: Pool },
         { id: 'members', label: 'Members', icon: icons.usersGroup, Panel: Members },
+        { id: 'tokens', label: 'API tokens', icon: icons.key, Panel: Tokens },
+        { id: 'subscription', label: 'Subscription', icon: icons.card, Panel: Subscription },
         { id: 'advanced', label: 'Advanced', icon: icons.shield, Panel: Advanced }
     ];
 
-    /*
-     * The section lives in the URL rather than in a local `$state`, so a link to
-     * #/settings/pool opens on Pool, reload keeps you there and browser-back walks the
-     * sections. That is the whole reason Tabs accepts `href` items.
-     */
-    const requested = $derived(segment(router.hash, 2));
-    const match = $derived(sections.find((s) => s.id === requested));
-    const active = $derived(match?.id ?? sections[0].id);
-    const Panel = $derived(sections.find((s) => s.id === active)!.Panel);
+    const sections = panels.map(({ id, label, icon }) => ({ id, label, icon, href: sectionHref('#/settings', id) }));
+    const requested = $derived(segment(router.hash, 2) || undefined);
+    const route = $derived(settingsRoute(requested, sections));
 
-    /*
-     * #/settings/bogus used to render Profile and highlight the Profile tab while the address
-     * bar still said "bogus" — the UI contradicting the URL is worse than either being wrong
-     * alone. The bare #/settings is a legitimate entry point, so only a named section that
-     * matches nothing is rewritten.
-     */
     $effect(() => {
-        if (!requested || match) return;
-        history.replaceState(null, '', `#/settings/${active}`);
-        router.hash = `#/settings/${active}`;
+        if (route.known) return;
+        history.replaceState(null, '', '#/settings');
+        router.hash = '#/settings';
     });
-
-    const items = $derived(
-        sections.map(({ id, label, icon }) => ({ id, label, icon, href: `#/settings/${id}` }))
-    );
 </script>
 
 <Page>
-    <PageHeader
-        title="Settings"
-        description="Your identity, this workspace, and everything wired to it."
-    />
-
-    <Tabs {items} value={active} label="Settings sections" />
-
-    <PageTransition key={active} distance={8} duration={0.25}>
-        <Panel />
-    </PageTransition>
+    <SettingsLayout {sections} active={requested} backHref="#/settings" description="Your identity, this workspace, and everything wired to it.">
+        {#snippet children(current)}
+            {@const Panel = panels.find((p) => p.id === current)!.Panel}
+            <PageTransition key={current} distance={8} duration={0.25}>
+                <Panel />
+            </PageTransition>
+        {/snippet}
+    </SettingsLayout>
 </Page>

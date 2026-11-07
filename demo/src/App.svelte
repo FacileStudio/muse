@@ -98,7 +98,7 @@
 
     const navPages = $derived(links.map((l) => ({ ...l, active: l.href === root })));
     const onSettings = $derived(root === '#/settings');
-    const user = { name: 'Camille' };
+    const user = { name: 'Camille', email: 'camille@facile.studio' };
 </script>
 
 <div class="flex h-dvh w-full overflow-hidden bg-fc-page">
@@ -116,11 +116,15 @@
             personalSpaceLabel="No space"
             manageSpacesLabel="All spaces"
             {user}
-            userMenu={[
-                { label: 'Settings', icon: icons.settings, href: '#/settings' },
-                { label: 'Downloads', icon: icons.download, href: '#/' },
-                { label: 'Sign out', icon: icons.logout, tone: 'danger', onSelect: () => {} }
-            ]}
+            userHref="#/settings"
+            userMenu={{
+                items: [{ label: 'Downloads', icon: icons.download, href: '#/' }],
+                subscription: { plan: 'Pro', href: '#/settings/subscription' },
+                helpHref: 'https://muse.facile.studio',
+                onSignOut: () => {},
+                theme: theme.mode,
+                onThemeChange: setTheme
+            }}
             userActive={onSettings}
             class="h-full"
         />
@@ -162,6 +166,13 @@
         {user}
         profileHref="#/settings"
         profileActive={onSettings}
+        userMenu={{
+            subscription: { plan: 'Pro', href: '#/settings/subscription' },
+            helpHref: 'https://muse.facile.studio',
+            onSignOut: () => {},
+            theme: theme.mode,
+            onThemeChange: setTheme
+        }}
     />
 </div>
 
