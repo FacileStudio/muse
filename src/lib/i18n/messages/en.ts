@@ -134,6 +134,7 @@ export const en = {
     'landing.newTab': '(opens in a new tab)',
     'landing.copyright': '© {year} {name}',
     'feature.glouton': 'Access to Glouton',
+    'feature.ai': 'AI assistant and AI features',
     'userMenu.open': '{name}: account menu',
     'userMenu.label': 'Account menu',
     'userMenu.account': 'Manage my Facile account',

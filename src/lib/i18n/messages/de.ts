@@ -134,6 +134,7 @@ export const de: MuseMessages = {
     'landing.newTab': '(öffnet in einem neuen Tab)',
     'landing.copyright': '© {year} {name}',
     'feature.glouton': 'Zugang zu Glouton',
+    'feature.ai': 'KI-Assistent und KI-Funktionen',
     'userMenu.open': '{name}: Kontomenü',
     'userMenu.label': 'Kontomenü',
     'userMenu.account': 'Mein Facile-Konto verwalten',

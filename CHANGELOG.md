@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.14.1 (2026-11-07)
+
+### Fixed
+
+- `PricingPlans` renders the `ai.access` feature row ("Assistant IA et fonctions IA" and its en, es, de equivalents) when a plan sets it to true. A plan with it false shows no row, like every other bool feature. `PlanLimit` already takes its copy from the 402 body, so it needed no change.
+
 ## v0.14.0 (2026-11-07)
 
 ### Added

@@ -138,3 +138,18 @@ describe('isFreeLabel', () => {
         for (const word of ['Découverte', 'Pro', '']) expect(isFreeLabel(word)).toBe(false);
     });
 });
+
+describe('ai.access label', () => {
+    test('resolves in every locale', () => {
+        for (const [locale, messages] of Object.entries(museMessages)) {
+            expect(String(messages['feature.ai']).length, locale).toBeGreaterThan(0);
+        }
+    });
+
+    test('shows for a plan with ai.access true and hides otherwise', () => {
+        const plan = (value: boolean) => ({ key: 'p', name: 'P', prices: [], features: { 'ai.access': value } });
+        expect(featureRows(plan(true)).map((r) => r.message)).toEqual(['feature.ai']);
+        expect(featureRows(plan(true), ['ai.access'])[0]?.key).toBe('ai.access');
+        expect(featureRows(plan(false))).toEqual([]);
+    });
+});
