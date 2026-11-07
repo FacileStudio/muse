@@ -927,6 +927,8 @@ phone needs seven destinations, one of them belongs somewhere else.
 
 ### Badge role tones
 
+Badge text never wraps: it truncates with an ellipsis.
+
 `owner` and `admin` tones render the coloured role pills used across Nuage/Courrier/Plume
 member lists: `owner` → `bg-fc-owner/10 text-fc-owner`, `admin` → `bg-fc-admin/10
 text-fc-admin`. Use `neutral` for a plain `member` role.

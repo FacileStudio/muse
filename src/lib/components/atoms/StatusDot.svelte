@@ -35,7 +35,7 @@
     };
 
     const classes = $derived(
-        twMerge('inline-flex items-center gap-2 text-fc-sm text-fc-fg-muted', className)
+        twMerge('inline-flex max-w-full items-center gap-2 text-fc-sm text-fc-fg-muted', className)
     );
 </script>
 
@@ -56,5 +56,5 @@ Un état de connexion ou de santé, en une pastille et son libellé.
         {/if}
         <span class={twMerge('relative inline-flex size-2 rounded-fc-pill', dots[tone])}></span>
     </span>
-    {#if label}<span>{label}</span>{/if}
+    {#if label}<span class="min-w-0 truncate whitespace-nowrap">{label}</span>{/if}
 </span>

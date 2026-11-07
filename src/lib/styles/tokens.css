@@ -308,6 +308,7 @@
   }
 
   [role='option'][data-active='true'] {
+    forced-color-adjust: none;
     background-color: Highlight;
     color: HighlightText;
   }
