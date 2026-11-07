@@ -26,8 +26,8 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { watchPopup } from '../../utils/popup.svelte.js';
-    import { MenuState } from '../../utils/menu.svelte.js';
+    import { present, watchPopup } from '../../utils/popup.svelte.js';
+    import { MenuState, pressOnSpace } from '../../utils/menu.svelte.js';
     import { icons } from '../../icons.js';
     import Icon from '../atoms/Icon.svelte';
 
@@ -59,20 +59,12 @@
         menu.focusActive();
     });
 
-    function present(node: HTMLElement) {
-        if (node.showPopover && !node.matches(':popover-open')) node.showPopover();
-    }
-
     function leave(event: FocusEvent) {
         const next = event.relatedTarget as Node | null;
         if (next && !menuEl?.contains(next) && next !== triggerEl) menu.hide();
     }
 
-    function space(event: KeyboardEvent) {
-        if (event.key !== ' ' || menu.buffer !== '') return;
-        event.preventDefault();
-        (event.currentTarget as HTMLElement).click();
-    }
+    const space = (event: KeyboardEvent) => pressOnSpace(event, menu.buffer !== '');
 
     function choose(action: MenuAction) {
         if (action.disabled) return;
@@ -142,7 +134,7 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
                             class={twMerge(row, tone)}
                             onclick={() => choose(entry)}
                             onkeydown={space}
-                            onpointermove={() => (menu.active = index)}
+                            onpointermove={() => menu.point(index)}
                         >
                             {#if entry.icon}<Icon icon={entry.icon} size={16} />{/if}
                             <span class="min-w-0 flex-1 truncate">{entry.label}</span>
@@ -155,7 +147,7 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
                             disabled={entry.disabled}
                             class={twMerge(row, tone)}
                             onclick={() => choose(entry)}
-                            onpointermove={() => !entry.disabled && (menu.active = index)}
+                            onpointermove={() => !entry.disabled && menu.point(index)}
                         >
                             {#if entry.icon}<Icon icon={entry.icon} size={16} />{/if}
                             <span class="min-w-0 flex-1 truncate">{entry.label}</span>

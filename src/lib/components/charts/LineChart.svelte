@@ -26,6 +26,8 @@
     import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelStride, linePath, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesNames, seriesTipRows, seriesValues } from '../../utils/chart.js';
     import { drawIn } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
+    import LineAxes from './LineAxes.svelte';
+    import LineHover from './LineHover.svelte';
     import ChartTable from './ChartTable.svelte';
     import ChartTooltip from './ChartTooltip.svelte';
 
@@ -172,46 +174,19 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                 onpointerleave={clear}
                 onpointercancel={clear}
             >
-                {#if showGrid}
-                    <g shape-rendering="crispEdges">
-                        {#each scale.ticks as tick, i (i)}
-                            <line
-                                x1={padLeft}
-                                y1={yAt(tick)}
-                                x2={padLeft + plotW}
-                                y2={yAt(tick)}
-                                stroke="var(--color-fc-surface)"
-                                stroke-width="1"
-                            />
-                        {/each}
-                    </g>
-                {/if}
-
-                <g>
-                    {#each scale.ticks as tick, i (i)}
-                        <text
-                            x={padLeft - 8}
-                            y={yAt(tick) + 4}
-                            text-anchor="end"
-                            class="fill-fc-fg-muted text-fc-xs tabular-nums">{yLabels[i]}</text
-                        >
-                    {/each}
-                </g>
-
-                {#if labels.length}
-                    <g>
-                        {#each xLabels as label, i (i)}
-                            {#if i % stride === 0}
-                                <text
-                                    x={xAt(i)}
-                                    y={PAD_TOP + plotH + 16}
-                                    text-anchor="middle"
-                                    class="fill-fc-fg-muted text-fc-xs">{label}</text
-                                >
-                            {/if}
-                        {/each}
-                    </g>
-                {/if}
+                <LineAxes
+                    ticks={scale.ticks}
+                    {yLabels}
+                    {xLabels}
+                    {stride}
+                    {padLeft}
+                    {plotW}
+                    {plotH}
+                    {showGrid}
+                    showX={labels.length > 0}
+                    {xAt}
+                    {yAt}
+                />
 
                 {#if area}
                     <g>
@@ -241,28 +216,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                 </g>
 
                 {#if hover >= 0}
-                    <g>
-                        <line
-                            x1={xAt(hover)}
-                            y1={PAD_TOP}
-                            x2={xAt(hover)}
-                            y2={PAD_TOP + plotH}
-                            stroke="var(--color-fc-ring)"
-                            stroke-width="1"
-                        />
-                        {#each series as s, i (i)}
-                            {#if Number.isFinite(s.data[hover])}
-                                <circle
-                                    cx={xAt(hover)}
-                                    cy={yAt(s.data[hover])}
-                                    r="4"
-                                    fill={colorAt(i)}
-                                    stroke="var(--color-fc-component)"
-                                    stroke-width="2"
-                                />
-                            {/if}
-                        {/each}
-                    </g>
+                    <LineHover {series} index={hover} {plotH} {xAt} {yAt} {colorAt} />
                 {/if}
 
                 <rect x="0" y="0" width={w} height={height} fill="transparent" />

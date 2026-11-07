@@ -47,7 +47,6 @@
 </script>
 
 <script lang="ts">
-    import { cubicInOut } from 'svelte/easing';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
@@ -57,6 +56,7 @@
     import TextElevate from '../motion/TextElevate.svelte';
     import { icons } from '../../icons.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
+    import { RAIL_DURATION, railWidth, switcherReveal, watchRailShortcuts } from '../../utils/rail.js';
     import UserMenu from './UserMenu.svelte';
 
     let {
@@ -89,17 +89,6 @@
 
     let narrow = $state(false);
 
-    const FALLBACK_WIDTH = { collapsed: 68, expanded: 220 };
-    const RAIL_DURATION = 0.3;
-
-    function railWidth(el: HTMLElement, isCollapsed: boolean): number {
-        const token = isCollapsed ? '--width-fc-nav-collapsed' : '--width-fc-nav-expanded';
-        const fallback = isCollapsed ? FALLBACK_WIDTH.collapsed : FALLBACK_WIDTH.expanded;
-        if (typeof window === 'undefined') return fallback;
-        const parsed = Number.parseFloat(getComputedStyle(el).getPropertyValue(token));
-        return Number.isFinite(parsed) ? parsed : fallback;
-    }
-
     $effect(() => {
         const isCollapsed = collapsed;
         if (!navEl) return;
@@ -126,35 +115,8 @@
 
     $effect(() => {
         if (!showCollapse && !onSearch) return;
-        const onKeydown = (e: KeyboardEvent) => {
-            if (!(e.metaKey || e.ctrlKey) || e.altKey) return;
-            const key = e.key.toLowerCase();
-            if (key === 'd' && showCollapse) {
-                e.preventDefault();
-                collapsed = !collapsed;
-            } else if (key === 'k' && onSearch) {
-                e.preventDefault();
-                onSearch();
-            }
-        };
-        document.addEventListener('keydown', onKeydown);
-        return () => document.removeEventListener('keydown', onKeydown);
+        return watchRailShortcuts({ onToggle: showCollapse ? () => (collapsed = !collapsed) : undefined, onSearch });
     });
-
-    const FADE_START = 0.45;
-
-    function switcherReveal(node: HTMLElement) {
-        const height = node.offsetHeight;
-        const marginTop = Number.parseFloat(getComputedStyle(node).marginTop) || 0;
-        return {
-            duration: prefersReducedMotion() ? 0 : RAIL_DURATION * 1000,
-            easing: cubicInOut,
-            css: (t: number, u: number) => {
-                const fade = Math.max(0, (t - FADE_START) / (1 - FADE_START));
-                return `overflow: hidden; height: ${t * height}px; margin-top: ${t * marginTop}px; opacity: ${fade}; transform: translateY(${-u * 8}px)`;
-            }
-        };
-    }
 
     const secondary = $derived(
         user?.secondary ?? user?.email ?? spaces.find((space) => space.id === activeSpaceId)?.name

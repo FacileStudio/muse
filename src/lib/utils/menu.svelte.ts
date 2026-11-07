@@ -19,6 +19,7 @@ export type MenuHost = {
  */
 export class MenuState extends AnchoredPopup {
     active = $state(-1);
+    mode = $state<'keyboard' | 'pointer'>('keyboard');
     host: MenuHost;
     buffer = '';
     timer: ReturnType<typeof setTimeout> | undefined;
@@ -29,13 +30,14 @@ export class MenuState extends AnchoredPopup {
     }
 
     show = (at: 'first' | 'last' = 'first'): void => {
-        this.active = moveActive(this.host.disabled(), -1, at === 'last' ? 'ArrowUp' : 'ArrowDown');
+        this.land(moveActive(this.host.disabled(), -1, at === 'last' ? 'ArrowUp' : 'ArrowDown'));
         this.place();
         this.open = true;
     };
 
     hide = (refocus = false): void => {
         this.open = false;
+        this.mode = 'keyboard';
         this.active = -1;
         this.buffer = '';
         if (refocus) this.host.trigger()?.focus();
@@ -46,20 +48,31 @@ export class MenuState extends AnchoredPopup {
         else this.show();
     };
 
+    point = (index: number): void => {
+        if (index === this.active && this.mode === 'pointer') return;
+        this.mode = 'pointer';
+        this.active = index;
+    };
+
+    land = (index: number): void => {
+        this.mode = 'keyboard';
+        this.active = index;
+    };
+
     focusActive = (): void => {
-        if (this.open && this.active >= 0) this.host.items()[this.active]?.focus();
+        if (this.open && this.mode === 'keyboard' && this.active >= 0) this.host.items()[this.active]?.focus();
     };
 
     type = (char: string): void => {
         const found = typeahead(this.host.labels(), this.host.disabled(), this.active, this.buffer, char);
         this.buffer = found.buffer;
-        if (found.index >= 0) this.active = found.index;
+        if (found.index >= 0) this.land(found.index);
         clearTimeout(this.timer);
         this.timer = setTimeout(() => (this.buffer = ''), TYPE_RESET_MS);
     };
 
     run = (action: KeyAction): void => {
-        if (action.kind === 'move') this.active = moveActive(this.host.disabled(), this.active, action.key, true);
+        if (action.kind === 'move') this.land(moveActive(this.host.disabled(), this.active, action.key, true));
         else if (action.kind === 'type') this.type(action.char);
         else if (action.kind === 'close') this.hide(true);
         else if (action.kind === 'tab') this.hide(true);
@@ -77,4 +90,11 @@ export class MenuState extends AnchoredPopup {
         event.preventDefault();
         this.show(event.key === 'ArrowUp' ? 'last' : 'first');
     };
+}
+
+/** Space presses a menu row like Enter, unless it is part of a type-ahead in progress. */
+export function pressOnSpace(event: KeyboardEvent, typing: boolean): void {
+    if (event.key !== ' ' || typing) return;
+    event.preventDefault();
+    (event.currentTarget as HTMLElement).click();
 }

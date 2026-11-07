@@ -79,3 +79,8 @@ export function watchPopup(inside: (target: Node) => boolean, close: () => void,
         window.removeEventListener('scroll', place, true);
     };
 }
+
+/** Puts a `popover="manual"` element in the top layer: above a Modal or Drawer and never clipped by an ancestor. */
+export function present(node: HTMLElement): void {
+    if (node.showPopover && !node.matches(':popover-open')) node.showPopover();
+}
