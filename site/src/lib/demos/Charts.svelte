@@ -29,6 +29,32 @@
     </div>
 </Row>
 
+<Row name="DonutChart, une seule part" lead="Une part à 100 % est un anneau complet : ni bout arrondi, ni jonction. Dès deux parts, coins arrondis et séparateurs reviennent.">
+    <div class="w-full max-w-[12rem]" data-testid="donut-full">
+        <DonutChart data={[{ label: 'Facturé', value: 120 }]} showLegend={false} animate={false} />
+    </div>
+    <div class="w-full max-w-[12rem]" data-testid="donut-almost">
+        <DonutChart
+            data={[
+                { label: 'Facturé', value: 999 },
+                { label: 'Interne', value: 1 }
+            ]}
+            showLegend={false}
+            animate={false}
+        />
+    </div>
+    <div class="w-full max-w-[12rem]" data-testid="donut-two">
+        <DonutChart
+            data={[
+                { label: 'Facturé', value: 60 },
+                { label: 'Interne', value: 40 }
+            ]}
+            showLegend={false}
+            animate={false}
+        />
+    </div>
+</Row>
+
 <Row name="Sparkline" lead="Une tendance dans une ligne de tableau, sans axes ni légende.">
     <Sparkline data={[3, 5, 4, 8, 6, 9, 7]} class="w-32" />
     <Sparkline data={[9, 7, 8, 4, 5, 3, 2]} class="w-32" />

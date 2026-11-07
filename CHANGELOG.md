@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.14.4 (2026-11-07)
+
+### Fixed
+
+- `DonutChart` with one slice at 100% (one non-zero value, or all others zero) drew a ring with rounded ends and a visible seam at 12 o'clock. A slice spanning the full circle is now a clean ring, or a plain disc when `rInner` is 0: no corner rounding, no gap. `arcPath` returns that path for any span of 360 degrees minus 1e-4 rad, and `donutSegments` no longer insets a lone slice. Two or more slices keep their rounded corners and separators. `DonutChart` is the only circular chart in muse. The docs demo gains a single-slice, a 99.9% / 0.1% and a two-slice case.
+
 ## v0.14.3 (2026-11-07)
 
 ### Added
