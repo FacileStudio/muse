@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import { DEFAULT_LOCALE, matchLocale, resolveLocale, type Locale } from './locale.js';
+import { DEFAULT_LOCALE, effectiveLocale, isKnownLocale, matchLocale, resolveLocale, type Locale } from './locale.js';
 import { museMessages, type MuseMessages } from './messages/index.js';
 import { createTranslator, type Translator } from './translate.js';
 
@@ -37,20 +37,7 @@ export function staticI18n(locale?: string | null): I18n {
  * reactively; `set()` (what `LocaleSwitch` calls) overrides it until the page reloads.
  */
 export function provideLocale(source: LocaleSource): I18n {
-    const read = typeof source === 'function' ? source : () => source;
-    const state = $state<{ chosen: Locale | null }>({ chosen: null });
-    const i18n: I18n = {
-        get locale() {
-            return state.chosen ?? resolveLocale(read());
-        },
-        get known() {
-            return state.chosen !== null || matchLocale(read()) !== null;
-        },
-        set(locale) {
-            state.chosen = resolveLocale(locale);
-        },
-        t: createTranslator(museMessages, () => i18n.locale)
-    };
+    const i18n = reactiveI18n(typeof source === 'function' ? source : () => source);
     setContext(KEY, i18n);
     $effect(() => {
         document.documentElement.lang = i18n.locale;
@@ -58,9 +45,32 @@ export function provideLocale(source: LocaleSource): I18n {
     return i18n;
 }
 
-/** The nearest `provideLocale` above the caller, or English when there is none. */
+function reactiveI18n(read: () => string | null | undefined): I18n {
+    const state = $state<{ chosen: Locale | null }>({ chosen: null });
+    const i18n: I18n = {
+        get locale() {
+            return effectiveLocale(state.chosen, read);
+        },
+        get known() {
+            return isKnownLocale(state.chosen, read);
+        },
+        set(locale) {
+            state.chosen = resolveLocale(locale);
+        },
+        t: createTranslator(museMessages, () => i18n.locale)
+    };
+    return i18n;
+}
+
+let detached: I18n | undefined;
+
+/**
+ * The nearest `provideLocale` above the caller. With none above it (a root mounted apart from
+ * the layout, an app that forgot the call) every caller shares one reactive English instance,
+ * so `set()` still re-renders them all at once instead of being dropped.
+ */
 export function getI18n(): I18n {
-    return getContext<I18n | undefined>(KEY) ?? staticI18n();
+    return getContext<I18n | undefined>(KEY) ?? (detached ??= reactiveI18n(() => null));
 }
 
 /**

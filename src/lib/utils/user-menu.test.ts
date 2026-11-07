@@ -63,6 +63,22 @@ describe('userMenuRows', () => {
         expect(rows.filter((row) => row.checked).map((row) => row.id)).toEqual(['fr']);
     });
 
+    test('locales narrows the language view and keeps the given order', () => {
+        const ids = (locales: UserMenuOptions['locales']) => userMenuRows(model({ locales }, 'language')).map((row) => row.id);
+        expect(ids(['fr', 'en'])).toEqual(['back', 'fr', 'en']);
+        expect(ids(['en', 'fr', 'en'])).toEqual(['back', 'en', 'fr']);
+        expect(ids([])).toEqual(['back', 'fr', 'en', 'es', 'de']);
+        expect(ids(['it'] as never)).toEqual(['back', 'fr', 'en', 'es', 'de']);
+    });
+
+    test('a subscription without a plan shows only its label', () => {
+        const row = userMenuRows(model({ subscription: { href: '/billing' } })).find((r) => r.id === 'subscription');
+        expect(row).toMatchObject({ label: 'Manage', href: '/billing' });
+        expect(row?.detail).toBeUndefined();
+        const empty = userMenuRows(model({ subscription: { plan: '', href: '/billing' } })).find((r) => r.id === 'subscription');
+        expect(empty?.detail).toBeUndefined();
+    });
+
     test('the theme view checks the current theme and a radio runs its callback', () => {
         let picked = '';
         const rows = userMenuRows({ ...model({}, 'theme'), onTheme: (t) => (picked = t) });

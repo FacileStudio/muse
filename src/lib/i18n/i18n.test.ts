@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { LOCALES, matchLocale, resolveLocale } from './locale.js';
+import { LOCALES, effectiveLocale, isKnownLocale, matchLocale, resolveLocale } from './locale.js';
 import { museMessages } from './messages/index.js';
 import { createTranslator, type Message } from './translate.js';
 
@@ -92,5 +92,40 @@ describe('muse catalogs', () => {
             'Iniciar sesión con Facile',
             'Mit Facile anmelden'
         ]);
+    });
+});
+
+describe('effectiveLocale', () => {
+    test('a choice beats the source and the source is re-read after it is gone', () => {
+        let session: string | null = 'de';
+        const source = () => session;
+        expect(effectiveLocale(null, source)).toBe('de');
+        expect(effectiveLocale('fr', source)).toBe('fr');
+        session = 'es';
+        expect(effectiveLocale(null, source)).toBe('es');
+        session = null;
+        expect(effectiveLocale(null, source)).toBe('en');
+    });
+
+    test('a choice is not read from the source at all', () => {
+        const source = () => {
+            throw new Error('read');
+        };
+        expect(effectiveLocale('fr', source)).toBe('fr');
+        expect(isKnownLocale('fr', source)).toBe(true);
+    });
+
+    test('known is false only for the English fallback', () => {
+        expect(isKnownLocale(null, () => 'it')).toBe(false);
+        expect(isKnownLocale(null, () => 'de-AT')).toBe(true);
+        expect(isKnownLocale('en', () => null)).toBe(true);
+    });
+
+    test('a translator over a getter follows every change at once', () => {
+        let locale: 'fr' | 'en' = 'en';
+        const t = createTranslator({ en: { hi: 'Hi' }, fr: { hi: 'Salut' }, es: { hi: 'Hola' }, de: { hi: 'Hallo' } }, () => effectiveLocale(null, () => locale));
+        expect(t('hi')).toBe('Hi');
+        locale = 'fr';
+        expect(t('hi')).toBe('Salut');
     });
 });
