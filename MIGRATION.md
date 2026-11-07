@@ -486,11 +486,25 @@ array menu (Sablier), a hand-rolled popover with a drawn rule (Courrier), a shad
    `bits-ui` dropdown, Bulle's `ProfileMenu.svelte`, any `DropdownMenu` around the avatar,
    and the app's own sign-out button inside Settings. Move its rows into `items` (they render
    before Settings) or drop them if the canonical row already covers them.
-4. `userMenu` as an array (Sablier) becomes `userMenu={{ items: [...], onSignOut }}`. The
-   `UserMenuItem` type is unchanged. `UserMenuItem` is now exported from the util module, same
-   name.
+4. `userMenu` as an array (Sablier) becomes an object, and the array's Settings and Sign out
+   entries leave it: Settings is the `userHref` row and Sign out is `onSignOut`, so keeping them
+   in `items` shows each twice. Sablier's layout has `{ Settings, Downloads, Sign out }` and
+   passes no `userHref`; it becomes:
+
+   ```svelte
+   const userMenu = $derived({
+     items: isApp() ? [] : [{ label: t('nav.downloads'), icon: icons.download, href: '/downloads' }],
+     onSignOut: signOut
+   });
+   <SideBar {user} userHref="/settings" {userMenu} ... />
+   <MobileNav {user} profileHref="/settings" {userMenu} ... />
+   ```
+
+   `UserMenuItem` keeps its shape and its name; it is now exported from the util module.
 5. Theme: pass `theme` and `onThemeChange` if the app stores the preference itself
-   (`theme.set`). Without them muse toggles `.dark` and `.light` on `<html>` and nothing else.
+   (`theme.set`). Without them muse toggles `.dark` and `.light` on `<html>` and stores nothing, so a reload
+   forgets the choice: persist it in `onThemeChange` and call `applyTheme` from `app.html`
+   before hydration to avoid a flash.
    Language: `onLocaleChange` is where the app persists the choice; `i18n.set` is already called.
 6. Remove the app's own "Appearance" language and theme rows once `PreferencesSection` is in.
 

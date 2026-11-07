@@ -27,3 +27,13 @@ export function maskSecret(value: string, mode: 'ends' | 'full' = 'ends'): strin
     if (mode === 'full' || value.length <= 12) return REDACTED;
     return `${value.slice(0, 4)}${REDACTED}${value.slice(-4)}`;
 }
+
+/** Numbers each async request so an answer that lands after a reset can be told from the current one. */
+export function latestOnly() {
+    let current = 0;
+    return {
+        begin: (): number => ++current,
+        cancel: (): void => void current++,
+        stale: (turn: number): boolean => turn !== current
+    };
+}

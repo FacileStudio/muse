@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { REDACTED, isRedacted, maskSecret } from './secret.js';
+import { REDACTED, isRedacted, latestOnly, maskSecret } from './secret.js';
 
 test('the mask never leaks the length of the secret', () => {
     const short = maskSecret('a'.repeat(20), 'full');
@@ -23,4 +23,15 @@ test('an already-redacted value never gets re-masked into a fake prefix', () => 
     expect(isRedacted(REDACTED)).toBe(true);
     expect(isRedacted('sk_live_real_key_here')).toBe(false);
     expect(isRedacted('')).toBe(false);
+});
+
+test('an answer that lands after a cancel is stale, a newer one is not', () => {
+    const run = latestOnly();
+    const first = run.begin();
+    run.cancel();
+    expect(run.stale(first)).toBe(true);
+    const second = run.begin();
+    expect(run.stale(second)).toBe(false);
+    run.begin();
+    expect(run.stale(second)).toBe(true);
 });

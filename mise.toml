@@ -14,7 +14,7 @@ run = [
 
 [tasks.test]
 description = "Run the chart and secret maths checks"
-run = "bun test src/lib"
+run = "bun test src/lib scripts"
 
 [tasks.demo]
 description = "Run the muse demo app (http://127.0.0.1:5183)"
