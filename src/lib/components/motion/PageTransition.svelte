@@ -26,19 +26,6 @@
 
     let el: HTMLDivElement | null = $state(null);
 
-    /*
-        Two things this effect has to get right.
-
-        {#key} swaps the node out from under an in-flight tween, so the teardown has to kill
-        it — otherwise the old, detached div keeps being animated to completion.
-
-        And `clearProps` is not cosmetic. gsap leaves `transform: translate(0px, 0px)` on the
-        node when the tween lands, and *any* transform makes an element the containing block
-        for `position: fixed` descendants. A fixed overlay rendered inside the routed page —
-        `Rideau`, a fixed toolbar, anything full-bleed — then anchors to this wrapper instead
-        of the viewport and starts overflowing its scroll container. Wiping the transform at
-        the end costs nothing and keeps the wrapper transparent to layout.
-    */
     $effect(() => {
         const node = el;
         if (!node) return;

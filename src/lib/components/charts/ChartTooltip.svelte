@@ -29,12 +29,6 @@
     let el: HTMLDivElement | null = $state(null);
     let box = $state({ w: 0, h: 0, pw: 0, ph: 0, left: 0, view: 0 });
 
-    /*
-        No border. It floats over a chart that lives in a `bg-fc-component` card, so the
-        separation comes from one step of fill — `fc-surface` is darker than the card in
-        light mode and lighter in dark — plus the shadow. An outline on top of that was a
-        third statement of the same thing, and it boxed in a surface that is 60px wide.
-    */
     const classes = $derived(
         twMerge(
             'absolute z-10 pointer-events-none whitespace-nowrap rounded-fc-sm bg-fc-surface shadow-lg px-2.5 py-2 text-fc-xs',
@@ -42,10 +36,6 @@
         )
     );
 
-    /**
-     * Measured once per open and again only when the tooltip or its plot actually resizes.
-     * Reading `offsetWidth` per pointermove forced a synchronous layout on every frame.
-     */
     $effect(() => {
         const node = el;
         if (!node || !visible) return;
@@ -69,10 +59,6 @@
         return () => observer.disconnect();
     });
 
-    /**
-     * Bounds are the plot box intersected with the viewport, so a chart flush against a
-     * card edge flips inward instead of spilling out of the card.
-     */
     const place = $derived.by(() => {
         if (!box.w || !box.h) return { left: x + OFFSET, top: y, centred: true };
         const min = Math.max(0, -box.left);

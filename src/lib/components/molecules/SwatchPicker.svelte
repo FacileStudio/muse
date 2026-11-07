@@ -58,11 +58,6 @@
         swatchEls[index]?.focus();
     }
 
-    /*
-     * An unselected group has no anchor to step from, so a forward key opens on the first
-     * swatch and a backward key on the last — the plain modulo landed both on index 0,
-     * which made ArrowLeft look broken until something was already selected.
-     */
     function move(delta: number) {
         const n = colors.length;
         if (n === 0) return;

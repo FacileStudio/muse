@@ -17,15 +17,6 @@
 <script lang="ts">
     import Section from '../layout/Section.svelte';
 
-    /*
-     * The settings preset of `Section`: same anatomy, card on by default, because a settings
-     * block is a surface holding `SettingsRow`s. Everything structural lives in `Section` — this
-     * exists so the nine repos already importing it keep working, and so CHARTE §14's settings
-     * shape has a name that says what it is for.
-     *
-     * Reach for `Section` for anything that is not a settings block.
-     */
-
     let {
         bare = false,
         children,

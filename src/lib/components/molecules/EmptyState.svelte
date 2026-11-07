@@ -28,9 +28,6 @@
         ...rest
     }: EmptyStateProps = $props();
 
-    /* `py-12` rather than the card's own `p-5`: an empty state is mostly air by design, and
-       the height is what stops a list that has nothing in it from reading as a broken layout
-       — a two-line card looks like a rendering failure, a tall quiet one looks deliberate. */
     const classes = $derived(twMerge('flex flex-col items-center gap-4 py-12 text-center', className));
 </script>
 

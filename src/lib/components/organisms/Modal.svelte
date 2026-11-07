@@ -52,20 +52,9 @@
     let dialogEl: HTMLDialogElement | null = $state(null);
     let tween: ReturnType<typeof gsap.to> | null = null;
 
-    /*
-     * Only the built-in heading can be pointed at: a `header` snippet is arbitrary markup
-     * with no id of ours in it, so the label falls to whatever the caller passes through
-     * `...rest` — which is exactly how ConfirmModal names itself.
-     */
     const headingId = $props.id();
     const labelledBy = $derived(!header && title ? headingId : undefined);
 
-    /*
-     * `dialog.handlers` is spread after `rest` in the markup, which is the one place this
-     * library lets the component win over the consumer. Those three handlers are what make
-     * the dialog dismissible and keep `open` in sync; a consumer passing `onclick` would
-     * otherwise silently break closing. Everything else still spreads consumer-last.
-     */
     const dialog = createDialog({
         element: () => dialogEl,
         open: () => open,
@@ -110,11 +99,6 @@
 
     $effect(() => dialog.sync());
 
-    /*
-     * `m-auto` is load-bearing: a <dialog> opened with showModal() is centred by the UA's
-     * own `margin: auto`, and Tailwind preflight's `margin: 0` reset kills exactly that —
-     * without this the dialog renders flush against the top-left corner in every consumer.
-     */
     const classes = $derived(twMerge('m-auto rounded-fc-lg bg-fc-component shadow-lg text-fc-fg p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto backdrop:bg-fc-scrim', sizes[size], className));
 </script>
 

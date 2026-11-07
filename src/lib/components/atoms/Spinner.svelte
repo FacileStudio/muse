@@ -30,13 +30,6 @@
         lg: 'size-10'
     };
 
-    /*
-     * Under reduced motion the spin slows, it does not stop. `motion-reduce:animate-none` froze
-     * it into a static ring — a busy indicator that indicates nothing, which is worse than the
-     * motion it was avoiding. Vestibular guidance is about large, fast or parallax movement; a
-     * 24px ring turning once every three seconds is a legible status, and `Skeleton` and
-     * `StatusDot` can keep hiding outright because their absence still reads correctly.
-     */
     const classes = $derived(twMerge('inline-block text-fc-fg animate-spin motion-reduce:[animation-duration:3s]', sizes[size], className));
 </script>
 

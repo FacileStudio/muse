@@ -33,27 +33,14 @@
 
     const pixels: Record<Size, number> = { sm: 32, md: 40, lg: 56 };
 
-    /* Falls back to `name` so the avatar is not silent: an empty alt marks the image
-       decorative, which is only true when the caller gave us nothing to announce. */
     const label = $derived(alt ?? name);
     const initial = $derived(name ? name.trim().charAt(0).toUpperCase() : '?');
 
-    /*
-     * A broken `src` must fall back to the initial, and this is not optional polish: an <img>
-     * that fails to load renders its `alt` text in place of the picture, and `alt` here is the
-     * person's *name*. So a 404 avatar — an expired OIDC URL, a deleted upload, an offline
-     * gravatar — turns the circle into a clipped word. That is exactly how it shipped: Vision's
-     * mobile nav showed "yann" spilling out of a 32px pill.
-     *
-     * `failed` resets when `src` changes so a retry, or a different user in a reused component
-     * instance, is not permanently stuck on the initial.
-     */
     let failed = $state(false);
     $effect(() => {
         void src;
         failed = false;
     });
-    /* `relative` contains the `sr-only` label — see the note in `Switch.svelte`. */
     const classes = $derived(twMerge('relative inline-flex shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent text-fc-accent-fg font-semibold overflow-hidden', sizes[size], className));
 </script>
 

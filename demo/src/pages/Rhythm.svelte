@@ -19,14 +19,6 @@
     } from '@facile/muse';
     import Verdict from '../components/Verdict.svelte';
 
-    /*
-     * The reference page for spacing. It exists because the rhythm was prose in CHARTE §4 and
-     * prose is what an agent skips: thirteen apps retyped the ladder by hand and drifted, and
-     * the one component that carried its own margin taught every call site to cancel it.
-     *
-     * Every "wrong" panel below renders the real defect rather than describing it. A screenshot
-     * would rot the first time a token moves; markup cannot.
-     */
     const rungs = [
         { gap: 'gap-1', name: 'bound', px: '4px', use: 'Deux morceaux d’une seule chose — un titre et sa description.' },
         { gap: 'gap-2', name: 'tight', px: '8px', use: 'Des contrôles utilisés ensemble — les boutons d’une barre d’actions.' },

@@ -53,7 +53,7 @@ The library has no build step — components are consumed directly from source v
 
 ```bash
 mise run check        # svelte-check over src/lib and demo/src — the only type check
-mise run test         # bun test src/lib — chart maths and the secret helpers
+mise run test         # bun test — every *.test.ts in the repo
 mise run demo         # dev server on http://127.0.0.1:5183
 mise run demo:build   # production build of the demo — compiles every component
 mise run verify       # check + test + demo:build, i.e. everything CI runs

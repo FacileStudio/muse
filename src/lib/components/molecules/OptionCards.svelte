@@ -46,11 +46,6 @@
         cards[index]?.focus();
     }
 
-    /*
-     * An unselected group has no anchor to step from, so a forward key opens on the first
-     * card and a backward key on the last; stepping from index 0 either way skipped the
-     * first card entirely on ArrowRight. Disabled options are stepped over, not landed on.
-     */
     function move(delta: number) {
         const n = options.length;
         if (n === 0) return;

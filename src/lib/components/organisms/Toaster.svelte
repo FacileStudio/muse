@@ -24,13 +24,6 @@
     const ENTER = 300;
     const EXIT = 200;
 
-    /*
-     * quartIn/Out are power3.in/out — the same curve GSAP would run, without pulling gsap in
-     * for four properties, and asymmetric like every other overlay in §11: a toast arrives
-     * decelerating and leaves accelerating. Duration 0 under reduced motion still runs the
-     * transition, so `out:` still holds the node for its own removal; it just does it in a
-     * frame instead of tweening.
-     */
     const travel = $derived(position === 'top' ? -16 : 16);
 
     function enter(_node: HTMLElement) {
@@ -50,16 +43,9 @@
         };
     }
 
-    /*
-     * `pointer-events-none` on the region, `pointer-events-auto` on each toast: the strip
-     * spans the viewport and would otherwise eat clicks on whatever sits behind it.
-     * Full-bleed on a phone, a 384px column pinned right from `sm:` up.
-     */
     const classes = $derived(
         twMerge(
             'pointer-events-none fixed inset-x-0 z-60 flex flex-col gap-3 px-4 sm:inset-x-auto sm:right-6 sm:w-full sm:max-w-sm sm:px-0',
-            /* One padding utility per edge, no `sm:` variant: an app clearing a fixed bottom
-               nav passes `pb-28 md:pb-6` and needs its own breakpoints to win. */
             position === 'top'
                 ? 'top-0 flex-col-reverse pt-[max(1.25rem,env(safe-area-inset-top))]'
                 : 'bottom-0 pb-[max(1.25rem,env(safe-area-inset-bottom))]',

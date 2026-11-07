@@ -58,7 +58,6 @@
             mounted = true;
         }
 
-        /* A tween left running against a detached node keeps ticking until it completes. */
         return () => gsap.killTweensOf(node);
     });
 </script>

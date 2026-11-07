@@ -27,10 +27,6 @@
     import Badge from '../atoms/Badge.svelte';
     import Card from '../atoms/Card.svelte';
 
-    /* `role` is the member's role in the workspace, not an ARIA role — the DOM attribute of
-       the same name is dropped from the passthrough so the two cannot collide into an
-       intersection type no caller can satisfy. */
-
     let {
         name,
         email,

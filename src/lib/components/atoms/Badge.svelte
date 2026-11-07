@@ -33,12 +33,6 @@
         admin: 'bg-fc-admin/10 text-fc-admin'
     };
 
-    /*
-        `w-fit` is load-bearing, not decoration. `inline-flex` stops mattering the moment the
-        badge is a child of a flex column or a grid cell — it becomes a flex item and stretches
-        to the full cross-axis width, so a pill in a `Card` renders as a full-width bar. A badge
-        has no business ever being wider than its own text.
-    */
     const classes = $derived(twMerge('inline-flex w-fit max-w-full min-w-0 items-center gap-1 rounded-fc-pill px-2.5 py-0.5 text-fc-xs font-medium whitespace-nowrap', tones[tone], className));
 </script>
 

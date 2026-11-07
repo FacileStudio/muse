@@ -15,7 +15,7 @@ There is no build to fail, so three commands stand in for one. They catch differ
 
 ```sh
 mise run check        # svelte-check over src/lib AND demo/src — the only type check
-mise run test         # bun test src/lib — chart maths and secret helpers
+mise run test         # bun test — every test in the repo
 mise run demo:build   # production build of the demo — compiles every component
 mise run verify       # all three, in that order: what CI runs
 ```
@@ -36,7 +36,7 @@ pull request. Run `mise run verify` before pushing and CI holds no surprises.
 
 ### Tests
 
-`bun test src/lib` picks up `src/lib/utils/chart.test.ts` and `src/lib/utils/secret.test.ts`.
+`bun test` runs every `*.test.ts` in the repo, `scripts/props-shape.test.ts` included.
 Those two modules are the only real logic in the repo that is not a Svelte template — axis
 scales, path geometry, tick strides, and the masking rules that must never leak a secret's
 length. New logic in `utils/` gets a test; new markup does not.

@@ -107,9 +107,6 @@
         input.value = '';
     };
 
-    /* dragenter/dragleave bubble from every child element, so a boolean flickers
-       as the pointer crosses them; the depth counter only settles back at zero
-       once the pointer has actually left the zone. */
     const handleEnter = () => {
         depth += 1;
     };
@@ -118,8 +115,6 @@
         depth = Math.max(0, depth - 1);
     };
 
-    /* A drag that ends outside the window never sends the balancing dragleave, so without
-       this the zone stays lit until the next full drag cycle. */
     const handleEnd = () => {
         depth = 0;
     };

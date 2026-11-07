@@ -87,20 +87,8 @@
     let ready = false;
     let tween: ReturnType<typeof gsap.to> | null = null;
 
-    /*
-     * `narrow` is the *visual* state the rows read, and it deliberately lags `collapsed`.
-     * Expanding switches the layout first so the growing rail reveals it; collapsing keeps
-     * the wide layout and lets the shrinking rail clip it away, switching only once the
-     * tween lands. Reading `collapsed` directly in the rows makes the icons jump to the
-     * centre of a still-full-width rail before it has moved a pixel.
-     */
     let narrow = $state(false);
 
-    /*
-     * The rail width is a token, so the tween has to read the token — hardcoding the pair
-     * here is how a retheme silently stops reaching the animation. The fallbacks only cover
-     * SSR and a consumer that forgot to import the stylesheet.
-     */
     const FALLBACK_WIDTH = { collapsed: 68, expanded: 220 };
     const RAIL_DURATION = 0.3;
 
@@ -136,16 +124,6 @@
         });
     });
 
-    /*
-     * The ⌘K / ⌘D chips shipped for months with nothing bound behind them — decoration
-     * describing a keybinding no one had implemented. This is that binding. The handler
-     * reads `collapsed` only inside the closure so the effect does not take it as a
-     * dependency and tear the listener down on every toggle.
-     *
-     * Document-scoped, so two mounted SideBars would both answer ⌘D and cancel each other
-     * out. Every consumer mounts exactly one rail; if that ever stops being true, this
-     * needs an owner rather than a listener per instance.
-     */
     $effect(() => {
         if (!showCollapse && !onSearch) return;
         const onKeydown = (e: KeyboardEvent) => {
@@ -163,16 +141,6 @@
         return () => document.removeEventListener('keydown', onKeydown);
     });
 
-    /*
-     * Every other row morphs into the narrow rail; the space switcher is the one that cannot,
-     * because it is a fixed-width control and a shrinking rail simply guillotines it. So it
-     * leaves on its own terms: lift and fade over the first half of the tween — gone well
-     * before the rail is narrow enough to cut it — then hand its height back so the rows below
-     * rise on the same curve. Reversed on expand, it waits for the rail to be wide enough to
-     * hold it before it appears.
-     *
-     * cubicInOut is power3.inOut, so this lands on the same curve as the rail beside it.
-     */
     const FADE_START = 0.45;
 
     function switcherReveal(node: HTMLElement) {

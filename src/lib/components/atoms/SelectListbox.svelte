@@ -41,8 +41,6 @@
         onhover
     }: SelectListboxProps = $props();
 
-    /* The Popover API puts the list in the top layer, so it draws above a Modal or Drawer
-       that contains the trigger and is never clipped by an ancestor's overflow. */
     function present(node: HTMLElement) {
         if (node.showPopover && !node.matches(':popover-open')) node.showPopover();
     }

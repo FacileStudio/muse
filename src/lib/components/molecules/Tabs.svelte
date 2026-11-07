@@ -57,17 +57,6 @@
         if (scroll) tabs[item.id]?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
 
-    /*
-     * The pill is one element sliding between tabs rather than a background per tab: with
-     * per-tab backgrounds the old one has to fade out while the new fades in, which reads as
-     * a blink. Position comes from offsetLeft inside the scrolling strip, so it stays put
-     * when the strip is scrolled horizontally on a narrow screen.
-     *
-     * Every tab is measured through a ResizeObserver, not just once on mount. Icons
-     * is a custom element that upgrades asynchronously and the icon fetch lands after first
-     * paint, so a tab measured at mount is one icon too narrow — the pill renders clipped
-     * through the label and never corrects itself. Same story for the Goga swap.
-     */
     function place(animate = true) {
         const el = tabs[value];
         if (!el || !indicator) return;
@@ -80,12 +69,6 @@
         gsap.to(indicator, { ...to, duration: 0.3, ease: 'power3.inOut' });
     }
 
-    /*
-     * The pill follows the rendered width of a tab, so the dependency has to be everything
-     * that changes that width — a relabelled tab or a badge appearing moves the target
-     * without moving `items.length`, which is what the old effect watched and why the pill
-     * went stale on any in-place edit.
-     */
     const layout = $derived(
         `${value}#${items.map((i) => `${i.id}:${i.label}:${i.icon ?? ''}:${i.badge ?? ''}`).join('|')}`
     );

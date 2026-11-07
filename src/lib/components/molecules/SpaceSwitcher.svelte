@@ -78,11 +78,6 @@
         if (rootEl && !rootEl.contains(e.target as Node)) open = false;
     }
 
-    /*
-     * Escape has to put focus back on the trigger: dismissing the menu while focus sits on
-     * one of its buttons leaves a keyboard user on a node that just left the document, and
-     * the browser drops them back at the top of the page.
-     */
     function handleKeydown(e: KeyboardEvent) {
         if (e.key !== 'Escape') return;
         e.stopPropagation();
