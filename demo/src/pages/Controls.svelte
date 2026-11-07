@@ -43,7 +43,7 @@
 <Page>
     <PageHeader title="Contrôles" description="Les contrôles complets d’une bibliothèque : tous au clavier, sans bordure, en quatre langues." />
 
-    <Section title="Case à cocher indéterminée" description="Le parent d’une sélection partielle : aria-checked mixed et un tiret.">
+    <Section title="Case à cocher indéterminée" description="Le parent d’une sélection partielle : propriété indeterminate native et un tiret.">
         <Card>
             <Stack>
                 <Checkbox

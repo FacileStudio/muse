@@ -88,7 +88,7 @@ Un code à usage unique en cases séparées : un seul vrai champ de saisie, donc
         <div
             data-otp-cell
             aria-hidden="true"
-            title={i18n.t('otp.digit', { n: i + 1, total: length })}
+            title={i18n.t(kind === 'numeric' ? 'otp.digit' : 'otp.character', { n: i + 1, total: length })}
             class={twMerge(
                 'flex h-12 w-10 items-center justify-center rounded-fc-md bg-fc-field text-fc-lg font-medium text-fc-fg tabular-nums',
                 control.invalid && 'bg-[color-mix(in_oklab,var(--color-fc-danger)_18%,var(--color-fc-field))]',

@@ -35,7 +35,7 @@ Un bouton radio. La validité appartient au groupe, pas au bouton, donc il ne po
 -->
 
 <label class={classes}>
-    <span class="relative inline-flex size-5 shrink-0 before:absolute before:-inset-3 before:content-['']">
+    <span class="relative inline-flex size-5 shrink-0 before:absolute before:-inset-x-3 before:-inset-y-[min(0.75rem,calc(var(--fc-control-gap,0.5rem)/2))] before:content-['']">
         <input
             type="radio"
             id={control.id}

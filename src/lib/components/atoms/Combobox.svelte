@@ -20,6 +20,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { chain } from '../../utils/handlers.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import { controlLine } from '../../utils/control.js';
     import { exactOption, filterOptions } from '../../utils/combobox.js';
@@ -42,6 +43,10 @@
         disabled = false,
         class: className = '',
         wrapperClass,
+        oninput,
+        onclick,
+        onkeydown,
+        onblur,
         ...rest
     }: ComboboxProps = $props();
 
@@ -122,10 +127,10 @@ Un champ de saisie avec suggestions : on tape, la liste se filtre, les flèches 
         aria-labelledby={ariaLabelledby}
         {disabled}
         class={twMerge(controlLine, className)}
-        oninput={combo.typed}
-        onclick={() => !combo.open && combo.show()}
-        onkeydown={combo.keydown}
-        onblur={combo.hide}
+        oninput={chain(oninput, combo.typed)}
+        onclick={chain(onclick, () => !combo.open && combo.show())}
+        onkeydown={chain(onkeydown, combo.keydown)}
+        onblur={chain(onblur, combo.hide)}
     />
 
     {#if expanded}

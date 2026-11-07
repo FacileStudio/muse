@@ -194,6 +194,7 @@ export const en = {
     'datePicker.nextMonth': 'Next month',
     'datePicker.clear': 'Clear the date',
     'otp.digit': 'Digit {n} of {total}',
+    'otp.character': 'Character {n} of {total}',
     'slider.min': 'Minimum',
     'slider.max': 'Maximum',
     'combobox.empty': 'No results'

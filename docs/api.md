@@ -192,7 +192,7 @@ Wrapped in a `<label>`, so the optional text is clickable.
 | Prop | Type | Default | Notes |
 |---|---|---|---|
 | `checked` | `boolean` | `false` | **bindable** |
-| `indeterminate` | `boolean` | `false` | **bindable**. `aria-checked="mixed"` and a dash; a click clears it |
+| `indeterminate` | `boolean` | `false` | **bindable**. The native indeterminate property and a dash; a click clears it |
 | `label` | `string` | — | Rendered after the box when present |
 
 ### `Radio`

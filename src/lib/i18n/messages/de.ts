@@ -194,6 +194,7 @@ export const de: MuseMessages = {
     'datePicker.nextMonth': 'Nächster Monat',
     'datePicker.clear': 'Datum löschen',
     'otp.digit': 'Ziffer {n} von {total}',
+    'otp.character': 'Zeichen {n} von {total}',
     'slider.min': 'Minimum',
     'slider.max': 'Maximum',
     'combobox.empty': 'Keine Ergebnisse'

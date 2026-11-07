@@ -16,6 +16,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { consumeEscape } from '../../utils/handlers.js';
     import { floatingPanel } from '../../utils/control.js';
     import { AnchoredPopup, present } from '../../utils/popup.svelte.js';
 
@@ -80,7 +81,7 @@
     $effect(() => {
         if (!visible) return;
         const onKey = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') hide();
+            consumeEscape(event, shown, hide);
         };
         document.addEventListener('keydown', onKey, true);
         return () => document.removeEventListener('keydown', onKey, true);
