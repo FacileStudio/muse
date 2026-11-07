@@ -71,6 +71,18 @@ test('arcPath closes a full circle without collapsing', () => {
     expect(arcPath(50, 50, 40, 20, 0, Math.PI * 2)).toStartWith('M');
 });
 
+test('a single full slice is a clean ring: no corner rounding, no radial edge', () => {
+    const slices = donutSegments([{ label: 'a', value: 5 }], 0.12);
+    expect(slices).toHaveLength(1);
+    const ring = arcPath(50, 50, 40, 20, slices[0].a0, slices[0].a1, 8);
+    expect(ring).toBe(arcPath(50, 50, 40, 20, 0, TAU, 0));
+    expect(ring.match(/M/g)).toHaveLength(2);
+    expect(ring.match(/A/g)).toHaveLength(4);
+    expect(ring).not.toContain('L');
+    expect(arcPath(50, 50, 40, 0, 0, TAU, 8)).not.toContain('L');
+    expect(arcPath(50, 50, 40, 20, 0, TAU * 0.999, 8)).toContain('L');
+});
+
 test('arcCorner never lets the fillets of one segment meet', () => {
     /* Half the radial thickness is the ceiling however wide the slice is… */
     expect(arcCorner(40, 20, 0, Math.PI, 999)).toBe(10);

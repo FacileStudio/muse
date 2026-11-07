@@ -40,6 +40,8 @@ export type DonutSegment = {
 
 const SLOT_COUNT = 6;
 
+const FULL_EPS = 1e-4;
+
 /** ~1.1°: below this an arc is sub-pixel at any donut radius we ship and reads as missing. */
 const MIN_ARC = 0.02;
 
@@ -295,7 +297,7 @@ export function arcCorner(
     corner: number
 ): number {
     const span = endAngle - startAngle;
-    if (!(corner > 0) || !(span > 0) || span >= TAU - 1e-6) return 0;
+    if (!(corner > 0) || !(span > 0) || span >= TAU - FULL_EPS) return 0;
     if (!(rOuter > 0) || !(rInner > 0) || rInner >= rOuter) return 0;
     const half = Math.min(span / 2, Math.PI / 2);
     const sin = Math.sin(half);
@@ -305,6 +307,18 @@ export function arcCorner(
     const byInner = sin >= 1 ? Infinity : (rInner * sin) / (1 - sin);
     const byOuter = (rOuter * sin) / (1 + sin);
     return Math.max(0, Math.min(corner, (rOuter - rInner) / 2, byInner, byOuter));
+}
+
+/**
+ * A slice that spans the whole circle: two half arcs per edge, so there is no seam, no
+ * rounded end and no gap. The inner circle runs the other way and cuts the hole under the
+ * default nonzero fill rule. `rInner` of 0 yields a plain disc.
+ */
+function circlePath(cx: number, cy: number, rOuter: number, rInner: number): string {
+    const ring = (r: number, sweep: 0 | 1) =>
+        `M${r2(cx)} ${r2(cy - r)}A${r2(r)} ${r2(r)} 0 1 ${sweep} ${r2(cx)} ${r2(cy + r)}A${r2(r)} ${r2(r)} 0 1 ${sweep} ${r2(cx)} ${r2(cy - r)}Z`;
+    const ri = Math.max(0, Math.min(rInner, rOuter));
+    return ri > 0 ? ring(rOuter, 1) + ring(ri, 0) : ring(rOuter, 1);
 }
 
 /**
@@ -326,9 +340,9 @@ export function arcPath(
     corner = 0
 ): string {
     if (!(rOuter > 0) || !(endAngle > startAngle)) return '';
-    const full = endAngle - startAngle >= TAU - 1e-6;
+    if (endAngle - startAngle >= TAU - FULL_EPS) return circlePath(cx, cy, rOuter, rInner);
     const a0 = startAngle;
-    const a1 = full ? startAngle + TAU - 1e-4 : endAngle;
+    const a1 = endAngle;
     const large = a1 - a0 > Math.PI ? 1 : 0;
     const px = (r: number, a: number) => r2(cx + r * Math.sin(a));
     const py = (r: number, a: number) => r2(cy - r * Math.cos(a));
@@ -572,7 +586,7 @@ export function donutSegments(slices: ChartSlice[], gap: number): DonutSegment[]
         const start = acc * TAU;
         const end = (acc + frac) * TAU;
         acc += frac;
-        const inset = end - start > gap * 2 ? gap / 2 : 0;
+        const inset = slices.length > 1 && end - start > gap * 2 ? gap / 2 : 0;
         const a0 = start + inset;
         out.push({
             label: slice.label,
