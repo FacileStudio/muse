@@ -20,8 +20,8 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
-    import { watchPopup } from '../../utils/popup.svelte.js';
-    import { MenuState } from '../../utils/menu.svelte.js';
+    import { present, watchPopup } from '../../utils/popup.svelte.js';
+    import { MenuState, pressOnSpace } from '../../utils/menu.svelte.js';
     import { springPress } from '../../utils/press.js';
     import { applyTheme, readTheme, type Theme } from '../../utils/theme.js';
     import {
@@ -38,6 +38,7 @@
     import TextElevate from '../motion/TextElevate.svelte';
     import Drawer from './Drawer.svelte';
     import UserMenuList from './UserMenuList.svelte';
+    import { userMenuLabels } from '../../utils/user-menu-labels.js';
 
     let {
         user,
@@ -75,20 +76,7 @@
     let view = $state<UserMenuView>('root');
     let detected = $state<Theme>('system');
 
-    const labels = $derived<UserMenuLabels>({
-        account: i18n.t('userMenu.account'),
-        settings: i18n.t('userMenu.settings'),
-        manageSubscription: i18n.t('userMenu.manageSubscription'),
-        language: i18n.t('userMenu.language'),
-        theme: i18n.t('userMenu.theme'),
-        help: i18n.t('userMenu.help'),
-        signOut: i18n.t('userMenu.signOut'),
-        back: i18n.t('userMenu.back'),
-        system: i18n.t('theme.system'),
-        light: i18n.t('theme.light'),
-        dark: i18n.t('theme.dark'),
-        ...overrides
-    });
+    const labels = $derived<UserMenuLabels>({ ...userMenuLabels(i18n.t), ...overrides });
 
     const options = $derived({ items, accountHref, settingsHref, subscription, helpHref, onSignOut, showLanguage, locales, showTheme });
     const model = $derived({
@@ -142,14 +130,10 @@
         view = 'root';
     });
 
-    function present(node: HTMLElement) {
-        if (node.showPopover && !node.matches(':popover-open')) node.showPopover();
-    }
-
     function go(next: UserMenuView, landOn: string) {
         view = next;
         const at = actionable(userMenuRows({ ...model, view: next })).findIndex((row) => row.id === landOn);
-        menu.active = at < 0 ? startIndex(userMenuRows({ ...model, view: next })) : at;
+        menu.land(at < 0 ? startIndex(userMenuRows({ ...model, view: next })) : at);
     }
 
     function choose(row: UserMenuRow) {
@@ -174,11 +158,7 @@
         if (!sheet && next && !menuEl?.contains(next) && next !== triggerEl) menu.hide();
     }
 
-    function space(event: KeyboardEvent) {
-        if (event.key !== ' ' || menu.buffer !== '') return;
-        event.preventDefault();
-        (event.currentTarget as HTMLElement).click();
-    }
+    const space = (event: KeyboardEvent) => pressOnSpace(event, menu.buffer !== '');
 
     const cardClasses = $derived(
         narrow ? 'size-fc-nav-item justify-center p-0' : 'min-h-12 w-full gap-2.5 px-2.5 py-1.5'
@@ -203,7 +183,7 @@ Le menu de la carte utilisateur : un déclencheur (carte de la barre latérale o
         backLabel={labels.back}
         newTabLabel={i18n.t('userMenu.opensNewTab')}
         onChoose={choose}
-        onPoint={(index) => (menu.active = index)}
+        onPoint={menu.point}
         onSpace={space}
     />
 {/snippet}

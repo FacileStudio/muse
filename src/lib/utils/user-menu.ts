@@ -1,6 +1,7 @@
-import { LOCALES, LOCALE_NAMES, isLocale, type Locale } from '../i18n/locale.js';
+import { LOCALE_NAMES, type Locale } from '../i18n/locale.js';
 import { icons } from '../icons.js';
 import { THEMES, type Theme } from './theme.js';
+import { offeredLocales } from './user-menu-nav.js';
 
 export const ACCOUNT_URL = 'https://sso.facile.studio/account';
 
@@ -79,12 +80,6 @@ export type UserMenuModel = {
     onTheme: (theme: Theme) => void;
 };
 
-/** The locales a menu offers: `wanted` without duplicates or unknown values, or all of `LOCALES` when nothing valid is left. */
-export function offeredLocales(wanted?: readonly string[] | null): readonly Locale[] {
-    const kept = [...new Set((wanted ?? []).filter(isLocale))];
-    return kept.length > 0 ? kept : LOCALES;
-}
-
 const GAP: UserMenuRow = { id: 'gap', kind: 'gap', label: '' };
 
 function appRows(items: UserMenuItem[] = []): UserMenuRow[] {
@@ -155,18 +150,4 @@ export function userMenuRows(model: UserMenuModel): UserMenuRow[] {
     return model.view === 'root' ? rootRows(model) : choiceRows(model);
 }
 
-/** The rows a keyboard can land on: everything but the spacing gap. */
-export function actionable(rows: UserMenuRow[]): UserMenuRow[] {
-    return rows.filter((row) => row.kind !== 'gap');
-}
-
-/** Where focus starts when a view opens: the checked choice, else the first row. */
-export function startIndex(rows: UserMenuRow[]): number {
-    return Math.max(0, actionable(rows).findIndex((row) => row.checked));
-}
-
-/** The view change a key asks for. Enter and Space on a row are its click, so only the arrows and Escape are keys here. */
-export function drillKey(view: UserMenuView, kind: UserMenuRow['kind'] | undefined, key: string): 'enter' | 'leave' | null {
-    if (view === 'root') return kind === 'submenu' && key === 'ArrowRight' ? 'enter' : null;
-    return key === 'ArrowLeft' || key === 'Escape' ? 'leave' : null;
-}
+export { actionable, drillKey, offeredLocales, startIndex } from './user-menu-nav.js';

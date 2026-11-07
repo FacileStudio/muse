@@ -23,6 +23,7 @@
     import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { createDialog } from '../../utils/dialog.js';
+    import { SheetDrag } from '../../utils/sheet-drag.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import IconButton from '../atoms/IconButton.svelte';
 
@@ -48,13 +49,7 @@
     let panel: HTMLDivElement | null = $state(null);
 
     let tween: ReturnType<typeof gsap.to> | null = null;
-    let dragging = false;
-    let pointer = -1;
-    let startY = 0;
-    let offset = 0;
-    let prevY = 0;
-    let prevTime = 0;
-    let velocity = 0;
+    const drag = new SheetDrag();
 
     const dialog = createDialog({
         element: () => dialogEl,
@@ -87,7 +82,7 @@
             });
         },
         closed() {
-            dragging = false;
+            drag.active = false;
             tween?.kill();
             tween = null;
             if (panel) gsap.set(panel, { y: 0 });
@@ -112,46 +107,28 @@
     }
 
     function onPointerDown(e: PointerEvent) {
-        if (!dismissible || !panel || dragging || e.button > 0) return;
+        if (!dismissible || !panel || drag.active || e.button > 0) return;
         if ((e.target as HTMLElement | null)?.closest('button, a, input, select, textarea')) return;
         tween?.kill();
         tween = null;
-        dragging = true;
-        pointer = e.pointerId;
-        startY = e.clientY;
-        offset = 0;
-        prevY = e.clientY;
-        prevTime = e.timeStamp;
-        velocity = 0;
+        drag.begin(e.pointerId, e.clientY, e.timeStamp);
         (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     }
 
     function onPointerMove(e: PointerEvent) {
-        if (!dragging || e.pointerId !== pointer || !panel) return;
-        const dt = e.timeStamp - prevTime;
-        if (dt > 0) {
-            velocity = (e.clientY - prevY) / dt;
-            prevY = e.clientY;
-            prevTime = e.timeStamp;
-        }
-        offset = Math.max(0, e.clientY - startY);
-        gsap.set(panel, { y: offset });
+        if (!drag.active || e.pointerId !== drag.pointer || !panel) return;
+        gsap.set(panel, { y: drag.move(e.clientY, e.timeStamp) });
     }
 
     function endDrag(e: PointerEvent, allowDismiss: boolean) {
-        if (!dragging || e.pointerId !== pointer) return;
-        dragging = false;
-        pointer = -1;
+        if (!drag.active || e.pointerId !== drag.pointer) return;
         const strip = e.currentTarget as HTMLElement;
         if (strip.hasPointerCapture(e.pointerId)) strip.releasePointerCapture(e.pointerId);
+        const height = panel?.getBoundingClientRect().height || 1;
+        const release = drag.end(e.timeStamp, height);
         if (!panel) return;
-        if (e.timeStamp - prevTime > 100) velocity = 0;
-        const height = panel.getBoundingClientRect().height || 1;
-        if (allowDismiss && (offset > height * 0.25 || velocity > 0.5)) {
-            dismiss();
-            return;
-        }
-        settle(0);
+        if (allowDismiss && release) dismiss();
+        else settle(0);
     }
 
     const hasHeader = $derived(Boolean(title || description || showClose));
