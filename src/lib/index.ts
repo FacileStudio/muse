@@ -115,6 +115,8 @@ export { default as SpaceSwitcher } from './components/molecules/SpaceSwitcher.s
 export type { SpaceSwitcherProps } from './components/molecules/SpaceSwitcher.svelte';
 export { default as SwatchPicker } from './components/molecules/SwatchPicker.svelte';
 export type { SwatchPickerProps } from './components/molecules/SwatchPicker.svelte';
+export { default as IconPicker } from './components/molecules/IconPicker.svelte';
+export type { IconPickerProps } from './components/molecules/IconPicker.svelte';
 export { default as StatCard } from './components/molecules/StatCard.svelte';
 export type { StatCardProps } from './components/molecules/StatCard.svelte';
 export { default as Tabs } from './components/molecules/Tabs.svelte';
@@ -214,6 +216,7 @@ export type { Gap, PageWidth, Align } from './utils/layout.js';
 export { cn, twMerge } from './utils/cn.js';
 export { REDACTED, isRedacted, maskSecret } from './utils/secret.js';
 export { icons, registerIcons } from './icons.js';
+export { solarIconId, solarIconNames } from './utils/solar.js';
 export type { IconData } from './icons.js';
 export { USER_COLORS, USER_COLOR_LABELS, normalizeUserColor, parseHex, userColorLabel } from './colors.js';
 export type { UserColor } from './colors.js';

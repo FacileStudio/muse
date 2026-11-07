@@ -9,6 +9,7 @@
         Drawer,
         EmptyState,
         Field,
+        IconPicker,
         icons,
         Input,
         Modal,
@@ -50,6 +51,7 @@
     let loading = $state(false);
 
     let createOpen = $state(false);
+    let draftIcon = $state('Folder');
     let filtersOpen = $state(false);
     let pendingDelete = $state<Project | null>(null);
     let confirmOpen = $state(false);
@@ -276,6 +278,9 @@
                 <option value="Acme Studio">Acme Studio</option>
                 <option value="Nova Collective">Nova Collective</option>
             </Select>
+        </Field>
+        <Field label="Icon">
+            <IconPicker bind:value={draftIcon} />
         </Field>
         <Field label="Colour">
             <SwatchPicker bind:value={draftColor} />
