@@ -25,7 +25,7 @@ muse/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map (47 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
-    components/               81 Svelte components (layout/ atoms/ molecules/ organisms/ charts/ motion/)
+    components/               93 Svelte files, 84 exported (layout/ atoms/ molecules/ organisms/ charts/ motion/)
     i18n/                     Message helper, locale context (provideLocale/getI18n), fr/en/es/de catalogs
     fonts/                    Bundled Goga font files (.otf)
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
@@ -35,15 +35,23 @@ muse/
     utils/field.ts            Field ↔ control context (id, describedBy, invalid)
     utils/dialog.ts           Shared Modal/Drawer controller — internal, not re-exported
     utils/landing.ts          LandingHeader/Footer helpers: scroll state, safe hrefs, scroll watcher
-    utils/chart.ts            scales, paths, arcs, resize action — shared by charts/
+    utils/chart.ts            barrel over utils/chart/ (types, scale, series, paths, arcs, bars, donut, resize)
     utils/secret.ts           REDACTED wire contract, isRedacted, maskSecret
+    utils/tone.ts             Tone, StatusTone, toneFill, isUrgent: the one tone vocabulary
+    utils/variant.ts          ButtonVariant, IconButtonVariant and the deprecated-name resolvers
+    utils/slider.ts           Slider maths: snap, keys, range thumbs (pure, tested)
+    utils/calendar.ts         DatePicker maths: ISO dates in UTC, month grid, grid keys, Intl names (pure, tested)
+    utils/otp.ts              InputOtp: sanitize, cells, caret (pure, tested)
+    utils/combobox.ts         Combobox filtering, accent-folding (pure, tested)
+    utils/accordion.ts        Accordion open set and header keys (pure, tested)
     utils/user-menu.ts        UserMenu rows, canonical order and drill keys (pure, tested)
     utils/settings-nav.ts     canonical settings section order and route resolution (pure, tested)
     utils/theme.ts            Theme, readTheme, applyTheme
     utils/toast.svelte.ts     Module-scope toast queue behind Toaster — toast, toasts
 ```
 
-Tier counts: 5 layout, 21 atoms, 26 molecules, 20 organisms, 7 charts, 2 motion. `ChartTable.svelte`,
+Tier counts (files): 5 layout, 24 atoms, 33 molecules, 20 organisms, 9 charts, 2 motion. `ChartTable.svelte`, `LineAxes.svelte`,
+`LineHover.svelte`, `molecules/DateGrid.svelte`,
 `components/charts/entry.ts`, `atoms/SelectListbox.svelte`, `organisms/PricingCard.svelte`, `organisms/LandingDrawer.svelte`, `organisms/UserMenuList.svelte` and `organisms/TokenCreate.svelte` are internal and not exported.
 
 ## Key commands
@@ -113,15 +121,16 @@ byte-identical duplicates on purpose — **edit both or neither**.
 
 - Read `CHARTE.md` before any UI work -- it is the visual contract.
 - Svelte 5 runes only. No legacy `$:` reactivity.
+- No comments inside a `<script>` body or a function. Doc comments (`/** */`) stay on exported props and types.
 - No hardcoded hex values -- use tokens from `tokens.css`. Ask before adding new ones.
 - **Import `twMerge` from `../../utils/cn.js`, never from `tailwind-merge`.** Stock
   tailwind-merge reads `text-fc-sm` as a *colour* and silently deletes `text-fc-fg` from the
   same class string. Any new `fc-*` token must be added to `cn.ts` too.
 - One tone vocabulary. `Badge` and `StatusDot` take
-  `neutral | accent | info | success | warning | danger | owner | admin`; `Alert` takes the
+  `neutral | accent | info | success | warning | danger | owner | admin` (`Toast` too, via `utils/tone.ts`); `Alert` takes the
   status subset (`neutral | info | success | warning | danger`); `ConfirmModal` takes
-  `neutral | danger`. `Button` deliberately keeps `variant` (emphasis and shape) as a
-  separate axis from tone.
+  `neutral | danger`. `Button` and `IconButton` keep `variant` (emphasis and shape: `primary | secondary | ghost | danger | ghost-danger`) as a
+  separate axis from tone. `outline`, `default` and IconButton's `danger` are deprecated aliases.
 - Callback props are camelCase `onX` — `onChange`, `onSelect`, `onClose`, `onConfirm`,
   `onCancel`, `onReveal`, `onCopy`, `onFiles`, `onReject`. Lowercase `on*` names are reserved
   for native DOM handlers arriving through `...rest`.
@@ -143,8 +152,8 @@ byte-identical duplicates on purpose — **edit both or neither**.
   `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring`.
 - `...rest` goes on the root element, **last**, so a consumer attribute wins. The exceptions
   are deliberate: `Modal`/`Drawer` spread the dialog controller's handlers after `rest`
-  (they are what keeps `open` in sync), and `Tabs`, `Dropzone`, `SwatchPicker`, `OptionCards`
-  and `SpaceSwitcher` keep their own role/keyboard wiring after it. Motion and chart
+  (they are what keeps `open` in sync), and `Tabs`, `Dropzone`, `SwatchPicker`, `OptionCards`,
+  `SpaceSwitcher`, `Combobox` and `InputOtp` keep their own role/keyboard wiring after it. Motion and chart
   components take `class` only and spread nothing.
 - Icons: Solar **`linear`** for chrome, MDI for plus/close/chevrons, `bold-duotone` for brand
   marks only. Icons inherit `currentColor`; always pass `width`, `height` and `class="block"`.

@@ -542,3 +542,18 @@ Delete the class override that keeps `UserMenu` on screen at the right edge of a
 ## 23. Optional plan, `locales` for the Language rows, live locale without a provider (v0.14.3)
 
 Drop `plan: ''` from `UserMenu`'s `subscription` if you only had it to satisfy the type, pass `locales: ['fr', 'en']` in `userMenu` when the app ships fewer than four catalogs, and make sure `provideLocale` sits in the root layout above every `UserMenu` and `LocaleSwitch`; nothing breaks if you do none of this.
+
+## 24. Deprecated variant names, shared tones, new controls (v0.15.0)
+
+Nothing breaks. Rename when you touch the line; the old names keep working through v1.0.
+
+| Where | Old | New |
+|---|---|---|
+| `Button variant` | `outline` | `secondary` |
+| `IconButton variant` | `default` | `secondary` |
+| `IconButton variant` | `danger` | `ghost-danger` |
+| Type import from the component file | `Variant` | `ButtonVariant`, `IconButtonVariant` (also exported from `@facile/muse`) |
+
+`IconButton variant="danger"` keeps its old look (muted, red on hover), which is `ghost-danger`. It does not become the tinted `Button` `danger` fill. `Toast` now takes the same eight tones as `Badge` (`accent`, `owner` and `admin` are new for it), and `Tone`, `StatusTone`, `toneFill` and `isUrgent` are exported.
+
+Behaviour that changes without an API change: a `Menu` or `UserMenu` row under the pointer is highlighted but no longer takes DOM focus (focus moves only with the keyboard); a `Select` trigger that loses focus closes its list and keeps its type-ahead buffer until the 600ms timer ends; `Checkbox`, `Radio` and `Switch` gain an invisible 44px hit area with no layout change. `SecretField` renders through `Field`, so its label, helper and error now share `Field`'s markup and ids. If you hand-rolled a combobox, date input, one-time code field, slider, tooltip, popover, accordion or a mixed checkbox, `Combobox`, `DatePicker`, `InputOtp`, `Slider`, `Tooltip`, `Popover`, `Accordion`, `Collapsible`, `RadioGroup` and `Checkbox indeterminate` replace them.

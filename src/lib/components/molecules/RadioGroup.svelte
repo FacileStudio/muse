@@ -40,7 +40,7 @@
     const control = $derived(resolveField(field?.(), { id, describedBy, invalid }));
 
     const classes = $derived(
-        twMerge('flex gap-x-6', orientation === 'vertical' ? 'flex-col gap-y-1' : 'flex-row flex-wrap gap-y-1', className)
+        twMerge('flex gap-x-6', orientation === 'vertical' ? 'flex-col' : 'flex-row flex-wrap', className)
     );
 </script>
 
@@ -65,6 +65,7 @@ Un groupe de boutons radio. Un seul est dans l'ordre de tabulation, les flèches
             bind:group={value}
             value={option.value}
             label={option.label}
+            class="min-h-11"
             disabled={disabled || option.disabled}
         />
     {/each}
