@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.15.0 (unreleased)
+## v0.15.0 (2026-11-07)
 
 ### Added
 
@@ -28,6 +28,10 @@
 - `bun test` runs every test in the repo; `mise run test` and CI no longer name directories, so `scripts/props-shape.test.ts` runs in CI.
 - Comments inside `<script>` bodies are gone from every component. Doc comments stay on exported props and types.
 - `utils/chart.ts` is a barrel over `utils/chart/`. `LineChart`, `SideBar`, `Drawer` and `UserMenu` each lose a block to a helper (`LineAxes`, `LineHover`, `utils/rail.ts`, `utils/sheet-drag.ts`, `utils/user-menu-labels.ts`, `utils/user-menu-nav.ts`) and pass filet's 250-line limit.
+
+### Fixed
+
+- `InputOtp`: the field no longer sets `maxlength`, which made the browser cut a pasted "123 456" or "123-456" before muse could strip the separator.
 
 ### Deprecated
 
