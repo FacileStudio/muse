@@ -71,7 +71,6 @@ Un code à usage unique en cases séparées : un seul vrai champ de saisie, donc
         autocapitalize="off"
         autocorrect="off"
         spellcheck="false"
-        maxlength={length}
         pattern={kind === 'numeric' ? '[0-9]*' : '[A-Za-z0-9]*'}
         {...rest}
         id={control.id}
