@@ -46,6 +46,7 @@
         narrow = false,
         active = false,
         class: className = '',
+        align = 'auto',
         items,
         accountHref = ACCOUNT_URL,
         settingsHref,
@@ -62,6 +63,7 @@
         ...rest
     }: UserMenuProps = $props();
 
+    const MENU_MIN_WIDTH = 240;
     const i18n = getI18n();
     const uid = $props.id();
     const menuId = `${uid}-menu`;
@@ -113,7 +115,8 @@
         labels: () => stops.map((row) => row.label),
         disabled: () => stops.map(() => false),
         trigger: () => triggerEl,
-        items: () => Array.from(menuEl?.querySelectorAll<HTMLElement>('[role^="menuitem"]') ?? [])
+        items: () => Array.from(menuEl?.querySelectorAll<HTMLElement>('[role^="menuitem"]') ?? []),
+        across: { width: () => Math.max(menuEl?.offsetWidth ?? 0, MENU_MIN_WIDTH), align: () => align }
     });
 
     $effect(() => {
@@ -126,6 +129,7 @@
 
     $effect(() => {
         void view;
+        if (menu.open && menuEl) menu.place();
         menu.focusActive();
     });
 
@@ -246,6 +250,7 @@ Le menu de la carte utilisateur : un déclencheur (carte de la barre latérale o
             aria-labelledby={triggerId}
             class="fixed inset-auto m-0 overflow-y-auto overscroll-contain rounded-fc-md bg-fc-bg p-1 text-fc-fg shadow-lg"
             style:min-width="max({menu.width}px, 15rem)"
+            style:max-width="calc(100vw - 1rem)"
             style:left="{menu.left}px"
             style:top={menu.up ? 'auto' : `${menu.top}px`}
             style:bottom={menu.up ? `${menu.bottom}px` : 'auto'}

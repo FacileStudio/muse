@@ -1,6 +1,6 @@
 import { keyAction, type KeyAction } from './keys.js';
 import { moveActive, typeahead } from './listbox.js';
-import { AnchoredPopup } from './popup.svelte.js';
+import { AnchoredPopup, type AcrossHost } from './popup.svelte.js';
 
 const NEED = 200;
 const TYPE_RESET_MS = 600;
@@ -10,6 +10,7 @@ export type MenuHost = {
     disabled: () => boolean[];
     trigger: () => HTMLElement | null;
     items: () => HTMLElement[];
+    across?: AcrossHost;
 };
 
 /**
@@ -23,7 +24,7 @@ export class MenuState extends AnchoredPopup {
     timer: ReturnType<typeof setTimeout> | undefined;
 
     constructor(host: MenuHost) {
-        super(host.trigger, NEED);
+        super(host.trigger, NEED, host.across);
         this.host = host;
     }
 

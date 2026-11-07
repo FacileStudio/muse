@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.14.2 (2026-11-07)
+
+### Added
+
+- `UserMenu` takes `align`: `'start'`, `'end'` or `'auto'` (default). `auto` lines the popover up with the trigger's left edge and switches to the right edge when the menu would leave the screen. The position is always clamped inside the viewport margins, and the menu is capped at the viewport width, so a trigger at the right edge of a header no longer clips at 360px. The width is re-measured once the popover is open. The maths is `placeAcross` in `utils/placement.ts`.
+- `TokensSection` takes `expiry` and `lastUsed` (both default `true`). `expiry={false}` hides the expiry field in the create drawer and the expiry column, and the `onCreate` draft carries no `days`. `lastUsed={false}` hides the last-used column.
+
 ## v0.14.1 (2026-11-07)
 
 ### Fixed
