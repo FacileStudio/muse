@@ -1,4 +1,4 @@
-import { LOCALES, LOCALE_NAMES, type Locale } from '../i18n/locale.js';
+import { LOCALES, LOCALE_NAMES, isLocale, type Locale } from '../i18n/locale.js';
 import { icons } from '../icons.js';
 import { THEMES, type Theme } from './theme.js';
 
@@ -29,7 +29,12 @@ export type UserMenuItem = {
     tone?: 'default' | 'danger';
 };
 
-export type UserMenuSubscription = { plan: string; href: string; label?: string };
+export type UserMenuSubscription = {
+    /** The plan name shown beside the row. Leave it out when the app has no plan data: the row then shows only its label. */
+    plan?: string;
+    href: string;
+    label?: string;
+};
 
 export type UserMenuOptions = {
     /** Which edge of the trigger the popover lines up with. `auto` keeps the left edge unless it would leave the screen. */
@@ -41,6 +46,8 @@ export type UserMenuOptions = {
     helpHref?: string | null;
     onSignOut?: (() => void) | null;
     showLanguage?: boolean;
+    /** The languages the Language rows offer, in this order. Defaults to all four; an empty or invalid list means all four. */
+    locales?: Locale[];
     locale?: Locale;
     onLocaleChange?: (locale: Locale) => void;
     showTheme?: boolean;
@@ -72,6 +79,12 @@ export type UserMenuModel = {
     onTheme: (theme: Theme) => void;
 };
 
+/** The locales a menu offers: `wanted` without duplicates or unknown values, or all of `LOCALES` when nothing valid is left. */
+export function offeredLocales(wanted?: readonly string[] | null): readonly Locale[] {
+    const kept = [...new Set((wanted ?? []).filter(isLocale))];
+    return kept.length > 0 ? kept : LOCALES;
+}
+
 const GAP: UserMenuRow = { id: 'gap', kind: 'gap', label: '' };
 
 function appRows(items: UserMenuItem[] = []): UserMenuRow[] {
@@ -94,7 +107,7 @@ function subscriptionRow(model: UserMenuModel): UserMenuRow[] {
     const sub = model.options.subscription;
     if (!sub) return [];
     const label = sub.label ?? model.labels.manageSubscription;
-    return [{ id: 'subscription', kind: 'item', label, icon: icons.card, href: sub.href, detail: sub.plan }];
+    return [{ id: 'subscription', kind: 'item', label, icon: icons.card, href: sub.href, detail: sub.plan || undefined }];
 }
 
 function preferenceRows(model: UserMenuModel): UserMenuRow[] {
@@ -132,7 +145,7 @@ function choiceRows(model: UserMenuModel): UserMenuRow[] {
     const { labels, view } = model;
     const back: UserMenuRow = { id: 'back', kind: 'back', label: labels[view === 'theme' ? 'theme' : 'language'], icon: icons.chevronLeft };
     if (view === 'language') {
-        return [back, ...LOCALES.map((l): UserMenuRow => ({ id: l, kind: 'radio', label: LOCALE_NAMES[l], checked: l === model.locale, run: () => model.onLocale(l) }))];
+        return [back, ...offeredLocales(model.options.locales).map((l): UserMenuRow => ({ id: l, kind: 'radio', label: LOCALE_NAMES[l], checked: l === model.locale, run: () => model.onLocale(l) }))];
     }
     return [back, ...THEMES.map((t): UserMenuRow => ({ id: t, kind: 'radio', label: labels[t], checked: t === model.theme, run: () => model.onTheme(t) }))];
 }

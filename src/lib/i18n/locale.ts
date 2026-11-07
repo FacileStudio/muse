@@ -50,3 +50,13 @@ export function matchLocale(value: string | null | undefined): Locale | null {
 export function resolveLocale(value: string | null | undefined): Locale {
     return matchLocale(value) ?? DEFAULT_LOCALE;
 }
+
+/** The locale in force: an explicit `chosen` one wins, otherwise `source()` resolved with the English fallback. */
+export function effectiveLocale(chosen: Locale | null, source: () => string | null | undefined): Locale {
+    return chosen ?? resolveLocale(source());
+}
+
+/** Whether `effectiveLocale` rests on a real choice or match rather than the English fallback. */
+export function isKnownLocale(chosen: Locale | null, source: () => string | null | undefined): boolean {
+    return chosen !== null || matchLocale(source()) !== null;
+}

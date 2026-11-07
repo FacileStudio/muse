@@ -54,6 +54,7 @@
         helpHref,
         onSignOut,
         showLanguage,
+        locales,
         locale,
         onLocaleChange,
         showTheme,
@@ -89,7 +90,7 @@
         ...overrides
     });
 
-    const options = $derived({ items, accountHref, settingsHref, subscription, helpHref, onSignOut, showLanguage, showTheme });
+    const options = $derived({ items, accountHref, settingsHref, subscription, helpHref, onSignOut, showLanguage, locales, showTheme });
     const model = $derived({
         view,
         labels,

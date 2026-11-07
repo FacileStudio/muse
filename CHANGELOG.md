@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.14.3 (2026-11-07)
+
+### Added
+
+- `UserMenuOptions.locales`: the languages the Language rows offer, in the order given. The default is all four; an empty list or one with no valid locale also means all four. `offeredLocales` in `utils/user-menu.ts` does the filtering.
+
+### Changed
+
+- `UserMenuSubscription.plan` is optional. Without it the Subscription row shows only its label ("Gérer l'abonnement"), with no detail. An empty `plan: ''` behaves the same, so existing callers keep working.
+
+### Fixed
+
+- `getI18n()` with no `provideLocale` above the caller returned a fresh English instance whose `set()` did nothing, so a `UserMenu` or `LocaleSwitch` outside the provider's subtree saved the choice and never re-rendered. Those callers now share one reactive instance: `set()` updates every `getI18n().t()` consumer at once. The choice-over-source rule behind `provideLocale` is now `effectiveLocale` and `isKnownLocale` in `i18n/locale.ts`, covered by tests.
+
 ## v0.14.2 (2026-11-07)
 
 ### Added

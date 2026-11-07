@@ -167,7 +167,8 @@
         profileHref="#/settings"
         profileActive={onSettings}
         userMenu={{
-            subscription: { plan: 'Pro', href: '#/settings/subscription' },
+            subscription: { href: '#/settings/subscription' },
+            locales: ['fr', 'en'],
             helpHref: 'https://muse.facile.studio',
             onSignOut: () => {},
             theme: theme.mode,

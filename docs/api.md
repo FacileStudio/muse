@@ -645,10 +645,11 @@ Settings, Subscription, Language, Theme, Help, Sign out. A row with no link or h
 | `items` | `UserMenuItem[]` | — | App rows before Settings: `label`, `icon`, `href` or `onSelect`, `tone` |
 | `accountHref` | `string \| null` | `ACCOUNT_URL` | `null` hides the row |
 | `settingsHref` | `string \| null` | — | |
-| `subscription` | `{ plan, href, label? } \| null` | — | |
+| `subscription` | `{ plan?, href, label? } \| null` | — | Without `plan` the row shows only its label |
 | `helpHref` | `string \| null` | — | |
 | `onSignOut` | `() => void \| null` | — | |
 | `showLanguage`, `showTheme` | `boolean` | `true` | |
+| `locales` | `Locale[]` | all four | The Language rows, in this order; an empty or invalid list means all four |
 | `locale`, `onLocaleChange` | `Locale`, `(l) => void` | context locale | `i18n.set` is always called |
 | `theme`, `onThemeChange` | `Theme`, `(t) => void` | read from `<html>` | Without a handler muse calls `applyTheme` |
 | `labels` | `Partial<UserMenuLabels>` | translated | Overrides any string |
