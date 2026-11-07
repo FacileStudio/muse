@@ -56,6 +56,10 @@ export class SelectState extends AnchoredPopup {
         this.host.trigger()?.focus();
     };
 
+    blur = (): void => {
+        this.open = false;
+    };
+
     toggle = (): void => {
         if (this.open) this.hide();
         else this.show();

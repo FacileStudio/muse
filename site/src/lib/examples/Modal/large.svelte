@@ -10,7 +10,7 @@
     ];
 </script>
 
-<Button variant="outline" onclick={() => (open = true)}>Détail de la semaine</Button>
+<Button variant="secondary" onclick={() => (open = true)}>Détail de la semaine</Button>
 
 <Modal bind:open title="Semaine 32 — 13 h 45 facturables" size="lg" showClose>
     <Table>

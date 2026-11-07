@@ -4,7 +4,7 @@
     let open = $state(false);
 </script>
 
-<Button variant="outline" onclick={() => (open = true)}>Voir l'espace</Button>
+<Button variant="secondary" onclick={() => (open = true)}>Voir l'espace</Button>
 
 <Modal bind:open title="Espace « Heranova »" showClose>
     <p class="text-fc-sm text-fc-fg-muted">

@@ -86,7 +86,7 @@ is set.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `variant` | `'primary' \| 'ghost' \| 'outline' \| 'danger' \| 'ghost-danger'` | `'primary'` | |
+| `variant` | `'primary' \| 'secondary' \| 'ghost' \| 'danger' \| 'ghost-danger'` | `'primary'` | `'outline'` is a deprecated alias of `secondary` |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | |
 | `icon` | `string` | — | Iconify name, rendered before the label |
 | `iconRight` | `string` | — | Iconify name, rendered after the label |
@@ -119,7 +119,7 @@ Round 44px icon button carrying the house press (`use:springPress`). Spreads to
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `variant` | `'default' \| 'ghost' \| 'danger'` | `'default'` | `default` is a `bg-fc-surface` fill; the other two are transparent until hover |
+| `variant` | `'secondary' \| 'ghost' \| 'ghost-danger'` | `'secondary'` | `secondary` is a `bg-fc-surface` fill; the other two are transparent until hover. `default` and `danger` are deprecated aliases of `secondary` and `ghost-danger` |
 | `type` | `string` | `'button'` | |
 | `children` | `Snippet` | — | Required — the glyph |
 

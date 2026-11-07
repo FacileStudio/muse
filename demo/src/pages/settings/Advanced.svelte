@@ -40,7 +40,7 @@
             label="Export"
             description="We email a download link when it is ready. The link lasts 24 hours."
         >
-            <Button variant="outline" icon={icons.download} disabled={exporting} onclick={exportData}>
+            <Button variant="secondary" icon={icons.download} disabled={exporting} onclick={exportData}>
                 {exporting ? 'Preparing…' : 'Export my data'}
             </Button>
         </SettingsRow>

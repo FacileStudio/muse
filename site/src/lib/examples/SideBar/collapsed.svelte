@@ -15,7 +15,7 @@
     <div class="overflow-hidden rounded-fc-md">
         <SideBar class="h-full" title="Nuage" icon={icons.server} {pages} bind:collapsed showSearch />
     </div>
-    <Button variant="outline" size="sm" icon={icons.collapse} onclick={() => (collapsed = !collapsed)}>
+    <Button variant="secondary" size="sm" icon={icons.collapse} onclick={() => (collapsed = !collapsed)}>
         {collapsed ? 'Déplier le rail' : 'Replier le rail'}
     </Button>
 </div>

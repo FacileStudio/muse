@@ -15,7 +15,7 @@
         {restaure ? 'Restauration en cours…' : 'Refonte du site Heranova a quitté la liste active.'}
     </Toast>
 {:else}
-    <Button variant="outline" onclick={() => ((visible = true), (restaure = false))}>
+    <Button variant="secondary" onclick={() => ((visible = true), (restaure = false))}>
         Rejouer la notification
     </Button>
 {/if}

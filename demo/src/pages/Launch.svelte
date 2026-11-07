@@ -35,7 +35,7 @@
 
     <Section title="PlanLimit en fenêtre" description="Répond à l'action qui a touché la limite, se ferme toujours.">
         <Inline>
-            <Button variant="outline" onclick={() => (dialog = true)}>Créer un projet</Button>
+            <Button variant="secondary" onclick={() => (dialog = true)}>Créer un projet</Button>
         </Inline>
         <PlanLimit variant="dialog" error={limit} bind:open={dialog} />
     </Section>

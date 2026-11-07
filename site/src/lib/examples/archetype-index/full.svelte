@@ -36,7 +36,7 @@
                 <option value="pause">En pause</option>
                 <option value="archivé">Archivés</option>
             </Select>
-            <Button size="lg" variant="outline" icon={icons.download}>Exporter</Button>
+            <Button size="lg" variant="secondary" icon={icons.download}>Exporter</Button>
         </div>
 
         {#if visibles.length}
@@ -61,7 +61,7 @@
                 title="Aucun projet ne correspond"
                 description="Aucun projet de cet espace ne répond à ce filtre."
             >
-                <Button variant="outline" onclick={() => ((recherche = ''), (statut = 'tous'))}>
+                <Button variant="secondary" onclick={() => ((recherche = ''), (statut = 'tous'))}>
                     Réinitialiser les filtres
                 </Button>
             </EmptyState>

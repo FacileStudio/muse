@@ -24,7 +24,7 @@
         description="Site vitrine et espace client · démarré le 3 mars 2026."
     >
         {#snippet actions()}
-            <Button variant="outline" size="sm" icon={icons.edit}>Modifier</Button>
+            <Button variant="secondary" size="sm" icon={icons.edit}>Modifier</Button>
             <Button size="sm" icon={icons.clock}>Pointer du temps</Button>
         {/snippet}
     </PageHeader>

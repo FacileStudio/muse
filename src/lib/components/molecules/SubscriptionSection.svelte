@@ -65,7 +65,7 @@ La section Abonnement : l'offre issue des droits, le lien pour la gérer, un lie
     <SettingsRow label={i18n.t('settings.subscription.plan')}>
         <Badge tone="accent">{plan}</Badge>
         {#if isSafeHref(manageHref)}
-            <Button href={manageHref} variant="outline" size="sm">
+            <Button href={manageHref} variant="secondary" size="sm">
                 {manageLabel ?? i18n.t('userMenu.manageSubscription')}
             </Button>
         {/if}

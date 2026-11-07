@@ -19,7 +19,7 @@
 
 <Row name="Inline" lead="Une ligne qui passe à la ligne par défaut — sinon elle déborde ou écrase ses cibles tactiles.">
     <Inline>
-        <Button size="sm" variant="outline">Annuler</Button>
+        <Button size="sm" variant="secondary">Annuler</Button>
         <Button size="sm">Enregistrer</Button>
     </Inline>
 </Row>

@@ -1,8 +1,9 @@
 <script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+    import type { Tone } from '../../utils/tone.js';
 
-    export type Tone = 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger' | 'owner' | 'admin';
+    export type { Tone };
 
     export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
         tone?: Tone;
@@ -14,6 +15,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { toneFill } from '../../utils/tone.js';
 
     let {
         tone = 'neutral',
@@ -22,18 +24,7 @@
         ...rest
     }: BadgeProps = $props();
 
-    const tones: Record<Tone, string> = {
-        neutral: 'bg-fc-surface text-fc-fg-muted',
-        accent: 'bg-fc-accent text-fc-accent-fg',
-        info: 'bg-fc-info/10 text-fc-info',
-        success: 'bg-fc-success/10 text-fc-success',
-        warning: 'bg-fc-warning/10 text-fc-warning',
-        danger: 'bg-fc-danger/10 text-fc-danger',
-        owner: 'bg-fc-owner/10 text-fc-owner',
-        admin: 'bg-fc-admin/10 text-fc-admin'
-    };
-
-    const classes = $derived(twMerge('inline-flex w-fit max-w-full min-w-0 items-center gap-1 rounded-fc-pill px-2.5 py-0.5 text-fc-xs font-medium whitespace-nowrap', tones[tone], className));
+    const classes = $derived(twMerge('inline-flex w-fit max-w-full min-w-0 items-center gap-1 rounded-fc-pill px-2.5 py-0.5 text-fc-xs font-medium whitespace-nowrap', toneFill[tone], className));
 </script>
 
 <!--

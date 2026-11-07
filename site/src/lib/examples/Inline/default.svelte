@@ -4,6 +4,6 @@
 
 <Inline gap="tight">
     <Button icon={icons.plus}>Nouveau projet</Button>
-    <Button variant="outline" icon={icons.download}>Exporter</Button>
+    <Button variant="secondary" icon={icons.download}>Exporter</Button>
     <Button variant="ghost" icon={icons.filter}>Filtrer</Button>
 </Inline>

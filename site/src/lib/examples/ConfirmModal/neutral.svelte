@@ -4,7 +4,7 @@
     let open = $state(false);
 </script>
 
-<Button variant="outline" icon={icons.mail} onclick={() => (open = true)}>
+<Button variant="secondary" icon={icons.mail} onclick={() => (open = true)}>
     Envoyer la facture
 </Button>
 

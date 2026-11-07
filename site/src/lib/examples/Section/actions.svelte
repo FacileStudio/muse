@@ -4,7 +4,7 @@
 
 <Section title="Invitations en attente" description="Elles expirent au bout de sept jours." card>
     {#snippet actions()}
-        <Button size="sm" variant="outline" icon={icons.refresh}>Tout relancer</Button>
+        <Button size="sm" variant="secondary" icon={icons.refresh}>Tout relancer</Button>
     {/snippet}
 
     <p class="text-fc-sm text-fc-fg-muted">lucas@gfconseil.fr · envoyée il y a 2 jours</p>

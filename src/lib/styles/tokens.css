@@ -300,6 +300,7 @@
   }
 
   input[type='checkbox']:checked,
+  input[type='checkbox']:indeterminate,
   input[type='radio']:checked,
   [role='switch']:checked + span,
   [role='progressbar'] > div {
@@ -314,6 +315,7 @@
   }
 
   input[type='checkbox']:checked + svg,
+  input[type='checkbox']:indeterminate + svg,
   input[type='radio']:checked + svg,
   [role='option'] > svg {
     forced-color-adjust: none;

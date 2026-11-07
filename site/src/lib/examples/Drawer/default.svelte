@@ -4,7 +4,7 @@
     let open = $state(false);
 </script>
 
-<Button variant="outline" onclick={() => (open = true)}>Détails de la tâche</Button>
+<Button variant="secondary" onclick={() => (open = true)}>Détails de la tâche</Button>
 
 <Drawer bind:open title="Maquettes du tunnel de paiement" description="Espace Boutique · échéance vendredi">
     <Stack gap="tight">

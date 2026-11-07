@@ -1,8 +1,12 @@
 <script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
+    import type { ButtonVariant, LegacyButtonVariant } from '../../utils/variant.js';
 
-    export type Variant = 'primary' | 'ghost' | 'outline' | 'danger' | 'ghost-danger';
+    export type { ButtonVariant };
+
+    /** @deprecated Use `ButtonVariant`. */
+    export type Variant = ButtonVariant | LegacyButtonVariant;
 
     export type Size = 'sm' | 'md' | 'lg';
 
@@ -12,7 +16,8 @@
         rel?: HTMLAnchorAttributes['rel'];
         download?: HTMLAnchorAttributes['download'];
         type?: HTMLButtonAttributes['type'];
-        variant?: Variant;
+        /** `outline` still works and means `secondary`. */
+        variant?: ButtonVariant | LegacyButtonVariant;
         size?: Size;
         disabled?: boolean;
         icon?: string;
@@ -25,6 +30,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { buttonVariant } from '../../utils/variant.js';
     import Icon from './Icon.svelte';
 
     let {
@@ -43,10 +49,10 @@
     const iconSizes: Record<Size, number> = { sm: 14, md: 16, lg: 18 };
     const glyph = $derived(iconSizes[size]);
 
-    const variants: Record<Variant, string> = {
+    const variants: Record<ButtonVariant, string> = {
         primary: 'bg-fc-accent text-fc-accent-fg hover:opacity-90',
         ghost: 'bg-transparent text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
-        outline: 'bg-fc-surface text-fc-fg hover:bg-fc-surface/60',
+        secondary: 'bg-fc-surface text-fc-fg hover:bg-fc-surface/60',
         danger: 'bg-fc-danger/10 text-fc-danger hover:bg-fc-danger/20',
         'ghost-danger': 'bg-transparent text-fc-fg-muted hover:bg-fc-danger/10 hover:text-fc-danger'
     };
@@ -59,7 +65,7 @@
 
     const anchorRest = $derived(rest as unknown as HTMLAnchorAttributes);
 
-    const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc-pill justify-center gap-2 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring', variants[variant], sizes[size], className));
+    const classes = $derived(twMerge('inline-flex shrink-0 items-center rounded-fc-pill justify-center gap-2 font-medium whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring', variants[buttonVariant(variant)], sizes[size], className));
 </script>
 
 <!--

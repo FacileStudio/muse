@@ -8,6 +8,6 @@
     back={{ href: '#', label: 'Projets' }}
 >
     {#snippet actions()}
-        <Button variant="outline" icon={icons.edit}>Modifier</Button>
+        <Button variant="secondary" icon={icons.edit}>Modifier</Button>
     {/snippet}
 </PageHeader>

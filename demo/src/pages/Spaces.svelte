@@ -110,7 +110,7 @@
             </p>
         </div>
         <div class="flex items-center gap-3">
-            <Button variant="outline" icon={icons.filter} onclick={() => (filtersOpen = true)}>
+            <Button variant="secondary" icon={icons.filter} onclick={() => (filtersOpen = true)}>
                 Filters
             </Button>
             <Button icon={icons.plus} onclick={() => (createOpen = true)}>New space</Button>

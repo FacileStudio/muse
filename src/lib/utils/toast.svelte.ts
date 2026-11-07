@@ -1,6 +1,7 @@
 import { untrack } from 'svelte';
+import type { Tone } from './tone.js';
 
-export type ToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+export type ToastTone = Tone;
 
 export type ToastAction = { label: string; onClick: () => void };
 

@@ -173,7 +173,7 @@ one**:
 Not every component uses every tone, but no component invents a name of its own. There is no
 `muted`, no `default`, no `primary` — those were three different spellings of `neutral` and
 they are gone. `Button` is the one component with a `variant` instead, and that is not a
-synonym: `variant` selects an action's *emphasis and shape* (`primary`, `ghost`, `outline`),
+synonym: `variant` selects an action's *emphasis and shape* (`primary`, `ghost`, `secondary`),
 `tone` selects a *semantic colour*. `danger` appears in both because a destructive action is
 both things at once.
 

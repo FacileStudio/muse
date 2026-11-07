@@ -17,6 +17,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { isUrgent, toneFill } from '../../utils/tone.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import Button from '../atoms/Button.svelte';
@@ -36,16 +37,11 @@
 
     const i18n = getI18n();
 
-    const badges: Record<ToastTone, string> = {
-        neutral: 'bg-fc-surface text-fc-fg-muted',
-        info: 'bg-fc-info/10 text-fc-info',
-        success: 'bg-fc-success/10 text-fc-success',
-        warning: 'bg-fc-warning/10 text-fc-warning',
-        danger: 'bg-fc-danger/10 text-fc-danger'
-    };
-
     const defaults: Record<ToastTone, string> = {
         neutral: icons.notification,
+        accent: icons.notification,
+        owner: icons.notification,
+        admin: icons.notification,
         info: icons.info,
         success: icons.check,
         warning: icons.warning,
@@ -54,7 +50,7 @@
 
     const glyph = $derived(icon === null ? undefined : (icon ?? defaults[tone]));
 
-    const role = $derived(tone === 'warning' || tone === 'danger' ? 'alert' : 'status');
+    const role = $derived(isUrgent(tone) ? 'alert' : 'status');
 
     const classes = $derived(
         twMerge(
@@ -72,7 +68,7 @@ La présentation d'un message éphémère. La file et l'auto-fermeture appartien
 <div class={classes} {role} {...rest}>
     {#if glyph}
         <span
-            class={twMerge('flex size-8 shrink-0 items-center justify-center rounded-fc-pill', badges[tone])}
+            class={twMerge('flex size-8 shrink-0 items-center justify-center rounded-fc-pill', toneFill[tone])}
             aria-hidden="true"
         >
             <Icon icon={glyph} size={18} />
@@ -89,7 +85,7 @@ La présentation d'un message éphémère. La file et l'auto-fermeture appartien
     </div>
 
     {#if action}
-        <Button variant="outline" size="sm" class="shrink-0" onclick={action.onClick}>
+        <Button variant="secondary" size="sm" class="shrink-0" onclick={action.onClick}>
             {action.label}
         </Button>
     {/if}

@@ -214,7 +214,7 @@ Never hand-write `<iconify-icon>` inside a `Button` — the prop sizes the glyph
 and emits the required `width`/`height`/`class="block"`. Action buttons should carry an icon:
 creation `icons.plus`, destruction `icons.remove`.
 
-Variants: `primary` `outline` `ghost` `danger` `ghost-danger`. Use **`ghost-danger` for
+Variants: `primary` `secondary` `ghost` `danger` `ghost-danger`. Use **`ghost-danger` for
 destructive row actions** (delete in a table or member list) — muted at rest, red on hover.
 `danger` is always-tinted, for standalone destructive buttons. Both route through
 `ConfirmModal`, never delete on click.

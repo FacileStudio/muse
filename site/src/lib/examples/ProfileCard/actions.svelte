@@ -13,7 +13,7 @@
         ]}
     >
         {#snippet actions()}
-            <Button variant="outline" size="sm" icon={icons.mail} onclick={() => toast.info('Invitation renvoyée à yanis@heranova.fr.')}>
+            <Button variant="secondary" size="sm" icon={icons.mail} onclick={() => toast.info('Invitation renvoyée à yanis@heranova.fr.')}>
                 Renvoyer l'invitation
             </Button>
             <Button variant="ghost-danger" size="sm" icon={icons.remove} onclick={() => toast.warning('Retrait du membre à confirmer.')}>

@@ -1,7 +1,8 @@
 <script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
+    import type { Tone } from '../../utils/tone.js';
 
-    export type Tone = 'neutral' | 'accent' | 'info' | 'success' | 'warning' | 'danger' | 'owner' | 'admin';
+    export type { Tone };
 
     export interface StatusDotProps extends HTMLAttributes<HTMLSpanElement> {
         tone?: Tone;

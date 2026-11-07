@@ -5,7 +5,7 @@
     let title = $state('Migrer la base vers PostgreSQL 16');
 </script>
 
-<Button variant="outline" onclick={() => (open = true)}>Nouvelle tâche</Button>
+<Button variant="secondary" onclick={() => (open = true)}>Nouvelle tâche</Button>
 
 <Drawer bind:open title="Nouvelle tâche" showClose>
     <Stack gap="tight">
