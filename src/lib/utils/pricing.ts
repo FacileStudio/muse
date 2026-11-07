@@ -9,7 +9,8 @@ export const FEATURE_LABELS: Readonly<Record<string, FeatureLabel>> = {
     'echo.max_call_minutes': { count: 'feature.callMinutes', unlimited: 'feature.callMinutesUnlimited' },
     'echo.max_participants': { count: 'feature.participants', unlimited: 'feature.participantsUnlimited' },
     'echo.recording': { on: 'feature.recording' },
-    'glouton.access': { on: 'feature.glouton' }
+    'glouton.access': { on: 'feature.glouton' },
+    'ai.access': { on: 'feature.ai' }
 };
 
 export type FeatureRow = { key: string; message: MuseKey; count?: number };

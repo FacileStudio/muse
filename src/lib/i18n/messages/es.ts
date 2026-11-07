@@ -134,6 +134,7 @@ export const es: MuseMessages = {
     'landing.newTab': '(se abre en una pestaña nueva)',
     'landing.copyright': '© {year} {name}',
     'feature.glouton': 'Acceso a Glouton',
+    'feature.ai': 'Asistente de IA y funciones de IA',
     'userMenu.open': '{name}: menú de la cuenta',
     'userMenu.label': 'Menú de la cuenta',
     'userMenu.account': 'Gestionar mi cuenta Facile',
