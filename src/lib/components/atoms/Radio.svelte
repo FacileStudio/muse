@@ -4,8 +4,9 @@
     export interface RadioProps extends HTMLInputAttributes {
         label?: string;
         group?: string;
+        /** Keep the row tight: the 44px touch area stops at half of `--fc-control-gap` (default 0.5rem) instead of reaching into the next row. */
+        dense?: boolean;
         class?: string;
-
     }
 </script>
 
@@ -19,6 +20,7 @@
         'aria-describedby': describedBy,
         group = $bindable(''),
         value,
+        dense = false,
         class: className = '',
         ...rest
     }: RadioProps = $props();
@@ -34,8 +36,8 @@
 Un bouton radio. La validité appartient au groupe, pas au bouton, donc il ne porte pas `aria-invalid`.
 -->
 
-<label class={classes}>
-    <span class="relative inline-flex size-5 shrink-0 before:absolute before:-inset-x-3 before:-inset-y-[min(0.75rem,calc(var(--fc-control-gap,0.5rem)/2))] before:content-['']">
+<label class={classes} data-dense={dense || undefined}>
+    <span class="relative inline-flex size-5 shrink-0 before:absolute before:-inset-x-3 {dense ? 'before:-inset-y-[min(0.75rem,calc(var(--fc-control-gap,0.5rem)/2))]' : 'before:-inset-y-3'} before:content-['']">
         <input
             type="radio"
             id={control.id}

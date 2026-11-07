@@ -6,6 +6,8 @@
         checked?: boolean;
         /** The mixed state of a parent whose children are partly checked. The native `indeterminate` property, which assistive technology reads, and a dash. A click clears it. */
         indeterminate?: boolean;
+        /** Keep the row tight: the 44px touch area stops at half of `--fc-control-gap` (default 0.5rem) instead of reaching into the next row. */
+        dense?: boolean;
         class?: string;
     }
 </script>
@@ -21,6 +23,7 @@
         'aria-invalid': invalid,
         checked = $bindable(false),
         indeterminate = $bindable(false),
+        dense = false,
         class: className = '',
         ...rest
     }: CheckboxProps = $props();
@@ -36,8 +39,8 @@
 Une case à cocher qui adopte l'identifiant de son `Field`, avec un état `indeterminate` pour le parent d'une sélection partielle. La boîte est un aplat de 20px sans bordure, cochée en accent avec un tracé SVG ; c'est le libellé qui porte la cible tactile.
 -->
 
-<label class={classes}>
-    <span class="relative inline-flex size-5 shrink-0 before:absolute before:-inset-x-3 before:-inset-y-[min(0.75rem,calc(var(--fc-control-gap,0.5rem)/2))] before:content-['']">
+<label class={classes} data-dense={dense || undefined}>
+    <span class="relative inline-flex size-5 shrink-0 before:absolute before:-inset-x-3 {dense ? 'before:-inset-y-[min(0.75rem,calc(var(--fc-control-gap,0.5rem)/2))]' : 'before:-inset-y-3'} before:content-['']">
         <input
             type="checkbox"
             id={control.id}

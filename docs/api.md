@@ -187,13 +187,14 @@ type-ahead.
 ### `Checkbox`
 
 Spreads to the inner `<input type="checkbox">` (`HTMLInputAttributes` minus `type`/`checked`).
-Wrapped in a `<label>`, so the optional text is clickable.
+Wrapped in a `<label>`, so the optional text is clickable. Checkbox, Radio and Switch keep a 44px touch target by default; `dense` caps it for tight lists.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
 | `checked` | `boolean` | `false` | **bindable** |
 | `indeterminate` | `boolean` | `false` | **bindable**. The native indeterminate property and a dash; a click clears it |
 | `label` | `string` | — | Rendered after the box when present |
+| `dense` | `boolean` | `false` | Stops the 44px touch area at half of `--fc-control-gap` (default 0.5rem) so tight lists do not overlap. Sets `data-dense` on the label |
 
 ### `Radio`
 
@@ -205,6 +206,7 @@ exclusive.
 | `group` | `string` | `''` | **bindable**. Bind the same variable across the set |
 | `value` | `string` | — | Value contributed to `group` when selected |
 | `label` | `string` | — | Optional text |
+| `dense` | `boolean` | `false` | Stops the 44px touch area at half of `--fc-control-gap` (default 0.5rem) so tight lists do not overlap. Sets `data-dense` on the label |
 
 ### `Switch`
 
@@ -217,6 +219,7 @@ through.
 | `checked` | `boolean` | `false` | **bindable** |
 | `label` | `string` | — | Optional text |
 | `disabled` | `boolean` | `false` | Dims the row and blocks the input |
+| `dense` | `boolean` | `false` | Stops the 44px touch area at half of `--fc-control-gap` (default 0.5rem) so tight lists do not overlap. Sets `data-dense` on the label |
 
 The accessible name comes from `label`. A `Switch` inside a `SettingsRow` — where the text
 lives in the row, not the switch — has **no** accessible name unless you pass `aria-label`,
@@ -664,6 +667,7 @@ A hint on hover (after `delay`) and on keyboard focus, closed by Escape, and the
 | `value` | `string` | `''` | Bindable |
 | `name` | `string` | generated | Form field name |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | |
+| `dense` | `boolean` | `false` | Passed to every `Radio`, and drops the 44px row height |
 | `disabled` | `boolean` | `false` | |
 
 ### `Slider`
