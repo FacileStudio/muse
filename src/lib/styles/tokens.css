@@ -331,6 +331,30 @@
     background-color: ButtonText;
   }
 
+  [role='gridcell'] > button {
+    border: 0;
+  }
+
+  [role='gridcell'][aria-selected='true'] > button {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+
+  [role='slider'],
+  [data-otp-cell] {
+    background-color: ButtonText;
+    border: 1px solid ButtonText;
+  }
+
+  [data-otp-cell] {
+    background-color: Canvas;
+    color: CanvasText;
+  }
+
+  [role='tooltip'] {
+    border: 1px solid CanvasText;
+  }
+
   [role='switch']:checked + span > span {
     background-color: HighlightText;
   }

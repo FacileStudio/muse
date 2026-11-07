@@ -37,7 +37,7 @@ Une case à cocher qui adopte l'identifiant de son `Field`, avec un état `indet
 -->
 
 <label class={classes}>
-    <span class="relative inline-flex size-5 shrink-0">
+    <span class="relative inline-flex size-5 shrink-0 before:absolute before:-inset-3 before:content-['']">
         <input
             type="checkbox"
             id={control.id}

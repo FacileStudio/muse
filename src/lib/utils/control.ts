@@ -15,3 +15,10 @@ export const controlFill =
 
 /** A single-line control: 44px high, so the touch target is met without padding tricks. */
 export const controlLine = `h-11 w-full px-3 ${controlFill}`;
+
+/** A button that opens a floating surface: a filled pill-less box, 44px high, with the one focus ring. */
+export const triggerButton =
+    'inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-fc-md bg-fc-surface px-3 text-fc-sm text-fc-fg transition-colors hover:bg-fc-surface/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:cursor-not-allowed disabled:opacity-50';
+
+/** The look of a floating panel: an opaque fill and the one shadow, no border. */
+export const floatingPanel = 'fixed inset-auto m-0 overflow-y-auto overscroll-contain rounded-fc-md bg-fc-bg text-fc-fg shadow-lg';

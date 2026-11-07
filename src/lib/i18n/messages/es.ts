@@ -188,5 +188,13 @@ export const es: MuseMessages = {
     'settings.subscription.usage': 'Uso',
     'settings.subscription.upgrade': 'Ver planes superiores',
     'settings.danger.title': 'Zona de peligro',
-    'settings.danger.description': 'Estas acciones no se pueden deshacer.'
+    'settings.danger.description': 'Estas acciones no se pueden deshacer.',
+    'datePicker.placeholder': 'Elegir una fecha',
+    'datePicker.previousMonth': 'Mes anterior',
+    'datePicker.nextMonth': 'Mes siguiente',
+    'datePicker.clear': 'Borrar la fecha',
+    'otp.digit': 'Dígito {n} de {total}',
+    'slider.min': 'Mínimo',
+    'slider.max': 'Máximo',
+    'combobox.empty': 'Sin resultados'
 };

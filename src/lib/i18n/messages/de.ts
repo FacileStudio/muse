@@ -188,5 +188,13 @@ export const de: MuseMessages = {
     'settings.subscription.usage': 'Nutzung',
     'settings.subscription.upgrade': 'Höhere Tarife ansehen',
     'settings.danger.title': 'Gefahrenbereich',
-    'settings.danger.description': 'Diese Aktionen lassen sich nicht rückgängig machen.'
+    'settings.danger.description': 'Diese Aktionen lassen sich nicht rückgängig machen.',
+    'datePicker.placeholder': 'Datum wählen',
+    'datePicker.previousMonth': 'Vorheriger Monat',
+    'datePicker.nextMonth': 'Nächster Monat',
+    'datePicker.clear': 'Datum löschen',
+    'otp.digit': 'Ziffer {n} von {total}',
+    'slider.min': 'Minimum',
+    'slider.max': 'Maximum',
+    'combobox.empty': 'Keine Ergebnisse'
 };

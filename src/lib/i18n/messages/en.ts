@@ -188,7 +188,15 @@ export const en = {
     'settings.subscription.usage': 'Usage',
     'settings.subscription.upgrade': 'See higher plans',
     'settings.danger.title': 'Danger zone',
-    'settings.danger.description': 'These actions cannot be undone.'
+    'settings.danger.description': 'These actions cannot be undone.',
+    'datePicker.placeholder': 'Choose a date',
+    'datePicker.previousMonth': 'Previous month',
+    'datePicker.nextMonth': 'Next month',
+    'datePicker.clear': 'Clear the date',
+    'otp.digit': 'Digit {n} of {total}',
+    'slider.min': 'Minimum',
+    'slider.max': 'Maximum',
+    'combobox.empty': 'No results'
 } satisfies Record<string, Message>;
 
 export type MuseMessages = { [K in keyof typeof en]: Message };
