@@ -59,6 +59,16 @@
         </Card>
     </Section>
 
+    <Section title="Liste dense" description="Par défaut la cible tactile fait 44px. Avec dense, elle s’arrête à la moitié de --fc-control-gap pour ne pas mordre sur la ligne voisine.">
+        <Card>
+            <div class="flex flex-col gap-1" style="--fc-control-gap: 0.25rem">
+                <Checkbox dense label="Reçus par courriel" />
+                <Checkbox dense label="Rappels de paiement" />
+                <Checkbox dense label="Résumé hebdomadaire" />
+            </div>
+        </Card>
+    </Section>
+
     <Section title="Popover" description="Un panneau non modal. Échap le referme, le focus revient au bouton.">
         <Card>
             <Popover label="Filtres" bind:open={panel}>

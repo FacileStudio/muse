@@ -5,8 +5,9 @@
         label?: string;
         checked?: boolean;
         disabled?: boolean;
+        /** Keep the row tight: the 44px touch area stops at half of `--fc-control-gap` (default 0.5rem) instead of reaching into the next row. */
+        dense?: boolean;
         class?: string;
-
     }
 </script>
 
@@ -21,6 +22,7 @@
         'aria-invalid': invalid,
         checked = $bindable(false),
         disabled = false,
+        dense = false,
         class: className = '',
         ...rest
     }: SwitchProps = $props();
@@ -36,7 +38,7 @@
 Un interrupteur. Dans une `SettingsRow` il prend `aria-label` et jamais de libellé visible : la ligne le porte déjà.
 -->
 
-<label class={classes}>
+<label class={classes} data-dense={dense || undefined}>
     <input
         type="checkbox"
         role="switch"
@@ -49,7 +51,7 @@ Un interrupteur. Dans une `SettingsRow` il prend `aria-label` et jamais de libel
         {...rest}
     />
     <span
-        class="relative h-6 w-11 shrink-0 rounded-fc-pill bg-fc-field before:absolute before:-inset-y-[min(0.625rem,calc(var(--fc-control-gap,0.5rem)/2))] before:inset-x-0 before:content-[''] transition-colors peer-checked:bg-fc-accent peer-aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_18%,var(--color-fc-field))] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fc-ring peer-checked:[&>span]:translate-x-5 peer-checked:[&>span]:bg-fc-accent-fg"
+        class="relative h-6 w-11 shrink-0 rounded-fc-pill bg-fc-field before:absolute {dense ? 'before:-inset-y-[min(0.625rem,calc(var(--fc-control-gap,0.5rem)/2))]' : 'before:-inset-y-2.5'} before:inset-x-0 before:content-[''] transition-colors peer-checked:bg-fc-accent peer-aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_18%,var(--color-fc-field))] peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-fc-ring peer-checked:[&>span]:translate-x-5 peer-checked:[&>span]:bg-fc-accent-fg"
     >
         <span class="absolute top-[3px] left-[3px] h-4 w-4 rounded-fc-pill bg-fc-fg-muted transition-transform"></span>
     </span>

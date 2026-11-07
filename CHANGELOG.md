@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.16.1 (2026-11-07)
+
+### Changed
+
+- `Checkbox`, `Radio` and `Switch` keep their 44px touch target by default again. v0.15.1 capped it at half of `--fc-control-gap`, which dropped the default to 28px.
+
+### Added
+
+- `dense` on `Checkbox`, `Radio`, `RadioGroup` and `Switch`: opts back into the v0.15.1 cap for tight lists. The touch area stops at half of `--fc-control-gap` (default 0.5rem), so set the variable to the list's real row gap, up to 1.5rem. Sets `data-dense` on the label; `RadioGroup` passes it to every `Radio` and drops its 44px row height.
+
 ## v0.16.0 (2026-11-07)
 
 ### Added

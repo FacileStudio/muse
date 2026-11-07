@@ -12,6 +12,8 @@
         disabled?: boolean;
         /** `vertical` stacks the options, `horizontal` wraps them in a row. @default 'vertical' */
         orientation?: 'vertical' | 'horizontal';
+        /** Passed to every `Radio`: the 44px touch area stops at half of `--fc-control-gap` instead of reaching into the next row. */
+        dense?: boolean;
         class?: string;
     }
 </script>
@@ -27,6 +29,7 @@
         name,
         disabled = false,
         orientation = 'vertical',
+        dense = false,
         id,
         'aria-describedby': describedBy,
         'aria-invalid': invalid,
@@ -65,7 +68,8 @@ Un groupe de boutons radio. Un seul est dans l'ordre de tabulation, les flèches
             bind:group={value}
             value={option.value}
             label={option.label}
-            class="min-h-11"
+            {dense}
+            class={dense ? '' : 'min-h-11'}
             disabled={disabled || option.disabled}
         />
     {/each}
