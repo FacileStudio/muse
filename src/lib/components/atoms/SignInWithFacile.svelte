@@ -48,14 +48,14 @@
     const name = $derived(label ?? i18n.t('signIn.label'));
 
     const sizes: Record<SignInSize, { box: string; mark: number }> = {
-        sm: { box: '[--h:2.5rem] [--m:16px] gap-2 text-fc-sm', mark: 16 },
-        md: { box: '[--h:2.75rem] [--m:18px] gap-2.5 text-fc-sm', mark: 18 },
-        lg: { box: '[--h:3rem] [--m:20px] gap-3 text-fc-md', mark: 20 }
+        sm: { box: '[--h:2.5rem] [--m:16px] gap-2 px-4 text-fc-sm', mark: 16 },
+        md: { box: '[--h:2.75rem] [--m:18px] gap-2.5 px-5 text-fc-sm', mark: 18 },
+        lg: { box: '[--h:3rem] [--m:20px] gap-3 px-6 text-fc-md', mark: 20 }
     };
 
     const classes = $derived(
         twMerge(
-            'inline-flex h-(--h) ps-[calc((var(--h)-var(--m))/2)] pe-[calc(var(--h)-var(--m))] shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent font-semibold whitespace-nowrap text-fc-accent-fg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-busy:cursor-progress aria-busy:opacity-80',
+            'inline-flex h-(--h) shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent font-semibold whitespace-nowrap text-fc-accent-fg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-busy:cursor-progress aria-busy:opacity-80',
             sizes[size].box,
             fullWidth && 'w-full',
             className

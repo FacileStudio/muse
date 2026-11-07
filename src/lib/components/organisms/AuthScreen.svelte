@@ -83,8 +83,10 @@ L'écran de connexion de toute app de la suite : nom et logo, une phrase, le bou
         class="flex w-full max-w-[360px] flex-col items-center gap-6 rounded-fc-lg bg-fc-component p-6 text-center"
     >
         <div class="flex flex-col items-center gap-3">
-            {#if logo}{@render logo()}{/if}
-            <h1 id={headingId} class="text-fc-xl font-semibold text-fc-fg">{appName}</h1>
+            <div class="flex items-center gap-3">
+                {#if logo}{@render logo()}{/if}
+                <h1 id={headingId} class="text-fc-xl font-semibold text-fc-fg">{appName}</h1>
+            </div>
             {#if tagline}
                 <p class="text-fc-sm text-fc-fg-muted">{@render tagline()}</p>
             {/if}

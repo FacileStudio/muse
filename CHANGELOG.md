@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `SignInWithFacile` had 13px of padding before the Facile mark and 26px after the label, so the pill looked pushed to the left. Both sides now match: 16px at `sm`, 20px at `md`, 24px at `lg`. At `md` the pill is the same height and inset as `DownloadCta` (44px, 20px), so the two line up side by side in a landing hero.
+- `AuthScreen` put the logo above the app name. The logo now sits left of the name on one row, the way `LandingHeader` shows it. The tagline stays below.
+
 ## v0.14.4 (2026-11-07)
 
 ### Fixed
