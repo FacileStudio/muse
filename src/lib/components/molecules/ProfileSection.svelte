@@ -63,7 +63,7 @@ La section Profil : nom, photo et e-mail lus depuis Facile, sans édition locale
                 href={safeHref(manageHref, ACCOUNT_URL)}
                 target="_blank"
                 rel="noopener noreferrer"
-                variant="outline"
+                variant="secondary"
                 iconRight={icons.external}
             >
                 {manageLabel ?? i18n.t('settings.profile.manage')}

@@ -178,8 +178,8 @@
             <Button variant="primary" size="lg" icon={icons.plus}>New space</Button>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-            <Button variant="outline" icon={icons.edit}>Edit</Button>
-            <Button variant="outline" icon={icons.upload}>Upload</Button>
+            <Button variant="secondary" icon={icons.edit}>Edit</Button>
+            <Button variant="secondary" icon={icons.upload}>Upload</Button>
             <Button variant="ghost" icon={icons.settings}>Settings</Button>
             <Button variant="danger" icon={icons.remove}>Delete</Button>
             <Button variant="primary" disabled icon={icons.logout}>Disabled</Button>
@@ -211,7 +211,7 @@
              still middle-clickable and still shows its target in the status bar. -->
         <div class="flex flex-wrap items-center gap-3">
             <Button href="#/projects" iconRight={icons.arrow}>All projects</Button>
-            <Button href="#/spaces" variant="outline" icon={icons.space}>Spaces</Button>
+            <Button href="#/spaces" variant="secondary" icon={icons.space}>Spaces</Button>
             <Button href="#/motion" variant="ghost" iconRight={icons.arrow}>Motion</Button>
             <Button href="#/settings" disabled iconRight={icons.arrow}>Disabled link</Button>
         </div>
@@ -324,14 +324,14 @@
             <p class="text-fc-sm text-fc-fg-muted">Last action: {lastAction}</p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-            <Button variant="outline" icon={icons.plus} onclick={() => (modalOpen = true)}>Invite</Button>
-            <Button variant="outline" icon={icons.upload} onclick={() => (confirmOpen = true)}>
+            <Button variant="secondary" icon={icons.plus} onclick={() => (modalOpen = true)}>Invite</Button>
+            <Button variant="secondary" icon={icons.upload} onclick={() => (confirmOpen = true)}>
                 Publish
             </Button>
             <Button variant="danger" icon={icons.remove} onclick={() => (deleteOpen = true)}>
                 Delete space
             </Button>
-            <Button variant="outline" icon={icons.filter} onclick={() => (drawerOpen = true)}>
+            <Button variant="secondary" icon={icons.filter} onclick={() => (drawerOpen = true)}>
                 Filters
             </Button>
         </div>
@@ -347,21 +347,21 @@
         </div>
         <div class="flex flex-wrap items-center gap-3">
             <Button
-                variant="outline"
+                variant="secondary"
                 icon={icons.check}
                 onclick={() => toast.success('Invoice sent to Acme Studio.')}
             >
                 Success
             </Button>
             <Button
-                variant="outline"
+                variant="secondary"
                 icon={icons.info}
                 onclick={() => toast.info('Export queued — the link arrives by email.')}
             >
                 Info
             </Button>
             <Button
-                variant="outline"
+                variant="secondary"
                 icon={icons.warning}
                 onclick={() => toast.warning('Two invoices are past their due date.', { title: 'Overdue' })}
             >
@@ -379,7 +379,7 @@
                 Danger
             </Button>
             <Button
-                variant="outline"
+                variant="secondary"
                 icon={icons.remove}
                 onclick={() =>
                     toast.neutral('Deleted “Nova rebrand”.', {

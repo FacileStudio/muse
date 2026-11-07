@@ -170,7 +170,7 @@ Une liste déroulante au style de muse, jamais celle du système. Un bouton `com
         class={twMerge(controlLine, 'group flex cursor-pointer items-center justify-between gap-2 text-left', className)}
         onclick={select.toggle}
         onkeydown={select.keydown}
-        onblur={select.hide}
+        onblur={select.blur}
     >
         <span class={twMerge('min-w-0 flex-1 truncate', showPlaceholder && 'text-fc-fg-muted group-aria-invalid:text-fc-fg')}>{shown}</span>
         <Icon

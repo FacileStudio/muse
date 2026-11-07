@@ -12,7 +12,7 @@
 </script>
 
 <Stack gap="tight">
-    <Button variant="outline" size="sm" onclick={() => (index = (index + 1) % invoices.length)}>
+    <Button variant="secondary" size="sm" onclick={() => (index = (index + 1) % invoices.length)}>
         Facture suivante
     </Button>
 

@@ -4,7 +4,7 @@
     let open = $state(false);
 </script>
 
-<Button variant="outline" onclick={() => (open = true)}>Import en cours</Button>
+<Button variant="secondary" onclick={() => (open = true)}>Import en cours</Button>
 
 <Drawer bind:open title="Import de l'archive Nuage" dismissible={false} showHandle={false}>
     <Stack gap="tight">

@@ -1,8 +1,9 @@
 <script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
+    import type { StatusTone } from '../../utils/tone.js';
 
-    export type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+    export type Tone = StatusTone;
 
     export interface AlertProps extends HTMLAttributes<HTMLDivElement> {
         tone?: Tone;
@@ -15,6 +16,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { isUrgent } from '../../utils/tone.js';
 
     let {
         tone = 'info',
@@ -32,7 +34,7 @@
         danger: 'bg-fc-danger/10 text-fc-danger'
     };
 
-    const role = $derived(tone === 'warning' || tone === 'danger' ? 'alert' : 'status');
+    const role = $derived(isUrgent(tone) ? 'alert' : 'status');
 
     const classes = $derived(twMerge('rounded-fc-md p-3 text-fc-sm', tones[tone], className));
 </script>

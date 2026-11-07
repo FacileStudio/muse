@@ -9,7 +9,7 @@
     <IconButton variant="ghost" aria-label="Filtrer les projets">
         <Icon icon={icons.filter} />
     </IconButton>
-    <IconButton variant="danger" aria-label="Supprimer le projet">
+    <IconButton variant="ghost-danger" aria-label="Supprimer le projet">
         <Icon icon={icons.remove} />
     </IconButton>
 </div>

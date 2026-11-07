@@ -18,7 +18,7 @@
     <IconButton variant="ghost" aria-label="Copier la clé">
         <Icon icon={icons.copy} />
     </IconButton>
-    <IconButton variant="danger" aria-label="Révoquer la clé">
+    <IconButton variant="ghost-danger" aria-label="Révoquer la clé">
         <Icon icon={icons.revoke} />
     </IconButton>
 </div>

@@ -25,12 +25,13 @@
 </script>
 
 <script lang="ts">
-    import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { icons } from '../../icons.js';
     import { isRedacted, maskSecret } from '../../utils/secret.js';
     import IconButton from '../atoms/IconButton.svelte';
+    import Input from '../atoms/Input.svelte';
+    import Field from './Field.svelte';
 
     let {
         value = $bindable(''),
@@ -54,9 +55,6 @@
     }: SecretFieldProps = $props();
 
     const i18n = getI18n();
-
-    const uid = $props.id();
-    const id = $derived(htmlFor ?? `${uid}-secret`);
 
     let status = $state('');
     let copyTick = $state(0);
@@ -101,12 +99,7 @@
         return () => clearTimeout(timer);
     });
 
-    const errorId = `${uid}-error`;
-    const helperId = `${uid}-helper`;
-    const describedBy = $derived(error ? errorId : helper ? helperId : undefined);
-
-    const box =
-        'flex h-11 min-w-0 flex-1 items-center rounded-fc-md bg-fc-field px-3 font-fc-mono text-fc-sm';
+    const box = 'flex h-11 min-w-0 flex-1 items-center rounded-fc-md bg-fc-field px-3 font-fc-mono text-fc-sm';
 </script>
 
 <!--
@@ -115,78 +108,60 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
 -->
 
 <!-- `relative` contains the `sr-only` live region — see the note in `Switch.svelte`. -->
-<div class={twMerge('relative flex flex-col gap-1.5', className)} {...rest}>
-    {#if label}
-        <label for={id} class="text-fc-sm text-fc-fg">{label}</label>
-    {/if}
-
-    <div class="flex items-center gap-2">
-        {#if editable}
-            <input
-                {id}
-                bind:value
-                {placeholder}
-                {disabled}
-                type={visible || !sensitive ? 'text' : 'password'}
-                autocomplete="off"
-                autocapitalize="off"
-                autocorrect="off"
-                spellcheck="false"
-                aria-invalid={error ? 'true' : undefined}
-                aria-describedby={describedBy}
-                class={twMerge(
-                    box,
-                    'text-fc-fg placeholder:font-sans placeholder:text-fc-fg-muted aria-invalid:placeholder:text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_18%,var(--color-fc-field))] disabled:opacity-50'
-                )}
-            />
-        {:else}
-            <output
-                {id}
-                aria-describedby={describedBy}
-                class={twMerge(box, empty ? 'text-fc-fg-muted' : 'text-fc-fg')}
-                title={visible || !sensitive ? value : undefined}
-            >
-                <span class={visible || !sensitive ? 'truncate select-all' : 'truncate select-none'}
-                    >{empty ? placeholder || i18n.t('secret.notSet') : shown}</span
+<Field {label} {helper} {error} for={htmlFor} class={className} {...rest}>
+    {#snippet children({ id, describedBy })}
+        <div class="relative flex items-center gap-2">
+            {#if editable}
+                <Input
+                    bind:value
+                    {placeholder}
+                    {disabled}
+                    type={visible || !sensitive ? 'text' : 'password'}
+                    autocomplete="off"
+                    autocapitalize="off"
+                    autocorrect="off"
+                    spellcheck="false"
+                    class="min-w-0 flex-1 font-fc-mono text-fc-sm placeholder:font-sans"
+                />
+            {:else}
+                <output
+                    {id}
+                    aria-describedby={describedBy}
+                    class={[box, empty ? 'text-fc-fg-muted' : 'text-fc-fg']}
+                    title={visible || !sensitive ? value : undefined}
                 >
-            </output>
-        {/if}
+                    <span class={visible || !sensitive ? 'truncate select-all' : 'truncate select-none'}
+                        >{empty ? placeholder || i18n.t('secret.notSet') : shown}</span
+                    >
+                </output>
+            {/if}
 
-        {#if sensitive}
-            <IconButton
-                onclick={toggle}
-                disabled={inert}
-                aria-label={i18n.t(visible ? 'secret.hideLabel' : 'secret.revealLabel')}
-                aria-pressed={visible}
-                title={i18n.t(visible ? 'secret.hide' : 'secret.reveal')}
-            >
-                <Icon icon={visible ? icons.eyeClosed : icons.eye} size={18} />
-            </IconButton>
-        {/if}
+            {#if sensitive}
+                <IconButton
+                    onclick={toggle}
+                    disabled={inert}
+                    aria-label={i18n.t(visible ? 'secret.hideLabel' : 'secret.revealLabel')}
+                    aria-pressed={visible}
+                    title={i18n.t(visible ? 'secret.hide' : 'secret.reveal')}
+                >
+                    <Icon icon={visible ? icons.eyeClosed : icons.eye} size={18} />
+                </IconButton>
+            {/if}
 
-        {#if copyable}
-            <IconButton
-                onclick={copy}
-                disabled={inert}
-                aria-label={i18n.t(sensitive ? 'secret.copySecretLabel' : 'secret.copyLabel')}
-                title={i18n.t('secret.copy')}
-                class={copied ? 'bg-fc-success/10 text-fc-success' : ''}
-            >
-                <Icon icon={copied ? icons.check : icons.copy} size={18} />
-            </IconButton>
-        {/if}
+            {#if copyable}
+                <IconButton
+                    onclick={copy}
+                    disabled={inert}
+                    aria-label={i18n.t(sensitive ? 'secret.copySecretLabel' : 'secret.copyLabel')}
+                    title={i18n.t('secret.copy')}
+                    class={copied ? 'bg-fc-success/10 text-fc-success' : ''}
+                >
+                    <Icon icon={copied ? icons.check : icons.copy} size={18} />
+                </IconButton>
+            {/if}
 
-        {#if actions}{@render actions()}{/if}
-    </div>
-
-    {#if error}
-        <span id={errorId} class="flex items-start gap-1.5 text-fc-xs text-fc-danger">
-            <Icon icon={icons.error} size={14} class="mt-0.5" />
-            <span>{error}</span>
-        </span>
-    {:else if helper}
-        <span id={helperId} class="text-fc-xs text-fc-fg-muted">{helper}</span>
-    {/if}
-
-    <span aria-live="polite" class="sr-only">{status}</span>
-</div>
+            {#if actions}{@render actions()}{/if}
+            <span aria-live="polite" class="sr-only">{status}</span>
+        </div>
+    {/snippet}
+</Field>

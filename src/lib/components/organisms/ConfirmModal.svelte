@@ -132,7 +132,7 @@ La confirmation d'une action destructive. Jamais une `Modal` nue avec deux bouto
         <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <Button
                 {@attach captureCancel}
-                variant="outline"
+                variant="secondary"
                 class="w-full sm:w-auto"
                 disabled={pending}
                 onclick={() => (open = false)}

@@ -73,7 +73,7 @@
     >
         {#snippet actions()}
             <Button
-                variant="outline"
+                variant="secondary"
                 icon={icons.refresh}
                 disabled={!enabled || connection === 'connecting'}
                 onclick={connect}
@@ -146,7 +146,7 @@
             <Button icon={icons.plug} disabled={saving} onclick={connect}>
                 {saving ? 'Connecting…' : 'Save and connect'}
             </Button>
-            <Button variant="outline" onclick={simulateDrop} disabled={!enabled}>
+            <Button variant="secondary" onclick={simulateDrop} disabled={!enabled}>
                 Simulate a drop
             </Button>
         </div>

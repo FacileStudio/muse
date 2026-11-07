@@ -142,7 +142,7 @@
                     <option value="name">Sort by name</option>
                     <option value="hours">Sort by hours</option>
                 </Select>
-                <Button variant="outline" icon={icons.filter} onclick={() => (filtersOpen = true)}>
+                <Button variant="secondary" icon={icons.filter} onclick={() => (filtersOpen = true)}>
                     Filters
                 </Button>
             </div>
@@ -160,7 +160,7 @@
                 title="No project matches “{search}”"
                 description="Try another name, or clear the filters."
             >
-                <Button variant="outline" icon={icons.refresh} onclick={() => { search = ''; statusFilter = 'all'; }}>
+                <Button variant="secondary" icon={icons.refresh} onclick={() => { search = ''; statusFilter = 'all'; }}>
                     Clear filters
                 </Button>
             </EmptyState>

@@ -32,7 +32,7 @@
 <Page width="xl">
     <PageHeader title="Tableau de bord" description="Espace Studio · semaine du 3 août.">
         {#snippet actions()}
-            <Button variant="outline" size="sm" icon={icons.download}>Exporter</Button>
+            <Button variant="secondary" size="sm" icon={icons.download}>Exporter</Button>
             <Button size="sm" icon={icons.plus}>Nouveau projet</Button>
         {/snippet}
     </PageHeader>

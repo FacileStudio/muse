@@ -10,8 +10,8 @@
 </script>
 
 <Row name="Modal · Drawer · ConfirmModal" lead="Un <dialog> natif : le navigateur les met dans sa couche supérieure, au-dessus de tout z-index.">
-    <Button variant="outline" onclick={() => (modal = true)}>Ouvrir une modale</Button>
-    <Button variant="outline" onclick={() => (drawer = true)}>Ouvrir un tiroir</Button>
+    <Button variant="secondary" onclick={() => (modal = true)}>Ouvrir une modale</Button>
+    <Button variant="secondary" onclick={() => (drawer = true)}>Ouvrir un tiroir</Button>
     <Button variant="danger" onclick={() => (confirm = true)}>Confirmer une suppression</Button>
 </Row>
 
@@ -69,7 +69,7 @@
 </Row>
 
 <Row name="Toaster" lead="Un retour sans question dedans. Se met en pause au survol, ne peut pas couvrir un <dialog>.">
-    <Button variant="outline" onclick={() => toast.success('Enregistré')}>Succès</Button>
-    <Button variant="outline" onclick={() => toast.danger('Sync échouée')}>Erreur</Button>
-    <Button variant="outline" onclick={() => toast.info('Trois espaces restants')}>Info</Button>
+    <Button variant="secondary" onclick={() => toast.success('Enregistré')}>Succès</Button>
+    <Button variant="secondary" onclick={() => toast.danger('Sync échouée')}>Erreur</Button>
+    <Button variant="secondary" onclick={() => toast.info('Trois espaces restants')}>Info</Button>
 </Row>

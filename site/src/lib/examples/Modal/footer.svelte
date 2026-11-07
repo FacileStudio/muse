@@ -5,7 +5,7 @@
     let name = $state('Refonte Sablier');
 </script>
 
-<Button variant="outline" onclick={() => (open = true)}>Renommer le projet</Button>
+<Button variant="secondary" onclick={() => (open = true)}>Renommer le projet</Button>
 
 <Modal bind:open title="Renommer le projet" size="sm">
     <Field label="Nom du projet"><Input bind:value={name} /></Field>

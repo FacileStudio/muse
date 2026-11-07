@@ -5,7 +5,7 @@
 </script>
 
 <Stack gap="tight">
-    <Button variant="outline" size="sm" onclick={() => run++}>Rejouer</Button>
+    <Button variant="secondary" size="sm" onclick={() => run++}>Rejouer</Button>
     {#key run}
         <TextElevate
             text="164 heures pointées ce mois"

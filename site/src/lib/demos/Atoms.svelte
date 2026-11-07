@@ -13,7 +13,7 @@
 
 <Row name="Button" lead="Cinq variantes sur un axe d'emphase, trois tailles. `lg` dès qu'il partage une ligne avec un champ.">
     <Button>Primaire</Button>
-    <Button variant="outline">Outline</Button>
+    <Button variant="secondary">Outline</Button>
     <Button variant="ghost">Ghost</Button>
     <Button variant="danger" icon={icons.remove}>Danger</Button>
     <Button variant="ghost-danger">Ghost danger</Button>
@@ -25,7 +25,7 @@
 <Row name="IconButton" lead="Rond, 44px, avec le press de la maison. Toujours un aria-label.">
     <IconButton aria-label="Réglages"><Icon icon={icons.settings} size={18} /></IconButton>
     <IconButton variant="ghost" aria-label="Copier"><Icon icon={icons.copy} size={18} /></IconButton>
-    <IconButton variant="danger" aria-label="Supprimer"><Icon icon={icons.remove} size={18} /></IconButton>
+    <IconButton variant="ghost-danger" aria-label="Supprimer"><Icon icon={icons.remove} size={18} /></IconButton>
 </Row>
 
 <Row name="Badge" lead="Le vocabulaire de tons, en huit valeurs. Se dimensionne sur son texte, jamais sur sa colonne.">
