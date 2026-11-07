@@ -188,5 +188,13 @@ export const fr: MuseMessages = {
     'settings.subscription.usage': 'Utilisation',
     'settings.subscription.upgrade': 'Voir les offres supérieures',
     'settings.danger.title': 'Zone dangereuse',
-    'settings.danger.description': 'Ces actions sont irréversibles.'
+    'settings.danger.description': 'Ces actions sont irréversibles.',
+    'datePicker.placeholder': 'Choisir une date',
+    'datePicker.previousMonth': 'Mois précédent',
+    'datePicker.nextMonth': 'Mois suivant',
+    'datePicker.clear': 'Effacer la date',
+    'otp.digit': 'Chiffre {n} sur {total}',
+    'slider.min': 'Minimum',
+    'slider.max': 'Maximum',
+    'combobox.empty': 'Aucun résultat'
 };

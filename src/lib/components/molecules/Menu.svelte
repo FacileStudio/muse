@@ -26,6 +26,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { floatingPanel, triggerButton } from '../../utils/control.js';
     import { present, watchPopup } from '../../utils/popup.svelte.js';
     import { MenuState, pressOnSpace } from '../../utils/menu.svelte.js';
     import { icons } from '../../icons.js';
@@ -90,7 +91,7 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
         aria-expanded={menu.open}
         aria-controls={menu.open ? menuId : undefined}
         aria-label={triggerContent ? label : undefined}
-        class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-fc-md bg-fc-surface px-3 text-fc-sm text-fc-fg transition-colors hover:bg-fc-surface/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+        class={triggerButton}
         onclick={menu.toggle}
         onkeydown={menu.triggerKeydown}
     >
@@ -110,7 +111,7 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
             role="menu"
             tabindex="-1"
             aria-labelledby={triggerId}
-            class="fixed inset-auto m-0 min-w-44 overflow-y-auto overscroll-contain rounded-fc-md bg-fc-bg p-1 text-fc-fg shadow-lg"
+            class={twMerge(floatingPanel, 'min-w-44 p-1')}
             style:left={align === 'start' ? `${menu.left}px` : 'auto'}
             style:right={align === 'end' ? `${menu.right}px` : 'auto'}
             style:top={menu.up ? 'auto' : `${menu.top}px`}
