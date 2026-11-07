@@ -7,6 +7,7 @@
         open: boolean;
         scopes: SelectOption[];
         expiryDays: number[];
+        expiry?: boolean;
         onCreate: (draft: TokenDraft) => Promise<string>;
     }
 </script>
@@ -22,7 +23,7 @@
     import { latestOnly } from '../../utils/secret.js';
     import Drawer from './Drawer.svelte';
 
-    let { open = $bindable(false), scopes, expiryDays, onCreate }: TokenCreateProps = $props();
+    let { open = $bindable(false), scopes, expiryDays, expiry: asksExpiry = true, onCreate }: TokenCreateProps = $props();
 
     const i18n = getI18n();
     const days = $derived(
@@ -54,7 +55,7 @@
         pending = true;
         failure = '';
         try {
-            const created = await onCreate({ name: name.trim(), scope: scope || undefined, days: Number(expiry) });
+            const created = await onCreate({ name: name.trim(), scope: scope || undefined, ...(asksExpiry ? { days: Number(expiry) } : {}) } as TokenDraft);
             if (!run.stale(turn)) secret = created;
         } catch (error) {
             if (!run.stale(turn)) failure = error instanceof Error ? error.message : String(error);
@@ -86,9 +87,11 @@ Le tiroir de création d'un jeton : nom, accès et expiration obligatoire, puis 
                     <Select bind:value={scope} options={scopes} />
                 </Field>
             {/if}
-            <Field label={i18n.t('settings.tokens.expiry')}>
-                <Select bind:value={expiry} options={days} />
-            </Field>
+            {#if asksExpiry}
+                <Field label={i18n.t('settings.tokens.expiry')}>
+                    <Select bind:value={expiry} options={days} />
+                </Field>
+            {/if}
             <Button type="submit" disabled={pending || name.trim() === ''}>{i18n.t('settings.tokens.submit')}</Button>
         </form>
     {/if}

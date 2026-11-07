@@ -1,4 +1,6 @@
-import { placePopup } from './placement.js';
+import { placeAcross, placePopup, type Align } from './placement.js';
+
+export type AcrossHost = { width: () => number; align: () => Align | undefined };
 
 const GAP = 6;
 const MARGIN = 8;
@@ -19,10 +21,12 @@ export class AnchoredPopup {
     width = $state(0);
     need: number;
     anchor: () => HTMLElement | null;
+    across: AcrossHost | undefined;
 
-    constructor(anchor: () => HTMLElement | null, need: number) {
+    constructor(anchor: () => HTMLElement | null, need: number, across?: AcrossHost) {
         this.anchor = anchor;
         this.need = need;
+        this.across = across;
         this.maxHeight = need;
     }
 
@@ -40,8 +44,18 @@ export class AnchoredPopup {
         });
         this.up = spot.up;
         this.maxHeight = spot.maxHeight;
-        this.left = box.left;
-        this.right = document.documentElement.clientWidth - box.right;
+        const viewportWidth = document.documentElement.clientWidth;
+        this.left = this.across
+            ? placeAcross({
+                  triggerLeft: box.left,
+                  triggerRight: box.right,
+                  viewportWidth,
+                  width: Math.max(this.across.width(), box.width),
+                  margin: MARGIN,
+                  align: this.across.align() ?? 'auto'
+              }).left
+            : box.left;
+        this.right = viewportWidth - box.right;
         this.width = box.width;
         this.top = box.bottom + GAP;
         this.bottom = viewportHeight - box.top + GAP;

@@ -32,6 +32,8 @@ export type UserMenuItem = {
 export type UserMenuSubscription = { plan: string; href: string; label?: string };
 
 export type UserMenuOptions = {
+    /** Which edge of the trigger the popover lines up with. `auto` keeps the left edge unless it would leave the screen. */
+    align?: 'start' | 'end' | 'auto';
     items?: UserMenuItem[];
     accountHref?: string | null;
     settingsHref?: string | null;

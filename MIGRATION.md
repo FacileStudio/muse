@@ -534,3 +534,7 @@ array menu (Sablier), a hand-rolled popover with a drawn rule (Courrier), a shad
 
 **Strings:** all `userMenu.*`, `theme.*` and `settings.*` keys exist in fr, en, es and de. The
 `mobileNav.profile` key is removed.
+
+## 22. `UserMenu` clamps itself, `TokensSection` can drop expiry (v0.14.2)
+
+Delete the class override that keeps `UserMenu` on screen at the right edge of a header (`align` defaults to `auto`), and pass `expiry={false}` and `lastUsed={false}` to `TokensSection` in apps without token expiry or last-use data; nothing breaks if you do neither.

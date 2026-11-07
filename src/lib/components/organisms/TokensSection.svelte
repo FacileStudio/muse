@@ -23,6 +23,10 @@
         scopes?: SelectOption[];
         /** The expiry choices, in days. A token always has one. */
         expiryDays?: number[];
+        /** Ask for an expiry and list the expiry column. Turn it off when the app has no token expiry: the draft then carries no `days`, so type the handler as `Omit<TokenDraft, 'days'>`. */
+        expiry?: boolean;
+        /** List the last-used column. Turn it off when the app does not record token use. */
+        lastUsed?: boolean;
         children?: Snippet;
     }
 </script>
@@ -35,6 +39,7 @@
     import Button from '../atoms/Button.svelte';
     import SettingsSection from '../molecules/SettingsSection.svelte';
     import ConfirmModal from './ConfirmModal.svelte';
+    import { tokenColumns } from '../../utils/tokens.js';
     import Table from './Table.svelte';
     import TokenCreate from './TokenCreate.svelte';
 
@@ -44,6 +49,8 @@
         onRevoke,
         scopes = [],
         expiryDays = [30, 90, 365],
+        expiry = true,
+        lastUsed = true,
         children,
         title,
         description,
@@ -55,7 +62,14 @@
     let revoking = $state<TokenItem | null>(null);
     let confirming = $state(false);
     const never = $derived(i18n.t('settings.tokens.never'));
-    const columns = $derived([i18n.t('settings.tokens.name'), i18n.t('settings.tokens.prefix'), i18n.t('settings.tokens.lastUsed'), i18n.t('settings.tokens.expires')]);
+    const columns = $derived(
+        tokenColumns({
+            name: i18n.t('settings.tokens.name'),
+            prefix: i18n.t('settings.tokens.prefix'),
+            lastUsed: lastUsed ? i18n.t('settings.tokens.lastUsed') : null,
+            expires: expiry ? i18n.t('settings.tokens.expires') : null
+        })
+    );
 </script>
 
 <!--
@@ -94,8 +108,8 @@ La section des jetons d'API : liste, création dans un tiroir avec secret affich
                             </span>
                         </td>
                         <td class="font-mono text-fc-xs">{token.prefix ?? ''}</td>
-                        <td>{token.lastUsed ?? never}</td>
-                        <td>{token.expires ?? never}</td>
+                        {#if lastUsed}<td>{token.lastUsed ?? never}</td>{/if}
+                        {#if expiry}<td>{token.expires ?? never}</td>{/if}
                         <td class="text-right">
                             {#if !token.revoked}
                                 <Button
@@ -120,7 +134,7 @@ La section des jetons d'API : liste, création dans un tiroir avec secret affich
     {@render children?.()}
 </SettingsSection>
 
-<TokenCreate bind:open={creating} {scopes} {expiryDays} {onCreate} />
+<TokenCreate bind:open={creating} {scopes} {expiryDays} {expiry} {onCreate} />
 
 <ConfirmModal
     bind:open={confirming}
