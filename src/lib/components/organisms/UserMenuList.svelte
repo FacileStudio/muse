@@ -67,6 +67,7 @@
             type="button"
             role={roles[row.kind]}
             aria-checked={row.kind === 'radio' ? row.checked : undefined}
+            aria-haspopup={row.kind === 'submenu' ? 'menu' : undefined}
             aria-label={row.kind === 'back' ? `${backLabel} (${row.label})` : undefined}
             tabindex={place(row) === active ? 0 : -1}
             class={twMerge(line, tone(row), row.kind === 'radio' && 'pl-9')}

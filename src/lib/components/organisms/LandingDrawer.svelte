@@ -1,10 +1,27 @@
-<script lang="ts">
+<script module lang="ts">
     import type { Snippet } from 'svelte';
+    import type { LandingLink } from '../../utils/landing.js';
+
+    export interface LandingDrawerProps {
+        id: string;
+        open?: boolean;
+        links: LandingLink[];
+        home: string;
+        appName?: string;
+        brandView: () => ReturnType<Snippet>;
+        actionsView: () => ReturnType<Snippet>;
+        brandClasses: string;
+        roundClasses: string;
+        onClosed: (restoreFocus: boolean) => void;
+    }
+</script>
+
+<script lang="ts">
     import { gsap } from 'gsap';
     import { getI18n } from '../../i18n/context.svelte.js';
     import { icons } from '../../icons.js';
     import { createDialog } from '../../utils/dialog.js';
-    import { linkAttrs, type LandingLink } from '../../utils/landing.js';
+    import { linkAttrs } from '../../utils/landing.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import Icon from '../atoms/Icon.svelte';
     import IconButton from '../atoms/IconButton.svelte';
@@ -20,18 +37,7 @@
         brandClasses,
         roundClasses,
         onClosed
-    }: {
-        id: string;
-        open?: boolean;
-        links: LandingLink[];
-        home: string;
-        appName?: string;
-        brandView: () => ReturnType<Snippet>;
-        actionsView: () => ReturnType<Snippet>;
-        brandClasses: string;
-        roundClasses: string;
-        onClosed: (restoreFocus: boolean) => void;
-    } = $props();
+    }: LandingDrawerProps = $props();
 
     const i18n = getI18n();
     const FOCUS = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring';

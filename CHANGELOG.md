@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.14.0 (unreleased)
+## v0.14.0 (2026-11-07)
 
 ### Added
 
@@ -30,7 +30,7 @@
 
 - `SideBar`: the user card shows the avatar, the name and a secondary line (`user.secondary`,
   else `user.email`, else the active space) with no trailing icon, and always opens the user
-  menu. `userHref` is now the Settings row. `userMenu` is a `UserMenuOptions` object, not an array.
+  menu. `userHref` is now the Settings row. **Breaking:** `userMenu` is a `UserMenuOptions` object, not an array (MIGRATION section 21).
 - `MobileNav`: the avatar opens the same menu as a bottom sheet. New `userMenu` prop; `profileHref`
   is the Settings row.
 - `User` gains `email` and `secondary`.

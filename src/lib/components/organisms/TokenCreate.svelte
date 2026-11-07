@@ -19,6 +19,7 @@
     import Select from '../atoms/Select.svelte';
     import Field from '../molecules/Field.svelte';
     import SecretField from '../molecules/SecretField.svelte';
+    import { latestOnly } from '../../utils/secret.js';
     import Drawer from './Drawer.svelte';
 
     let { open = $bindable(false), scopes, expiryDays, onCreate }: TokenCreateProps = $props();
@@ -34,9 +35,11 @@
     let secret = $state('');
     let failure = $state('');
     let pending = $state(false);
+    const run = latestOnly();
 
     $effect(() => {
         if (open) return;
+        run.cancel();
         name = '';
         scope = scopes[0]?.value ?? '';
         expiry = days[0]?.value ?? '';
@@ -47,14 +50,16 @@
 
     async function submit(event: SubmitEvent) {
         event.preventDefault();
+        const turn = run.begin();
         pending = true;
         failure = '';
         try {
-            secret = await onCreate({ name: name.trim(), scope: scope || undefined, days: Number(expiry) });
+            const created = await onCreate({ name: name.trim(), scope: scope || undefined, days: Number(expiry) });
+            if (!run.stale(turn)) secret = created;
         } catch (error) {
-            failure = error instanceof Error ? error.message : String(error);
+            if (!run.stale(turn)) failure = error instanceof Error ? error.message : String(error);
         } finally {
-            pending = false;
+            if (!run.stale(turn)) pending = false;
         }
     }
 </script>
