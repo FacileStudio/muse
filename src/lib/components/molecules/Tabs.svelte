@@ -143,7 +143,7 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
         {#if item.badge !== undefined}
             <span
                 class={twMerge(
-                    'rounded-fc-pill px-1.5 text-fc-xs',
+                    'shrink-0 rounded-fc-pill px-1.5 text-fc-xs whitespace-nowrap',
                     active ? 'bg-fc-accent-fg/15' : 'bg-fc-surface'
                 )}>{item.badge}</span
             >

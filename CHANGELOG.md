@@ -29,6 +29,8 @@
 
 ### Changed
 
+- Badge text never wraps. `Badge`, the `Tabs` counter and the `StatusDot` label stay on one line and
+  truncate with an ellipsis when the container is too narrow.
 - **No borders anywhere** (but the `forced-colors` rules). `Input`, `Textarea`, `Select`, `SecretField` and `ColorPicker` are
   filled with `fc-field`. `Checkbox` and `Radio` are 20px filled boxes, inverted to the accent when
   checked, with the mark drawn as an SVG (the native input stays, `appearance-none`). `Switch`

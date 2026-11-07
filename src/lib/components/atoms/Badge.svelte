@@ -39,7 +39,7 @@
         to the full cross-axis width, so a pill in a `Card` renders as a full-width bar. A badge
         has no business ever being wider than its own text.
     */
-    const classes = $derived(twMerge('inline-flex w-fit items-center gap-1 rounded-fc-pill px-2.5 py-0.5 text-fc-xs font-medium', tones[tone], className));
+    const classes = $derived(twMerge('inline-flex w-fit max-w-full min-w-0 items-center gap-1 rounded-fc-pill px-2.5 py-0.5 text-fc-xs font-medium whitespace-nowrap', tones[tone], className));
 </script>
 
 <!--
@@ -48,5 +48,5 @@ Une pastille d'état ou de rôle, dimensionnée sur son texte. Huit tons, un seu
 -->
 
 <span class={classes} {...rest}>
-    {@render children()}
+    <span class="min-w-0 truncate">{@render children()}</span>
 </span>

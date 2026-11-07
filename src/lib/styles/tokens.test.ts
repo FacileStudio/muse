@@ -187,10 +187,11 @@ describe('forced-colors', () => {
         expect(forced).toContain('HighlightText');
     });
 
-    test('forced-color-adjust is turned off for the switch thumb and the SVG marks only', () => {
+    test('forced-color-adjust is turned off for the switch thumb, the SVG marks and the active option only', () => {
         const rules = forced.split('}').filter((rule) => rule.includes('forced-color-adjust: none'));
-        expect(rules).toHaveLength(2);
+        expect(rules).toHaveLength(3);
         expect(rules.join(' ')).toContain("[role='switch'] + span > span");
         expect(rules.join(' ')).toContain('+ svg');
+        expect(rules.join(' ')).toContain("[role='option'][data-active='true']");
     });
 });
