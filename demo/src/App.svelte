@@ -19,6 +19,7 @@
     import Spaces from './pages/Spaces.svelte';
     import Settings from './pages/Settings.svelte';
     import Forms from './pages/Forms.svelte';
+    import Controls from './pages/Controls.svelte';
     import { spaces } from './data.js';
     import { HOME, router, segment } from './router.svelte.js';
     import { setTheme, theme } from './theme.svelte.js';
@@ -33,6 +34,7 @@
         '#/pricing': Pricing,
         '#/landing': Landing,
         '#/forms': Forms,
+        '#/controls': Controls,
         '#/settings': Settings
     };
 
@@ -73,6 +75,7 @@
         { href: '#/launch', label: 'Lancement', icon: icons.key },
         { href: '#/pricing', label: 'Tarifs', icon: icons.download },
         { href: '#/forms', label: 'Formulaires', icon: icons.edit },
+        { href: '#/controls', label: 'Contrôles', icon: icons.widget },
         { href: '#/landing', label: 'Landing', icon: icons.compass }
     ];
 

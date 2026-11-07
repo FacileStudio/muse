@@ -2,7 +2,7 @@
 
 Svelte 5 component library and design system for Facile tools, published as `@facile/muse`.
 
-muse ships 67 components arranged as layout primitives, atoms, molecules, organisms, charts and
+muse ships 84 components arranged as layout primitives, atoms, molecules, organisms, charts and
 two motion pieces,
 a Tailwind v4 token theme and the Iconify icon map. It bundles no typeface. It is consumed
 directly from source — there is no build step and no `dist/`. An `install.sh` also registers
@@ -14,7 +14,7 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 
 ## What it does
 
-- Exports 67 Svelte 5 components: 5 layout primitives, 20 atoms, 21 molecules, 13 organisms,
+- Exports 84 Svelte 5 components: 5 layout primitives, 23 atoms, 32 molecules, 16 organisms,
   6 charts, 2 motion pieces
 - Speaks fr, en, es and de: a dependency-free message helper (`provideLocale`, `createTranslator`)
   drives every muse string, and apps reuse it for their own catalogs

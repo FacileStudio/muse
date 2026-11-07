@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.15.0 (unreleased)
+
+### Added
+
+- Nine components, each with APG keyboard behaviour, a demo section on the Controls page and docs-site examples. The pure logic of each is in `utils/` and tested.
+  - `Popover`: a non-modal panel opened by a button. Props `label`, `open` (bindable), `trigger`, `align`, `panelClass`, `onOpenChange`. Escape closes and returns focus; a press outside or Tab out closes.
+  - `Tooltip`: a hint on hover (after `delay`, 500ms) and keyboard focus, dismissed by Escape, hoverable, ignored on touch. Props `text`, `delay`, `disabled`. It sets `aria-describedby` on its first child and never replaces the control's own name.
+  - `RadioGroup`: `role="radiogroup"` over native radios (roving tabindex from the browser). Props `options`, `value`, `name`, `orientation`, `disabled`; named by its `Field`.
+  - `Slider`: single or range. Props `value`, `values`, `range`, `min`, `max`, `step`, `valueText`, `name`, `disabled`. Arrows, Page keys, Home and End; `aria-valuetext`; a 44px pointer target. `utils/slider.ts`.
+  - `Collapsible` and `Accordion`: props `title`, `open`, `level`, `region` and `items`, `open` (ids), `multiple`, `panel`. Arrows, Home and End move between headers. `utils/accordion.ts`.
+  - `Combobox`: an editable autocomplete that reuses `Select`'s listbox. Props `value` (the free text), `options`, `onSelect`, `emptyLabel`. Accent and case blind filtering, `aria-activedescendant`. `utils/combobox.ts`.
+  - `DatePicker`: a calendar grid in the app locale through `Intl`, grid keyboard navigation, `min` and `max`, an ISO value and hidden input. Props `value`, `min`, `max`, `name`, `placeholder`, `locale`, `onChange`. `utils/calendar.ts`.
+  - `InputOtp`: one real input drawn as cells, so paste and SMS autofill work. Props `value`, `length`, `kind`, `onComplete`. `utils/otp.ts`.
+- `Checkbox` takes `indeterminate`: `aria-checked="mixed"` and a dash. A click clears it. Forced-colors maps it to `Highlight`.
+- `ButtonVariant` and `IconButtonVariant` types, exported from `@facile/muse`, and `secondary` and `ghost-danger` on both buttons.
+- `Tone`, `StatusTone`, `toneFill` and `isUrgent` in `utils/tone.ts`. `Toast` takes all eight tones.
+- `datePicker.*`, `otp.digit`, `slider.min`, `slider.max` and `combobox.empty` strings in fr, en, es and de.
+- `triggerButton` and `floatingPanel` class constants in `utils/control.ts`, shared by `Menu` and `Popover`.
+
+### Changed
+
+- `Menu` and `UserMenu`: a row under the pointer is highlighted without taking DOM focus. Real focus moves only for keyboard input (`MenuState.point` and `land`).
+- `Select`: blur closes the list and commits nothing, and keeps the type-ahead buffer until its timer ends.
+- `SecretField` is built on `Field` (label, helper, error, ids) and `Input` instead of its own copy.
+- `Checkbox`, `Radio` and `Switch` have a 44px hit area through a pseudo-element, with no layout change.
+- `bun test` runs every test in the repo; `mise run test` and CI no longer name directories, so `scripts/props-shape.test.ts` runs in CI.
+- Comments inside `<script>` bodies are gone from every component. Doc comments stay on exported props and types.
+- `utils/chart.ts` is a barrel over `utils/chart/`. `LineChart`, `SideBar`, `Drawer` and `UserMenu` each lose a block to a helper (`LineAxes`, `LineHover`, `utils/rail.ts`, `utils/sheet-drag.ts`, `utils/user-menu-labels.ts`, `utils/user-menu-nav.ts`) and pass filet's 250-line limit.
+
+### Deprecated
+
+- `Button variant="outline"`: use `secondary`.
+- `IconButton variant="default"` and `"danger"`: use `secondary` and `ghost-danger`.
+- The `Variant` type of `Button.svelte` and `IconButton.svelte`: use `ButtonVariant` and `IconButtonVariant`.
+
 ## v0.14.5 (2026-11-07)
 
 ### Fixed

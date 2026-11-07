@@ -13,9 +13,9 @@ import {
   Page, PageHeader, Section, Stack, Inline,
   // atoms
   Alert, Avatar, Badge, Button, Card, Checkbox, ColorPicker, Divider, IconButton,
-  Input, Radio, Select, Skeleton, Spinner, StatusDot, Switch, Textarea,
+  Combobox, Input, Radio, Select, Skeleton, Slider, Spinner, StatusDot, Switch, Textarea, Tooltip,
   // molecules
-  Dropzone, Field, NavButton, OptionCards, SecretField, SettingsRow,
+  Accordion, Collapsible, DatePicker, Dropzone, Field, InputOtp, NavButton, OptionCards, Popover, RadioGroup, SecretField, SettingsRow,
   SettingsSection, SpaceSwitcher, StatCard, SwatchPicker, Tabs, Toast, UploadProgress,
   // organisms
   ConfirmModal, Drawer, MobileNav, Modal, ProfileCard, SideBar, Table, Toaster, Topbar,
@@ -192,6 +192,7 @@ Wrapped in a `<label>`, so the optional text is clickable.
 | Prop | Type | Default | Notes |
 |---|---|---|---|
 | `checked` | `boolean` | `false` | **bindable** |
+| `indeterminate` | `boolean` | `false` | **bindable**. `aria-checked="mixed"` and a dash; a click clears it |
 | `label` | `string` | — | Rendered after the box when present |
 
 ### `Radio`
@@ -627,6 +628,107 @@ same flip as `Select`. Spreads to the wrapper `<div>`.
 | `label` | `string` | required | Name of the trigger and of the menu |
 | `trigger` | `Snippet` | — | Replaces the default text and chevron |
 | `align` | `'start' \| 'end'` | `'start'` | Which edge of the trigger the list lines up with |
+
+### `Popover`
+
+A non-modal floating panel opened by a button (`aria-haspopup="dialog"`). Focus moves into it, Escape closes and returns focus to the trigger, a press outside or Tab out closes it. Top layer, `shadow-lg`, no border. Spreads to the wrapper `<div>`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `label` | `string` | required | Name of the panel, and the text of the default trigger |
+| `open` | `boolean` | `false` | Bindable |
+| `trigger` | `Snippet` | none | Replaces the default text and chevron |
+| `align` | `'start' \| 'end' \| 'auto'` | `'auto'` | Flips to stay on screen |
+| `panelClass` | `string` | none | Classes for the floating panel |
+| `onOpenChange` | `(open: boolean) => void` | none | |
+| `children` | `Snippet` | required | The panel content |
+
+### `Tooltip`
+
+A hint on hover (after `delay`) and on keyboard focus, closed by Escape, and the pointer can move onto it. It sets `aria-describedby` on the first child element. Never the only carrier of information: the control keeps its own accessible name. Touch does not open it.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `text` | `string` | required | Short plain text |
+| `delay` | `number` | `500` | Hover delay in ms; focus is immediate |
+| `disabled` | `boolean` | `false` | |
+| `children` | `Snippet` | required | The trigger |
+
+### `RadioGroup`
+
+`role="radiogroup"` over native radios, so the browser supplies the roving tabindex: one stop in the group, arrows move and check, disabled options are skipped. Takes its name from a surrounding `Field`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `options` | `{ value, label, disabled? }[]` | required | |
+| `value` | `string` | `''` | Bindable |
+| `name` | `string` | generated | Form field name |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | |
+| `disabled` | `boolean` | `false` | |
+
+### `Slider`
+
+APG slider: `role="slider"` thumbs with `aria-valuemin/max/now/text`. Arrows step, Page keys move a tenth, Home and End jump. The pointer target is 44px high. `range` makes two thumbs that never cross.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `value` | `number` | `0` | Single slider, bindable |
+| `values` | `[number, number]` | `[0, 100]` | With `range`, bindable |
+| `range` | `boolean` | `false` | |
+| `min` / `max` / `step` | `number` | `0` / `100` / `1` | |
+| `valueText` | `(n: number) => string` | `String` | The `aria-valuetext`, such as `75 %` |
+| `name` | `string` | none | Hidden input; a range submits it twice |
+| `disabled` | `boolean` | `false` | |
+
+### `Collapsible` and `Accordion`
+
+`Collapsible` is a heading with a button (`aria-expanded`, `aria-controls`) and a panel that is `hidden` when closed. `Accordion` stacks them on `bg-fc-component` and adds ArrowUp/ArrowDown/Home/End between headers.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `title` | `string` | required | `Collapsible` |
+| `open` | `boolean` | `false` | `Collapsible`, bindable |
+| `level` | `2..6` | `3` | Heading level, both |
+| `region` | `boolean` | `true` | `Collapsible`; `Accordion` drops it past six panels |
+| `items` | `{ id, title, disabled? }[]` | required | `Accordion` |
+| `open` | `string[]` | `[]` | `Accordion`, bindable ids |
+| `multiple` | `boolean` | `false` | `Accordion` |
+| `panel` | `Snippet<[item]>` | required | `Accordion` |
+
+### `Combobox`
+
+An editable combobox with list autocomplete (APG, manual selection). The text stays free. Typing filters (accent and case blind, prefix matches first), the arrows highlight, Enter picks, Escape closes then clears. Reuses `Select`'s listbox.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `value` | `string` | `''` | The text, bindable |
+| `options` | `{ value, label, disabled? }[]` | required | |
+| `onSelect` | `(option) => void` | none | |
+| `emptyLabel` | `string` | `combobox.empty` | Announced when nothing matches |
+
+### `DatePicker`
+
+A button showing the date in the app locale (`Intl`) that opens a calendar dialog. Grid keys: arrows, Home and End (week), PageUp and PageDown (month), Shift for a year. `min` and `max` grey days out and clamp the keys. The value is an ISO `YYYY-MM-DD` string, also the hidden input's.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `value` | `string` | `''` | Bindable ISO date |
+| `min` / `max` | `string` | none | ISO dates |
+| `name` | `string` | none | Hidden input |
+| `locale` | `string` | active locale | |
+| `placeholder` | `string` | `datePicker.placeholder` | |
+| `onChange` | `(value) => void` | none | |
+
+### `InputOtp`
+
+One real `<input autocomplete="one-time-code">` drawn as cells, so typing, paste and SMS autofill work. Spaces and dashes in a pasted code are dropped.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `value` | `string` | `''` | Bindable |
+| `length` | `number` | `6` | |
+| `kind` | `'numeric' \| 'alphanumeric'` | `'numeric'` | |
+| `onComplete` | `(value) => void` | none | Fires once when the last cell fills |
 
 ### `UserMenu`
 

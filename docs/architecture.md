@@ -49,10 +49,10 @@ raw.githubusercontent.com/FacileStudio/muse/main
 
 | Piece | File | Role |
 |---|---|---|
-| Public surface | `src/lib/index.ts` | Re-exports 48 components plus `cn`/`twMerge`, the motion/press/field/secret/chart helpers, `icons`, `USER_COLORS` and the exported types. Nothing else is importable |
-| Atoms | `src/lib/components/atoms/` | 16 single-element primitives — buttons, inputs, badges, surfaces |
-| Molecules | `src/lib/components/molecules/` | 12 compositions of atoms — form rows, settings rows, nav rows, uploads, secrets |
-| Organisms | `src/lib/components/organisms/` | 8 page-level structures — dialogs, nav, header, table, profile |
+| Public surface | `src/lib/index.ts` | Re-exports 84 components plus `cn`/`twMerge`, the motion/press/field/secret/chart helpers, `icons`, `USER_COLORS` and the exported types. Nothing else is importable |
+| Atoms | `src/lib/components/atoms/` | 23 primitives — buttons, inputs, badges, surfaces |
+| Molecules | `src/lib/components/molecules/` | 32 compositions of atoms — form rows, settings rows, nav rows, uploads, secrets |
+| Organisms | `src/lib/components/organisms/` | 16 page-level structures — dialogs, nav, header, table, profile |
 | Charts | `src/lib/components/charts/` | 6 exported SVG charts and chart parts, plus internal `ChartTable.svelte` and `entry.ts` |
 | Motion | `src/lib/components/motion/` | 6 pieces that exist for the animation, not the markup |
 | Icons | `src/lib/icons.ts` | 45 Iconify names behind stable keys — Solar `linear` for chrome, MDI for plus/close/chevrons |
