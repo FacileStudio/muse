@@ -40,11 +40,6 @@
     let activeSpaceId = $state<string | null>('acme');
     let scroller: HTMLElement | null = $state(null);
 
-    /*
-     * Routes match on the first segment only, so #/settings/pool still resolves to Settings and
-     * the page keeps its own state across section changes. Keying PageTransition on the same
-     * root is what stops every settings tab from remounting the whole page.
-     */
     const root = $derived('#/' + segment(router.hash, 1));
     const known = $derived(root in routes);
     const Route = $derived(routes[known ? root : HOME]);
@@ -55,35 +50,20 @@
         return () => window.removeEventListener('hashchange', onHash);
     });
 
-    /*
-     * An empty or unknown hash is corrected rather than quietly rendering the home page under
-     * a URL that describes something else. `replaceState` and not an assignment to
-     * `location.hash`: the latter pushes an entry, so booting the app already left one press
-     * of Back landing back on the blank hash instead of leaving the app.
-     */
     $effect(() => {
         if (known) return;
         history.replaceState(null, '', HOME);
         router.hash = HOME;
     });
 
-    /* <main> is the scroll container and sits outside PageTransition, so its scrollTop
-       survives a route change unless someone puts it back. */
     $effect(() => {
         if (router.hash) scroller?.scrollTo({ top: 0 });
     });
 
-
-
-    /* Apply the stored preference to <html> on boot; the store already read it. */
     setTheme(theme.mode);
 
     provideLocale(navigator.language);
 
-    /*
-     * No Settings row here, by design — the user card at the bottom of the rail is the only way
-     * in. See the comment in SideBar.svelte.
-     */
     const links = [
         { href: '#/dashboard', label: 'Dashboard', icon: icons.dashboard },
         { href: '#/projects', label: 'Projects', icon: icons.folder },

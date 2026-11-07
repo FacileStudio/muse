@@ -36,20 +36,6 @@
 
     const i18n = getI18n();
 
-    /*
-     * `$bindable('')` and not `$bindable('#000000')`, deliberately.
-     *
-     * A non-empty default is written *back* into the parent the moment a consumer binds to a
-     * key that does not exist yet — `bind:value={record[key]}` on a fresh record. If that
-     * record is state something else reads, the write schedules a render, the render recreates
-     * the control, and the control writes again; Svelte gives up at the update-depth limit and
-     * abandons the flush, freezing the DOM mid-update. `Input` shipped that and it reached
-     * production as a permanent spinner over an API call that had already returned 200.
-     *
-     * So empty means "no colour yet" and nothing is ever written until a person picks one. The
-     * OS picker still has to show *something*, and `<input type="color">` has exactly one legal
-     * spelling of nothing, which is black — that is the only reason a literal hex appears here.
-     */
     const FALLBACK = '#000000';
 
     const field = getFieldContext();
@@ -57,13 +43,6 @@
     const describes = $derived(field?.().describedBy);
     const isInvalid = $derived(field?.().invalid ? 'true' : undefined);
 
-    /*
-     * `typed` holds the draft exactly as it was keyed, and it outranks `value` for display.
-     * Half a hex is not an error, it is an unfinished one: `#ab` parses to nothing, so nothing
-     * is written to the bound value and — crucially — nothing is written back over the two
-     * characters the user has so far. The draft is dropped on blur, which is what snaps the
-     * field to the canonical `#rrggbb` spelling once the colour is settled.
-     */
     let typed = $state<string | null>(null);
 
     const text = $derived(typed ?? value);

@@ -26,11 +26,6 @@
         ...rest
     }: SettingsRowProps = $props();
 
-    /*
-     * Rows are separated by their own vertical padding, not a rule: muse draws no decorative
-     * lines (CHARTE §5). first:pt-0 and last:pb-0 keep the group flush with the card padding
-     * at both ends, so a section can hold any number of rows without counting them.
-     */
     const classes = $derived(
         twMerge(
             'flex flex-col gap-3 py-4 first:pt-0 last:pb-0',

@@ -50,8 +50,6 @@
     let confirmed = false;
     let cancelEl: HTMLElement | null = $state(null);
 
-    /* `Button` renders the <button> itself and exposes no element binding, so the node
-       comes back through an attachment — still a direct reference, no DOM query. */
     const captureCancel: Attachment<HTMLElement> = (node) => {
         cancelEl = node;
         return () => {
@@ -59,21 +57,11 @@
         };
     };
 
-    /*
-     * The heading stays here rather than moving into Modal's `title` so the icon badge can
-     * sit beside it — which means the dialog has to be named from here too, and
-     * `aria-labelledby` rides through Modal's `...rest` onto the <dialog>.
-     */
     const titleId = $props.id();
 
     const badgeIcon = $derived(icon ?? (tone === 'danger' ? 'solar:danger-triangle-linear' : undefined));
     const badgeClasses = $derived(twMerge('flex size-10 shrink-0 items-center justify-center rounded-fc-pill', tone === 'danger' ? 'bg-fc-danger/10 text-fc-danger' : 'bg-fc-surface text-fc-fg-muted'));
 
-    /*
-     * Focus lands on Cancel, never Confirm: a confirmation dialog that arms the destructive
-     * button under the Enter key the user is already holding is a trap. The frame delay is
-     * for showModal(), which moves focus itself once the dialog is in the top layer.
-     */
     $effect(() => {
         if (!open || !cancelEl) return;
         const el = cancelEl;

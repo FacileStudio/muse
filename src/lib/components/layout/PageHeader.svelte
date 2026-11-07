@@ -18,13 +18,6 @@
     import { icons } from '../../icons.js';
     import Button from '../atoms/Button.svelte';
 
-    /*
-     * Three consumer repos hand-wrote this component, each citing CHARTE §4 in a comment, and
-     * all three disagreed: `text-fc-2xl` against `text-fc-lg`, `gap-4` against `gap-3`, one with
-     * a border-bottom the others do not have. The title block is `gap-1` — a heading and its
-     * description are two parts of one thing, not two siblings of the header's own gap.
-     */
-
     let {
         title,
         description,

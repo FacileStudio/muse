@@ -13,8 +13,8 @@ run = [
 ]
 
 [tasks.test]
-description = "Run the chart and secret maths checks"
-run = "bun test src/lib scripts"
+description = "Run every test in the repo (bun test finds src/lib, scripts and anything added later)"
+run = "bun test"
 
 [tasks.demo]
 description = "Run the muse demo app (http://127.0.0.1:5183)"

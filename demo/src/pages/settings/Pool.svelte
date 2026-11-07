@@ -33,11 +33,6 @@
         { id: 'task.created', label: 'Task created', on: false }
     ]);
 
-    /*
-     * Four states, not a boolean. "Not connected" covers a switch that is off, a handshake in
-     * flight and a client that has burned all twenty retries — three situations with three
-     * different things to do about them, and telling them apart is the whole job of this card.
-     */
     const status = $derived.by((): { tone: 'success' | 'warning' | 'danger' | 'neutral'; label: string; pulse: boolean } => {
         if (!enabled) return { tone: 'neutral', label: 'Disabled', pulse: false };
         switch (connection) {

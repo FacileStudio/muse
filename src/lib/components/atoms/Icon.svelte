@@ -15,30 +15,11 @@
     import { ICON_DATA } from '../../icons-data.js';
     import { extraIcons } from '../../icons.js';
 
-    /*
-     * An inline `<svg>`, not a custom element.
-     *
-     * muse used to render `<iconify-icon>`, which meant three things every consumer paid for:
-     * the element had to be registered browser-side or every icon silently vanished, the glyph
-     * was fetched from api.iconify.design at runtime, and until that request landed the element
-     * was a 0×0 box — so buttons rendered at label width and jumped when the icon arrived.
-     *
-     * The paths are bundled instead. Icons now render during SSR, cost no request, and have
-     * their box from the first frame. `<iconify-icon>` remains the fallback for a name muse
-     * does not carry, so an app passing its own `solar:*` string keeps working.
-     */
     let { icon, size = 16, class: className = '', ...rest }: IconProps = $props();
 
     const data = $derived(ICON_DATA[icon] ?? extraIcons[icon]);
     const classes = $derived(twMerge('block shrink-0', className));
 
-    /*
-     * Some glyphs are drawn through a `<mask>`, and the mask's id is baked into the path data —
-     * `solar:pallete-2-linear` is one. Inlining that body twice on a page puts the same DOM id
-     * on two elements: invalid HTML, and worse, unmounting either one leaves the other pointing
-     * at a mask that no longer exists, so the icon silently disappears. Iconify's own runtime
-     * rewrites these per instance for exactly this reason; inlining has to do the same.
-     */
     const uid = $props.id();
     const body = $derived(
         /\bid="/.test(data?.body ?? '')

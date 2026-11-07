@@ -57,13 +57,6 @@
     const low = $derived(isEmpty ? 0 : Math.min(...values));
     const high = $derived(isEmpty ? 1 : Math.max(...values));
 
-    /*
-     * Padding is derived from the stroke, not picked. `padX` was 1 against a 2px stroke with
-     * round caps: half the stroke sits outside the path, so the first and last cap landed
-     * exactly on the viewBox edge and antialiasing shaved them flat — the line read as cut off
-     * at both ends. A cap needs its full half-width plus a hair, and the end dot needs its
-     * radius. Same reasoning vertically, where 3 already cleared it.
-     */
     const STROKE = 2;
     const DOT_R = 3;
     const padY = STROKE / 2 + 2;

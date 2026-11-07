@@ -82,7 +82,6 @@
 
     const catLabels = $derived(categoryLabels(labels, count));
 
-    /* Geometry is independent of the entry tween, so only `bars` re-derives per frame. */
     const geometry = $derived(
         barGeometry({
             series,

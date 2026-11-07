@@ -20,8 +20,6 @@
         ...rest
     }: InputProps = $props();
 
-    /* Inside a `Field`, adopt the ids it generated so the label actually points here.
-       An explicit prop always wins, and outside a Field this is a no-op. */
     const field = getFieldContext();
     const control = $derived(resolveField(field?.(), { id, describedBy, invalid }));
 

@@ -56,12 +56,6 @@
     let prevTime = 0;
     let velocity = 0;
 
-    /*
-     * `dialog.handlers` is spread after `rest` in the markup, which is the one place this
-     * library lets the component win over the consumer. Those three handlers are what make
-     * the dialog dismissible and keep `open` in sync; a consumer passing `onclick` would
-     * otherwise silently break closing. Everything else still spreads consumer-last.
-     */
     const dialog = createDialog({
         element: () => dialogEl,
         open: () => open,
@@ -108,10 +102,6 @@
         open = false;
     }
 
-    /*
-     * Reduced motion asks for no *animation*, not for no interaction — the sheet still
-     * drags, only the spring back to rest snaps instead of tweening.
-     */
     function settle(y: number) {
         if (!panel) return;
         if (prefersReducedMotion()) {
@@ -166,12 +156,6 @@
 
     const hasHeader = $derived(Boolean(title || description || showClose));
 
-    /*
-     * `mt-auto mb-0 mx-auto` is load-bearing, same trap as Modal: the UA centres a modal
-     * <dialog> with its own `margin: auto`, which Tailwind preflight's `margin: 0` reset
-     * kills. `w-full max-w-none` is equally load-bearing — it defeats the UA's
-     * `width: fit-content` and `max-width: calc(100% - 6px - 2em)` on modal dialogs.
-     */
     const dialogClasses = $derived(
         twMerge(
             'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-none bg-transparent p-0 text-fc-fg sm:max-w-fc-sm backdrop:bg-fc-scrim',

@@ -2,14 +2,6 @@
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
 
-    /*
-     * `children` is Omitted rather than intersected. `HTMLAttributes` declares its own
-     * `children?: Snippet<[]>`, and an intersection with a parameterised snippet produces a
-     * type that accepts neither arity — which is why `{#snippet children({ id })}` failed with
-     * "Expected 1 or more, but got 0" and consumers had to reach for `getFieldContext` instead.
-     * The intersection swallowed it silently; `interface extends` checks compatibility and
-     * surfaced it.
-     */
     export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
         label?: string;
         helper?: string;
@@ -39,13 +31,6 @@
 
     const uid = $props.id();
 
-    /*
-     * The label, the message and the control have to agree on one id or the label points at
-     * nothing. muse's own form atoms pick the ids up from context automatically, so the
-     * plain `<Field label="Email"><Input /></Field>` form is correctly labelled with no
-     * ceremony; the same ids are also passed as snippet parameters for controls muse does
-     * not own. `for` lets a caller that already manages its own id keep it instead.
-     */
     const id = $derived(htmlFor ?? `${uid}-control`);
     const errorId = `${uid}-error`;
     const helperId = `${uid}-helper`;

@@ -25,29 +25,9 @@
         ...rest
     }: SwitchProps = $props();
 
-    /*
-     * Inside a `Field`, adopt the ids it generated. Without this the field renders
-     * `<label for="…-control">` pointing at an element that does not exist and the control has
-     * no accessible name — the exact silent failure `utils/field.ts` was written to prevent,
-     * fixed for `Input`/`Select`/`Textarea` and missed on the three controls that wrap
-     * themselves in their own `<label>`.
-     *
-     * That wrapper stays. It carries no text in field mode, so it adds nothing to the
-     * accessible name, and it is what makes clicking the visible control toggle it — dropping
-     * it would leave the input with an inert graphic beside it. An explicit prop always wins,
-     * and outside a Field the lookup is a no-op.
-     */
     const field = getFieldContext();
     const control = $derived(resolveField(field?.(), { id, describedBy, invalid }));
 
-    /*
-        `relative` is load-bearing, not decoration: `sr-only` is `position: absolute`, and an
-        absolutely positioned box whose nearest *positioned* ancestor is the initial containing
-        block is laid out against the document — `overflow` on an unpositioned ancestor does not
-        clip it. Inside an app shell whose scroller is an inner `<main>`, that puts a 1px input
-        at its flow offset in *document* coordinates, several thousand pixels down, and hands
-        the page a second scrollbar into empty space. Positioning the label confines it.
-    */
     const classes = $derived(twMerge('relative inline-flex items-center gap-3 cursor-pointer text-fc-sm text-fc-fg', disabled ? 'opacity-50 cursor-not-allowed' : '', className));
 </script>
 

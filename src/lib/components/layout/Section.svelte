@@ -21,19 +21,6 @@
     import { GAP } from '../../utils/layout.js';
     import Card from '../atoms/Card.svelte';
 
-    /*
-     * A titled block inside a page: the heading lockup, optional actions, and the body.
-     *
-     * This is `SettingsSection` with the settings taken out of the name — that component was
-     * always structurally generic, and nine repos used it only under `/settings` because of what
-     * it was called, hand-rolling the identical `<section class="flex flex-col gap-4"><div
-     * class="flex flex-col gap-1">` everywhere else. `SettingsSection` now delegates here.
-     *
-     * The card is opt-in, and that is the one behavioural difference from the settings preset.
-     * A settings block is a surface holding rows, so it wants one; a dashboard section holding a
-     * grid of cards must not be a card itself, or the page grows a container inside a container.
-     */
-
     let {
         title,
         description,

@@ -96,7 +96,7 @@ it directly. Three checks stand in, and they catch different things:
 | Command | What it actually proves |
 |---|---|
 | `mise run check` | `svelte-check --tsconfig ./tsconfig.json --fail-on-warnings` — **the only type check**. `tsconfig.json` includes `src/**` *and* `demo/src/**`, with a `paths` alias mapping `@facile/muse` to `src/lib/index.ts`, so the demo's usage is type-checked against the library it aliases |
-| `mise run test` | `bun test src/lib` — the chart maths in `utils/chart.test.ts` and the secret helpers in `utils/secret.test.ts`. The two pieces of real logic here that are not Svelte templates |
+| `mise run test` | `bun test`, every `*.test.ts` in the repo: the pure logic and the source-scanning guards |
 | `mise run demo:build` | Every component **compiles**: template syntax, snippet misuse, unknown DOM props. Vite strips types without reading them, so this proves nothing about type correctness |
 | `mise run verify` | All three, in that order. Same steps as `.github/workflows/ci.yml` |
 

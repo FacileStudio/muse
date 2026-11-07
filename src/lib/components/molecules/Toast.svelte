@@ -36,13 +36,6 @@
 
     const i18n = getI18n();
 
-    /*
-        A toast floats over content it does not own, so it takes the floating-surface
-        treatment from CHARTE §5 — opaque `fc-component` fill and a shadow, no border — and
-        not `Alert`'s tinted wash, which would let whatever is underneath bleed through the
-        tone. The shadow is what lifts it off arbitrary content with no scrim under it. The
-        tone lives in the icon badge instead, tinted the same way `ConfirmModal` tints its own.
-    */
     const badges: Record<ToastTone, string> = {
         neutral: 'bg-fc-surface text-fc-fg-muted',
         info: 'bg-fc-info/10 text-fc-info',
@@ -61,7 +54,6 @@
 
     const glyph = $derived(icon === null ? undefined : (icon ?? defaults[tone]));
 
-    /* Same rule as `Alert`: only a tone the user has to act on earns an assertive region. */
     const role = $derived(tone === 'warning' || tone === 'danger' ? 'alert' : 'status');
 
     const classes = $derived(

@@ -64,11 +64,6 @@
     const copied = $derived(copyTick > 0);
     const empty = $derived(value.length === 0);
 
-    /*
-     * A value the server redacted is a placeholder, not a secret: there is nothing to reveal
-     * and nothing worth copying, so both affordances go dead rather than handing the user
-     * eight dots and a "Copied" toast.
-     */
     const stored = $derived(isRedacted(value));
     const inert = $derived(disabled || empty || stored);
     const shown = $derived(visible || !sensitive ? value : maskSecret(value, mask));
@@ -79,11 +74,6 @@
         status = i18n.t(visible ? 'secret.revealed' : 'secret.hidden');
     }
 
-    /*
-     * Revealing is a peek, not a mode: a secret left on screen ends up in a screen share or a
-     * screenshot long after the person who revealed it walked away. The timer restarts on
-     * every reveal and is cancelled the moment it is hidden by hand.
-     */
     $effect(() => {
         if (!visible || autoHideMs <= 0) return;
         const timer = setTimeout(() => {
@@ -105,11 +95,6 @@
         }
     }
 
-    /*
-     * The tick is a 2s flash on the copy button, so the timer has to die with the component:
-     * unmounting mid-flash otherwise leaves a timeout writing to state nobody is rendering.
-     * Re-copying bumps the counter, which restarts the effect and therefore the countdown.
-     */
     $effect(() => {
         if (copyTick === 0) return;
         const timer = setTimeout(() => (copyTick = 0), 2000);

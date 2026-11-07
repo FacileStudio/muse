@@ -51,9 +51,6 @@
     let sweep = $state(0);
     let started = false;
 
-    /* `justify-center` matters when the card stretches to a taller neighbour in a grid row:
-       the ring then sits in the middle of the space it was given instead of hanging off the
-       title with the legend stranded at the bottom. */
     const classes = $derived(
         twMerge('relative flex flex-col items-center justify-center gap-4', className)
     );
@@ -87,7 +84,6 @@
         });
     });
 
-    /* Only the hovered wedge is re-pathed on pointermove; `arcs` never reads `hover`. */
     const lifted = $derived.by(() => {
         const arc = hover >= 0 ? arcs[hover] : undefined;
         return arc?.drawn ? arcPath(cx, cx, rOuter + LIFT, rInner, arc.a0, arc.a1, corner) : '';
