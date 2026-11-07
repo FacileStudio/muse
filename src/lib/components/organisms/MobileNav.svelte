@@ -1,15 +1,20 @@
 <script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
+    import type { UserMenuOptions } from '../../utils/user-menu.js';
+    import type { UserMenuUser } from './UserMenu.svelte';
 
     export type NavItem = { href: string; label: string; icon: string; active?: boolean };
 
-    export type User = { name: string; avatar?: string };
+    export type User = UserMenuUser;
 
     export interface MobileNavProps extends HTMLAttributes<HTMLElement> {
         items?: NavItem[];
         user?: User;
+        /** The Settings row of the user menu. `userMenu.settingsHref` wins when both are set. */
         profileHref?: string;
         profileActive?: boolean;
+        /** The same user menu as the sidebar card, opened as a bottom sheet from the avatar. */
+        userMenu?: UserMenuOptions;
         class?: string;
 
     }
@@ -17,20 +22,18 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
-    import Avatar from '../atoms/Avatar.svelte';
+    import UserMenu from './UserMenu.svelte';
 
     let {
         items = [],
         user,
         profileHref,
         profileActive = false,
+        userMenu,
         class: className = '',
         ...rest
     }: MobileNavProps = $props();
-
-    const i18n = getI18n();
 </script>
 
 <!--
@@ -74,19 +77,15 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
             </a>
         {/each}
 
-        {#if profileHref && user}
-            <a
-                href={profileHref}
-                aria-label={i18n.t('mobileNav.profile')}
-                aria-current={profileActive ? 'page' : undefined}
-                title={i18n.t('mobileNav.profile')}
-                class={twMerge(
-                    'flex size-fc-nav-item shrink-0 items-center justify-center rounded-fc-pill transition-all duration-200',
-                    profileActive ? 'bg-fc-accent shadow-sm' : 'hover:bg-fc-surface'
-                )}
-            >
-                <Avatar name={user.name} src={user.avatar} size="sm" class="h-7 w-7" />
-            </a>
+        {#if user}
+            <UserMenu
+                {user}
+                trigger="avatar"
+                presentation="sheet"
+                active={profileActive}
+                settingsHref={profileHref}
+                {...userMenu}
+            />
         {/if}
     </div>
 </nav>

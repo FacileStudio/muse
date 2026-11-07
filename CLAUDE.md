@@ -25,7 +25,7 @@ muse/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map (47 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
-    components/               67 Svelte components (layout/ atoms/ molecules/ organisms/ charts/ motion/)
+    components/               81 Svelte components (layout/ atoms/ molecules/ organisms/ charts/ motion/)
     i18n/                     Message helper, locale context (provideLocale/getI18n), fr/en/es/de catalogs
     fonts/                    Bundled Goga font files (.otf)
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
@@ -37,11 +37,14 @@ muse/
     utils/landing.ts          LandingHeader/Footer helpers: scroll state, safe hrefs, scroll watcher
     utils/chart.ts            scales, paths, arcs, resize action — shared by charts/
     utils/secret.ts           REDACTED wire contract, isRedacted, maskSecret
+    utils/user-menu.ts        UserMenu rows, canonical order and drill keys (pure, tested)
+    utils/settings-nav.ts     canonical settings section order and route resolution (pure, tested)
+    utils/theme.ts            Theme, readTheme, applyTheme
     utils/toast.svelte.ts     Module-scope toast queue behind Toaster — toast, toasts
 ```
 
-Tier counts: 5 layout, 20 atoms, 21 molecules, 13 organisms, 6 charts, 2 motion. `ChartTable.svelte`,
-`components/charts/entry.ts`, `atoms/SelectListbox.svelte`, `organisms/PricingCard.svelte` and `organisms/LandingDrawer.svelte` are internal and not exported.
+Tier counts: 5 layout, 21 atoms, 26 molecules, 20 organisms, 7 charts, 2 motion. `ChartTable.svelte`,
+`components/charts/entry.ts`, `atoms/SelectListbox.svelte`, `organisms/PricingCard.svelte`, `organisms/LandingDrawer.svelte`, `organisms/UserMenuList.svelte` and `organisms/TokenCreate.svelte` are internal and not exported.
 
 ## Key commands
 

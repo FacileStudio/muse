@@ -665,22 +665,24 @@ called `NavBar`; there is no `NavBar` export and has not been for some time.)
     { label: 'Dashboard', href: '/',         icon: icons.dashboard, active: true },
     { label: 'Projects',  href: '/projects', icon: icons.folder }
   ]}
-  user={{ name: 'Camille', avatar: '/pfp.jpg' }}
+  user={{ name: 'Camille', email: 'camille@facile.studio', avatar: '/pfp.jpg' }}
   userHref="/settings"
+  userMenu={{ subscription: { plan: 'Pro', href: '/billing' }, onSignOut: signOut }}
 />
 ```
 
-Note what is **not** in `pages`: Settings. It is reached from the user card via `userHref` —
-see §14.
+Note what is **not** in `pages`: Settings. It is the second row of the user menu, which opens
+from the user card at the bottom of the rail — see §14.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `icon` | `string` | — | Brand mark — the one `bold-duotone` glyph in the rail |
 | `title` | `string` | `''` | App / section name |
 | `pages` | `Page[]` | `[]` | Nav links. Each: `{ label, href, icon?, active? }` |
-| `user` | `User` | — | `{ name, avatar? }` — shown in the footer card |
-| `userHref` | `string` | — | Makes the user card a link — this is the route to settings |
+| `user` | `User` | — | `{ name, avatar?, email?, secondary? }` — the footer card. The second line is `secondary`, else `email`, else the active space's name. There is no trailing icon |
+| `userHref` | `string` | — | The Settings route: the Settings row of the user menu. `userMenu.settingsHref` wins |
 | `userActive` | `boolean` | `false` | Marks the user card active (surface fill, not inverted) |
+| `userMenu` | `UserMenuOptions` | — | Configures the menu the card opens (§14): `items`, `subscription`, `helpHref`, `onSignOut`, `accountHref`, `locale`, `theme`, `labels` |
 | `collapsed` | `boolean` | `false` | Bindable. Collapses to `68px` (`--width-fc-nav-collapsed`), labels hidden |
 | `showSearch` | `boolean` | `false` | Renders the Search row. The ⌘K chip only appears with `onSearch` |
 | `onSearch` | `() => void` | — | Search row click handler, and what ⌘K fires |
@@ -776,8 +778,7 @@ not. (The geometry is the `68 = 44 + 12 + 12` above. An earlier revision of this
 claimed `77px = 53px + 12 + 12` a few paragraphs later; that was never the shipped value.)
 
 **The `icon` prop is the brand mark — it is the one icon that stays `bold-duotone.`**
-Everything else in the sidebar (nav rows, search, collapse, the footer settings gear) is
-`solar:*-linear`. Pass `solar:<glyph>-bold-duotone` at `width="24"`; the duotone weight is
+Everything else in the sidebar (nav rows, search, collapse) is `solar:*-linear`. Pass `solar:<glyph>-bold-duotone` at `width="24"`; the duotone weight is
 what makes the app's identity read against a column of hairline chrome icons.
 
 ### NavButton
@@ -900,15 +901,17 @@ Ported from Sablier's `MobileNav.svelte`.
   items={[{ href: '/dashboard', label: 'Dashboard', icon: 'solar:chart-2-linear', active: true }]}
   user={{ name: 'Gian', avatar: '/pfp.jpg' }}
   profileHref="/settings"
+  userMenu={{ onSignOut: signOut }}
 />
 ```
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `items` | `{ href, label, icon, active? }[]` | `[]` | Nav destinations, icon-only |
-| `user` | `{ name, avatar? }` | — | Shown as a trailing avatar pill |
-| `profileHref` | `string` | — | Renders the avatar pill as a link |
+| `user` | `{ name, avatar?, email? }` | — | The trailing avatar pill. Pressing it opens the same user menu as the sidebar card, as a bottom sheet |
+| `profileHref` | `string` | — | The Settings route: the Settings row of the menu. `userMenu.settingsHref` wins |
 | `profileActive` | `boolean` | `false` | Inverts the avatar pill like an active item |
+| `userMenu` | `UserMenuOptions` | — | The same options object the `SideBar` takes |
 | `class` | `string` | — | Passed through `twMerge` |
 
 Style: `rounded-fc-pill bg-fc-bg/70 backdrop-blur-2xl backdrop-saturate-150 shadow-lg` —
@@ -1285,69 +1288,88 @@ will not see it again", and three apps with no switcher at all. This section is 
 
 ### Settings is reached from the user card, never from the nav
 
-**Never put a Settings row in the sidebar's nav list.** The only way in is the user card at
-the bottom of the rail (`SideBar`'s `userHref` / `userActive`), plus the avatar on
-`MobileNav`'s `profileHref`.
+**Never put a Settings row in the sidebar's nav list.** The user card at the bottom of the rail
+opens the **user menu**, and Settings is its second row. On a phone the avatar on `MobileNav`
+opens the same menu as a bottom sheet.
 
 ```svelte
-<SideBar pages={navPages} {user} userHref="/settings" userActive={onSettings} />
-<MobileNav items={navPages} {user} profileHref="/settings" profileActive={onSettings} />
+<SideBar pages={navPages} {user} userHref="/settings" userActive={onSettings} userMenu={menu} />
+<MobileNav items={navPages} {user} profileHref="/settings" profileActive={onSettings} userMenu={menu} />
 ```
 
-The nav list is for the app's actual sections — the things people came to use. Settings is
-where you go to change *yourself*, so it belongs on your own name, and a permanent nav row
-spends prime vertical space on the page people open least. The card already carries the gear
-glyph, so the affordance is not lost.
+The nav list is for the app's actual sections, the things people came to use. Settings is where
+you go to change *yourself*, so it hangs off your own name.
 
-Two details the card gets right and a hand-rolled one usually does not: the name is a single
-truncating line (`TextElevate` takes `class="truncate"` — a two-line name changes the height
-of the rail), and the active state is the **surface fill**, not the inverted pill the nav
-rows use, because the avatar inside already wears `bg-fc-accent` and an inverted card would
-swallow it whole. Log out lives inside settings — not in the rail.
+### The user card and the user menu
 
-### One page, top tabs, one section per tab
+Every app builds its footer from the same two parts, and none invents its own. Echo, which has
+its own design, is the only exception.
 
-Sections are `Tabs` across the top of the page, then a `Divider`. Not a left sub-nav (it
-costs 256px that a settings form wants), not an endless stacked scroll.
+- **The card** shows the avatar, the name and one secondary line (email, else the current space).
+  It carries **no trailing icon**: no cog, no chevron. The name is a single truncating line, and
+  the active state is the surface fill, not the inverted pill of the nav rows, because the
+  avatar inside already wears `bg-fc-accent`. Collapsed, the card is the avatar alone.
+- **The menu** is `UserMenu`, an APG menu button drawn in the top layer. It has **no border**:
+  a `bg-fc-bg` surface and `shadow-lg` separate it, and a spacing step (not a line) sets Sign
+  out apart. Real focus moves onto the rows, the arrows wrap, typing jumps, Escape closes and
+  returns focus to the card. Language and Theme open a one-level view of radio rows
+  (`menuitemradio`): Right arrow or Enter opens it, Left arrow or Escape returns.
 
-**Put the section in the URL.** `Tabs` items carry `href`, so each section is a real route:
-a link to `/settings/pool` opens on Pool, reload keeps you there, and browser-back walks the
-sections. Local `$state` tabs break all three.
+The canonical rows, in this order. A row with no `href` or handler is not drawn.
 
-```svelte
-<div class="flex flex-col gap-4">
-  <Tabs items={sections.map(s => ({ ...s, href: `/settings/${s.id}` }))} value={active} />
-  <Divider />
-</div>
-```
-
-That `gap-4` is not arbitrary, and it is **load-bearing** — `Divider` carries no margin of its
-own, so the parent's `gap` is the only thing giving the rule air. Dropped into plain block flow
-with nothing above it, the same markup welds the rule to whatever precedes it. That is the
-whole reason `Divider` has no `my-*` default: through v0.5.0 it shipped `my-4`, and all
-twenty-four call sites across the suite — plus both usages inside muse itself — cancelled it
-with `class="my-0"`. A default with a zero percent hit rate is not a default, and the `my-0`
-idiom it taught is exactly what produced buttons glued to separators. Space between siblings
-belongs to the parent. See §4.
-
-The active tab is an inverted pill that **slides** between tabs on a 0.3s `power3.inOut`
-tween. Pass an `icon` per item; the strip scrolls horizontally on narrow screens and the
-selected tab scrolls itself into view.
-
-The canonical section order, take what the app has:
-
-| Section | For | Typical contents |
+| Row | Source | Notes |
 |---|---|---|
-| **Profile** | every app | identity, display name, SSO-managed email, avatar, identity colour, log out |
-| **Appearance** | every app | theme (system/light/dark), density, language, timezone |
-| **Notifications** | anything that emails | a master switch, per-event rows, digest cadence |
-| **API** | anything with a CLI or public API | base URL, token list, create/revoke |
-| **Pool** | anything wired to Nook | enable, instance URL, shared secret, connection status, channels |
-| **Members** | anything space-scoped | member table with role pills, invites |
-| **Advanced** | every app | export, instance/version facts, **danger zone last** |
+| Account, "Gérer mon compte Facile" | `accountHref`, default `https://sso.facile.studio/account` | external, new tab. `null` hides it |
+| App rows | `items` | the extension point, before Settings: `{ label, icon?, href? \| onSelect?, tone? }` |
+| Settings | `settingsHref` (`userHref` on the rail) | the app route |
+| Subscription | `subscription: { plan, href }` | the plan name beside "Gérer l'abonnement" |
+| Language | `locale`, `onLocaleChange` | fr, en, es, de; calls `i18n.set` |
+| Theme | `theme`, `onThemeChange` | system, light, dark; without a handler muse toggles `.dark` and `.light` |
+| Help | `helpHref` | external |
+| Sign out | `onSignOut` | danger tone, after a spacing gap |
 
-Never give Danger Zone a tab of its own — it lives at the bottom of Advanced. A destructive
-action should cost a scroll, not sit one mis-click from every other tab all day.
+Every string is in the four catalogs, and `labels` overrides any of them. `showLanguage` and
+`showTheme` drop the two preference rows for an app that cannot honour them.
+
+### One page, a section nav, one section per panel
+
+`SettingsLayout` is the shell. From 64rem a section nav sits on the left (inverted active row,
+sticky) and the panel on the right. Under 64rem the bare settings address shows the sections as
+a stacked list, and choosing one drills into its panel with a "back to all settings" link.
+
+**Put the section in the URL.** Each item carries its `href`, so a link to `/settings/tokens`
+opens on Tokens, reload keeps you there and browser-back walks the sections. `settingsRoute`
+resolves the request: a bare address is `drilled: false` (the first panel on desktop, the list
+on a phone) and an unknown section comes back `known: false` so the app can redirect.
+
+```svelte
+<SettingsLayout {sections} active={params.section} backHref="/settings">
+  {#snippet children(current)}
+    <Panel id={current} />
+  {/snippet}
+</SettingsLayout>
+```
+
+The canonical order, applied by `orderSections` unless `ordered={false}`. App-specific sections
+(Accounts, Bus, Pool, Members, Integrations) sit between Notifications and API tokens, in the
+order the app lists them.
+
+| Section | Block | For |
+|---|---|---|
+| **Profile** | `ProfileSection` | every app. Name, photo and email are read-only from Facile, with "Gérer sur Facile". The identity lives in Registre |
+| **Preferences** | `PreferencesSection` | every app. Language and theme, then the app's own rows (density, timezone) |
+| **Notifications** | `NotificationsSection` | anything that emails or pushes. The rows are the app's |
+| *App sections* | `SettingsSection` | what only this app has |
+| **API tokens** | `TokensSection` | anything with a CLI or public API: list, create in a drawer, revoke |
+| **Subscription** | `SubscriptionSection` | the plan from the entitlements, the manage and upgrade links, usage, the `PlanLimit` banner |
+| **Advanced** | `SettingsSection` + `DangerZone` | export, instance facts, and the danger zone last |
+
+Never give Danger Zone a section of its own. `DangerZone` is a tinted fill (`bg-fc-danger/10`,
+no border) at the bottom of Advanced, so a destructive action costs a scroll.
+
+`TokensSection` encodes the token rules below: a required expiry, the secret revealed once in a
+`SecretField` after an `Alert tone="warning"`, state reset on every open, revoked rows kept at
+`opacity-55`, and a `ConfirmModal` that says what breaks.
 
 ### Section and row anatomy
 
@@ -1374,9 +1396,9 @@ of icon cards in a `stacked` row, with the selected card **inverted** like every
 selected state. Not a `Select` (it hides the choices behind a click) and not bare `Radio`
 dots (a native radio next to a word is a form, not a preference).
 
-**The colour scheme belongs here and nowhere else.** No theme toggle floating in a corner of
-every page — it is a preference like any other, and a control pinned over every screen
-competes with that screen's own actions.
+**The colour scheme lives in Preferences and in the user menu, and nowhere else.** No theme
+toggle floating in a corner of every page: it is a preference like any other, and a control
+pinned over every screen competes with that screen's own actions.
 
 ### Secrets
 
