@@ -4,7 +4,7 @@
     export interface CheckboxProps extends Omit<HTMLInputAttributes, 'type' | 'checked'> {
         label?: string;
         checked?: boolean;
-        /** The mixed state of a parent whose children are partly checked. `aria-checked="mixed"` and a dash. A click clears it. */
+        /** The mixed state of a parent whose children are partly checked. The native `indeterminate` property, which assistive technology reads, and a dash. A click clears it. */
         indeterminate?: boolean;
         class?: string;
     }
@@ -37,7 +37,7 @@ Une case à cocher qui adopte l'identifiant de son `Field`, avec un état `indet
 -->
 
 <label class={classes}>
-    <span class="relative inline-flex size-5 shrink-0 before:absolute before:-inset-3 before:content-['']">
+    <span class="relative inline-flex size-5 shrink-0 before:absolute before:-inset-x-3 before:-inset-y-[min(0.75rem,calc(var(--fc-control-gap,0.5rem)/2))] before:content-['']">
         <input
             type="checkbox"
             id={control.id}
@@ -45,7 +45,6 @@ Une case à cocher qui adopte l'identifiant de son `Field`, avec un état `indet
             aria-invalid={control.invalid}
             bind:checked
             bind:indeterminate
-            aria-checked={indeterminate ? 'mixed' : undefined}
             class="peer size-5 shrink-0 cursor-pointer appearance-none rounded-fc-sm bg-fc-field transition-colors checked:bg-fc-accent indeterminate:bg-fc-accent aria-invalid:bg-[color-mix(in_oklab,var(--color-fc-danger)_18%,var(--color-fc-field))] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
             {...rest}
         />

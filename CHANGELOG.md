@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.15.1 (2026-11-07)
+
+### Fixed
+
+- `Combobox`: a consumer's `oninput`, `onclick`, `onkeydown` and `onblur` no longer get dropped. They run first, then muse's own handler, which still runs if the consumer's throws.
+- `Slider`: a consumer's `onpointerdown`, `onpointermove`, `onpointerup` and `onpointercancel` chain with the internal ones instead of replacing them.
+- `Accordion`: a consumer's `onkeydown` chains with the header navigation instead of replacing it.
+- `Tooltip`: when open, Escape stops propagating, so it no longer closes an enclosing `Modal` as well. When closed, Escape passes through untouched.
+- `InputOtp`: the cell label reads "Character n of m" for the alphanumeric kind (`otp.character` in fr, en, es and de). The numeric kind keeps "Digit n of m".
+- `Checkbox`: dropped `aria-checked="mixed"` from the native input. The native `indeterminate` property is what assistive technology reads.
+- `Checkbox`, `Radio` and `Switch`: the 44px touch area no longer reaches into the next row. Its vertical extension is capped at half of `--fc-control-gap` (default 0.5rem). Set `--fc-control-gap` on a list to its real row gap, up to 1.5rem, to get the full 44px.
+
 ## v0.15.0 (2026-11-07)
 
 ### Added

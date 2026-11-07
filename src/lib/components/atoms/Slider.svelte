@@ -21,6 +21,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { chain } from '../../utils/handlers.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import { getFieldContext, resolveField } from '../../utils/field.js';
     import { moveThumb, nearestThumb, ratioOf, snap, valueAt, valueForKey, type Thumb } from '../../utils/slider.js';
@@ -40,6 +41,10 @@
         'aria-label': ariaLabel,
         'aria-labelledby': labelledby,
         class: className = '',
+        onpointerdown,
+        onpointermove,
+        onpointerup,
+        onpointercancel,
         ...rest
     }: SliderProps = $props();
 
@@ -111,11 +116,11 @@ Un curseur à une valeur ou à deux bornes. Les flèches avancent d'un pas, Pg p
     aria-label={range ? ariaLabel : undefined}
     aria-labelledby={range ? (labelledby ?? control.labelId) : undefined}
     class={twMerge('flex h-11 w-full touch-none items-center', disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer', className)}
-    onpointerdown={press}
-    onpointermove={drag}
-    onpointerup={release}
-    onpointercancel={release}
     {...rest}
+    onpointerdown={chain(onpointerdown, press)}
+    onpointermove={chain(onpointermove, drag)}
+    onpointerup={chain(onpointerup, release)}
+    onpointercancel={chain(onpointercancel, release)}
 >
     <div bind:this={track} class="relative h-1.5 w-full rounded-fc-pill bg-fc-field">
         <div

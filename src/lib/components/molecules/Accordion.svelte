@@ -19,6 +19,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import { chain } from '../../utils/handlers.js';
     import { headerForKey, toggleOpen } from '../../utils/accordion.js';
     import Collapsible from './Collapsible.svelte';
 
@@ -29,6 +30,7 @@
         level = 3,
         class: className = '',
         panel,
+        onkeydown,
         ...rest
     }: AccordionProps = $props();
 
@@ -52,7 +54,7 @@ Une pile de panneaux repliables, un seul ouvert à la fois ou plusieurs avec `mu
 -->
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class={twMerge('flex flex-col gap-2', className)} onkeydown={keydown} {...rest}>
+<div class={twMerge('flex flex-col gap-2', className)} {...rest} onkeydown={chain(onkeydown, keydown)}>
     {#each items as item (item.id)}
         <Collapsible
             title={item.title}
