@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.16.0 (2026-11-07)
+
+### Added
+
+- `IconPicker`: a filled trigger showing the chosen icon, and a top-layer panel with a search field and a grid of every linear Solar icon. It sits above a `Modal` or `Drawer`, stays inside the viewport, flips up when there is more room above, and opens scrolled to the current icon. Arrows, Home and End move through the grid; typing jumps to the search; Enter in the search picks a single match; Escape closes it. Cells are 44px. It takes `icons` and `toIcon` to offer another set, `name` for forms, and reads its label from `Field`. Strings: `iconPicker.placeholder`, `iconPicker.search` and `iconPicker.empty` in fr, en, es and de.
+- `solarIconNames` and `solarIconId`: the 1,451 linear Solar icons by name (`add-circle` is `AddCircle`, the names Opus stores for project icons) and the name-to-iconify mapping, with a kebab-case fallback for names Solar has since renamed.
+
 ## v0.15.1 (2026-11-07)
 
 ### Fixed

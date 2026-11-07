@@ -37,6 +37,7 @@ muse/
     utils/landing.ts          LandingHeader/Footer helpers: scroll state, safe hrefs, scroll watcher
     utils/chart.ts            barrel over utils/chart/ (types, scale, series, paths, arcs, bars, donut, resize)
     utils/secret.ts           REDACTED wire contract, isRedacted, maskSecret
+    utils/solar.ts            Every linear Solar icon by name + solarIconId, behind IconPicker
     utils/tone.ts             Tone, StatusTone, toneFill, isUrgent: the one tone vocabulary
     utils/variant.ts          ButtonVariant, IconButtonVariant and the deprecated-name resolvers
     utils/slider.ts           Slider maths: snap, keys, range thumbs (pure, tested)
