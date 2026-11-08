@@ -6,9 +6,12 @@
         SpaceSwitcher,
         Toaster,
         Topbar,
+        getI18n,
         icons,
+        ideasNavItem,
         provideLocale
     } from '@facile/muse';
+    import Ideas from './pages/Ideas.svelte';
     import Dashboard from './pages/Dashboard.svelte';
     import Launch from './pages/Launch.svelte';
     import Pricing from './pages/Pricing.svelte';
@@ -25,6 +28,7 @@
     import { setTheme, theme } from './theme.svelte.js';
 
     const routes: Record<string, typeof Dashboard> = {
+        '#/ideas': Ideas,
         '#/dashboard': Dashboard,
         '#/projects': Projects,
         '#/spaces': Spaces,
@@ -79,7 +83,9 @@
         { href: '#/landing', label: 'Landing', icon: icons.compass }
     ];
 
-    const navPages = $derived(links.map((l) => ({ ...l, active: l.href === root })));
+    const i18n = getI18n();
+    const ideasEntry = $derived(ideasNavItem({ href: '#/ideas', active: root === '#/ideas', count: 3, running: true, i18n }));
+    const navPages = $derived([ideasEntry, ...links.map((l) => ({ ...l, active: l.href === root }))]);
     const onSettings = $derived(root === '#/settings');
     const user = { name: 'Camille', email: 'camille@facile.studio' };
 </script>

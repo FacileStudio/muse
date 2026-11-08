@@ -8,6 +8,8 @@
         label?: string;
         active?: boolean;
         collapsed?: boolean;
+        /** Draws a dot over the icon, for a collapsed row that carries a badge or a running task. */
+        marked?: boolean;
         textDelay?: number;
         class?: string;
         right?: Snippet;
@@ -28,6 +30,7 @@
         label,
         active = false,
         collapsed = false,
+        marked = false,
         textDelay = 0.15,
         class: className = '',
         right,
@@ -38,7 +41,7 @@
     const buttonRest = $derived(rest as HTMLButtonAttributes);
 
     const classes = $derived(twMerge(
-        'flex items-center gap-2.5 rounded-fc-md text-fc-sm transition-colors overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
+        'relative flex items-center gap-2.5 rounded-fc-md text-fc-sm transition-colors overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
         collapsed
             ? 'size-fc-nav-item shrink-0 self-center justify-center gap-0 p-0'
             : 'w-full min-h-11 px-3 py-2.5',
@@ -54,6 +57,9 @@ Une ligne de navigation. Elle se réduit à un carré de 44px quand le rail se r
 
 {#snippet inner()}
     {#if icon}<Icon {icon} size={18} />{/if}
+    {#if marked && collapsed}
+        <span class="absolute top-2 right-2 size-2 rounded-fc-pill bg-fc-info" aria-hidden="true"></span>
+    {/if}
     {#if !collapsed}
         <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
             {#if label}<TextElevate text={label} visible={!collapsed} delay={textDelay} class="truncate" />{/if}

@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.17.0 (2026-11-08)
+
+### Added
+
+- The Ideas kit, one entry and one page for proactive AI suggestions in every app. muse fetches nothing: the app passes the data and the callbacks.
+  - `IDEAS_ICON` (`solar:lightbulb-bolt-linear`, bundled, also `icons.ideas`) and `ideasNavItem({ href, active, count, running, i18n })`. It returns the entry for `SideBar` `pages` and `MobileNav` `items`, with the label in the active locale, a badge for the new ideas, a running indicator and a spoken hint such as "3 new ideas, in progress". Every app puts it first. Pass `i18n` (from `getI18n()`) when you call it inside `$derived`.
+  - `IdeaCard`: a kind icon for mail, task, event, follow_up, research and other, plus any app kind through `icon` and `kindLabel`. Title, why, sources as links, a collapsed draft, and run and dismiss actions. The run state is `idle`, `running`, `needs_approval`, `done` or `failed`, with a result summary, output links, a retry on failure, and a continue-in-Bulle link (`continueHref`). Props `idea`, `busy`, `level`, `onRun`, `onDismiss`, `onApprove`, `onDecline`.
+  - `IdeasPage`: a header with Generate and the time of the last batch, a grid or list (bindable `layout`), and the loading, empty, busy and error states. Props `ideas`, `loading`, `generating`, `error`, `lastGeneratedAt`, `busyIds`, `onGenerate`, `onRetry` and the card callbacks.
+  - `IdeasUpsell`: the page for a plan without AI. It explains the feature with three example ideas and links to `upgradeHref`. `examples` replaces the defaults.
+  - `ApprovalCard`: tool label, human summary, arguments on demand, approve and decline, and a busy state. Ideas runs and future MCP confirmations use the same card.
+  - Helpers: `ideaKind`, `ideaRunState`, `ideaActions`, `runTone`, `runLabel`, `isNewIdea`, `countNewIdeas`, `hasActiveRun`, `ideasView`, `relativeTime`, `formatArgs`, and the types `Idea`, `IdeaRun`, `IdeaRunState`, `IdeaKind`, `IdeaSource`, `IdeaOutput`, `IdeaStatus`, `ApprovalRequest`.
+  - `ideas.*` strings in fr, en, es and de. The demo has an Ideas page with every state.
+- `SideBar` `Page` and `MobileNav` `NavItem` take `badge`, `busy` and `hint`. The sidebar shows a count pill and a pulsing dot, and a dot over the icon when the rail is collapsed. The phone bar shows a dot. `hint` joins the accessible name. The pulse stops under reduced motion.
+- `NavButton` takes `marked`: a dot over the icon of a collapsed row.
+
 ## v0.16.1 (2026-11-07)
 
 ### Changed
