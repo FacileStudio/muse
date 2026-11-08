@@ -3,7 +3,18 @@
     import type { UserMenuOptions } from '../../utils/user-menu.js';
     import type { UserMenuUser } from './UserMenu.svelte';
 
-    export type NavItem = { href: string; label: string; icon: string; active?: boolean };
+    export type NavItem = {
+        href: string;
+        label: string;
+        icon: string;
+        active?: boolean;
+        /** Draws a dot on the icon when above 0. The count itself is spoken through `hint`. */
+        badge?: number;
+        /** Draws the dot for work in progress. */
+        busy?: boolean;
+        /** Spoken after the label, for example "3 new ideas". */
+        hint?: string;
+    };
 
     export type User = UserMenuUser;
 
@@ -63,7 +74,7 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
         {#each items as item (item.href)}
             <a
                 href={item.href}
-                aria-label={item.label}
+                aria-label={item.hint ? `${item.label}, ${item.hint}` : item.label}
                 aria-current={item.active ? 'page' : undefined}
                 title={item.label}
                 class={twMerge(
@@ -73,7 +84,15 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
                         : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg'
                 )}
             >
-                <Icon icon={item.icon} size={22} />
+                <span class="relative flex">
+                    <Icon icon={item.icon} size={22} />
+                    {#if item.badge || item.busy}
+                        <span
+                            class="absolute -top-0.5 -right-1 size-2.5 rounded-fc-pill bg-fc-info motion-safe:animate-pulse"
+                            aria-hidden="true"
+                        ></span>
+                    {/if}
+                </span>
             </a>
         {/each}
 

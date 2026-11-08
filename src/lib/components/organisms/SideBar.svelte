@@ -14,6 +14,12 @@
          * has no room for it and the icons still read as a list.
          */
         group?: string;
+        /** A count shown on the row, capped at 99+. 0 or undefined shows nothing. */
+        badge?: number;
+        /** Marks work in progress with a pulsing dot. */
+        busy?: boolean;
+        /** Spoken after the label, for example "3 new ideas". */
+        hint?: string;
     };
 
     export type User = UserMenuUser;
@@ -52,6 +58,7 @@
     import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import NavButton from '../molecules/NavButton.svelte';
+    import NavMarks from '../molecules/NavMarks.svelte';
     import SpaceSwitcher from '../molecules/SpaceSwitcher.svelte';
     import TextElevate from '../motion/TextElevate.svelte';
     import { icons } from '../../icons.js';
@@ -223,8 +230,17 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                         {page.group}
                     </p>
                 {/if}
-                <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} collapsed={narrow}>
+                <NavButton
+                    href={page.href}
+                    icon={page.icon}
+                    label={page.label}
+                    active={page.active}
+                    collapsed={narrow}
+                    marked={Boolean(page.badge || page.busy)}
+                    aria-label={page.hint ? `${page.label}, ${page.hint}` : undefined}
+                >
                     {#snippet right()}
+                        <NavMarks badge={page.badge} busy={page.busy} active={page.active} />
                         {#if page.active}
                             <Icon icon={icons.arrow} size={16} class="opacity-70" />
                         {/if}

@@ -117,6 +117,14 @@ export { default as SwatchPicker } from './components/molecules/SwatchPicker.sve
 export type { SwatchPickerProps } from './components/molecules/SwatchPicker.svelte';
 export { default as IconPicker } from './components/molecules/IconPicker.svelte';
 export type { IconPickerProps } from './components/molecules/IconPicker.svelte';
+export { default as ApprovalCard } from './components/molecules/ApprovalCard.svelte';
+export type { ApprovalCardProps } from './components/molecules/ApprovalCard.svelte';
+export { default as IdeasUpsell } from './components/molecules/IdeasUpsell.svelte';
+export type { IdeasUpsellProps, IdeaExample } from './components/molecules/IdeasUpsell.svelte';
+export { default as IdeaCard } from './components/organisms/IdeaCard.svelte';
+export type { IdeaCardProps } from './components/organisms/IdeaCard.svelte';
+export { default as IdeasPage } from './components/organisms/IdeasPage.svelte';
+export type { IdeasPageProps, IdeasLayout } from './components/organisms/IdeasPage.svelte';
 export { default as StatCard } from './components/molecules/StatCard.svelte';
 export type { StatCardProps } from './components/molecules/StatCard.svelte';
 export { default as Tabs } from './components/molecules/Tabs.svelte';
@@ -217,6 +225,33 @@ export { cn, twMerge } from './utils/cn.js';
 export { REDACTED, isRedacted, maskSecret } from './utils/secret.js';
 export { icons, registerIcons } from './icons.js';
 export { solarIconId, solarIconNames } from './utils/solar.js';
+export {
+    IDEAS_ICON,
+    IDEA_KINDS,
+    ideaActions,
+    ideaKind,
+    ideaRunState,
+    isNewIdea,
+    countNewIdeas,
+    hasActiveRun,
+    runTone
+} from './utils/ideas.js';
+export type {
+    ApprovalRequest,
+    Idea,
+    IdeaActions,
+    IdeaKind,
+    IdeaOutput,
+    IdeaRun,
+    IdeaRunState,
+    IdeaSource,
+    IdeaStatus,
+    KnownIdeaKind
+} from './utils/ideas.js';
+export { formatArgs, ideasView, relativeTime, runLabel } from './utils/ideas-view.js';
+export type { IdeasView, IdeasViewInput } from './utils/ideas-view.js';
+export { ideasNavItem } from './utils/ideas-nav.js';
+export type { IdeasNavItem, IdeasNavOptions } from './utils/ideas-nav.js';
 export type { IconData } from './icons.js';
 export { USER_COLORS, USER_COLOR_LABELS, normalizeUserColor, parseHex, userColorLabel } from './colors.js';
 export type { UserColor } from './colors.js';
