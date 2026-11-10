@@ -1,9 +1,10 @@
 import { describe, expect, test } from 'bun:test';
 import { fr } from '../i18n/messages/fr.js';
-import { actionable, drillKey, startIndex, userMenuRows, type UserMenuLabels, type UserMenuModel, type UserMenuOptions, type UserMenuView } from './user-menu.js';
+import { actionable, drillKey, pendingInvitations, startIndex, userMenuRows, type UserMenuLabels, type UserMenuModel, type UserMenuOptions, type UserMenuView } from './user-menu.js';
 
 const labels: UserMenuLabels = {
     account: 'Account',
+    invitations: 'Invitations',
     settings: 'Settings',
     manageSubscription: 'Manage',
     language: 'Language',
@@ -30,6 +31,27 @@ const full: UserMenuOptions = {
 };
 
 describe('userMenuRows', () => {
+    test('invitations sit after account with a count, and an absolute href opens a new tab', () => {
+        const rows = userMenuRows(model({ ...full, invitations: { count: 3, href: 'https://sso.facile.studio/spaces' } }));
+        expect(rows.map((row) => row.id).slice(0, 3)).toEqual(['account', 'invitations', 'item-0']);
+        expect(rows[1]).toMatchObject({ label: 'Invitations', count: 3, external: true, href: 'https://sso.facile.studio/spaces' });
+    });
+
+    test('no invitations prop, or no href, shows no row; zero shows the row without a pill', () => {
+        expect(userMenuRows(model(full)).some((row) => row.id === 'invitations')).toBe(false);
+        expect(userMenuRows(model({ invitations: null })).some((row) => row.id === 'invitations')).toBe(false);
+        const zero = userMenuRows(model({ invitations: { count: 0, href: '/invitations', label: 'Invites' } }))[0];
+        expect(zero).toMatchObject({ id: 'invitations', label: 'Invites', external: false });
+        expect(zero.count).toBeUndefined();
+    });
+
+    test('pendingInvitations ignores negative and invalid counts', () => {
+        expect(pendingInvitations({ count: 2, href: '/' })).toBe(2);
+        expect(pendingInvitations({ count: -1, href: '/' })).toBe(0);
+        expect(pendingInvitations({ count: Number.NaN, href: '/' })).toBe(0);
+        expect(pendingInvitations(null)).toBe(0);
+    });
+
     test('root order: account, app items, settings, subscription, language, theme, help, gap, sign out', () => {
         const ids = userMenuRows(model(full)).map((row) => row.id);
         expect(ids).toEqual(['account', 'item-0', 'settings', 'subscription', 'language', 'theme', 'help', 'gap', 'signOut']);

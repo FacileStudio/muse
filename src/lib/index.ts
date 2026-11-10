@@ -184,8 +184,9 @@ export { prefersReducedMotion, isMobile } from './utils/motion.js';
 export { springPress } from './utils/press.js';
 export { THEMES, isTheme, readTheme, applyTheme } from './utils/theme.js';
 export type { Theme } from './utils/theme.js';
-export { ACCOUNT_URL } from './utils/user-menu.js';
+export { ACCOUNT_URL, pendingInvitations } from './utils/user-menu.js';
 export type {
+    UserMenuInvitations,
     UserMenuItem,
     UserMenuLabels,
     UserMenuOptions,

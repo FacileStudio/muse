@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.18.0 (2026-11-10)
+
+### Added
+
+- `UserMenu` (and `SideBar` / `MobileNav` through `userMenu`) takes `invitations: { count, href, label? } | null`: the signed-in person's pending Registre space invitations. It adds an Invitations row after Account with a count pill (99+ cap, never wraps) and puts a dot on the avatar while `count` is above 0; the trigger's accessible name then ends with "2 pending invitations". An absolute `href` opens in a new tab. Leave it out, or pass `null`, for no row. Strings in fr, en, es and de. Also exported: `pendingInvitations()` and the `UserMenuInvitations` type.
+
+#### How an app wires it
+
+muse fetches nothing. The app's backend asks Registre and the shell passes the answer down:
+
+1. Backend: `GET /api/me/invitations` behind the session. It calls `GET https://sso.facile.studio/api/directory/invitations?sub=<registre subject>` with HTTP Basic (the app's OIDC client id and secret, the same pair as the directory syncer), caches the answer per user for 60 seconds, and returns `{ count, href }`: the one invitation's `url` when there is exactly one, else `https://sso.facile.studio/spaces`. On any error it returns `{ count: 0 }`. Registre's docs/invitations.md has the details.
+2. Frontend: `userMenu={{ ...userMenu, invitations }}` on `SideBar` and `MobileNav`.
+
 ## v0.17.1 (2026-11-10)
 
 ### Fixed

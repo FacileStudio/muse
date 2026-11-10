@@ -5,6 +5,7 @@ import type { UserMenuLabels } from './user-menu.js';
 export function userMenuLabels(t: I18n['t']): UserMenuLabels {
     return {
         account: t('userMenu.account'),
+        invitations: t('userMenu.invitations'),
         settings: t('userMenu.settings'),
         manageSubscription: t('userMenu.manageSubscription'),
         language: t('userMenu.language'),

@@ -138,6 +138,11 @@ export const de: MuseMessages = {
     'userMenu.open': '{name}: Kontomenü',
     'userMenu.label': 'Kontomenü',
     'userMenu.account': 'Mein Facile-Konto verwalten',
+    'userMenu.invitations': 'Einladungen',
+    'userMenu.invitationsPending': {
+        one: '{count} offene Einladung',
+        other: '{count} offene Einladungen'
+    },
     'userMenu.settings': 'Einstellungen',
     'userMenu.manageSubscription': 'Abonnement verwalten',
     'userMenu.language': 'Sprache',
