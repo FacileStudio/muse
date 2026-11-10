@@ -60,7 +60,7 @@ export const icons = {
   layers:        'solar:layers-linear',
   help:          'solar:question-circle-linear',
   external:      'solar:arrow-right-up-linear',
-  ideas:         'solar:lightbulb-bolt-linear',
+  ideas:         'solar:lightbulb-linear',
 } as const;
 
 export type IconKey = keyof typeof icons;

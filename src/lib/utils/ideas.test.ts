@@ -20,8 +20,8 @@ const idea = (id: string, extra: Partial<Idea> = {}): Idea => ({ id, kind: 'mail
 const NOW = Date.parse('2026-11-08T12:00:00Z');
 
 describe('ideas icon and kinds', () => {
-    test('the entry icon is the lightbulb-bolt', () => {
-        expect(IDEAS_ICON).toBe('solar:lightbulb-bolt-linear');
+    test('the entry icon is the lightbulb', () => {
+        expect(IDEAS_ICON).toBe('solar:lightbulb-linear');
         expect(icons.ideas).toBe(IDEAS_ICON);
     });
 
