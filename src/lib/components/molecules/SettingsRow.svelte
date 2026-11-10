@@ -57,7 +57,11 @@ Une ligne de réglage : libellé, description et contrôle. Le contrôle prend `
     {/if}
 
     {#if children}
-        <div class={twMerge('flex items-center gap-2', !stacked && 'sm:shrink-0 sm:justify-end')}>
+        <div
+            class={twMerge(
+                stacked ? 'flex flex-col items-stretch gap-2' : 'flex items-center gap-2 sm:shrink-0 sm:justify-end'
+            )}
+        >
             {@render children()}
         </div>
     {/if}

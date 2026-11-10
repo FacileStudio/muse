@@ -1,6 +1,8 @@
 <script lang="ts">
-    import { ProfileSection, SettingsRow, Stack, SwatchPicker, USER_COLOR_LABELS, USER_COLORS } from '@facile/muse';
+    import { Field, Input, ProfileSection, Textarea, SettingsRow, Stack, SwatchPicker, USER_COLOR_LABELS, USER_COLORS } from '@facile/muse';
 
+    let displayName = $state('Camille');
+    let bio = $state('');
     let identityColor = $state<string>(USER_COLORS[0]);
 </script>
 
@@ -13,6 +15,14 @@
                 bind:value={identityColor}
                 label="Identity colour"
             />
+        </SettingsRow>
+        <SettingsRow label="About you" description="Stacked rows give the field the full width." stacked>
+            <Field label="Display name">
+                <Input bind:value={displayName} />
+            </Field>
+            <Field label="Bio">
+                <Textarea bind:value={bio} />
+            </Field>
         </SettingsRow>
     </ProfileSection>
 </Stack>

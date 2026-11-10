@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.17.1 (2026-11-10)
+
+### Fixed
+
+- `SettingsRow` `stacked`: the control now takes the full width of the row. The wrapper was a horizontal `flex items-center` box, so a `Field`, `Input` or `Textarea` inside shrank to its content width. Stacked rows use a column with `items-stretch`; side-by-side rows are unchanged.
+
+### Added
+
+- `Textarea` grows with its content (`field-sizing: content`, with a `min-h-24` floor). Pass `autoGrow={false}` for a fixed height set by `rows`.
+
 ## v0.17.0 (2026-11-08)
 
 ### Added

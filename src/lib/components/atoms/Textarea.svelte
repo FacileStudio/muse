@@ -2,7 +2,9 @@
     import type { HTMLTextareaAttributes } from 'svelte/elements';
 
     export interface TextareaProps extends HTMLTextareaAttributes {
-        class?: string; value?: string
+        class?: string;
+        value?: string;
+        autoGrow?: boolean;
     }
 </script>
 
@@ -14,6 +16,7 @@
     let {
         value = $bindable(''),
         rows = 4,
+        autoGrow = true,
         id,
         'aria-describedby': describedBy,
         'aria-invalid': invalid,
@@ -24,12 +27,12 @@
     const field = getFieldContext();
     const control = $derived(resolveField(field?.(), { id, describedBy, invalid }));
 
-    const classes = $derived(twMerge('w-full resize-y px-3 py-2', controlFill, className));
+    const classes = $derived(twMerge('w-full resize-y px-3 py-2', autoGrow && 'field-sizing-content min-h-24', controlFill, className));
 </script>
 
 <!--
 @component
-Une zone de texte multiligne, redimensionnable verticalement, qui adopte le contexte de son `Field`.
+Une zone de texte multiligne, redimensionnable verticalement, qui grandit avec son contenu (`autoGrow={false}` pour une hauteur fixe) et qui adopte le contexte de son `Field`.
 -->
 
 <textarea
