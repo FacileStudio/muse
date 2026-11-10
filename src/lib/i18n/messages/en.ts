@@ -138,6 +138,11 @@ export const en = {
     'userMenu.open': '{name}: account menu',
     'userMenu.label': 'Account menu',
     'userMenu.account': 'Manage my Facile account',
+    'userMenu.invitations': 'Invitations',
+    'userMenu.invitationsPending': {
+        one: '{count} pending invitation',
+        other: '{count} pending invitations'
+    },
     'userMenu.settings': 'Settings',
     'userMenu.manageSubscription': 'Manage subscription',
     'userMenu.language': 'Language',

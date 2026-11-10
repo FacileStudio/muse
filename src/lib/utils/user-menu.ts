@@ -2,6 +2,7 @@ import { LOCALE_NAMES, type Locale } from '../i18n/locale.js';
 import { icons } from '../icons.js';
 import { THEMES, type Theme } from './theme.js';
 import { offeredLocales } from './user-menu-nav.js';
+import { invitationsRow } from './user-menu-invitations.js';
 
 export const ACCOUNT_URL = 'https://sso.facile.studio/account';
 
@@ -9,6 +10,7 @@ export type UserMenuView = 'root' | 'language' | 'theme';
 
 export type UserMenuLabels = {
     account: string;
+    invitations: string;
     settings: string;
     manageSubscription: string;
     language: string;
@@ -30,6 +32,13 @@ export type UserMenuItem = {
     tone?: 'default' | 'danger';
 };
 
+/** The signed-in person's pending space invitations, from Registre. `href` opens them (Registre's /spaces page or one invitation's page). */
+export type UserMenuInvitations = {
+    count: number;
+    href: string;
+    label?: string;
+};
+
 export type UserMenuSubscription = {
     /** The plan name shown beside the row. Leave it out when the app has no plan data: the row then shows only its label. */
     plan?: string;
@@ -42,6 +51,8 @@ export type UserMenuOptions = {
     align?: 'start' | 'end' | 'auto';
     items?: UserMenuItem[];
     accountHref?: string | null;
+    /** Adds an Invitations row after Account, with a count pill and a dot on the avatar while `count` is above 0. Leave it out, or pass null, to show no row. */
+    invitations?: UserMenuInvitations | null;
     settingsHref?: string | null;
     subscription?: UserMenuSubscription | null;
     helpHref?: string | null;
@@ -63,6 +74,8 @@ export type UserMenuRow = {
     label: string;
     icon?: string;
     detail?: string;
+    /** A count pill after the label, capped at 99+. */
+    count?: number;
     href?: string;
     external?: boolean;
     tone?: 'default' | 'danger';
@@ -128,6 +141,7 @@ function rootRows(model: UserMenuModel): UserMenuRow[] {
     const { labels, options } = model;
     return [
         ...linkRow('account', labels.account, icons.userCircle, options.accountHref, true),
+        ...invitationsRow(model),
         ...appRows(options.items),
         ...linkRow('settings', labels.settings, icons.settings, options.settingsHref),
         ...subscriptionRow(model),
@@ -145,9 +159,10 @@ function choiceRows(model: UserMenuModel): UserMenuRow[] {
     return [back, ...THEMES.map((t): UserMenuRow => ({ id: t, kind: 'radio', label: labels[t], checked: t === model.theme, run: () => model.onTheme(t) }))];
 }
 
-/** The rows of one menu view, in the canonical order: Account, app items, Settings, Subscription, Language, Theme, Help, gap, Sign out. */
+/** The rows of one menu view, in the canonical order: Account, Invitations, app items, Settings, Subscription, Language, Theme, Help, gap, Sign out. */
 export function userMenuRows(model: UserMenuModel): UserMenuRow[] {
     return model.view === 'root' ? rootRows(model) : choiceRows(model);
 }
 
 export { actionable, drillKey, offeredLocales, startIndex } from './user-menu-nav.js';
+export { pendingInvitations, triggerLabel } from './user-menu-invitations.js';

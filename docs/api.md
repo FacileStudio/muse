@@ -738,8 +738,8 @@ One real `<input autocomplete="one-time-code">` drawn as cells, so typing, paste
 
 The menu behind the sidebar's user card (`trigger="card"`) and the mobile avatar (`trigger="avatar"`
 with `presentation="sheet"`). `SideBar` and `MobileNav` mount it for you; their `userMenu` prop is the
-`UserMenuOptions` below. APG menu button, top-layer popover, no border. Rows in order: Account, `items`,
-Settings, Subscription, Language, Theme, Help, Sign out. A row with no link or handler is not drawn.
+`UserMenuOptions` below. APG menu button, top-layer popover, no border. Rows in order: Account, Invitations,
+`items`, Settings, Subscription, Language, Theme, Help, Sign out. A row with no link or handler is not drawn.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
@@ -750,6 +750,7 @@ Settings, Subscription, Language, Theme, Help, Sign out. A row with no link or h
 | `active` | `boolean` | `false` | Surface fill (card) or inverted pill (avatar) |
 | `items` | `UserMenuItem[]` | — | App rows before Settings: `label`, `icon`, `href` or `onSelect`, `tone` |
 | `accountHref` | `string \| null` | `ACCOUNT_URL` | `null` hides the row |
+| `invitations` | `{ count, href, label? } \| null` | — | Pending Registre space invitations: an Invitations row with a count pill (99+ cap, no wrap) and a dot on the avatar while `count > 0`. An absolute `href` opens a new tab. Leave it out to show no row |
 | `settingsHref` | `string \| null` | — | |
 | `subscription` | `{ plan?, href, label? } \| null` | — | Without `plan` the row shows only its label |
 | `helpHref` | `string \| null` | — | |

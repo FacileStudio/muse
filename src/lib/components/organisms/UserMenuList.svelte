@@ -16,6 +16,7 @@
     import { twMerge } from '../../utils/cn.js';
     import { icons } from '../../icons.js';
     import Icon from '../atoms/Icon.svelte';
+    import NavMarks from '../molecules/NavMarks.svelte';
 
     let { rows, active, backLabel, newTabLabel, onChoose, onPoint, onSpace }: UserMenuListProps = $props();
 
@@ -32,6 +33,9 @@
 {#snippet content(row: UserMenuRow)}
     {#if row.icon}<Icon icon={row.icon} size={16} class="shrink-0" />{/if}
     <span class={twMerge('min-w-0 flex-1 truncate', row.checked && 'font-semibold')}>{row.label}</span>
+    {#if row.count}
+        <NavMarks badge={row.count} />
+    {/if}
     {#if row.detail}
         <span class="max-w-28 shrink-0 truncate text-fc-xs text-fc-fg-muted">{row.detail}</span>
     {/if}

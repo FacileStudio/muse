@@ -108,6 +108,7 @@
             userHref="#/settings"
             userMenu={{
                 items: [{ label: 'Downloads', icon: icons.download, href: '#/' }],
+                invitations: { count: 2, href: 'https://sso.facile.studio/spaces' },
                 subscription: { plan: 'Pro', href: '#/settings/subscription' },
                 helpHref: 'https://muse.facile.studio',
                 onSignOut: () => {},
@@ -157,6 +158,7 @@
         profileActive={onSettings}
         userMenu={{
             subscription: { href: '#/settings/subscription' },
+            invitations: { count: 2, href: 'https://sso.facile.studio/spaces' },
             locales: ['fr', 'en'],
             helpHref: 'https://muse.facile.studio',
             onSignOut: () => {},
