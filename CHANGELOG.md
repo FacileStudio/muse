@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.19.1 (2026-11-11)
+
+### Fixed
+
+- `SideBar`: the ⌘K and ⌘D shortcut hints use `text-fc-fg-muted` instead of `opacity-50`, so they pass WCAG AA colour contrast in light and dark.
+- `LandingFooter` is now the page's `<footer>` landmark as a whole, so the brand, tagline and link columns sit inside contentinfo. `LegalFooter` takes `landmark` (default `true`); `LandingFooter` renders its inner one with `landmark={false}`, so footers never nest.
+
 ## v0.19.0 (2026-11-11)
 
 ### Added
