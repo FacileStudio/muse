@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.18.1 (2026-11-11)
+
+### Fixed
+
+- Dependencies: the dev and site lockfiles move to svelte 5.57.3, vite 6.4.6 and @sveltejs/kit 2.70.4, and the site pins patched devalue, source-map-js and cookie. Clears the vite, devalue and source-map-js advisories. No component or API change.
+
 ## v0.18.0 (2026-11-10)
 
 ### Added
