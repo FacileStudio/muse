@@ -32,8 +32,8 @@ export const APPS: SuiteApp[] = [
     },
     {
         id: 'boite', name: 'Boîte', icon: 'solar:box-minimalistic-bold-duotone', url: 'https://boite.facile.studio',
-        title: 'Packages and build artifacts',
-        description: 'Hosts your private packages, Docker images and binary artifacts on your own server, next to your code.'
+        title: 'Disposable VM sandboxes for development',
+        description: 'A CLI that creates, manages and cleans up disposable QEMU virtual machines as isolated development sandboxes.'
     },
     {
         id: 'boutique', name: 'Boutique', icon: BOUTIQUE_GLYPH, url: 'https://boutique.facile.studio',
@@ -110,7 +110,7 @@ export const APPS: SuiteApp[] = [
     },
     {
         id: 'pastille', name: 'Pastille', icon: 'solar:circle-dot-bold-duotone', url: 'https://pastille.facile.studio',
-        title: 'An open voice beacon, 38 mm wide',
+        title: 'An open voice companion, 42 mm wide',
         description: 'Open BOHS-01 hardware with duplex 16 kHz audio, a round IPS screen and Rust Embassy firmware.'
     },
     {

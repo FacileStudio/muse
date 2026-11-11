@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.19.2 (2026-11-11)
+
+### Changed
+
+- `scripts/brand/generate.ts <id> <outDir>` no longer writes `head.html` into `<outDir>`. That dir is usually an app's public `static/` or `public/`, so the block shipped as a public file. It prints the head block to stdout, and writes it only to the file given with `--head <file>`. `--all <dir>` still writes `<dir>/<id>/head.html`, since that dir is an export, not a web root.
+
+### Fixed
+
+- Catalog: Boîte is a CLI for disposable QEMU VM development sandboxes, not a package host. New title and description.
+- Catalog: Pastille's title says 42 mm, the disc's size, instead of 38 mm, its board's.
+
 ## v0.19.1 (2026-11-11)
 
 ### Fixed

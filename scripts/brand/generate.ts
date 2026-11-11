@@ -8,7 +8,7 @@ import { ogSvg } from './og.ts';
 import { renderPng } from './raster.ts';
 import { faviconSvg, iconSvg } from './svg.ts';
 
-const USAGE = 'usage: bun scripts/brand/generate.ts <id> <outDir> | --all <dir>';
+const USAGE = 'usage: bun scripts/brand/generate.ts <id> <outDir> [--head <file>] | --all <dir>';
 
 /** Writes an app's favicons, touch and manifest icons, link preview and manifest into `dir`. */
 export function writeAssets(app: SuiteApp, dir: string): void {
@@ -25,11 +25,11 @@ export function writeAssets(app: SuiteApp, dir: string): void {
     writeFileSync(join(dir, 'site.webmanifest'), webManifest(app));
 }
 
-/** Writes every asset plus `head.html` for one app, and returns the head block. */
-export function generate(app: SuiteApp, dir: string): string {
+/** Writes an app's assets into `dir` and returns its head block, written to `headFile` only when one is given. */
+export function generate(app: SuiteApp, dir: string, headFile?: string): string {
     writeAssets(app, dir);
     const head = headHtml(app);
-    writeFileSync(join(dir, 'head.html'), head);
+    if (headFile) writeFileSync(headFile, head);
     return head;
 }
 
@@ -41,14 +41,16 @@ export function findApp(id: string): SuiteApp {
 }
 
 function main(args: string[]): void {
-    const [first, dir] = args;
-    if (!first || !dir) throw new Error(USAGE);
+    const [first, dir, flag, headFile, ...rest] = args;
+    if (!first || !dir || rest.length > 0) throw new Error(USAGE);
     if (first === '--all') {
-        APPS.forEach((app) => generate(app, join(dir, app.id)));
+        if (flag) throw new Error(USAGE);
+        APPS.forEach((app) => generate(app, join(dir, app.id), join(dir, app.id, 'head.html')));
         console.error(`brand: wrote ${APPS.length} apps into ${dir}`);
         return;
     }
-    process.stdout.write(generate(findApp(first), dir));
+    if (flag !== undefined && (flag !== '--head' || !headFile)) throw new Error(USAGE);
+    process.stdout.write(generate(findApp(first), dir, headFile));
 }
 
 if (import.meta.main) main(process.argv.slice(2));

@@ -1,8 +1,10 @@
 import { describe, expect, test } from 'bun:test';
-import { readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { APPS } from './apps.ts';
 import { resolveGlyph } from './glyphs.ts';
+import { findApp, generate } from './generate.ts';
 import { encodeIco } from './ico.ts';
 import { faviconSvg } from './svg.ts';
 
@@ -39,4 +41,19 @@ test('the muse site favicon is the generated one', () => {
     const muse = APPS.find((app) => app.id === 'muse');
     const shipped = readFileSync(join(import.meta.dir, '../../site/static/favicon.svg'), 'utf8');
     expect(shipped).toBe(faviconSvg(resolveGlyph(muse!.icon)));
+});
+
+test('generate keeps the head block out of the asset dir unless --head names a file', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'brand-'));
+    try {
+        const head = generate(findApp('muse'), dir);
+        expect(head).toContain('<title>');
+        expect(existsSync(join(dir, 'head.html'))).toBe(false);
+        expect(existsSync(join(dir, 'favicon.svg'))).toBe(true);
+        const file = join(dir, 'block.html');
+        generate(findApp('muse'), dir, file);
+        expect(readFileSync(file, 'utf8')).toBe(head);
+    } finally {
+        rmSync(dir, { recursive: true, force: true });
+    }
 });

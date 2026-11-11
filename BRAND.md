@@ -63,8 +63,9 @@ Every suite app gets its tab icon, touch icons, link preview and `<head>` from o
 The catalog of apps (name, icon, URL, English title and description) is `scripts/brand/apps.ts`.
 
 ```sh
-bun scripts/brand/generate.ts <id> <outDir>   # one app; prints the head block
-bun scripts/brand/generate.ts --all <dir>     # every app, into <dir>/<id>/
+bun scripts/brand/generate.ts <id> <outDir>                 # one app; prints the head block
+bun scripts/brand/generate.ts <id> <outDir> --head <file>   # also writes the head block to <file>
+bun scripts/brand/generate.ts --all <dir>                   # every app, into <dir>/<id>/, head.html included
 ```
 
 It writes:
@@ -77,12 +78,12 @@ It writes:
 | `icon-192.png`, `icon-512.png` | The same tile, for the manifest. |
 | `og-image.png` | The 1200x630 link preview Discord, Slack and social sites show. |
 | `site.webmanifest` | Name, the two icons, `#fafafa` theme and background, `standalone`. |
-| `head.html` | The canonical `<head>` block: title, description, icons, theme colours, Open Graph, Twitter. |
+| head block | The canonical `<head>` block: title, description, icons, theme colours, Open Graph, Twitter. Printed to stdout; written to a file only with `--head <file>`, so it never lands in a public `static/` dir. |
 
 Rules:
 
 - Apps never hand-edit these files. Change the catalog or the generator in muse, regenerate,
-  and copy the output into the app's `static/`. Paste `head.html` into `src/app.html`.
+  and copy the output into the app's `static/`. Paste the printed head block into `src/app.html`.
 - Icons are Solar `bold-duotone` names, checked against `@iconify-json/solar`. An app with its
   own mark (Boutique, sonar, the Facile "F." for the studio site) passes a glyph instead.
 - Titles are 3 to 7 words and descriptions 90 to 155 characters, in English. `brand.test.ts`
