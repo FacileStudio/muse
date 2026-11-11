@@ -41,7 +41,7 @@
     );
 </script>
 
-<svelte:head><title>Composants — muse</title></svelte:head>
+<svelte:head><title>Composants · muse</title></svelte:head>
 
 <Stack gap="bound">
     <h1 class="text-fc-2xl font-semibold text-fc-fg">Composants</h1>

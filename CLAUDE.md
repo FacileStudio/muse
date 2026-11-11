@@ -21,6 +21,7 @@ muse/
   .github/workflows/ci.yml    check + test + demo build on push and PR
   demo/                       Vite SPA playground — src/pages/ (hash router) renders every component
   integrations/SKILL.md       Shared AI skill definition
+  scripts/brand/              Suite brand assets: app catalog (apps.ts) and the favicon/og generator
   src/lib/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map (47 keys) + IconKey type

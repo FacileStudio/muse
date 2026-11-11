@@ -1,29 +1,31 @@
 /*
- * The favicon, generated from the same bundled glyph the rail draws — so the tab icon and the
- * logo cannot drift.
- *
- * No background plate: a favicon sits on browser chrome that is already a surface, and a filled
- * square reads as a sticker on it. Transparent means the glyph has to survive both a light and a
- * dark tab strip, which a single fill cannot do — so the colour comes from an embedded
- * `prefers-color-scheme` block. SVG favicons honour it in Chrome and Firefox; Safari falls back
- * to the default fill, which is the dark one and is correct on its light chrome.
+ * muse's own favicons, touch icons, link preview, manifest and <head>, from the suite brand
+ * generator. Run `bun site/scripts/favicon.ts` after a change to scripts/brand; never edit the
+ * files it writes by hand.
  */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { ICON_DATA } from '../../src/lib/icons-data.js';
+import { findApp, writeAssets } from '../../scripts/brand/generate.ts';
+import { headHtml } from '../../scripts/brand/head.ts';
 
-const MARK = 'solar:pallete-2-bold-duotone';
-const d = ICON_DATA[MARK];
-if (!d) throw new Error(`${MARK} is not in the bundle — run scripts/build-icons.ts`);
+const app = findApp('muse');
+const site = join(import.meta.dir, '..');
+writeAssets(app, join(site, 'static'));
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${d.width} ${d.height}">
-  <style>
-    :root { color: #0a0a0a }
-    @media (prefers-color-scheme: dark) { :root { color: #fafafa } }
-  </style>
-  ${d.body}
-</svg>
+const head = headHtml(app).trimEnd().split('\n').map((line) => `        ${line}`).join('\n');
+const html = `<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="light dark" />
+${head}
+        %sveltekit.head%
+    </head>
+    <body data-sveltekit-preload-data="hover">
+        <div style="display: contents">%sveltekit.body%</div>
+    </body>
+</html>
 `;
-
-writeFileSync(join(import.meta.dir, '../static/favicon.svg'), svg);
-console.log(`favicon written from ${MARK}, ${svg.length} bytes, transparent`);
+writeFileSync(join(site, 'src/app.html'), html);
+console.log(`brand assets and src/app.html written for ${app.id}`);

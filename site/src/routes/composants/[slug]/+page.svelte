@@ -9,7 +9,7 @@
     const examples = $derived(examplesFor(doc.name));
 </script>
 
-<svelte:head><title>{doc.name} — muse</title></svelte:head>
+<svelte:head><title>{doc.name} · muse</title></svelte:head>
 
 <Stack gap="bound">
     <Inline gap="tight">

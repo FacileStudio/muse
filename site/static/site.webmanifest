@@ -1,7 +1,7 @@
 {
   "name": "muse",
   "short_name": "muse",
-  "description": "The Svelte 5 component library and design system behind the Facile Suite.",
+  "description": "The Svelte 5 component library behind the Facile Suite: tokens, primitives and the charter every app uses.",
   "icons": [
     {
       "src": "/icon-192.png",
@@ -12,15 +12,10 @@
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
     }
   ],
-  "theme_color": "#0a0a0a",
-  "background_color": "#0a0a0a",
+  "theme_color": "#fafafa",
+  "background_color": "#fafafa",
   "display": "standalone",
   "start_url": "/"
 }

@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.19.0 (2026-11-11)
+
+### Added
+
+- The suite brand-asset generator. `scripts/brand/apps.ts` is the one catalog of the 32 suite apps: id, name, icon, URL, an English title and an English description. `bun scripts/brand/generate.ts <id> <outDir>` (or `--all <dir>`) writes `favicon.svg`, a 16/32/48 px `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, a 1200x630 `og-image.png`, `site.webmanifest` and `head.html`, and prints the head block. Rasterised with `@resvg/resvg-js` and the bundled Inter font; Solar glyphs come from `@iconify-json/solar`. BRAND.md has the rules: apps never hand-edit these files.
+
+### Changed
+
+- muse.facile.studio uses the generator: new favicons, touch icons, manifest, link preview and `<head>` (`og:site_name` is now Facile, theme colour light `#fafafa`). `site/scripts/favicon.ts` regenerates them and no longer runs during the site build, so the Docker build needs no root dependencies.
+
 ## v0.18.1 (2026-11-11)
 
 ### Fixed
