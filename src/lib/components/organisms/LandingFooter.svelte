@@ -9,7 +9,7 @@
         links: Pick<LandingLink, 'href' | 'label' | 'external'>[];
     }
 
-    export interface LandingFooterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+    export interface LandingFooterProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
         /** Shown next to the icon, and as the home link's name. */
         appName?: string;
         /** Iconify name drawn before `appName`. */
@@ -23,7 +23,7 @@
         /** Link groups. They sit in a row on wide screens and stack on a phone. */
         columns?: LandingFooterColumn[];
         /** Passed to the `LegalFooter` inside: `cgu`, `base`, `hideLocaleSwitch`... */
-        legal?: LegalFooterProps;
+        legal?: Omit<LegalFooterProps, 'landmark'>;
         /** Overrides the default "(c) year appName" line. */
         copyright?: string;
         /** Year in the default copyright line. Without it the year appears after mount, so server and client markup match. */
@@ -82,10 +82,10 @@
 
 <!--
 @component
-Le pied de page d'une page d'atterrissage : la marque, des colonnes de liens qui s'empilent sur mobile, puis une bande avec le copyright et le pied légal. La bande légale porte le repère contentinfo (le `<footer>` de `LegalFooter`) : ne pas ajouter un second `<footer>` autour.
+Le pied de page d'une page d'atterrissage : la marque, des colonnes de liens qui s'empilent sur mobile, puis une bande avec le copyright et le pied légal. Le tout est le repère contentinfo (un seul `<footer>`, le `LegalFooter` intérieur rendu en `div`) : ne pas ajouter un second `<footer>` autour.
 -->
 
-<div class={classes} {...rest}>
+<footer class={classes} {...rest}>
     <div class="fc-chrome flex flex-col rounded-fc-outer bg-fc-component p-(--fc-pad)">
         <div class="flex flex-col gap-8 px-6 py-8 md:flex-row md:justify-between md:px-8">
             <div class="flex min-w-0 flex-col gap-3">
@@ -134,7 +134,7 @@ Le pied de page d'une page d'atterrissage : la marque, des colonnes de liens qui
             class="flex flex-col gap-1 rounded-fc-inner bg-fc-surface px-6 py-2 text-fc-xs text-fc-fg-muted lg:flex-row lg:items-center lg:justify-between lg:gap-6"
         >
             {#if line}<p>{line}</p>{/if}
-            <LegalFooter {...legal} />
+            <LegalFooter {...legal} landmark={false} />
         </div>
     </div>
-</div>
+</footer>

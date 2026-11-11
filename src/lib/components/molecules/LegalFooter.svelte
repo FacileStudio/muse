@@ -14,6 +14,8 @@
         /** Hide the language switcher. */
         hideLocaleSwitch?: boolean;
         onLocaleChange?: (locale: Locale) => void;
+        /** Render as the page's `<footer>` landmark. Set `false` inside another footer, which then carries the landmark. */
+        landmark?: boolean;
         class?: string;
     }
 </script>
@@ -33,6 +35,7 @@
         base = LEGAL_BASE,
         hideLocaleSwitch = false,
         onLocaleChange,
+        landmark = true,
         class: className = '',
         ...rest
     }: LegalFooterProps = $props();
@@ -58,7 +61,7 @@
 Le pied de page légal : CGU, CGV, confidentialité et mentions légales hébergées par Registre, plus le choix de langue.
 -->
 
-<footer class={classes} {...rest}>
+<svelte:element this={landmark ? 'footer' : 'div'} class={classes} {...rest}>
     <nav aria-label={i18n.t('legal.nav')}>
         <ul class="flex flex-wrap justify-center gap-x-4 gap-y-1">
             {#each links as link (link.label)}
@@ -77,4 +80,4 @@ Le pied de page légal : CGU, CGV, confidentialité et mentions légales héberg
     {#if !hideLocaleSwitch}
         <LocaleSwitch onChange={onLocaleChange} />
     {/if}
-</footer>
+</svelte:element>

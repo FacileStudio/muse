@@ -194,7 +194,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                             <!-- No handler, no chip: the shortcut hint is a promise, and an
                                  unwired Search row cannot keep it. -->
                             {#if onSearch}
-                                <span class="text-fc-xs opacity-50 shrink-0">⌘K</span>
+                                <span class="text-fc-xs text-fc-fg-muted shrink-0">⌘K</span>
                             {/if}
                         {/snippet}
                     </NavButton>
@@ -208,7 +208,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                         aria-label={i18n.t(collapsed ? 'sideBar.expand' : 'sideBar.collapse')}
                     >
                         {#snippet right()}
-                            <span class="text-fc-xs opacity-50 shrink-0">⌘D</span>
+                            <span class="text-fc-xs text-fc-fg-muted shrink-0">⌘D</span>
                         {/snippet}
                     </NavButton>
                 {/if}
