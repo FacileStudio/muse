@@ -15,6 +15,7 @@
 		Checkbox,
 		DonutChart,
 		DownloadCta,
+		DownloadSection,
 		LandingFooter,
 		LandingHeader,
 		Field,
@@ -157,6 +158,11 @@
 
 					<PricingPlans {catalog} data-smoke-pricing />
 					<DownloadCta href="/downloads" data-smoke-download />
+					<DownloadSection
+						downloads={[{ platform: 'linux', href: '/smoke.deb', label: '.deb', size: 4_200_000 }]}
+						commands={[{ label: 'Homebrew', command: 'brew install facilestudio/tap/smoke' }]}
+						data-smoke-download-section
+					/>
 					<LandingHeader appName="Smoke" links={[{ href: '#a', label: 'A' }]} data-smoke-landing-header />
 					<LandingFooter appName="Smoke" data-smoke-landing-footer />
 

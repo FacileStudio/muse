@@ -144,6 +144,8 @@ export { default as MobileNav } from './components/organisms/MobileNav.svelte';
 export type { MobileNavProps } from './components/organisms/MobileNav.svelte';
 export { default as PricingPlans } from './components/organisms/PricingPlans.svelte';
 export type { PricingPlansProps } from './components/organisms/PricingPlans.svelte';
+export { default as DownloadSection } from './components/organisms/DownloadSection.svelte';
+export type { DownloadSectionProps } from './components/organisms/DownloadSection.svelte';
 export { default as ProfileCard } from './components/organisms/ProfileCard.svelte';
 export type { ProfileCardProps } from './components/organisms/ProfileCard.svelte';
 export { default as Presence } from './components/organisms/Presence.svelte';
@@ -273,6 +275,8 @@ export { LEGAL_DOCS, LEGAL_BASE, SIGNUP_URL, legalUrl, signUpUrl } from './utils
 export type { LegalDoc } from './utils/legal.js';
 export { planLimitFrom, isSafeUpgradeUrl } from './utils/plan-limit.js';
 export { isSafeHref, safeHref, withParam } from './utils/href.js';
+export { detectPlatform, groupDownloads, PLATFORM_ORDER } from './utils/download.js';
+export type { CliCommand, DownloadEntry, DownloadGroup } from './utils/download.js';
 export type { PlanLimitError } from './utils/plan-limit.js';
 export { CATALOG_URL, CATALOG_TIMEOUT_MS, fetchCatalog, parseCatalog, parsePlan, parsePrice, parseFeatures } from './utils/catalog.js';
 export type { BillingInterval, CatalogPlan, CatalogPrice, FeatureValue, FetchCatalogOptions } from './utils/catalog.js';
