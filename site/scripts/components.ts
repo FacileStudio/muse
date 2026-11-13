@@ -82,9 +82,11 @@ function parseProps(body: string): PropDoc[] {
     const parts: string[] = [];
     let depth = 0;
     let buf = '';
+    let prev = '';
     for (const ch of body) {
         if ('{(<['.includes(ch)) depth++;
-        if ('})>]'.includes(ch)) depth--;
+        if ('})]'.includes(ch) || (ch === '>' && prev !== '=')) depth--;
+        prev = ch;
         if (ch === ';' && depth === 0) {
             parts.push(buf);
             buf = '';

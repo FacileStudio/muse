@@ -10,6 +10,7 @@
         ChartTooltip,
         Checkbox,
         ConfirmModal,
+        ConnectionHint,
         DonutChart,
         Drawer,
         Field,
@@ -20,6 +21,7 @@
         Modal,
         Page,
         PageHeader,
+        Presence,
         Radio,
         SpaceSwitcher,
         Sparkline,
@@ -38,6 +40,15 @@
     let digest = $state('weekly');
     let scopes = $state({ projects: true, invoices: false, exports: true });
     let activeSpaceId = $state<string | null>('acme');
+    let following = $state<string | number | null>(null);
+    const peers = [
+        { id: 'lea', name: 'Léa Martin', color: '#AD9EF0' },
+        { id: 'marc', name: 'Marc Dubois', color: '#EE7E89' },
+        { id: 'ines', name: 'Inès Haddad', color: '#7EEEDB' },
+        { id: 'paul', name: 'Paul Girard', color: '#EEB47E' },
+        { id: 'zoe', name: 'Zoé Laurent', color: '#A9EE7E' },
+        { id: 'noe', name: 'Noé Petit', color: '#F09ED6' }
+    ];
     let modalOpen = $state(false);
     let confirmOpen = $state(false);
     let deleteOpen = $state(false);
@@ -96,7 +107,12 @@
     <PageHeader
         title="Dashboard"
         description="Overview of the current space, and a gallery of the primitives every Facile tool shares."
-    />
+    >
+        {#snippet actions()}
+            <ConnectionHint state="connecting" />
+            <Presence {peers} {following} onfollow={(id) => (following = id)} />
+        {/snippet}
+    </PageHeader>
 
     <!-- One rhythm for the whole page: 40px between sections, 16px between the cards of a
          section, 20px of card padding, and a section's heading bound to its body by the

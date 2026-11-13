@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.20.0 (2026-11-13)
+
+### Added
+
+- `Presence`: the other people connected to a document, as an overlapping avatar stack. Each avatar has a 2px ring in the peer's colour, set off from the background by a gap. Past `max` (default 4) the rest fold into a "+N" pill whose tooltip lists their names. Each avatar has a tooltip and a 44px hit target. With `onfollow`, each avatar is a follow button ("Suivre Léa", or "Arrêter de suivre" on the one followed), and a "Vous suivez Léa · Arrêter" pill sits before the stack. Avatars scale and fade in and out, and stay still under reduced motion. It renders nothing when `peers` is empty. Props: `peers: PresencePeer[]` (`{ id, name, color, picture? }`, the viewer left out by the caller), `following?: PresenceId | null`, `onfollow?: (id: PresenceId | null) => void`, `max?: number`, `labels?: Partial<PresenceLabels>`. Types `PresencePeer`, `PresenceId`, `PresenceLabels`.
+- `ConnectionHint`: the realtime link state as a quiet pill built on `StatusDot`. `live` renders nothing, `connecting` shows a pulsing warning dot ("Reconnexion…"), `offline` shows "Hors ligne" with "Vos modifications partiront au retour du réseau" in a tooltip and to screen readers, `stopped` shows a danger dot ("Déconnecté"). Props: `state: ConnectionState`, `labels?: Partial<ConnectionHintLabels>`.
+- `presence.*` and `connection.*` strings in fr, en, es and de. Both components read the active locale from `provideLocale`, and `labels` overrides any string.
+
+### Fixed
+
+- muse.facile.studio prop tables: a callback prop (`onRun?: (idea: Idea) => void`) no longer hides every prop declared after it. The extractor read the `>` of `=>` as a closing bracket.
+
 ## v0.19.2 (2026-11-11)
 
 ### Changed

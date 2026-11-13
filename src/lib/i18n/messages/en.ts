@@ -260,7 +260,20 @@ export const en = {
     'otp.character': 'Character {n} of {total}',
     'slider.min': 'Minimum',
     'slider.max': 'Maximum',
-    'combobox.empty': 'No results'
+    'combobox.empty': 'No results',
+    'presence.region': 'Connected people',
+    'presence.follow': 'Follow {name}',
+    'presence.stopFollowing': 'Stop following',
+    'presence.following': 'You are following {name}',
+    'presence.stop': 'Stop',
+    'presence.more': {
+        one: '{count} more person',
+        other: '{count} more people'
+    },
+    'connection.connecting': 'Reconnecting…',
+    'connection.offline': 'Offline',
+    'connection.offlineDetail': 'Your changes will be sent when the network is back',
+    'connection.stopped': 'Disconnected'
 } satisfies Record<string, Message>;
 
 export type MuseMessages = { [K in keyof typeof en]: Message };

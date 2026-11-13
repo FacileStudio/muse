@@ -1,13 +1,26 @@
 <script lang="ts">
     import {
-        Button, ConfirmModal, Drawer, Modal, ProfileCard, Table, Topbar, toast
+        Button, ConfirmModal, ConnectionHint, Drawer, Modal, Presence, ProfileCard, Table, Topbar, toast
     } from '@facile/muse';
     import Row from './Row.svelte';
 
     let modal = $state(false);
     let drawer = $state(false);
     let confirm = $state(false);
+    let following = $state<string | number | null>(null);
+    const peers = [
+        { id: 1, name: 'Léa Martin', color: '#AD9EF0' },
+        { id: 2, name: 'Marc Dubois', color: '#EE7E89' },
+        { id: 3, name: 'Inès Haddad', color: '#7EEEDB' },
+        { id: 4, name: 'Paul Girard', color: '#EEB47E' },
+        { id: 5, name: 'Zoé Laurent', color: '#A9EE7E' }
+    ];
 </script>
+
+<Row name="Presence · ConnectionHint" lead="Qui d'autre est sur le document, et l'état du lien temps réel. Les deux s'effacent quand il n'y a rien à dire.">
+    <ConnectionHint state="offline" />
+    <Presence {peers} {following} onfollow={(id) => (following = id)} />
+</Row>
 
 <Row name="Modal · Drawer · ConfirmModal" lead="Un <dialog> natif : le navigateur les met dans sa couche supérieure, au-dessus de tout z-index.">
     <Button variant="secondary" onclick={() => (modal = true)}>Ouvrir une modale</Button>
