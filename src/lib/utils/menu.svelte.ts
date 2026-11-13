@@ -60,7 +60,10 @@ export class MenuState extends AnchoredPopup {
     };
 
     focusActive = (): void => {
-        if (this.open && this.mode === 'keyboard' && this.active >= 0) this.host.items()[this.active]?.focus();
+        if (!this.open || this.mode !== 'keyboard' || this.active < 0) return;
+        const item = this.host.items()[this.active];
+        item?.focus({ preventScroll: true });
+        item?.scrollIntoView({ block: 'nearest' });
     };
 
     type = (char: string): void => {

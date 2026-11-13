@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.21.1 (2026-11-13)
+
+### Fixed
+
+- `Menu` and `UserMenu` keep the keyboard-active entry in view. In a menu taller than its panel, ArrowDown, ArrowUp, Home, End and type-ahead now scroll the panel to the entry (`scrollIntoView({ block: 'nearest' })`); before, the highlight moved below the fold and only the mouse wheel reached it. Focus moves with `preventScroll`, so the panel never jumps to centre the entry. A pointer hover still neither focuses nor scrolls.
+- `Menu` keeps its labels in one column when only some entries have an `icon`: entries without one get an empty icon-sized slot.
+
 ## v0.21.0 (2026-11-13)
 
 ### Changed
