@@ -79,6 +79,8 @@ export { default as EmptyState } from './components/molecules/EmptyState.svelte'
 export type { EmptyStateProps } from './components/molecules/EmptyState.svelte';
 export { default as UploadProgress } from './components/molecules/UploadProgress.svelte';
 export type { UploadProgressProps } from './components/molecules/UploadProgress.svelte';
+export { default as ConnectionHint } from './components/molecules/ConnectionHint.svelte';
+export type { ConnectionHintProps, ConnectionHintLabels, ConnectionState } from './components/molecules/ConnectionHint.svelte';
 export { default as Field } from './components/molecules/Field.svelte';
 export type { FieldProps } from './components/molecules/Field.svelte';
 export { default as LegalFooter } from './components/molecules/LegalFooter.svelte';
@@ -144,6 +146,8 @@ export { default as PricingPlans } from './components/organisms/PricingPlans.sve
 export type { PricingPlansProps } from './components/organisms/PricingPlans.svelte';
 export { default as ProfileCard } from './components/organisms/ProfileCard.svelte';
 export type { ProfileCardProps } from './components/organisms/ProfileCard.svelte';
+export { default as Presence } from './components/organisms/Presence.svelte';
+export type { PresenceProps, PresencePeer, PresenceId, PresenceLabels } from './components/organisms/Presence.svelte';
 export { default as Modal } from './components/organisms/Modal.svelte';
 export type { ModalProps } from './components/organisms/Modal.svelte';
 export { default as SideBar } from './components/organisms/SideBar.svelte';

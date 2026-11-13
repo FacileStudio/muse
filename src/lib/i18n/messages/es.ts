@@ -260,5 +260,18 @@ export const es: MuseMessages = {
     'otp.character': 'Carácter {n} de {total}',
     'slider.min': 'Mínimo',
     'slider.max': 'Máximo',
-    'combobox.empty': 'Sin resultados'
+    'combobox.empty': 'Sin resultados',
+    'presence.region': 'Personas conectadas',
+    'presence.follow': 'Seguir a {name}',
+    'presence.stopFollowing': 'Dejar de seguir',
+    'presence.following': 'Sigues a {name}',
+    'presence.stop': 'Parar',
+    'presence.more': {
+        one: '{count} persona más',
+        other: '{count} personas más'
+    },
+    'connection.connecting': 'Reconectando…',
+    'connection.offline': 'Sin conexión',
+    'connection.offlineDetail': 'Tus cambios se enviarán cuando vuelva la red',
+    'connection.stopped': 'Desconectado'
 };
