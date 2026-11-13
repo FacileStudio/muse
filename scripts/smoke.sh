@@ -147,11 +147,28 @@ SSR_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$SSR_PORT/
 [ "$SSR_STATUS" = '200' ] || fail "SSR answered $SSR_STATUS, expected 200" "$(cat "$SSR_LOG")"
 
 for marker in 'data-smoke="ready"' 'bg-fc-component' 'rounded-fc-pill' '<table' \
-    'data-smoke-pricing' '200 GB of storage' 'Starter' '€9' 'data-smoke-download' 'Download the apps'; do
+    'data-smoke-pricing' '200 GB of storage' 'Starter' '€9' 'data-smoke-download' 'Download the apps' \
+    'data-smoke-download-section' 'brew install facilestudio/tap/smoke'; do
     case "$HTML" in
         *"$marker"*) ;;
         *) fail "the server-rendered HTML is missing '$marker' — the page returned 200 but did not render" \
             "$(printf '%s' "$HTML" | head -c 600)" ;;
+    esac
+done
+
+# The @font-face url()s are relative to tokens.css inside node_modules. Only a packed install
+# proves Vite rebased them: each Magnetik file must be emitted, referenced by the compiled CSS
+# at its hashed path, and served by the built app as a woff2.
+step 'Loading the bundled Magnetik faces'
+for face in Regular Medium Bold; do
+    FONT_FILE=$(grep -oh "Magnetik-$face\.[A-Za-z0-9_-]*\.woff2" \
+        "$SMOKE"/build/client/_app/immutable/assets/*.css | head -1)
+    FONT_PATH="/_app/immutable/assets/$FONT_FILE"
+    [ -n "$FONT_FILE" ] || fail "the compiled CSS references no emitted Magnetik-$face.woff2"
+    FONT_TYPE=$(curl -s -o /dev/null -w '%{http_code} %{content_type}' "http://127.0.0.1:$SSR_PORT$FONT_PATH")
+    case "$FONT_TYPE" in
+        '200 font/woff2'*) ;;
+        *) fail "Magnetik-$face did not load: $FONT_PATH answered '$FONT_TYPE'" ;;
     esac
 done
 
@@ -169,17 +186,11 @@ CSS=$(find "$SMOKE/build/client/_app/immutable/assets" -name '*.css' 2>/dev/null
 # --color-fc-chart-6    the `@theme static` slot — a plain @theme drops it and SVG fills render black
 # color-scheme          the half of dark mode a token cannot reach; needed in BOTH modes
 # bg-fc-component       a utility that only exists because @source scanned node_modules
-for needle in '--color-fc-page' '--color-fc-chart-6' 'color-scheme:dark' 'color-scheme:light' 'bg-fc-component'; do
+# bg-fc-inverse         the inverse pair, used by DownloadSection's command rows
+for needle in '--color-fc-page' '--color-fc-chart-6' 'color-scheme:dark' 'color-scheme:light' 'bg-fc-component' \
+    'bg-fc-inverse' 'text-fc-on-inverse' 'text-fc-on-inverse-muted'; do
     grep -q -- "$needle" "$CSS" || fail "the compiled CSS is missing '$needle'" "stylesheet: $CSS"
 done
-
-# muse bundles no face any more (the trial cut it used to ship covered 68 glyphs and no
-# accented Latin). If one is reintroduced, restore an emitted-asset assertion here: the
-# @font-face url() resolving from node_modules is a real failure mode that only shows in a
-# packed install. `src/lib/styles/fonts.test.ts` guards the glyph coverage side of it.
-if ls "$SMOKE/build/client/_app/immutable/assets/" 2>/dev/null | grep -qi '\.\(otf\|ttf\|woff2\?\)$'; then
-    fail 'a font asset was emitted, but muse ships no face — add back the coverage assertion'
-fi
 
 # A `for` that points at no element is the failure mode `Field` exists to prevent, and it is
 # invisible to every other gate: it type-checks, it renders, and it looks right. Pull each
