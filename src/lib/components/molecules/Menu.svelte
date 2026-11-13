@@ -43,6 +43,7 @@
     let menuEl: HTMLElement | null = $state(null);
 
     const actions = $derived(items.filter((entry): entry is MenuAction => !('separator' in entry)));
+    const iconColumn = $derived(actions.some((action) => action.icon));
 
     const menu = new MenuState({
         labels: () => actions.map((a) => a.label),
@@ -80,7 +81,7 @@
 
 <!--
 @component
-Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les flèches bouclent, la frappe saute à l'entrée, Échap referme et rend le focus. Chaque entrée est un bouton, ou un lien avec `href`.
+Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les flèches bouclent (Début et Fin sautent aux bouts, les entrées désactivées sont sautées), l'entrée active reste visible dans un menu qui défile, la frappe saute à l'entrée, Échap referme et rend le focus. Chaque entrée est un bouton, ou un lien avec `href`.
 -->
 
 <div class={twMerge('relative inline-block', className)} {...rest}>
@@ -140,7 +141,7 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
                             onkeydown={space}
                             onpointermove={() => menu.point(index)}
                         >
-                            {#if entry.icon}<Icon icon={entry.icon} size={16} />{/if}
+                            {#if entry.icon}<Icon icon={entry.icon} size={16} />{:else if iconColumn}<span class="size-4 shrink-0" aria-hidden="true"></span>{/if}
                             <span class="min-w-0 flex-1 truncate">{entry.label}</span>
                         </a>
                     {:else}
@@ -153,7 +154,7 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
                             onclick={() => choose(entry)}
                             onpointermove={() => !entry.disabled && menu.point(index)}
                         >
-                            {#if entry.icon}<Icon icon={entry.icon} size={16} />{/if}
+                            {#if entry.icon}<Icon icon={entry.icon} size={16} />{:else if iconColumn}<span class="size-4 shrink-0" aria-hidden="true"></span>{/if}
                             <span class="min-w-0 flex-1 truncate">{entry.label}</span>
                         </button>
                     {/if}
