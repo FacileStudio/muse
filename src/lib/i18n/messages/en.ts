@@ -256,8 +256,6 @@ export const en = {
     'ideas.upsell.task.why': 'Five action items came out of Tuesday\'s call.',
     'ideas.upsell.follow_up.title': 'Follow up with a quiet lead',
     'ideas.upsell.follow_up.why': 'No answer in two weeks. A short nudge usually works.',
-    'otp.digit': 'Digit {n} of {total}',
-    'otp.character': 'Character {n} of {total}',
     'slider.min': 'Minimum',
     'slider.max': 'Maximum',
     'combobox.empty': 'No results',

@@ -24,6 +24,7 @@
     import { linkAttrs } from '../../utils/landing.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import Icon from '../atoms/Icon.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
     import IconButton from '../atoms/IconButton.svelte';
 
     let {
@@ -103,9 +104,11 @@ Le tiroir de LandingHeader, interne : un dialog natif qui glisse depuis la droit
     >
         <div class="flex flex-col gap-6">
             <div class="flex items-center justify-between gap-(--fc-pad)">
-                <a href={home} aria-label={appName ? undefined : i18n.t('landing.home')} class={brandClasses} onclick={followLink}>
-                    {@render brandView()}
-                </a>
+                <Tooltip text={i18n.t('landing.home')} describe={false} disabled={Boolean(appName)} class="contents">
+                    <a href={home} aria-label={appName ? undefined : i18n.t('landing.home')} class={brandClasses} onclick={followLink}>
+                        {@render brandView()}
+                    </a>
+                </Tooltip>
                 <IconButton variant="ghost" class={roundClasses} aria-label={i18n.t('landing.menu.close')} onclick={() => (open = false)}>
                     <Icon icon={icons.close} size={18} />
                 </IconButton>

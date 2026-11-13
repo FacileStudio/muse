@@ -87,6 +87,10 @@ Reach for these before hand-rolling — they are the ones agents most often rebu
 - **Settings rows** → `SettingsSection` + `SettingsRow`.
 - **Connection state** → `StatusDot`.
 - **Pick one of N (theme, density, view mode)** → `OptionCards`, a radiogroup of icon cards.
+- **Icon-only control** → `IconButton` with an `aria-label`. It shows that label as a muse
+  `Tooltip` on hover and keyboard focus (override with `tooltip="..."`). Never wrap it in your
+  own `Tooltip`; pass `tooltip={false}` if a parent must own the hint. A raw icon-only `<a>` or
+  `<button>` goes inside `<Tooltip>`. **Never use the native `title` attribute as a tooltip.**
 
 App shell = `SideBar` (desktop, collapsible) + `MobileNav` (the `md:hidden` floating pill bar).
 `SideBar` takes `spaces` / `activeSpaceId` / `onSpaceSelect` and renders `SpaceSwitcher` itself.

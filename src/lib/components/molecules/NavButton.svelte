@@ -21,6 +21,7 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import Icon from '../atoms/Icon.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
     import { springPress } from '../../utils/press.js';
     import TextElevate from '../motion/TextElevate.svelte';
 
@@ -37,6 +38,7 @@
         ...rest
     }: NavButtonProps = $props();
 
+    const name = $derived(collapsed ? label : undefined);
     const anchorRest = $derived(rest as HTMLAnchorAttributes);
     const buttonRest = $derived(rest as HTMLButtonAttributes);
 
@@ -52,7 +54,7 @@
 
 <!--
 @component
-Une ligne de navigation. Elle se réduit à un carré de 44px quand le rail se replie.
+Une ligne de navigation. Elle se réduit à un carré de 44px quand le rail se replie, et montre alors son libellé en info-bulle.
 -->
 
 {#snippet inner()}
@@ -68,18 +70,21 @@ Une ligne de navigation. Elle se réduit à un carré de 44px quand le rail se r
     {/if}
 {/snippet}
 
-{#if href}
-    <a
-        {href}
-        aria-current={active ? 'page' : undefined}
-        class={classes}
-        use:springPress
-        {...anchorRest}
-    >
-        {@render inner()}
-    </a>
-{:else}
-    <button type="button" class={classes} use:springPress {...buttonRest}>
-        {@render inner()}
-    </button>
-{/if}
+<Tooltip text={label ?? ''} describe={false} disabled={!collapsed || !label} class="contents">
+    {#if href}
+        <a
+            {href}
+            aria-current={active ? 'page' : undefined}
+            aria-label={name}
+            class={classes}
+            use:springPress
+            {...anchorRest}
+        >
+            {@render inner()}
+        </a>
+    {:else}
+        <button type="button" aria-label={name} class={classes} use:springPress {...buttonRest}>
+            {@render inner()}
+        </button>
+    {/if}
+</Tooltip>

@@ -202,10 +202,9 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                 {#if showCollapse}
                     <NavButton
                         icon={icons.collapse}
-                        label={i18n.t('sideBar.collapse')}
+                        label={i18n.t(collapsed ? 'sideBar.expand' : 'sideBar.collapse')}
                         collapsed={narrow}
                         onclick={() => (collapsed = !collapsed)}
-                        aria-label={i18n.t(collapsed ? 'sideBar.expand' : 'sideBar.collapse')}
                     >
                         {#snippet right()}
                             <span class="text-fc-xs text-fc-fg-muted shrink-0">⌘D</span>

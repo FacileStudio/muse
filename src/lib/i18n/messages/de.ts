@@ -256,8 +256,6 @@ export const de: MuseMessages = {
     'ideas.upsell.task.why': 'Aus dem Gespräch am Dienstag sind fünf To-dos entstanden.',
     'ideas.upsell.follow_up.title': 'Bei einem stillen Kontakt nachfassen',
     'ideas.upsell.follow_up.why': 'Seit zwei Wochen keine Antwort. Eine kurze Erinnerung wirkt meist.',
-    'otp.digit': 'Ziffer {n} von {total}',
-    'otp.character': 'Zeichen {n} von {total}',
     'slider.min': 'Minimum',
     'slider.max': 'Maximum',
     'combobox.empty': 'Keine Ergebnisse',

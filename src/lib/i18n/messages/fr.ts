@@ -256,8 +256,6 @@ export const fr: MuseMessages = {
     'ideas.upsell.task.why': 'Cinq actions sont ressorties de l\'appel de mardi.',
     'ideas.upsell.follow_up.title': 'Relancer un prospect silencieux',
     'ideas.upsell.follow_up.why': 'Pas de réponse depuis deux semaines. Une courte relance suffit souvent.',
-    'otp.digit': 'Chiffre {n} sur {total}',
-    'otp.character': 'Caractère {n} sur {total}',
     'slider.min': 'Minimum',
     'slider.max': 'Maximum',
     'combobox.empty': 'Aucun résultat',

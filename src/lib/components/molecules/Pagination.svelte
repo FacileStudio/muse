@@ -20,6 +20,7 @@
     import { icons } from '../../icons.js';
     import { pageRange } from '../../utils/pagination.js';
     import Icon from '../atoms/Icon.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
 
     let {
         page = $bindable(1),
@@ -53,15 +54,17 @@ La pagination d'une liste : précédent, suivant et une plage de pages avec des 
 
 {#if pageCount > 1}
     <nav aria-label={label ?? i18n.t('pagination.label')} class={twMerge('flex flex-wrap items-center gap-1', className)} {...rest}>
-        <button
-            type="button"
-            class={twMerge(cell, 'bg-fc-surface text-fc-fg hover:bg-fc-surface/60')}
-            aria-label={i18n.t('pagination.previous')}
-            disabled={current <= 1}
-            onclick={() => go(current - 1)}
-        >
-            <Icon icon={icons.chevronLeft} size={18} />
-        </button>
+        <Tooltip text={i18n.t('pagination.previous')} describe={false} class="contents">
+            <button
+                type="button"
+                class={twMerge(cell, 'bg-fc-surface text-fc-fg hover:bg-fc-surface/60')}
+                aria-label={i18n.t('pagination.previous')}
+                disabled={current <= 1}
+                onclick={() => go(current - 1)}
+            >
+                <Icon icon={icons.chevronLeft} size={18} />
+            </button>
+        </Tooltip>
 
         {#each items as item, i (i)}
             {#if item === 'gap'}
@@ -79,14 +82,16 @@ La pagination d'une liste : précédent, suivant et une plage de pages avec des 
             {/if}
         {/each}
 
-        <button
-            type="button"
-            class={twMerge(cell, 'bg-fc-surface text-fc-fg hover:bg-fc-surface/60')}
-            aria-label={i18n.t('pagination.next')}
-            disabled={current >= pageCount}
-            onclick={() => go(current + 1)}
-        >
-            <Icon icon={icons.arrow} size={18} />
-        </button>
+        <Tooltip text={i18n.t('pagination.next')} describe={false} class="contents">
+            <button
+                type="button"
+                class={twMerge(cell, 'bg-fc-surface text-fc-fg hover:bg-fc-surface/60')}
+                aria-label={i18n.t('pagination.next')}
+                disabled={current >= pageCount}
+                onclick={() => go(current + 1)}
+            >
+                <Icon icon={icons.arrow} size={18} />
+            </button>
+        </Tooltip>
     </nav>
 {/if}

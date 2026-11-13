@@ -11,9 +11,14 @@
     export interface IconButtonProps extends HTMLButtonAttributes {
         /** `default` still works and means `secondary`; `danger` still works and means `ghost-danger`. */
         variant?: IconButtonVariant | LegacyIconButtonVariant;
+        /**
+         * The hover and keyboard-focus hint. Defaults to the `aria-label`, so every icon button names
+         * itself on screen. A string shows that text instead; `false` shows none, for a parent that
+         * already wraps the button in its own `Tooltip`.
+         */
+        tooltip?: string | false;
         class?: string;
         children: Snippet;
-
     }
 </script>
 
@@ -21,10 +26,13 @@
     import { twMerge } from '../../utils/cn.js';
     import { iconButtonVariant } from '../../utils/variant.js';
     import { springPress } from '../../utils/press.js';
+    import { describes, iconTooltip } from '../../utils/tooltip.js';
+    import Tooltip from './Tooltip.svelte';
 
     let {
         type = 'button',
         variant = 'secondary',
+        tooltip,
         class: className = '',
         children,
         ...rest
@@ -41,13 +49,25 @@
         variants[iconButtonVariant(variant)],
         className
     ));
+
+    const hint = $derived(iconTooltip(tooltip, rest['aria-label']));
 </script>
 
 <!--
 @component
-Un bouton rond de 44px pour une action sans libellé. Il prend l'icône en enfant, et toujours un `aria-label`.
+Un bouton rond de 44px pour une action sans libellé. Il prend l'icône en enfant, et toujours un `aria-label`, qu'il affiche en info-bulle au survol et au focus clavier. `tooltip` change ce texte, `tooltip={false}` la retire quand un parent en pose déjà une.
 -->
 
-<button {type} class={classes} use:springPress {...rest}>
-    {@render children()}
-</button>
+{#snippet button()}
+    <button {type} class={classes} use:springPress {...rest}>
+        {@render children()}
+    </button>
+{/snippet}
+
+{#if hint}
+    <Tooltip text={hint} describe={describes(hint, rest['aria-label'])} class="contents">
+        {@render button()}
+    </Tooltip>
+{:else}
+    {@render button()}
+{/if}

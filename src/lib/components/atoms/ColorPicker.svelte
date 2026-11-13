@@ -16,6 +16,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import Tooltip from './Tooltip.svelte';
     import { controlFill } from '../../utils/control.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import { parseHex } from '../../colors.js';
@@ -118,28 +119,29 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
             {#each swatches as color (color)}
                 {@const hex = parseHex(color) ?? color}
                 {@const active = selected !== null && hex.toLowerCase() === selected}
-                <button
-                    type="button"
-                    {disabled}
-                    aria-pressed={active}
-                    aria-label={labelFor(color)}
-                    title={labelFor(color)}
-                    onclick={() => {
-                        typed = null;
-                        commit(hex);
-                    }}
-                    class="group flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-fc-pill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                    <span
-                        class={twMerge(
-                            'h-7 w-7 flex items-center justify-center rounded-fc-pill transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
-                            active && 'scale-110'
-                        )}
-                        style:background-color={hex}
+                <Tooltip text={labelFor(color)} describe={false} class="contents">
+                    <button
+                        type="button"
+                        {disabled}
+                        aria-pressed={active}
+                        aria-label={labelFor(color)}
+                        onclick={() => {
+                            typed = null;
+                            commit(hex);
+                        }}
+                        class="group flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-fc-pill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        {#if active}<svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 text-white mix-blend-difference" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10" /></svg>{/if}
-                    </span>
-                </button>
+                        <span
+                            class={twMerge(
+                                'h-7 w-7 flex items-center justify-center rounded-fc-pill transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+                                active && 'scale-110'
+                            )}
+                            style:background-color={hex}
+                        >
+                            {#if active}<svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 text-white mix-blend-difference" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10" /></svg>{/if}
+                        </span>
+                    </button>
+                </Tooltip>
             {/each}
         </div>
     {/if}

@@ -27,6 +27,7 @@
     import { AnchoredPopup, present, watchPopup } from '../../utils/popup.svelte.js';
     import { icons } from '../../icons.js';
     import Icon from '../atoms/Icon.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
 
     let {
         label,
@@ -94,24 +95,26 @@ Un panneau flottant ouvert par un bouton, pour un formulaire court ou des détai
 -->
 
 <div class={twMerge('relative inline-block', className)} {...rest}>
-    <button
-        bind:this={triggerEl}
-        type="button"
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-controls={open ? panelId : undefined}
-        aria-label={triggerContent ? label : undefined}
-        class={triggerButton}
-        onclick={() => set(!open)}
-        onkeydown={keydown}
-    >
-        {#if triggerContent}
-            {@render triggerContent()}
-        {:else}
-            <span>{label}</span>
-            <Icon icon={icons.chevronDown} size={16} class={twMerge('transition-transform motion-reduce:transition-none', open && 'rotate-180')} />
-        {/if}
-    </button>
+    <Tooltip text={label} describe={false} disabled={!triggerContent || open} class="contents">
+        <button
+            bind:this={triggerEl}
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded={open}
+            aria-controls={open ? panelId : undefined}
+            aria-label={triggerContent ? label : undefined}
+            class={triggerButton}
+            onclick={() => set(!open)}
+            onkeydown={keydown}
+        >
+            {#if triggerContent}
+                {@render triggerContent()}
+            {:else}
+                <span>{label}</span>
+                <Icon icon={icons.chevronDown} size={16} class={twMerge('transition-transform motion-reduce:transition-none', open && 'rotate-180')} />
+            {/if}
+        </button>
+    </Tooltip>
 
     {#if open}
         <div
