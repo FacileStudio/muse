@@ -34,6 +34,7 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import Icon from '../atoms/Icon.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
     import UserMenu from './UserMenu.svelte';
 
     let {
@@ -72,28 +73,29 @@ La barre-pilule flottante des écrans étroits. Quatre entrées tiennent au plan
     -->
     <div class="flex max-w-full items-center gap-0.5 overflow-x-auto rounded-fc-pill bg-fc-bg/70 p-1 shadow-lg backdrop-blur-2xl backdrop-saturate-150 sm:gap-1 sm:p-1.5">
         {#each items as item (item.href)}
-            <a
-                href={item.href}
-                aria-label={item.hint ? `${item.label}, ${item.hint}` : item.label}
-                aria-current={item.active ? 'page' : undefined}
-                title={item.label}
-                class={twMerge(
-                    'flex size-fc-nav-item shrink-0 items-center justify-center rounded-fc-pill transition-all duration-200',
-                    item.active
-                        ? 'bg-fc-accent text-fc-accent-fg shadow-sm'
-                        : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg'
-                )}
-            >
-                <span class="relative flex">
-                    <Icon icon={item.icon} size={22} />
-                    {#if item.badge || item.busy}
-                        <span
-                            class="absolute -top-0.5 -right-1 size-2.5 rounded-fc-pill bg-fc-info motion-safe:animate-pulse"
-                            aria-hidden="true"
-                        ></span>
-                    {/if}
-                </span>
-            </a>
+            <Tooltip text={item.label} describe={false} class="contents">
+                <a
+                    href={item.href}
+                    aria-label={item.hint ? `${item.label}, ${item.hint}` : item.label}
+                    aria-current={item.active ? 'page' : undefined}
+                    class={twMerge(
+                        'flex size-fc-nav-item shrink-0 items-center justify-center rounded-fc-pill transition-all duration-200',
+                        item.active
+                            ? 'bg-fc-accent text-fc-accent-fg shadow-sm'
+                            : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg'
+                    )}
+                >
+                    <span class="relative flex">
+                        <Icon icon={item.icon} size={22} />
+                        {#if item.badge || item.busy}
+                            <span
+                                class="absolute -top-0.5 -right-1 size-2.5 rounded-fc-pill bg-fc-info motion-safe:animate-pulse"
+                                aria-hidden="true"
+                            ></span>
+                        {/if}
+                    </span>
+                </a>
+            </Tooltip>
         {/each}
 
         {#if user}

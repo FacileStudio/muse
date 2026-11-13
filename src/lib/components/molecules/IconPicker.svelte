@@ -30,6 +30,7 @@
     import { solarIconId, solarIconNames } from '../../utils/solar.js';
     import { icons as museIcons } from '../../icons.js';
     import Icon from '../atoms/Icon.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
 
     let {
         value = $bindable(''),
@@ -233,22 +234,23 @@ Un sélecteur d'icône : un bouton qui montre l'icône choisie et ouvre, au-dess
                 >
                     {#each shown as icon, index (icon)}
                         {@const chosen = icon === value}
-                        <button
-                            bind:this={cellEls[index]}
-                            type="button"
-                            role="radio"
-                            aria-checked={chosen}
-                            aria-label={icon}
-                            title={icon}
-                            tabindex={index === focusIndex ? 0 : -1}
-                            class={twMerge(
-                                'flex size-11 cursor-pointer items-center justify-center rounded-fc-md text-fc-fg-muted transition-colors hover:bg-fc-surface hover:text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
-                                chosen && 'bg-fc-accent text-fc-accent-fg hover:bg-fc-accent hover:text-fc-accent-fg'
-                            )}
-                            onclick={() => pick(icon)}
-                        >
-                            <Icon icon={toIcon(icon)} size={18} />
-                        </button>
+                        <Tooltip text={icon} describe={false} class="contents">
+                            <button
+                                bind:this={cellEls[index]}
+                                type="button"
+                                role="radio"
+                                aria-checked={chosen}
+                                aria-label={icon}
+                                tabindex={index === focusIndex ? 0 : -1}
+                                class={twMerge(
+                                    'flex size-11 cursor-pointer items-center justify-center rounded-fc-md text-fc-fg-muted transition-colors hover:bg-fc-surface hover:text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
+                                    chosen && 'bg-fc-accent text-fc-accent-fg hover:bg-fc-accent hover:text-fc-accent-fg'
+                                )}
+                                onclick={() => pick(icon)}
+                            >
+                                <Icon icon={toIcon(icon)} size={18} />
+                            </button>
+                        </Tooltip>
                     {/each}
                 </div>
             {/if}

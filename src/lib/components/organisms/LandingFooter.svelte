@@ -37,6 +37,7 @@
     import { getI18n } from '../../i18n/context.svelte.js';
     import { landingHref } from '../../utils/landing.js';
     import Icon from '../atoms/Icon.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
     import LegalFooter from '../molecules/LegalFooter.svelte';
 
     let {
@@ -89,18 +90,20 @@ Le pied de page d'une page d'atterrissage : la marque, des colonnes de liens qui
     <div class="fc-chrome flex flex-col rounded-fc-outer bg-fc-component p-(--fc-pad)">
         <div class="flex flex-col gap-8 px-6 py-8 md:flex-row md:justify-between md:px-8">
             <div class="flex min-w-0 flex-col gap-3">
-                <a
-                    href={home}
-                    aria-label={appName ? undefined : i18n.t('landing.home')}
-                    class="inline-flex min-h-11 items-center gap-2 self-start rounded-fc-md text-fc-md font-semibold text-fc-fg {FOCUS}"
-                >
-                    {#if brand}
-                        {@render brand()}
-                    {:else}
-                        {#if icon}<Icon {icon} size={22} />{/if}
-                        {#if appName}<span>{appName}</span>{/if}
-                    {/if}
-                </a>
+                <Tooltip text={i18n.t('landing.home')} describe={false} disabled={Boolean(appName)} class="contents">
+                    <a
+                        href={home}
+                        aria-label={appName ? undefined : i18n.t('landing.home')}
+                        class="inline-flex min-h-11 items-center gap-2 self-start rounded-fc-md text-fc-md font-semibold text-fc-fg {FOCUS}"
+                    >
+                        {#if brand}
+                            {@render brand()}
+                        {:else}
+                            {#if icon}<Icon {icon} size={22} />{/if}
+                            {#if appName}<span>{appName}</span>{/if}
+                        {/if}
+                    </a>
+                </Tooltip>
                 {#if tagline}<p class="max-w-xs text-fc-sm text-fc-fg-muted">{tagline}</p>{/if}
             </div>
 

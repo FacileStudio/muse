@@ -24,6 +24,7 @@
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
+    import IconButton from '../atoms/IconButton.svelte';
     import { createDialog } from '../../utils/dialog.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
 
@@ -125,14 +126,14 @@ Un dialogue natif : le navigateur le place dans sa couche supérieure, au-dessus
                     {/if}
                 </div>
                 {#if showClose && dismissible}
-                    <button
-                        type="button"
+                    <IconButton
+                        variant="ghost"
                         aria-label={i18n.t('dialog.close')}
                         onclick={() => (open = false)}
-                        class="-mt-2 -mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-fc-pill text-fc-fg-muted transition-colors hover:bg-fc-surface hover:text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+                        class="-mt-2 -mr-2"
                     >
                         <Icon icon="mdi:close" size={18} />
-                    </button>
+                    </IconButton>
                 {/if}
             </div>
         {/if}

@@ -638,6 +638,16 @@ MDI (plus, close, chevrons — Solar's read muddy at small sizes):
   tab stop, arrows to move, Home/End to jump.
 - **`<iconify-icon>` is decorative unless it is the only content.** A standalone icon button
   needs an `aria-label`; an icon beside a text label must not repeat it.
+- **Icon-only means a tooltip, always.** Every control whose only content is an icon shows a
+  muse `Tooltip` on hover and keyboard focus. `IconButton` does it for you: it shows its
+  `aria-label` (or `tooltip="..."`), and `tooltip={false}` is only for a parent that already
+  wraps it. A raw icon-only `<button>` or `<a>` goes inside `<Tooltip>`. Never use the native
+  `title` attribute as a tooltip: it waits about a second, cannot be hovered, never shows on
+  keyboard focus and is not muse. `icon-tooltip.test.ts` fails on a `title=` in a component.
+- **Tooltip timing.** 300ms hover delay; instant on keyboard focus; instant while another
+  tooltip is open or closed less than 500ms ago, so a toolbar reads with no wait; 100ms grace
+  so the pointer can move onto it; Escape dismisses; one open at a time; nothing on touch;
+  120ms fade, none under reduced motion (WCAG 2.2 SC 1.4.13).
 - **Live regions are earned.** `role="alert"` is assertive and interrupts a screen reader
   mid-sentence — it is for `warning` and `danger` only. Everything else is `role="status"`.
 - **Every `<button>` declares its `type`.** An undeclared button inside a form submits it.

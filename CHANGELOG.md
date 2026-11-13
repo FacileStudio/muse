@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.21.0 (2026-11-13)
+
+### Changed
+
+- `Tooltip` opens sooner. A hover waits 300ms (was 500ms). While another muse tooltip is open, or closed less than 500ms ago, the next opens at once, so moving along a toolbar shows each label with no wait. Keyboard focus (`:focus-visible`) opens it at once, as before. Only one tooltip is open at a time. It stays 100ms after the pointer leaves, so the pointer can move onto it, and stays while hovered. Escape dismisses it, a press on the trigger hides it, and touch never opens it. It fades in and out over 120ms, with no fade under reduced motion. `delay` still overrides the hover wait.
+- `Tooltip` takes `describe` (default `true`). Pass `false` when the trigger's accessible name already says the hint: the tooltip is then not wired with `aria-describedby` and is hidden from assistive tech, so a screen reader does not read the name twice.
+- `Tooltip` anchors to its trigger (its first element) instead of its wrapper, so `class="contents"` on the wrapper keeps the trigger's layout untouched.
+- `IconButton` shows its `aria-label` as a muse tooltip on hover and keyboard focus. New prop `tooltip?: string | false`: a string shows that text instead (wired as a description only when it adds to the name), `false` shows none. The tooltip wrapper is `display: contents`, so layout does not change.
+- Every icon-only control in muse now shows a tooltip: `Modal` close (now an `IconButton`), `Drawer`, `Toast`, `LandingHeader`, `LandingDrawer`, `SecretField`, `UploadProgress`, `IdeasPage` and `DatePicker` month arrows (through `IconButton`), `Pagination` previous and next, a collapsed `SideBar` row (`NavButton`), `MobileNav` items, the `UserMenu` avatar trigger (narrow rail and mobile), `Menu` and `Popover` triggers given `triggerContent`, the logo-only home link of `LandingHeader`, `LandingDrawer` and `LandingFooter`, and the cells of `ColorPicker`, `SwatchPicker` (without `showLabels`) and `IconPicker`.
+- No muse component uses the native `title` attribute as a tooltip any more. `SecretField` shows a revealed value in a muse tooltip, and its eye and copy buttons keep their short hints through `tooltip`.
+
+### Fixed
+
+- A collapsed `NavButton` (and so every collapsed `SideBar` row) had no accessible name, since its label is not rendered. It now takes `label` as its `aria-label` when collapsed; a consumer `aria-label` still wins.
+- The `SideBar` collapse row's visible label now follows its state ("Agrandir" when collapsed), so the label, the tooltip and the accessible name agree.
+
+### Removed
+
+- The `otp.digit` and `otp.character` strings. They fed a `title` on the `InputOtp` cells that never showed, since the input covers the cells.
+
+### Upgrading
+
+- An app that wraps an `IconButton` in its own `Tooltip` now gets two tooltips. Remove the wrapper and pass its text as `tooltip="..."`, or keep the wrapper and pass `tooltip={false}`.
+- An app that put `title=` on an `IconButton` gets both the native and the muse tooltip. Drop `title`, or move a different text to `tooltip`.
+- CSS that targets an `IconButton` as a direct child (`[&>button]`, `:first-child`) now sees a `display: contents` span in between.
+- The rule for every app: an icon-only control always shows a muse tooltip; never use the native `title` attribute. See CHARTE §9.
+
 ## v0.20.0 (2026-11-13)
 
 ### Added

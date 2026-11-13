@@ -19,6 +19,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
+    import Tooltip from '../atoms/Tooltip.svelte';
     import { USER_COLORS, USER_COLOR_LABELS } from '../../colors.js';
 
     let {
@@ -103,36 +104,37 @@ Le choix dans une palette fixe — la couleur d'identité d'un membre, d'un cale
 >
     {#each colors as color, i}
         {@const selected = i === selectedIndex}
-        <button
-            bind:this={swatchEls[i]}
-            type="button"
-            role="radio"
-            aria-checked={selected}
-            aria-label={labelFor(color)}
-            title={labelFor(color)}
-            tabindex={i === focusIndex ? 0 : -1}
-            onclick={() => select(i)}
-            class={twMerge(
-                'group flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center rounded-fc-pill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
-                showLabels ? 'h-auto w-auto flex-col gap-1.5 px-2 py-2' : 'h-11 w-11'
-            )}
-        >
-            <span
+        <Tooltip text={labelFor(color)} describe={false} disabled={showLabels} class="contents">
+            <button
+                bind:this={swatchEls[i]}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                aria-label={labelFor(color)}
+                tabindex={i === focusIndex ? 0 : -1}
+                onclick={() => select(i)}
                 class={twMerge(
-                    'flex items-center justify-center rounded-fc-pill transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
-                    dots[size],
-                    selected && 'scale-110'
+                    'group flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center rounded-fc-pill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
+                    showLabels ? 'h-auto w-auto flex-col gap-1.5 px-2 py-2' : 'h-11 w-11'
                 )}
-                style:background-color={color}
             >
-                {#if selected}<svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 text-white mix-blend-difference" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10" /></svg>{/if}
-            </span>
-            {#if showLabels}
-                <span class={twMerge('text-fc-xs', selected ? 'font-medium text-fc-fg' : 'text-fc-fg-muted')}>
-                    {labelFor(color)}
+                <span
+                    class={twMerge(
+                        'flex items-center justify-center rounded-fc-pill transition-transform duration-150 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+                        dots[size],
+                        selected && 'scale-110'
+                    )}
+                    style:background-color={color}
+                >
+                    {#if selected}<svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 text-white mix-blend-difference" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10" /></svg>{/if}
                 </span>
-            {/if}
-        </button>
+                {#if showLabels}
+                    <span class={twMerge('text-fc-xs', selected ? 'font-medium text-fc-fg' : 'text-fc-fg-muted')}>
+                        {labelFor(color)}
+                    </span>
+                {/if}
+            </button>
+        </Tooltip>
     {/each}
 
     {#if name}

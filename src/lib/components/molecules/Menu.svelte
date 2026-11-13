@@ -31,6 +31,7 @@
     import { MenuState, pressOnSpace } from '../../utils/menu.svelte.js';
     import { icons } from '../../icons.js';
     import Icon from '../atoms/Icon.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
 
     let { items, label, trigger: triggerContent, align = 'start', class: className = '', ...rest }: MenuProps = $props();
 
@@ -83,25 +84,27 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
 -->
 
 <div class={twMerge('relative inline-block', className)} {...rest}>
-    <button
-        bind:this={triggerEl}
-        id={triggerId}
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={menu.open}
-        aria-controls={menu.open ? menuId : undefined}
-        aria-label={triggerContent ? label : undefined}
-        class={triggerButton}
-        onclick={menu.toggle}
-        onkeydown={menu.triggerKeydown}
-    >
-        {#if triggerContent}
-            {@render triggerContent()}
-        {:else}
-            <span>{label}</span>
-            <Icon icon={icons.chevronDown} size={16} class={twMerge('transition-transform motion-reduce:transition-none', menu.open && 'rotate-180')} />
-        {/if}
-    </button>
+    <Tooltip text={label} describe={false} disabled={!triggerContent || menu.open} class="contents">
+        <button
+            bind:this={triggerEl}
+            id={triggerId}
+            type="button"
+            aria-haspopup="menu"
+            aria-expanded={menu.open}
+            aria-controls={menu.open ? menuId : undefined}
+            aria-label={triggerContent ? label : undefined}
+            class={triggerButton}
+            onclick={menu.toggle}
+            onkeydown={menu.triggerKeydown}
+        >
+            {#if triggerContent}
+                {@render triggerContent()}
+            {:else}
+                <span>{label}</span>
+                <Icon icon={icons.chevronDown} size={16} class={twMerge('transition-transform motion-reduce:transition-none', menu.open && 'rotate-180')} />
+            {/if}
+        </button>
+    </Tooltip>
 
     {#if menu.open}
         <div

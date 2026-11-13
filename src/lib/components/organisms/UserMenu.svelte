@@ -27,6 +27,7 @@
     import { ACCOUNT_URL, actionable, drillKey, pendingInvitations, startIndex, triggerLabel, userMenuRows } from '../../utils/user-menu.js';
     import type { UserMenuLabels, UserMenuRow, UserMenuView } from '../../utils/user-menu.js';
     import Avatar from '../atoms/Avatar.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
     import TextElevate from '../motion/TextElevate.svelte';
     import Drawer from './Drawer.svelte';
     import UserMenuList from './UserMenuList.svelte';
@@ -183,34 +184,36 @@ Le menu de la carte utilisateur : un déclencheur (carte de la barre latérale o
 {/snippet}
 
 <div class={twMerge('relative', narrow || trigger === 'avatar' ? 'self-center' : 'w-full', className)} {...rest}>
-    <button
-        bind:this={triggerEl}
-        id={triggerId}
-        type="button"
-        use:springPress
-        aria-haspopup="menu"
-        aria-expanded={menu.open}
-        aria-controls={menu.open ? menuId : undefined}
-        aria-label={triggerLabel(i18n.t, user.name, pending)}
-        class={twMerge('flex shrink-0 cursor-pointer items-center overflow-hidden text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring', pillClasses)}
-        onclick={menu.toggle}
-        onkeydown={menu.triggerKeydown}
-    >
-        <span class="relative flex shrink-0">
-            <Avatar src={user.avatar} name={user.name} alt="" size="sm" class="h-7 w-7 text-fc-xs" />
-            {#if pending > 0}
-                <span class="absolute -top-0.5 -right-0.5 size-2.5 rounded-fc-pill bg-fc-info" aria-hidden="true"></span>
-            {/if}
-        </span>
-        {#if trigger === 'card' && !narrow}
-            <span class="flex min-w-0 flex-1 flex-col leading-tight">
-                <TextElevate text={user.name} visible class="truncate text-fc-sm font-medium" />
-                {#if secondary}
-                    <span class="truncate text-fc-xs text-fc-fg-muted">{secondary}</span>
+    <Tooltip text={user.name} describe={false} disabled={menu.open || (trigger === 'card' && !narrow)} class="contents">
+        <button
+            bind:this={triggerEl}
+            id={triggerId}
+            type="button"
+            use:springPress
+            aria-haspopup="menu"
+            aria-expanded={menu.open}
+            aria-controls={menu.open ? menuId : undefined}
+            aria-label={triggerLabel(i18n.t, user.name, pending)}
+            class={twMerge('flex shrink-0 cursor-pointer items-center overflow-hidden text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring', pillClasses)}
+            onclick={menu.toggle}
+            onkeydown={menu.triggerKeydown}
+        >
+            <span class="relative flex shrink-0">
+                <Avatar src={user.avatar} name={user.name} alt="" size="sm" class="h-7 w-7 text-fc-xs" />
+                {#if pending > 0}
+                    <span class="absolute -top-0.5 -right-0.5 size-2.5 rounded-fc-pill bg-fc-info" aria-hidden="true"></span>
                 {/if}
             </span>
-        {/if}
-    </button>
+            {#if trigger === 'card' && !narrow}
+                <span class="flex min-w-0 flex-1 flex-col leading-tight">
+                    <TextElevate text={user.name} visible class="truncate text-fc-sm font-medium" />
+                    {#if secondary}
+                        <span class="truncate text-fc-xs text-fc-fg-muted">{secondary}</span>
+                    {/if}
+                </span>
+            {/if}
+        </button>
+    </Tooltip>
 
     {#if sheet}
         <Drawer bind:open={menu.open} title={user.name} description={secondary}>

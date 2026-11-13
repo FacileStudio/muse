@@ -28,6 +28,7 @@
     import { icons } from '../../icons.js';
     import { landingHref, linkAttrs, safeLinks, watchScrolled } from '../../utils/landing.js';
     import Icon from '../atoms/Icon.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
     import IconButton from '../atoms/IconButton.svelte';
     import SignInWithFacile from '../atoms/SignInWithFacile.svelte';
     import LandingDrawer from './LandingDrawer.svelte';
@@ -154,9 +155,11 @@ La barre du haut d'une page d'atterrissage : collée en haut, elle se resserre e
 
 <div bind:this={wrapper} class={wrapClasses}>
     <header class={barClasses} {...rest}>
-        <a href={home} aria-label={appName ? undefined : i18n.t('landing.home')} class={brandClasses}>
-            {@render brandView()}
-        </a>
+        <Tooltip text={i18n.t('landing.home')} describe={false} disabled={Boolean(appName)} class="contents">
+            <a href={home} aria-label={appName ? undefined : i18n.t('landing.home')} class={brandClasses}>
+                {@render brandView()}
+            </a>
+        </Tooltip>
 
         <nav bind:this={navEl} aria-label={i18n.t('landing.primary')} class="relative hidden items-center gap-(--fc-pad) lg:flex">
             {#if pill}

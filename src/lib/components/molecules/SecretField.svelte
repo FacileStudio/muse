@@ -30,6 +30,7 @@
     import { icons } from '../../icons.js';
     import { isRedacted, maskSecret } from '../../utils/secret.js';
     import IconButton from '../atoms/IconButton.svelte';
+    import Tooltip from '../atoms/Tooltip.svelte';
     import Input from '../atoms/Input.svelte';
     import Field from './Field.svelte';
 
@@ -124,16 +125,17 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                     class="min-w-0 flex-1 font-fc-mono text-fc-sm placeholder:font-sans"
                 />
             {:else}
-                <output
-                    {id}
-                    aria-describedby={describedBy}
-                    class={[box, empty ? 'text-fc-fg-muted' : 'text-fc-fg']}
-                    title={visible || !sensitive ? value : undefined}
-                >
-                    <span class={visible || !sensitive ? 'truncate select-all' : 'truncate select-none'}
-                        >{empty ? placeholder || i18n.t('secret.notSet') : shown}</span
+                <Tooltip text={value} describe={false} disabled={empty || (sensitive && !visible)} class="contents">
+                    <output
+                        {id}
+                        aria-describedby={describedBy}
+                        class={[box, empty ? 'text-fc-fg-muted' : 'text-fc-fg']}
                     >
-                </output>
+                        <span class={visible || !sensitive ? 'truncate select-all' : 'truncate select-none'}
+                            >{empty ? placeholder || i18n.t('secret.notSet') : shown}</span
+                        >
+                    </output>
+                </Tooltip>
             {/if}
 
             {#if sensitive}
@@ -142,7 +144,7 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                     disabled={inert}
                     aria-label={i18n.t(visible ? 'secret.hideLabel' : 'secret.revealLabel')}
                     aria-pressed={visible}
-                    title={i18n.t(visible ? 'secret.hide' : 'secret.reveal')}
+                    tooltip={i18n.t(visible ? 'secret.hide' : 'secret.reveal')}
                 >
                     <Icon icon={visible ? icons.eyeClosed : icons.eye} size={18} />
                 </IconButton>
@@ -153,7 +155,7 @@ L'affichage d'un secret : masque à longueur fixe, révélation qui se recache, 
                     onclick={copy}
                     disabled={inert}
                     aria-label={i18n.t(sensitive ? 'secret.copySecretLabel' : 'secret.copyLabel')}
-                    title={i18n.t('secret.copy')}
+                    tooltip={i18n.t('secret.copy')}
                     class={copied ? 'bg-fc-success/10 text-fc-success' : ''}
                 >
                     <Icon icon={copied ? icons.check : icons.copy} size={18} />

@@ -88,15 +88,17 @@
         </Card>
     </Section>
 
-    <Section title="Tooltip" description="Au survol et au focus clavier. Le bouton garde son nom : l’info-bulle ne le remplace pas.">
+    <Section title="Tooltip" description="300 ms au survol, tout de suite au clavier, et sans attente d’un bouton à l’autre. Chaque IconButton montre son aria-label : une icône seule a toujours une info-bulle.">
         <Card>
-            <div class="flex flex-wrap items-center gap-4">
-                <Tooltip text="Copier le lien">
-                    <IconButton aria-label="Copier le lien"><Icon icon={icons.copy} size={18} /></IconButton>
-                </Tooltip>
-                <Tooltip text="Supprimer le projet, définitivement">
-                    <IconButton variant="ghost-danger" aria-label="Supprimer"><Icon icon={icons.remove} size={18} /></IconButton>
-                </Tooltip>
+            <div class="flex flex-wrap items-center gap-1">
+                <IconButton variant="ghost" aria-label="Copier le lien"><Icon icon={icons.copy} size={18} /></IconButton>
+                <IconButton variant="ghost" aria-label="Réglages"><Icon icon={icons.settings} size={18} /></IconButton>
+                <IconButton variant="ghost" aria-label="Rechercher"><Icon icon={icons.search} size={18} /></IconButton>
+                <IconButton variant="ghost-danger" aria-label="Supprimer" tooltip="Supprimer le projet, définitivement">
+                    <Icon icon={icons.remove} size={18} />
+                </IconButton>
+            </div>
+            <div class="mt-4 flex flex-wrap items-center gap-4">
                 <Tooltip text="Désactivé" disabled>
                     <Button variant="secondary">Sans info-bulle</Button>
                 </Tooltip>
