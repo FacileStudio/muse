@@ -153,6 +153,24 @@ function check(name: string, tokens: Record<string, string>): void {
     });
 }
 
+describe('inverse surface', () => {
+    for (const [name, tokens] of Object.entries(themes)) {
+        const merged = { ...themes.light, ...tokens };
+        const ratio = (a: string, b: string) => contrast(merged[`--color-fc-${a}`], merged[`--color-fc-${b}`]);
+
+        test(`${name}: on-inverse text and its muted step clear 4.5:1 on the surface`, () => {
+            expect(ratio('on-inverse', 'inverse')).toBeGreaterThanOrEqual(4.5);
+            expect(ratio('on-inverse-muted', 'inverse')).toBeGreaterThanOrEqual(4.5);
+        });
+    }
+
+    test('dark: the surface sits one fill step off the page', () => {
+        const dark = { ...themes.light, ...themes.dark };
+        expect(dark['--color-fc-inverse']).toBe(dark['--color-fc-component']);
+        expect(dark['--color-fc-inverse']).not.toBe(dark['--color-fc-page']);
+    });
+});
+
 describe('form control fill (subtle by design, strict on text)', () => {
     check('light', themes.light);
     check('dark', themes.dark);
