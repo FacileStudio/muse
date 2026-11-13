@@ -63,7 +63,7 @@ export class MenuState extends AnchoredPopup {
         if (!this.open || this.mode !== 'keyboard' || this.active < 0) return;
         const item = this.host.items()[this.active];
         item?.focus({ preventScroll: true });
-        item?.scrollIntoView({ block: 'nearest' });
+        item?.scrollIntoView?.({ block: 'nearest' });
     };
 
     type = (char: string): void => {
