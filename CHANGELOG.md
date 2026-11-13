@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.21.2 (2026-11-13)
+
+### Fixed
+
+- `Menu` and `UserMenu` no longer throw when the keyboard moves the active entry in an environment without `Element.scrollIntoView`, such as jsdom in an app's tests. v0.21.1 called it unguarded.
+
 ## v0.21.1 (2026-11-13)
 
 ### Fixed

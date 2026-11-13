@@ -67,4 +67,13 @@ describe('MenuState keyboard', () => {
         expect(items[2].focus).not.toHaveBeenCalled();
         expect(items[2].scrollIntoView).not.toHaveBeenCalled();
     });
+
+    test('an item without scrollIntoView (jsdom) is still focused', () => {
+        const { menu, items } = setup(['Alpha', 'Bravo']);
+        const bare = items[1] as Partial<FakeItem>;
+        delete bare.scrollIntoView;
+        press(menu, 'ArrowDown');
+        expect(() => menu.focusActive()).not.toThrow();
+        expect(items[1].focus).toHaveBeenCalled();
+    });
 });
