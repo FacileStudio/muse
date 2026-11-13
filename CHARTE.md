@@ -39,6 +39,9 @@ CSS custom properties. Source of truth: `src/lib/styles/tokens.css`.
 | `--fc-border`         | `oklch(0.9 0 0)`    | `oklch(1 0 0 / 10%)`   | **deprecated**: muse draws no borders and uses it nowhere; kept so consumer classes keep a colour |
 | `--fc-ring`           | `oklch(0.4 0 0)`    | `oklch(0.6 0 0)`       | focus rings                   |
 | `--fc-scrim`          | `oklch(0 0 0 / 50%)` | `oklch(0 0 0 / 50%)`  | overlay backdrops — same in both modes |
+| `--fc-inverse`        | `oklch(0.09 0 0)`    | `oklch(0.16 0 0)`     | dark surface for terminal-style blocks; one step off the dark page |
+| `--fc-on-inverse`     | `oklch(0.985 0 0)`   | `oklch(0.985 0 0)`    | text on `fc-inverse` |
+| `--fc-on-inverse-muted` | `oklch(0.64 0 0)`  | `oklch(0.64 0 0)`     | dim text on `fc-inverse` (prompts, comments) |
 | `--fc-danger`         | `oklch(0.54 0.22 29)`| `oklch(0.65 0.22 29)` | destructive                    |
 | `--fc-danger-fg`      | `oklch(1 0 0)`      | `oklch(1 0 0)`         | text on a solid danger fill   |
 | `--fc-success`        | `oklch(0.5 0.12 150)`| `oklch(0.72 0.14 150)`| success / positive            |
@@ -197,22 +200,26 @@ those two tokens is the fix; it has not been done because the tokens are shared 
 
 ## 3. Typography
 
-- **Sans**: the platform stack (`ui-sans-serif`, `system-ui`, `-apple-system`, `'Segoe UI'`,
-  `Roboto`, `'Helvetica Neue'`, `Arial`, `sans-serif`) — `--font-fc-body`
-- **Display**: same stack — `--font-fc-title`. The display/body split is
-  intentional-in-name-only so consumers can diverge without touching components. It is also
-  the seam a licensed display face would come back through: headings only, body untouched.
+- **Sans**: Magnetik, then the platform stack (`ui-sans-serif`, `system-ui`, `-apple-system`,
+  `'Segoe UI'`, `Roboto`, `'Helvetica Neue'`, `Arial`, `sans-serif`) — `--font-fc-body` and
+  `--font-sans`
+- **Display**: same stack — `--font-fc-title`. The display/body split stays so headings can
+  move to another face without touching body copy.
 - **Mono**: the platform stack — `--font-fc-mono`, used via `font-fc-mono`. It is for
   **machine strings only**: secrets, API keys, IDs, endpoints, event channel names. Prose
   never wears it.
-- **muse bundles no typeface, and re-adding one is a gated decision.** Through v0.5.0 it
-  shipped the Goga *trial* cut: 68 glyphs, no accented Latin, no apostrophe, no colon, no
-  percent sign. In a French-language suite every `é` fell back to Helvetica mid-word, and the
-  files were redistributed to thirteen apps under a test licence with no LICENSE in the repo.
-  `src/lib/styles/fonts.test.ts` now fails the build on any face in `src/lib/fonts/` that does
-  not cover the character set the suite actually types. A new face needs a real licence
-  recorded in `LICENSE` and a full Latin-1 cut. Weights: use `font-medium` and
-  `font-semibold`; do not reach for `font-bold`.
+- **muse bundles Magnetik** (owner decision, 2026-11-13) in `src/lib/fonts/`: Regular, Medium
+  and Bold, woff2, `font-display: swap`. The owner holds a web licence for every suite site.
+  The faces map to weights the way the suite uses them: Regular is 400, Medium covers 500
+  **and 600**, Bold is 700. Semibold lands on Medium on purpose: mapped to Bold, semibold
+  button labels smeared on vitrine. So `font-medium` and `font-semibold` render the same
+  face, and `font-bold` is a real Bold, kept for rare emphasis.
+- **Goga stays out.** Through v0.5.0 muse shipped the Goga *trial* cut: 68 glyphs, no
+  accented Latin, no apostrophe, no colon, no `%`, no « », no €, no œ. In a French-language
+  suite every `é` fell back to Helvetica mid-word. `src/lib/styles/fonts.test.ts` fails the
+  build on any face in `src/lib/fonts/` (otf, ttf or woff2) that misses the character set the
+  suite types, or that no `@font-face` declares. A new face needs a licence and a full
+  Latin-1 cut.
 
 Scale — `text-fc-*`, each with a paired line-height:
 

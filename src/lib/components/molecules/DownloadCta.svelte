@@ -1,8 +1,9 @@
 <script module lang="ts">
     import type { HTMLAnchorAttributes } from 'svelte/elements';
     import { icons } from '../../icons.js';
+    import type { Platform } from '../../utils/download.js';
 
-    export type Platform = 'macos' | 'windows' | 'linux' | 'android' | 'ios';
+    export type { Platform };
 
     export interface DownloadCtaProps extends Omit<HTMLAnchorAttributes, 'href'> {
         /** The app's downloads page. An unsafe value renders nothing. */

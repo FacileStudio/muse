@@ -16,18 +16,20 @@ Nothing here breaks an app that stays on its current tag. Read this when you bum
 
 ---
 
-## 1. No bundled typeface
+## 1. Magnetik is the bundled typeface (v0.22.0)
 
-**Symptom:** headings and body copy render in the platform sans stack instead of Goga.
+**Symptom:** headings and body copy render in Magnetik instead of the platform sans stack.
+`font-semibold` looks like `font-medium`: both use the Medium file.
 
-**Why:** the shipped faces were the trial cut — 68 codepoints, no accented Latin, no
-apostrophe, no colon, no `%`. In a French-language suite every accented character fell back to
-Helvetica mid-word, as did every clock time and every percentage. They were also redistributed
-under a test licence.
+**Why:** the owner chose Magnetik for the suite on 2026-11-13. Medium covers weights 500 and
+600, because mapping 600 to Bold smeared semibold labels. Through v0.21 muse bundled no face:
+the earlier Goga files were a trial cut with 68 codepoints, no accented Latin, no apostrophe,
+no colon and no `%`.
 
-**Do:** delete any local `@font-face` block or `<link rel=preload>` still pointing at Goga —
-several apps kept one from before muse shipped the fonts. Nothing else to change; the tokens
-still resolve. `src/lib/styles/fonts.test.ts` guards the replacement.
+**Do:** delete any local `@font-face` block or `<link rel=preload>` for Magnetik or Goga. Two
+declarations of one family fight over which file wins. Nothing else changes: the woff2 files
+ship in the package and Vite emits them when the app imports `@facile/muse/styles`.
+`src/lib/styles/fonts.test.ts` guards the glyph coverage and the weight mapping.
 
 ## 2. `Divider` carries no margin
 

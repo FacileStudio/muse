@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Card, DownloadCta, Inline, LOCALES, LocaleSwitch, Page, PageHeader, PricingPlans, Section, Select } from '@facile/muse';
+    import { Card, DownloadCta, DownloadSection, Inline, LOCALES, LocaleSwitch, Page, PageHeader, PricingPlans, Section, Select } from '@facile/muse';
     import Scoped from '../components/Scoped.svelte';
     import { demoCatalog } from '../catalog.js';
     import { setTheme, theme, type ThemeMode } from '../theme.svelte.js';
@@ -27,6 +27,19 @@
     <Section title="Dans la langue choisie" description="Catalogue fourni côté serveur ; une entrée invalide est ignorée.">
         <PricingPlans catalog={demoCatalog} highlight={['echo.max_participants']} ctaHref="/billing" />
         <DownloadCta href="/downloads" />
+    </Section>
+
+    <Section title="Page de téléchargement" description="DownloadSection : une carte par plateforme, celle du visiteur en premier, et les commandes du terminal à copier.">
+        <DownloadSection
+            downloads={[
+                { platform: 'macos', href: '/dl/app-arm64.dmg', label: 'Apple Silicon', arch: 'arm64', version: 'v1.4.0', size: 18_400_000 },
+                { platform: 'windows', href: '/dl/app-setup.exe', label: 'Installer', arch: 'x64', size: 12_700_000 },
+                { platform: 'linux', href: '/dl/app.deb', label: '.deb', checksumHref: '/dl/app.deb.sha256' },
+                { platform: 'android', href: '/dl/app.apk', label: 'APK', size: 4_200_000 }
+            ]}
+            commands={[{ label: 'Homebrew', command: 'brew install facilestudio/tap/app' }]}
+            releasesHref="/releases"
+        />
     </Section>
 
     <Section title="Catalogue vide ou injoignable" description="Rien n'est rendu : pas de section cassée.">

@@ -4,7 +4,7 @@ Svelte 5 component library and design system for Facile tools, published as `@fa
 
 muse ships 84 components arranged as layout primitives, atoms, molecules, organisms, charts and
 two motion pieces,
-a Tailwind v4 token theme and the Iconify icon map. It bundles no typeface. It is consumed
+a Tailwind v4 token theme, the Iconify icon map and the Magnetik typeface. It is consumed
 directly from source — there is no build step and no `dist/`. An `install.sh` also registers
 muse as an AI skill for Claude Code and Codex so agents generate suite-shaped UI by default.
 
@@ -19,7 +19,8 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 - Speaks fr, en, es and de: a dependency-free message helper (`provideLocale`, `createTranslator`)
   drives every muse string, and apps reuse it for their own catalogs
 - Ships the launch surfaces every app shares: `SignInWithFacile`, `AuthScreen`, `PlanLimit`,
-  `LegalFooter`, `LocaleSwitch`, `PricingPlans`, `DownloadCta`, `LandingHeader` and `LandingFooter`
+  `LegalFooter`, `LocaleSwitch`, `PricingPlans`, `DownloadCta`, `DownloadSection`, `LandingHeader` and
+  `LandingFooter`
 - Standardises the settings page — `Tabs`, `SettingsSection`, `SettingsRow`, and a
   `SecretField` that masks, reveals-then-re-hides, and copies credentials the same way in
   every app
@@ -35,7 +36,8 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
   `aria-invalid` through context
 - Exports `icons`, a keyed map of 45 Iconify names — Solar `linear` for chrome, MDI for
   plus/close/chevrons — with an `IconKey` type
-- Bundles no typeface — the platform sans stack renders every accented character the suite types
+- Bundles Magnetik (Regular 400, Medium 500 and 600, Bold 700) as woff2 with `font-display: swap`,
+  in front of the platform sans stack. Mono stays on the platform stack
 - Supports OS dark mode out of the box, plus a `.dark` / `.light` class override so apps can
   offer a theme toggle
 - Ships `prefersReducedMotion()`, `isMobile()` and the `springPress` action so every

@@ -3,11 +3,41 @@
 
 @import 'tailwindcss';
 
-/* No bundled display face. The Goga files shipped here through v0.5.0 were the trial cut:
-   68 glyphs, no accented Latin, no apostrophe, no colon, no percent. Every French string in
-   the suite fell back to Helvetica mid-word, and the files were redistributed under a test
-   licence. Re-adding a face means a full Latin-1 cut and a licence — `fonts.test.ts` fails
-   the build on any font in `src/lib/fonts/` that does not cover the required set. */
+/* Bundled face: Magnetik, for titles and body copy (owner decision, 2026-11-13). It covers the
+   full set `fonts.test.ts` requires, and the owner holds a web licence for every suite site.
+   Weights map to the files the way the suite uses them: Regular 400, Medium 500 and 600,
+   Bold 700. Semibold (600) lands on Medium on purpose: mapped to Bold, semibold button labels
+   smeared on vitrine. Mono stays on the platform stack.
+   Goga stays out. The only cut on hand is the trial, which has no apostrophe, colon, `%`,
+   « », €, or œ, so every French string would fall back to another face mid-word. Re-adding
+   any face means a full Latin-1 cut and a licence. `fonts.test.ts` fails the build on a file
+   in `src/lib/fonts/` that misses the required set or that no @font-face declares.
+   The url()s are relative on purpose: Vite rebases them when a consumer imports this file
+   from node_modules, and emits the woff2 files as hashed assets. */
+
+@font-face {
+  font-family: 'Magnetik';
+  src: url('../fonts/Magnetik-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Magnetik';
+  src: url('../fonts/Magnetik-Medium.woff2') format('woff2');
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Magnetik';
+  src: url('../fonts/Magnetik-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 @theme {
   /*
@@ -80,6 +110,15 @@
      both draw one and they must never disagree. */
   --color-fc-scrim: oklch(0 0 0 / 50%);
 
+  /* Inverse surface → bg-fc-inverse, text-fc-on-inverse, text-fc-on-inverse-muted. A dark
+     block with light text in both themes, for terminals and code output. Light mode uses the
+     dark page value; dark mode moves the surface one fill step up (the dark `component`) so it
+     still separates from the page. The text pair matches the dark theme's fg and fg-muted.
+     `tokens.test.ts` holds both text tokens to 4.5:1 on the surface in each theme. */
+  --color-fc-inverse: oklch(0.09 0 0);
+  --color-fc-on-inverse: oklch(0.985 0 0);
+  --color-fc-on-inverse-muted: oklch(0.64 0 0);
+
   /* radii → rounded-fc-* — `pill` and `full` are the same value, kept as two names so
      "a pill-shaped button" and "a circular avatar" read differently at the call site. */
   --radius-fc-xs: 4px;
@@ -105,12 +144,12 @@
   --text-fc-3xl: 2.25rem;
   --text-fc-3xl--line-height: 2.5rem;
 
-  /* fonts → font-fc-* / font-sans. The platform stack renders every accented character the
-     suite actually types, which the bundled face did not. `title` stays a separate token so a
-     licensed display cut can be reintroduced on headings alone without touching body copy. */
-  --font-fc-body: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-fc-title: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* fonts → font-fc-* / font-sans. Magnetik first, the platform stack behind it for the swap
+     period and any glyph outside the cut. `title` stays a separate token so headings can move
+     to another face without touching body copy. */
+  --font-fc-body: 'Magnetik', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-fc-title: 'Magnetik', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'Magnetik', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* Mono is for machine strings only — secrets, keys, IDs, endpoints. This is the platform
      stack: nothing extra to download, and it lands on the font the user already reads code in. */
@@ -231,6 +270,7 @@
     --color-fc-accent-fg: oklch(0.09 0 0);
     --color-fc-border: oklch(1 0 0 / 10%);
     --color-fc-field: oklch(0.26 0 0);
+    --color-fc-inverse: oklch(0.16 0 0);
     --color-fc-ring: oklch(0.6 0 0);
     --color-fc-danger: oklch(0.65 0.22 29);
     --color-fc-success: oklch(0.72 0.14 150);
@@ -261,6 +301,7 @@
   --color-fc-accent-fg: oklch(0.09 0 0);
   --color-fc-border: oklch(1 0 0 / 10%);
   --color-fc-field: oklch(0.26 0 0);
+  --color-fc-inverse: oklch(0.16 0 0);
   --color-fc-ring: oklch(0.6 0 0);
   --color-fc-danger: oklch(0.65 0.22 29);
   --color-fc-success: oklch(0.72 0.14 150);

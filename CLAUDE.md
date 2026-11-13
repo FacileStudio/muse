@@ -8,7 +8,7 @@ Svelte 5 component library and design system for Facile tools. Published as `@fa
 - Tailwind CSS v4 with custom `@theme` tokens
 - GSAP for animations (`^3.13.0` — `gsap/SplitText` does not resolve on 3.12)
 - TypeScript, type-checked with `svelte-check`
-- Bundled font: Goga (Medium 500 + Semibold 600)
+- Bundled font: Magnetik (Regular 400, Medium 500 and 600, Bold 700), woff2
 
 ## Project structure
 
@@ -28,7 +28,7 @@ muse/
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
     components/               102 Svelte files, 91 exported (layout/ atoms/ molecules/ organisms/ charts/ motion/)
     i18n/                     Message helper, locale context (provideLocale/getI18n), fr/en/es/de catalogs
-    fonts/                    Bundled Goga font files (.otf)
+    fonts/                    Bundled Magnetik font files (.woff2), licence in LICENSE
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
     utils/cn.ts               fc-*-aware tailwind-merge — every component uses it
     utils/motion.ts           prefersReducedMotion() and isMobile() helpers
@@ -51,6 +51,7 @@ muse/
     utils/accordion.ts        Accordion open set and header keys (pure, tested)
     utils/user-menu.ts        UserMenu rows, canonical order and drill keys (pure, tested)
     utils/settings-nav.ts     canonical settings section order and route resolution (pure, tested)
+    utils/download.ts         DownloadSection: platform detection, grouping and dedupe, sizes (pure, tested)
     utils/theme.ts            Theme, readTheme, applyTheme
     utils/toast.svelte.ts     Module-scope toast queue behind Toaster — toast, toasts
 ```
@@ -100,7 +101,7 @@ import '@facile/muse/styles';
 
 The palette is **chroma-zero OKLCH**, matching the shipped suite apps. Namespaces: `fc-page`,
 `fc-bg`, `fc-surface`, `fc-component`, `fc-fg`, `fc-fg-muted`, `fc-accent`, `fc-accent-fg`,
-`fc-field`, `fc-ring`, `fc-scrim`, `fc-danger`, `fc-danger-fg`, `fc-success`, `fc-info`,
+`fc-field`, `fc-ring`, `fc-scrim`, `fc-inverse`, `fc-on-inverse`, `fc-on-inverse-muted`, `fc-danger`, `fc-danger-fg`, `fc-success`, `fc-info`,
 `fc-warning`, `fc-owner`, `fc-admin`, plus `fc-chart-1`…`fc-chart-6` for categorical chart
 series (Sablier's identity palette, deepened for legibility). Use via Tailwind utilities like
 `bg-fc-bg`, `text-fc-fg`, `rounded-fc-md`.
@@ -195,6 +196,9 @@ byte-identical duplicates on purpose — **edit both or neither**.
 - The `@theme static` block for `fc-chart-*` is deliberate: `chartColor()` builds the variable
   name with a template literal, so Tailwind never sees the class names and a plain `@theme`
   would drop the unused slots — and an undefined `var()` in an SVG `fill` renders black.
-- Only Goga Medium and Semibold ship, so `font-bold` synthesizes -- prefer `font-semibold`.
-  The Goga files are labeled "GogaTest" (test license).
+- Magnetik Medium serves both 500 and 600, so `font-medium` and `font-semibold` render the same
+  face. Never map 600 to Bold: semibold labels smear. Never bundle Goga: the only cut on hand is
+  the trial, missing apostrophe, colon, `%`, « », €, and œ.
+- `fonts.test.ts` reads woff2 by decompressing its brotli stream for the cmap, and the smoke
+  harness asserts each Magnetik file is emitted and served as `font/woff2` from a packed install.
 - `peerDependencies` require Svelte 5+ and Tailwind 4+ in the consumer.

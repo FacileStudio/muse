@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.22.0 (2026-11-13)
+
+### Added
+
+- Magnetik is the suite typeface (owner decision, 2026-11-13). muse bundles Regular, Medium and Bold as woff2 in `src/lib/fonts/`, with `font-display: swap`. `--font-fc-title`, `--font-fc-body` and `--font-sans` now start with `'Magnetik'`, with the platform stack after it as fallback. Medium serves weights 500 and 600, so `font-semibold` uses Medium: mapped to Bold, semibold button labels smeared on vitrine. Bold is 700. `--font-fc-mono` does not change. The licence is recorded in `LICENSE`.
+- `DownloadSection`, one download block for every app. It shows one card per platform (macOS, Windows, Linux, iOS, Android), each listing its files with arch, version, size and an optional checksum link. A terminal card lists install commands with copy buttons. It reads the visitor's platform from `navigator` after hydration, moves that card first and marks it "For your device", so server rendering is safe. Data comes in as props and nothing is fetched. Unsafe or repeated hrefs and repeated commands are dropped. Strings come from the muse catalogs in fr, en, es and de.
+- `detectPlatform`, `groupDownloads`, `PLATFORM_ORDER` and the `DownloadEntry`, `CliCommand` and `DownloadGroup` types are exported for apps that build their own layout.
+- Inverse surface tokens for terminal-style blocks: `--color-fc-inverse` (`bg-fc-inverse`), `--color-fc-on-inverse` (`text-fc-on-inverse`) and `--color-fc-on-inverse-muted` (`text-fc-on-inverse-muted`). The surface is near-black in light mode and one fill step above the page in dark mode (the dark `component` value). Both text tokens clear 4.5:1 on it in both themes.
+
+### Changed
+
+- `fonts.test.ts` reads woff2 files. It used to reject them, so it now checks their glyph coverage and the weight mapping, and that every `url()` in `tokens.css` points at a bundled file.
+- The consumer smoke test now checks that each Magnetik file is emitted by a packed-install build and served as `font/woff2`.
+
+### Upgrading
+
+- Delete any local `@font-face` block or `<link rel=preload>` for Magnetik or Goga. Two declarations of one family fight over which file wins. The fonts come in through `@facile/muse/styles`, so the app needs no other change. See `MIGRATION.md` §1.
+- `font-medium` and `font-semibold` now render the same face. A design that needs heavier text uses `font-bold`.
+
 ## v0.21.2 (2026-11-13)
 
 ### Fixed
