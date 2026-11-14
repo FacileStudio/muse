@@ -64,8 +64,8 @@ export const APPS: SuiteApp[] = [
     {
         id: 'courrier', name: 'Courrier', icon: 'solar:letter-opened-bold-duotone', url: 'https://courrier.facile.studio',
         title: 'All your email, in one calm inbox.',
-        description: 'Bring your Gmail or OVH addresses into one clear inbox, share it with your team and let Bulle '
-            + 'sum up long threads. Free to start.'
+        description: 'Bring your Gmail, OVH or own-domain addresses into one clear inbox, share it with your team '
+            + 'and let Bulle sum up long threads. Free to start.'
     },
     {
         id: 'docs', name: 'Docs', icon: 'solar:documents-bold-duotone', url: 'https://docs.facile.studio',
