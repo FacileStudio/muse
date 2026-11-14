@@ -1,5 +1,6 @@
 import { cubicInOut } from 'svelte/easing';
 import { prefersReducedMotion } from './motion.js';
+import { EDGE_FADE, type Axis } from './scroll-area.js';
 
 export const RAIL_DURATION = 0.3;
 
@@ -61,16 +62,25 @@ export function revealOffset(view: Span, item: Span, scrollTop: number, gap = RE
 }
 
 /**
- * Scrolls `container`, and only it, so its `aria-current="page"` link is in view. Never
- * touches the document, does nothing when the link is already visible or the DOM has no
- * layout (jsdom), and jumps instead of gliding when `smooth` is false or motion is reduced.
+ * Scrolls `container`, and only it, so `item` is fully in view along `axis`. Never touches the
+ * document, does nothing when the item is already visible or the DOM has no layout (jsdom),
+ * and jumps instead of gliding when `smooth` is false or motion is reduced.
  */
+export function revealChild(container: HTMLElement, item: HTMLElement, axis: Axis, smooth: boolean, gap = EDGE_FADE): void {
+    if (typeof item.getBoundingClientRect !== 'function') return;
+    const span = (r: Pick<DOMRect, 'top' | 'bottom' | 'left' | 'right'>): Span =>
+        axis === 'x' ? { top: r.left, bottom: r.right } : { top: r.top, bottom: r.bottom };
+    const from = axis === 'x' ? container.scrollLeft : container.scrollTop;
+    const to = revealOffset(span(container.getBoundingClientRect()), span(item.getBoundingClientRect()), from, gap);
+    if (to === null) return;
+    const behavior = smooth && !prefersReducedMotion() ? 'smooth' : 'auto';
+    if (typeof container.scrollTo === 'function') container.scrollTo(axis === 'x' ? { left: to, behavior } : { top: to, behavior });
+    else if (axis === 'x') container.scrollLeft = to;
+    else container.scrollTop = to;
+}
+
+/** Scrolls `container`, and only it, so its `aria-current="page"` link is in view. */
 export function revealActive(container: HTMLElement, smooth: boolean): void {
     const item = container.querySelector<HTMLElement>('[aria-current="page"]');
-    if (!item || typeof item.getBoundingClientRect !== 'function') return;
-    const top = revealOffset(container.getBoundingClientRect(), item.getBoundingClientRect(), container.scrollTop);
-    if (top === null) return;
-    const behavior = smooth && !prefersReducedMotion() ? 'smooth' : 'auto';
-    if (typeof container.scrollTo === 'function') container.scrollTo({ top, behavior });
-    else container.scrollTop = top;
+    if (item) revealChild(container, item, 'y', smooth);
 }

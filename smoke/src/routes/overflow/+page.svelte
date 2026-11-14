@@ -2,7 +2,7 @@
 	const WIDTHS = [360, 390, 768, 1024, 1440];
 	const HEIGHT = 900;
 
-	type Report = { width: number; scrollWidth: number; offenders: unknown[]; sidebar: string };
+	type Report = { width: number; scrollWidth: number; offenders: unknown[]; sidebar: string; tabs: string[] };
 
 	let reports = $state<Record<number, Report>>({});
 
@@ -11,6 +11,8 @@
 			report.scrollWidth <= report.width &&
 			report.offenders.length === 0 &&
 			report.sidebar !== 'below-fold' &&
+			report.sidebar !== 'header-hidden' &&
+			report.tabs.every((state) => state === 'fits' || state === 'scrolls') &&
 			!report.sidebar.startsWith('page-scrolled')
 		);
 	}

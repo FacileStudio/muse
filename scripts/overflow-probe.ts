@@ -3,7 +3,7 @@ import { tmpdir, homedir } from 'node:os';
 import { join } from 'node:path';
 
 type Offender = { tag: string; cls: string; left: number; right: number };
-type Report = { width: number; scrollWidth: number; offenders: Offender[]; sidebar: string };
+type Report = { width: number; scrollWidth: number; offenders: Offender[]; sidebar: string; tabs: string[] };
 
 const TIMEOUT_MS = 90_000;
 
@@ -106,7 +106,7 @@ if (!url) {
 try {
     const { verdict, reports } = await probe(url);
     for (const [width, r] of Object.entries(reports).sort(([a], [b]) => Number(a) - Number(b))) {
-        console.log(`  ${width}px: document ${r.scrollWidth}px wide, ${r.offenders.length} overflowing element(s), sidebar ${r.sidebar}`);
+        console.log(`  ${width}px: document ${r.scrollWidth}px wide, ${r.offenders.length} overflowing element(s), sidebar ${r.sidebar}, tabs ${r.tabs.join('/')}`);
         for (const o of r.offenders) console.log(`      <${o.tag} class="${o.cls}"> spans ${o.left}..${o.right}px`);
     }
     process.exit(verdict === 'pass' ? 0 : 1);

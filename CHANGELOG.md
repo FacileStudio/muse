@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.23.2 (2026-11-14)
+
+### Fixed
+
+- `SideBar` keeps the active row in view when content appears later (owner request, 2026-11-14). A space switcher rendered after async data pushed the row back below the fold. The nav column now re-reveals the active row, debounced, whenever it or its content changes size, until the person scrolls the column by hand; the next navigation re-arms it. Without `ResizeObserver` (jsdom, SSR) it does nothing.
+- `SideBar` pins its header. The brand, the space switcher and the Search and Collapse rows stay at the top like the user card at the bottom; only the nav rows scroll. Tempo at 1440x900 scrolled the logo and the switcher out of the rail when it revealed a low row. The column fades over 24px at the end that still hides rows, with no border.
+- `Tabs` never clips silently. At 390px a row of three tabs with icons and counts cut the last tab at the right edge with no hint. The row now fades at the end that hides tabs, keeps the selected tab in view on mount, on resize and on every change, and scrolls only itself (it used `scrollIntoView`, which can scroll the page). It is `min-w-0 max-w-full`, so it never widens the document.
+
+### Added
+
+- `utils/rail.ts` `revealChild` (either axis) and `utils/scroll-area.ts` (`hiddenEdges`, `edgeMask`, `watchScrollArea`), with unit tests. `revealActive` now reveals with a 24px gap so the row clears the fade.
+- The `/overflow` probe page has a 320px row of three tabs with icons and counts, the last one selected, and a `SideBar` whose space switcher appears 600ms after mount. The probe fails when a tab row hides its selected tab or hides tabs with no fade, when the switcher is scrolled out of the rail, and when the active row ends up below the fold. Each check fails on v0.23.1.
+
 ## v0.23.1 (2026-11-14)
 
 ### Fixed

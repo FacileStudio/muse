@@ -30,6 +30,21 @@
 	const mobile = pages.slice(0, 6).map((page, i) => ({ ...page, active: i === 0 }));
 	const user = { name: 'Camille Delacroix-Montgolfier', email: 'camille.delacroix-montgolfier@example.com' };
 
+	let spaces = $state<{ id: string; name: string }[]>([]);
+	const SPACE = 'Late workspace';
+
+	$effect(() => {
+		const timer = setTimeout(() => (spaces = [{ id: 'late', name: SPACE }]), 600);
+		return () => clearTimeout(timer);
+	});
+
+	let narrowTab = $state('gear');
+	const narrowTabs = [
+		{ id: 'info', label: 'Infos salle', icon: icons.info },
+		{ id: 'trips', label: 'Trajets', icon: icons.folder, badge: 2 },
+		{ id: 'gear', label: 'Matos', icon: icons.folder, badge: 1 }
+	];
+
 	let tab = $state('t0');
 	const tabs = Array.from({ length: 9 }, (_, i) => ({ id: `t${i}`, label: `Section ${i + 1} label`, badge: i * 7 }));
 
@@ -49,7 +64,7 @@
 	}));
 
 	type Offender = { tag: string; cls: string; left: number; right: number };
-	type Report = { width: number; scrollWidth: number; offenders: Offender[]; sidebar: string };
+	type Report = { width: number; scrollWidth: number; offenders: Offender[]; sidebar: string; tabs: string[] };
 
 	let report = $state<Report | null>(null);
 
@@ -73,7 +88,41 @@
 		const item = active.getBoundingClientRect();
 		const page = document.scrollingElement?.scrollTop ?? 0;
 		if (page !== 0) return `page-scrolled-${page}`;
+		if (!headerVisible()) return 'header-hidden';
 		return item.top >= view.top && item.bottom <= view.bottom ? 'revealed' : 'below-fold';
+	}
+
+	function headerVisible(): boolean {
+		const rail = document.querySelector('[data-probe-sidebar]');
+		if (!rail) return false;
+		const walker = document.createTreeWalker(rail, NodeFilter.SHOW_TEXT);
+		const range = document.createRange();
+		for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+			if (node.textContent?.trim() !== SPACE) continue;
+			range.selectNodeContents(node);
+			const text = range.getBoundingClientRect();
+			for (let el = node.parentElement; el && el !== rail; el = el.parentElement) {
+				if (getComputedStyle(el).overflowY === 'visible') continue;
+				const box = el.getBoundingClientRect();
+				if (text.top < box.top - 0.5 || text.bottom > box.bottom + 0.5) return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	function tabRows(): string[] {
+		return [...document.querySelectorAll<HTMLElement>('[data-probe-tabs] [role="tablist"]')].map((row) => {
+			const active = row.querySelector('[aria-selected="true"], [aria-current="page"]');
+			if (!active) return 'no-active-tab';
+			const box = row.getBoundingClientRect();
+			const tab = active.getBoundingClientRect();
+			if (tab.left < box.left - 0.5 || tab.right > box.right + 0.5) return 'active-clipped';
+			const hides = row.scrollWidth > row.clientWidth + 1;
+			const mask = getComputedStyle(row).maskImage || getComputedStyle(row).getPropertyValue('-webkit-mask-image');
+			if (hides && (!mask || mask === 'none')) return 'clipped-without-fade';
+			return hides ? 'scrolls' : 'fits';
+		});
 	}
 
 	function measure(): Report {
@@ -111,7 +160,8 @@
 			width,
 			scrollWidth: document.documentElement.scrollWidth,
 			offenders: offenders.slice(0, 20),
-			sidebar: sidebarState()
+			sidebar: sidebarState(),
+			tabs: tabRows()
 		};
 	}
 
@@ -132,7 +182,18 @@
 
 	<div class="flex w-full">
 		<div class="sticky top-0 hidden h-dvh shrink-0 p-3 md:block" data-probe-sidebar>
-			<SideBar icon={icons.folder} title={LONG} {pages} {user} userHref="/" showSearch onSearch={() => {}} class="h-full" />
+			<SideBar
+				icon={icons.folder}
+				title={LONG}
+				{pages}
+				{user}
+				{spaces}
+				activeSpaceId="late"
+				userHref="/"
+				showSearch
+				onSearch={() => {}}
+				class="h-full"
+			/>
 		</div>
 
 		<main class="min-w-0 flex-1 pb-28 md:pb-0">
@@ -151,7 +212,12 @@
 					<p class="text-fc-sm text-fc-fg">{URL_TEXT}</p>
 				</Section>
 
-				<Tabs bind:value={tab} items={tabs} />
+				<div data-probe-tabs class="flex flex-col gap-4">
+					<Tabs bind:value={tab} items={tabs} />
+					<div class="w-full max-w-80">
+						<Tabs bind:value={narrowTab} items={narrowTabs} />
+					</div>
+				</div>
 
 				<Table>
 					<thead>

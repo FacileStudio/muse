@@ -22,12 +22,15 @@
 </script>
 
 <script lang="ts">
+    import { untrack } from 'svelte';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
     import { prefersReducedMotion } from '../../utils/motion.js';
     import { resize } from '../../utils/chart.js';
+    import { revealChild } from '../../utils/rail.js';
+    import { edgeMask, hiddenEdges, watchScrollArea } from '../../utils/scroll-area.js';
 
     let {
         items = [],
@@ -43,8 +46,10 @@
 
     const uid = $props.id();
 
+    let root: HTMLElement | null = $state(null);
     let indicator: HTMLElement | null = $state(null);
     let placed = false;
+    let fade = $state('');
 
     const tabs: Record<string, HTMLElement> = {};
     const routed = $derived(items.some((i) => i.href));
@@ -54,8 +59,29 @@
         if (item.disabled) return;
         value = item.id;
         onChange?.(item.id);
-        if (scroll) tabs[item.id]?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        if (scroll) reveal(item.id, true);
     }
+
+    function reveal(id: string, smooth: boolean) {
+        const el = tabs[id];
+        if (root && el) revealChild(root, el, 'x', smooth);
+    }
+
+    function edges() {
+        if (root) fade = edgeMask(hiddenEdges(root, 'x'), 'x');
+    }
+
+    function relayout() {
+        place(false);
+        reveal(value, false);
+        edges();
+    }
+
+    $effect(() => {
+        if (!root) return;
+        untrack(relayout);
+        return watchScrollArea(root, { onScroll: edges, onResize: relayout }, 0);
+    });
 
     function place(animate = true) {
         const el = tabs[value];
@@ -77,8 +103,10 @@
 
     $effect(() => {
         if (layout === lastLayout) return;
+        const first = lastLayout === '';
         lastLayout = layout;
         place();
+        if (!first) reveal(value, true);
     });
 
     function keydown(e: KeyboardEvent) {
@@ -103,9 +131,15 @@
 Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec des `href`, l'URL devient la source de vérité.
 -->
 
+<!--
+    A row wider than its column scrolls on its own and never widens the page. The ends that still
+    hide tabs fade out, and the active tab is scrolled into view on mount, on resize and on every
+    change, so a phone always shows where the row continues and which tab is open.
+-->
 <div
-    use:resize={() => place(false)}
-    class={twMerge('relative flex w-full items-center gap-1 overflow-x-auto', className)}
+    bind:this={root}
+    class={twMerge('relative flex w-full min-w-0 max-w-full items-center gap-1 overflow-x-auto overscroll-x-contain', className)}
+    style={fade || undefined}
     {...rest}
     role={routed ? undefined : 'tablist'}
     aria-label={routed ? undefined : (label ?? i18n.t('tabs.label'))}
@@ -146,7 +180,10 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
                 bind:this={tabs[item.id]}
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
-                use:resize={() => place(false)}
+                use:resize={() => {
+                    place(false);
+                    edges();
+                }}
                 class={inner}
             >
                 {@render content(item, active)}
@@ -162,7 +199,10 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
                 tabindex={active ? 0 : -1}
                 disabled={item.disabled}
                 onclick={() => select(item)}
-                use:resize={() => place(false)}
+                use:resize={() => {
+                    place(false);
+                    edges();
+                }}
                 class={inner}
             >
                 {@render content(item, active)}
