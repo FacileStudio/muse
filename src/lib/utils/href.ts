@@ -19,6 +19,11 @@ export function isSafeHref(raw: unknown): raw is string {
     }
 }
 
+/** True for a same-page fragment such as `#download`: `#` then letters, digits, `-` or `_` only. */
+export function isFragmentHref(raw: unknown): raw is string {
+    return typeof raw === 'string' && /^#[A-Za-z0-9_-]+$/.test(raw);
+}
+
 /** `href` when it passes `isSafeHref`, otherwise `fallback`. */
 export function safeHref(href: unknown, fallback: string): string {
     return isSafeHref(href) ? href : fallback;

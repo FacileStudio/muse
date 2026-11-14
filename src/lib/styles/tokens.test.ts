@@ -164,10 +164,13 @@ describe('inverse surface', () => {
         });
     }
 
-    test('dark: the surface sits one fill step off the page', () => {
+    test('dark: the surface differs from the page and from a card', () => {
         const dark = { ...themes.light, ...themes.dark };
-        expect(dark['--color-fc-inverse']).toBe(dark['--color-fc-component']);
+        expect(dark['--color-fc-inverse']).not.toBe(dark['--color-fc-component']);
         expect(dark['--color-fc-inverse']).not.toBe(dark['--color-fc-page']);
+        const inverse = lightness(dark['--color-fc-inverse']);
+        expect(Math.abs(inverse - lightness(dark['--color-fc-component']))).toBeGreaterThanOrEqual(0.05);
+        expect(Math.abs(inverse - lightness(dark['--color-fc-page']))).toBeGreaterThanOrEqual(0.05);
     });
 });
 

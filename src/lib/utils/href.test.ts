@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { isSafeHref, safeHref, withParam } from './href.js';
+import { isFragmentHref, isSafeHref, safeHref, withParam } from './href.js';
 import { isSafeUpgradeUrl } from './plan-limit.js';
 import { legalUrl, signUpUrl } from './legal.js';
 import { staticI18n } from '../i18n/context.svelte.js';
@@ -26,6 +26,22 @@ const BAD = [
     undefined,
     42
 ];
+
+describe('isFragmentHref', () => {
+    test('accepts a same-page fragment of letters, digits, - and _', () => {
+        for (const ok of ['#download', '#Download_2', '#get-the-app']) expect(isFragmentHref(ok)).toBe(true);
+    });
+
+    test('rejects markup, schemes, paths and an empty fragment', () => {
+        for (const bad of ['#<script>', '#"onmouseover=x', '#a b', '#/launch', '#', 'javascript:alert(1)', '/#download', 'download', undefined, 42]) {
+            expect(`${String(bad)}:${isFragmentHref(bad)}`).toBe(`${String(bad)}:false`);
+        }
+    });
+
+    test('leaves isSafeHref unchanged for fragments', () => {
+        expect(isSafeHref('#download')).toBe(false);
+    });
+});
 
 describe('isSafeHref', () => {
     test('accepts same-origin paths and https URLs', () => {
