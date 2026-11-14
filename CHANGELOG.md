@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.23.1 (2026-11-14)
+
+### Fixed
+
+- `SideBar` brings the active row into view on load and on every route change (owner request, 2026-11-14). Tempo at 1440x900, with about 15 rows in 3 groups, left the active row below the fold. The nav column scrolls on its own and the user card stays pinned at the bottom. The rail scrolls only its own column and never the page. A row that is already visible does not move. The first reveal jumps, later ones glide, and reduced motion always jumps. Without layout (jsdom) it does nothing. The logic is `revealOffset` and `revealActive` in `utils/rail.ts`, with unit tests.
+- Long unbroken text, such as a URL in a description, no longer widens the page. `html` now sets `overflow-wrap: break-word`, inherited everywhere, so a word breaks only when it would overflow its line. Consumer prose gets the same fix.
+- `LandingHeader`: a long app name pushed the menu button and the sign-in action past the right edge at 360 and 1024px. The brand link now shrinks and truncates its name.
+- `PageHeader`: a long `back.label` made a button wider than the phone. The back button is capped at the column width and truncates its label.
+
+### Added
+
+- The consumer smoke test checks that nothing in the app shell overflows horizontally. The smoke app's `/overflow` route frames a stress page at 360, 390, 768, 1024 and 1440px. The page has a 41-character app name, unbroken URLs, 9 tabs, an 8-column table, 18 grouped `SideBar` rows with row 17 active, `SettingsLayout`, `DownloadSection`, `LandingFooter` and `MobileNav`. `scripts/overflow-probe.ts` loads it in headless Chrome over the DevTools protocol, with no new dependency. It fails when the document or any unclipped element or text is wider than the viewport, or when the active `SideBar` row is out of view. It finds Chrome through `$CHROME`, the `PATH`, then the Playwright cache.
+
 ## v0.23.0 (2026-11-14)
 
 ### Added

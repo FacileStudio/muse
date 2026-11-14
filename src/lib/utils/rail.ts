@@ -44,3 +44,33 @@ export function watchRailShortcuts(shortcuts: RailShortcuts): () => void {
     document.addEventListener('keydown', onKeydown);
     return () => document.removeEventListener('keydown', onKeydown);
 }
+
+export type Span = { top: number; bottom: number };
+
+const REVEAL_GAP = 8;
+
+/**
+ * The scrollTop that brings `item` fully inside `view`, or null when it is already visible.
+ * Moves the least distance, like `scrollIntoView({ block: 'nearest' })`, plus a small gap.
+ */
+export function revealOffset(view: Span, item: Span, scrollTop: number, gap = REVEAL_GAP): number | null {
+    const tall = item.bottom - item.top > view.bottom - view.top;
+    if (item.top >= view.top && item.bottom <= view.bottom) return null;
+    if (item.top < view.top || tall) return Math.max(0, scrollTop + item.top - view.top - gap);
+    return scrollTop + item.bottom - view.bottom + gap;
+}
+
+/**
+ * Scrolls `container`, and only it, so its `aria-current="page"` link is in view. Never
+ * touches the document, does nothing when the link is already visible or the DOM has no
+ * layout (jsdom), and jumps instead of gliding when `smooth` is false or motion is reduced.
+ */
+export function revealActive(container: HTMLElement, smooth: boolean): void {
+    const item = container.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!item || typeof item.getBoundingClientRect !== 'function') return;
+    const top = revealOffset(container.getBoundingClientRect(), item.getBoundingClientRect(), container.scrollTop);
+    if (top === null) return;
+    const behavior = smooth && !prefersReducedMotion() ? 'smooth' : 'auto';
+    if (typeof container.scrollTo === 'function') container.scrollTo({ top, behavior });
+    else container.scrollTop = top;
+}

@@ -43,8 +43,8 @@ Le bloc de titre d'une page : h1, description, actions et lien retour, avec le t
           and each picked a different number (-ml-3, -ml-3.5, -ml-4, and one with `self-start`
           instead); it belongs here once. `w-fit` stops the button stretching in the column.
         -->
-        <Button href={back.href} variant="ghost" size="sm" icon={icons.chevronLeft} class="-ml-3 w-fit">
-            {back.label ?? i18n.t('pageHeader.back')}
+        <Button href={back.href} variant="ghost" size="sm" icon={icons.chevronLeft} class="-ml-3 w-fit max-w-full">
+            <span class="min-w-0 truncate">{back.label ?? i18n.t('pageHeader.back')}</span>
         </Button>
     {/if}
 
