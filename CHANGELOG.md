@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.24.0 (2026-11-14)
+
+### Added
+
+- `SignUpWithFacile`: the "Créer un compte gratuit" pill (fr, en, es, de), same heights as `SignInWithFacile`. It links to Registre's `https://sso.facile.studio/signup`, with `?lang=` when the locale is known. Registre's sign-up is public; no app route can open it directly (Registre's `/authorize` always lands on `/login`, porte forwards only `ui_locales`), so after sign-up the visitor is signed in on Registre and the app's sign-in completes without a password.
+- `LandingCta`: sign-up first and sign-in second on one row at equal height, stacked full width below 640px, `align="center"` for a closing call to action.
+- `SignInWithFacile` takes `variant="secondary"` (the `bg-fc-component` fill), only for standing beside `SignUpWithFacile`.
+- `FeatureSplit`: heading and one line beside an icon list, the layout six apps hand-rolled. `reverse` flips the sides.
+- `WorksWith`: the suite apps an app connects to, each with icon, name, one line and an optional link.
+- `ForDevelopers`: a bottom block with CLI, API, MCP and source rows (`kind` gives the icon and title), copyable commands, and a `selfHostHref` button.
+- `PricingPlans` for an app page: `highlightOnly`, `notes` (one line per plan key, `'*'` for every plan), `recommended` (badge, other paid plans go secondary) and `suiteHref` with the "one subscription covers every Facile app" line.
+- `LANDING_HEADING`, `developerRows` and `worksWithApps` in `utils/landing-blocks.ts`, with unit tests. `icons.github`.
+- The demo's Landing page shows every block; the `/overflow` probe page carries them with long text.
+
+### Changed
+
+- The three section blocks lay out on their own width with container queries, so they read the same inside an app shell as on a full-width page.
+- `DownloadSection`'s command row is now the internal `CommandLine`, shared with `ForDevelopers`.
+
 ## v0.23.3 (2026-11-14)
 
 ### Fixed
