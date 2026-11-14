@@ -474,6 +474,13 @@ Scrolling itself is completely untouched — wheel, trackpad, touch, keyboard an
 never "fix" it by showing a scrollbar. Long content still needs its own affordances: keep a
 partial row visible at the fold, or pair the scroll area with its own arrows.
 
+**A strip that scrolls fades at the end that hides content.** `Tabs` and the `SideBar` column
+compute it with `hiddenEdges` and `edgeMask` (`utils/scroll-area.ts`): a 24px `mask-image` on the
+hidden end only, none when everything fits. `Tabs` also keeps the selected tab in view on
+mount, on resize and on every change, scrolling only its own row (never `scrollIntoView`,
+which drags the page along). A row of tabs never wraps and never widens the page: it is
+`min-w-0 max-w-full` and scrolls inside its column.
+
 **Anything carrying `sr-only` needs a positioned ancestor.** `sr-only` is `position: absolute`,
 and an absolutely positioned box whose nearest *positioned* ancestor is the initial containing
 block belongs to the **document**, not to whatever scroll container it happens to sit inside —
@@ -722,6 +729,14 @@ keydown listener: ⌘D toggles `collapsed`, ⌘K calls `onSearch`, both `prevent
 the browser's bookmark and search bindings do not fire underneath. They previously advertised
 keys nothing listened for. ⌘K is bound only when `onSearch` is passed — `showSearch` alone
 renders a Search row that looks the part and does nothing, chip included.
+
+**Only the nav rows scroll.** The brand, the space switcher and the Search and Collapse rows
+are pinned at the top like the user card at the bottom, so revealing a low row can never push
+the app's identity out of the rail. The column fades over 24px at whichever end still hides
+rows; there is no line between header and list. The active row is revealed on load, on every
+route change, and again whenever the column or its content changes size (a switcher that
+renders after async data, a font swap, a window resize), until the person scrolls the column
+by hand. The next navigation re-arms it.
 
 That listener is on `document`, so **mount exactly one `SideBar`.** Both instances answer the
 same ⌘D: bound to one `collapsed`, the second handler undoes the first and nothing moves;
