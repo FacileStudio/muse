@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.25.0 (2026-11-14)
+
+### Added
+
+- `PricingPlans` takes `freeLabel` and `freeHref`: the free plan's button label and link, for an app where "Start for free" misleads (Bulle's AI needs a paid plan, Capsule needs no account). Without them the button reads "Commencer gratuitement" and follows `ctaHref`, as before.
+- `scripts/brand/false-claims.json`: the landing review's struck claims. `brand.test.ts` fails when a catalog title or description contains one.
+- Gare in the brand catalog (`solar:tram-bold-duotone`).
+- `sharedNote` in `utils/landing-blocks.ts`, with unit tests; `commandParts` in `utils/download.ts`.
+
+### Changed
+
+- `PricingPlans` shows a note once, under the cards, when every plan would show the same line (`notes={{ '*': … }}`, or the same text under each key). Plume and Sonde repeated "Included in every plan" on each card. A plan with its own line keeps per-card notes, so `notes={{ solo: …, '*': … }}` renders as before.
+- `CommandLine` (in `DownloadSection` and `ForDevelopers`) wraps a long command between words and path or URL segments instead of scrolling a cut-off line at phone widths. `brew install FacileStudio/tap/sablier` and `curl -fsSL https://… | bash` read in full at 360px with no page overflow.
+- `CommandLine` carries the whole command in `data-command`, since the visible text is split into segments: a test that greps server-rendered HTML for a command should match that attribute.
+- `ForDevelopers` puts a row's command under the icon at full width when the block is under 24rem, and pads 20px instead of 24px below 640px, so a command gets about 26 characters per line at 360px.
+- Brand catalog: every suite app's title and description now come from the landing copy review. Removed: "on your own server" (Suite), "GDPR compliant by design, hosted on your server" (Vision), "S3-compatible" (Nuage), "Your email, on your server" (Courrier), "for the studio" (Glouton, Nuage, Agenda), "sovereign hosting" (studio site), "multi-region probes" (Sonde), the coding-agent and microVM pitch (Bulle), Stripe and automatic reminders (Ardoise), IronCalc and MCP (Feuilles, Docs), "on Matrix" and "no subscription" (Prisme), the voice companion (Pastille), QEMU (Boîte), "for your infrastructure" (Journal), AES-256-GCM (Casier). Mycelium's title no longer contains "your coding agent". Titles may be 8 words, descriptions 80 characters.
+
 ## v0.24.0 (2026-11-14)
 
 ### Added
