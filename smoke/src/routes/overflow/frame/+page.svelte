@@ -2,7 +2,11 @@
 	import { measure, type Report } from './measure';
 	import {
 		DownloadSection,
+		FeatureSplit,
+		ForDevelopers,
+		LandingCta,
 		LandingFooter,
+		WorksWith,
 		LandingHeader,
 		MobileNav,
 		Page,
@@ -145,6 +149,24 @@
 					{/snippet}
 				</SettingsLayout>
 
+				<LandingCta />
+				<FeatureSplit
+					title={LONG}
+					description={URL_TEXT}
+					features={[1, 2, 3, 4].map((i) => ({ icon: icons.folder, title: `${LONG} ${i}`, text: URL_TEXT }))}
+				/>
+				<WorksWith
+					description={URL_TEXT}
+					apps={[1, 2, 3, 4].map((i) => ({ name: `${LONG} ${i}`, icon: icons.folder, line: URL_TEXT, href: '/a' }))}
+				/>
+				<ForDevelopers
+					selfHostHref="/self-hosting"
+					rows={[
+						{ kind: 'cli', text: URL_TEXT, command: `curl -fsSL ${URL_TEXT}/install.sh | sh` },
+						{ kind: 'api', title: LONG, text: URL_TEXT, href: '/api' },
+						{ kind: 'source', text: URL_TEXT }
+					]}
+				/>
 				<DownloadSection
 					platform="linux"
 					downloads={[

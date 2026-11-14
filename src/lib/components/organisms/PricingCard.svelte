@@ -5,6 +5,9 @@
         plan: CatalogPlan;
         interval: BillingInterval;
         highlight?: readonly string[];
+        highlightOnly?: boolean;
+        note?: string;
+        recommended?: string;
         href: string;
         heading?: 'h3' | 'h4';
     }
@@ -20,7 +23,16 @@
     import Icon from '../atoms/Icon.svelte';
     import { icons } from '../../icons.js';
 
-    let { plan, interval, highlight = [], href, heading = 'h3' }: PricingCardProps = $props();
+    let {
+        plan,
+        interval,
+        highlight = [],
+        highlightOnly = false,
+        note,
+        recommended,
+        href,
+        heading = 'h3'
+    }: PricingCardProps = $props();
 
     const i18n = getI18n();
     const free = $derived(isFreePlan(plan));
@@ -28,7 +40,9 @@
     const nameIsFree = $derived(free && isFreeLabel(name));
     const price = $derived(free ? undefined : priceFor(plan, interval));
     const saving = $derived(price?.interval === 'year' ? yearlySaving(plan) : 0);
-    const rows = $derived(featureRows(plan, highlight));
+    const rows = $derived(featureRows(plan, highlight).filter((row) => !highlightOnly || highlight.includes(row.key)));
+    const starred = $derived(recommended !== undefined && plan.key === recommended);
+    const variant = $derived(free ? 'outline' : recommended === undefined || starred ? 'primary' : 'secondary');
     const cta = $derived(
         free || !price ? href : withParam(withParam(href, 'plan', plan.key), 'interval', price.interval)
     );
@@ -42,7 +56,10 @@ Une offre du catalogue : nom, prix dans la période choisie, fonctionnalités co
 
 <article aria-labelledby={headingId} class="flex flex-col gap-4 rounded-fc-lg bg-fc-component p-5">
     <div class="flex flex-col gap-1">
-        <svelte:element this={heading} id={headingId} class="text-fc-md font-semibold text-fc-fg">{name}</svelte:element>
+        <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <svelte:element this={heading} id={headingId} class="text-fc-md font-semibold text-fc-fg">{name}</svelte:element>
+            {#if starred}<Badge tone="accent">{i18n.t('pricing.recommended')}</Badge>{/if}
+        </div>
         {#if price}
             <p class="flex flex-wrap items-baseline gap-x-1">
                 <span class="text-fc-2xl font-semibold text-fc-fg">
@@ -69,8 +86,14 @@ Une offre du catalogue : nom, prix dans la période choisie, fonctionnalités co
         {/if}
     </div>
 
-    {#if rows.length}
+    {#if rows.length || note}
         <ul aria-label={i18n.t('pricing.includes', { name })} class="flex flex-col gap-2 text-fc-sm text-fc-fg">
+            {#if note}
+                <li class="flex items-start gap-2 font-medium">
+                    <Icon icon={icons.check} size={18} class="mt-px shrink-0 text-fc-success" />
+                    <span>{note}</span>
+                </li>
+            {/if}
             {#each rows as row (row.key)}
                 <li class="flex items-start gap-2">
                     <Icon icon={icons.check} size={18} class="mt-px shrink-0 text-fc-success" />
@@ -80,7 +103,7 @@ Une offre du catalogue : nom, prix dans la période choisie, fonctionnalités co
         </ul>
     {/if}
 
-    <Button href={cta} rel="external" size="lg" variant={free ? 'outline' : 'primary'} class="mt-auto w-full">
+    <Button href={cta} rel="external" size="lg" {variant} class="mt-auto w-full">
         {free ? i18n.t('pricing.startFree') : i18n.t('pricing.choose', { name })}
     </Button>
 </article>

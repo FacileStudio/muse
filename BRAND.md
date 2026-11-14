@@ -9,6 +9,9 @@ These rules keep it recognisable across the suite and on any third-party site th
 - Point `href` at the app's porte route, `/auth/oidc` by default. The component already sets
   `rel="external"` so SvelteKit does a full page load.
 - One sign-in button per screen. Put it above any other way in.
+- On a landing page, account creation comes first: use `LandingCta`, which puts `SignUpWithFacile`
+  ("Créer un compte gratuit") as the filled pill and `SignInWithFacile variant="secondary"` beside it.
+  The secondary fill exists only for that pair.
 
 ## Label
 
@@ -40,9 +43,16 @@ a `gap-2` or larger satisfies it.
 ## Colour
 
 - The button is the inverted accent pair, `bg-fc-accent text-fc-accent-fg`. It reads black on
-  light and white on dark, from the tokens.
+  light and white on dark, from the tokens. Beside `SignUpWithFacile` it takes `variant="secondary"`,
+  the `bg-fc-component` fill, so the page has one filled call to action.
 - Never recolour the button or the mark. No brand tints, gradients, outlines or shadows.
 - Never place it on a busy image. Use `bg-fc-page`, `bg-fc-bg` or `bg-fc-component` behind it.
+
+## Sign-up label
+
+`SignUpWithFacile` reads "Créer un compte gratuit", "Create a free account", "Crear una cuenta
+gratuita" or "Kostenloses Konto erstellen". It carries no mark: the mark stays on the sign-in
+button. It links to Registre's `/signup`; see the README for why no app route can do better today.
 
 ## Mark
 

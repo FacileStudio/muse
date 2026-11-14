@@ -13,6 +13,19 @@
         catalog?: unknown;
         /** Feature keys this app cares about, shown first on every card. */
         highlight?: string[];
+        /** Show only the `highlight` rows and `notes`, for an app page that prices its own part of the suite. */
+        highlightOnly?: boolean;
+        /**
+         * One line per plan key on what this app gives on that plan, shown first on its card.
+         * The `'*'` key applies to every plan without its own line, e.g. "Included in every plan".
+         */
+        notes?: Record<string, string>;
+        /** The plan key to mark as recommended. Its button stays primary and the other paid plans go secondary. */
+        recommended?: string;
+        /** The Suite pricing page. Set, a line under the cards says one subscription covers every app and links to it. */
+        suiteHref?: string;
+        /** Overrides the "one subscription covers every app" line. */
+        suiteNote?: string;
         /** Where each card's button goes; `plan` and `interval` are added for a paid plan. */
         ctaHref?: string;
         interval?: BillingInterval;
@@ -32,7 +45,7 @@
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import { CATALOG_URL, fetchCatalog, parseCatalog, type CatalogPlan } from '../../utils/catalog.js';
-    import { safeHref } from '../../utils/href.js';
+    import { isSafeHref, safeHref } from '../../utils/href.js';
     import { withFreePlan, yearlySaving } from '../../utils/pricing.js';
     import { formatPercent } from '../../utils/money.js';
     import PricingCard from './PricingCard.svelte';
@@ -41,6 +54,11 @@
         catalogUrl = CATALOG_URL,
         catalog,
         highlight = [],
+        highlightOnly = false,
+        notes = {},
+        recommended,
+        suiteHref,
+        suiteNote,
         ctaHref,
         interval = $bindable('month'),
         synthesizeFree = false,
@@ -59,6 +77,7 @@
     const source = $derived(Array.isArray(catalog) ? { plans: catalog } : catalog);
     const plans = $derived(withFreePlan(catalog === undefined ? fetched : parseCatalog(source), synthesizeFree));
     const href = $derived(safeHref(ctaHref, 'https://sso.facile.studio/spaces'));
+    const suite = $derived(isSafeHref(suiteHref) ? suiteHref : null);
     const yearly = $derived(plans.some((p) => p.prices.some((q) => q.interval === 'year')));
     const monthly = $derived(plans.some((p) => p.prices.some((q) => q.interval === 'month')));
     const best = $derived(Math.max(0, ...plans.map(yearlySaving)));
@@ -82,7 +101,7 @@
 
 <!--
 @component
-Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offre, les offres gratuites en premier, bascule mensuel / annuel. Ne rend rien si le catalogue est vide ou injoignable.
+Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offre, les offres gratuites en premier, bascule mensuel / annuel. Sur la page d'une app, `notes`, `highlightOnly`, `recommended` et `suiteHref` disent ce que l'app donne dans chaque offre, mettent l'offre payante en avant et rappellent qu'un abonnement couvre toutes les apps. Ne rend rien si le catalogue est vide ou injoignable.
 -->
 
 {#if plans.length}
@@ -117,8 +136,28 @@ Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offr
         </div>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(15rem,1fr))]">
             {#each plans as plan (plan.key)}
-                <PricingCard {plan} {interval} {highlight} {href} heading={cardHeading} />
+                <PricingCard
+                    {plan}
+                    {interval}
+                    {highlight}
+                    {highlightOnly}
+                    note={notes[plan.key] ?? notes['*']}
+                    {recommended}
+                    {href}
+                    heading={cardHeading}
+                />
             {/each}
         </div>
+        {#if suite}
+            <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-fc-sm text-fc-fg-muted">
+                <span>{suiteNote ?? i18n.t('pricing.oneSubscription')}</span>
+                <a
+                    href={suite}
+                    class="rounded-fc-xs font-medium text-fc-fg underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring"
+                >
+                    {i18n.t('pricing.allPlans')}
+                </a>
+            </p>
+        {/if}
     </section>
 {/if}

@@ -10,6 +10,12 @@
          */
         href?: string;
         size?: SignInSize;
+        /**
+         * `secondary` is the quiet fill, only for standing beside `SignUpWithFacile` in `LandingCta`,
+         * where creating an account is the main action. Everywhere else keep the default.
+         * @default 'primary'
+         */
+        variant?: 'primary' | 'secondary';
         /** Stretch to the width of the container. */
         fullWidth?: boolean;
         /** Shows the spinner and stops a second navigation. Also set by the first click. */
@@ -32,6 +38,7 @@
     let {
         href: hrefProp,
         size = 'md',
+        variant = 'primary',
         fullWidth = false,
         loading = false,
         label,
@@ -55,7 +62,8 @@
 
     const classes = $derived(
         twMerge(
-            'inline-flex h-(--h) shrink-0 items-center justify-center rounded-fc-pill bg-fc-accent font-semibold whitespace-nowrap text-fc-accent-fg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-busy:cursor-progress aria-busy:opacity-80',
+            'inline-flex h-(--h) shrink-0 items-center justify-center rounded-fc-pill font-semibold whitespace-nowrap transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring aria-busy:cursor-progress aria-busy:opacity-80',
+            variant === 'secondary' ? 'bg-fc-component text-fc-fg' : 'bg-fc-accent text-fc-accent-fg',
             sizes[size].box,
             fullWidth && 'w-full',
             className
@@ -101,7 +109,7 @@ Le bouton « Se connecter avec Facile », le seul : en pilule, la marque Facile 
         <Spinner
             size="sm"
             aria-hidden="true"
-            class="size-(--m) text-fc-accent-fg"
+            class="size-(--m) text-current"
         />
     {:else}
         <svg

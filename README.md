@@ -14,13 +14,13 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
 
 ## What it does
 
-- Exports 84 Svelte 5 components: 5 layout primitives, 23 atoms, 32 molecules, 16 organisms,
-  6 charts, 2 motion pieces
+- Exports 97 Svelte 5 components: layout primitives, atoms, molecules, organisms, charts and
+  motion pieces
 - Speaks fr, en, es and de: a dependency-free message helper (`provideLocale`, `createTranslator`)
   drives every muse string, and apps reuse it for their own catalogs
-- Ships the launch surfaces every app shares: `SignInWithFacile`, `AuthScreen`, `PlanLimit`,
-  `LegalFooter`, `LocaleSwitch`, `PricingPlans`, `DownloadCta`, `DownloadSection`, `LandingHeader` and
-  `LandingFooter`
+- Ships the launch surfaces every app shares: `SignInWithFacile`, `SignUpWithFacile`, `LandingCta`,
+  `AuthScreen`, `PlanLimit`, `LegalFooter`, `LocaleSwitch`, `PricingPlans`, `DownloadCta`, `DownloadSection`,
+  `FeatureSplit`, `WorksWith`, `ForDevelopers`, `LandingHeader` and `LandingFooter`
 - Standardises the settings page — `Tabs`, `SettingsSection`, `SettingsRow`, and a
   `SecretField` that masks, reveals-then-re-hides, and copies credentials the same way in
   every app
@@ -48,6 +48,29 @@ icons — plus a six-slot chart palette derived from Sablier's identity colours.
   the chart maths (`niceScale`, `linePath`, `areaPath`, `arcPath`, `tickStride`, `resize`)
 - Registers itself as an AI skill for Claude Code (`~/.claude/skills/muse/`) and Codex
   (`~/.codex/muse/`) through `install.sh`
+
+## Landing pages
+
+Every app landing uses the same blocks, in this order of importance:
+
+| Block | What it does |
+|---|---|
+| `LandingCta` | "Créer un compte gratuit" first, "Se connecter avec Facile" second, same height, stacked full width below 640px |
+| `FeatureSplit` | Heading and one line on one side, an icon list on the other; `reverse` flips the sides |
+| `WorksWith` | The suite apps this one really connects to: icon, name, one line, optional link |
+| `PricingPlans` | On an app page: `highlight` + `highlightOnly`, `notes` per plan key, `recommended="pro"`, `suiteHref` for the "one subscription covers every app" line |
+| `ForDevelopers` | Bottom block: CLI, API, MCP and source rows with copyable commands, and `selfHostHref` |
+
+The section blocks lay out on their own width (container queries), so they behave the same inside
+an app shell and on a full-width page. Their headings default to `LANDING_HEADING`.
+
+**The sign-up href.** `SignUpWithFacile` links to `https://sso.facile.studio/signup`, plus
+`?lang=<locale>` when the locale is known. Registre's sign-up is public (proof of work, no puzzle,
+then an e-mailed link). Nothing an app can put on its porte route (`/auth/oidc`) opens Registre on
+the sign-up form: `/authorize` always lands on `/login?auth_request=…`, and porte forwards only
+`ui_locales`. So a visitor who signs up ends on Registre's home, signed in; the app's
+`SignInWithFacile` then completes without a password. Pass `signUpHref` only to point at another
+Registre.
 
 ## Stack
 

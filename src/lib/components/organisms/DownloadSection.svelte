@@ -44,7 +44,7 @@
     import Icon from '../atoms/Icon.svelte';
     import Badge from '../atoms/Badge.svelte';
     import Button from '../atoms/Button.svelte';
-    import IconButton from '../atoms/IconButton.svelte';
+    import CommandLine from '../molecules/CommandLine.svelte';
 
     let {
         downloads = [],
@@ -66,8 +66,6 @@
 
     let detected = $state<Platform | null>(null);
     let hydrated = $state(false);
-    let copied = $state<number | null>(null);
-    let status = $state('');
 
     $effect(() => {
         if (platform === undefined) detected = detectPlatform(navigator.userAgent, navigator.maxTouchPoints);
@@ -90,22 +88,6 @@
     const linkOnly = $derived(device && (pending || all !== null) && !cards.length && !terminal.length);
     const reserve = $derived(pending && twMerge('min-h-48', cli.length > 0 && 'sm:min-h-96'));
     const other = $derived(device && !linkOnly ? all : null);
-
-    $effect(() => {
-        if (copied === null) return;
-        const timer = setTimeout(() => (copied = null), 2000);
-        return () => clearTimeout(timer);
-    });
-
-    async function copy(index: number) {
-        try {
-            await navigator.clipboard.writeText(terminal[index].command);
-            copied = index;
-            status = i18n.t('download.copied');
-        } catch {
-            status = i18n.t('download.copyFailed');
-        }
-    }
 
     const classes = $derived(twMerge('flex min-w-0 flex-col gap-4', className));
     const link = 'underline underline-offset-2 transition-colors hover:text-fc-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring';
@@ -190,33 +172,13 @@ Une section de téléchargement complète : une carte par plateforme (ordinateur
                 </div>
             </div>
             <ul class="flex flex-col gap-3">
-                {#each terminal as item, i (item.command)}
+                {#each terminal as item (item.command)}
                     <li class="flex min-w-0 flex-col gap-1.5">
                         <span class="text-fc-xs font-medium text-fc-fg-muted">{item.label}</span>
-                        <div class="flex min-w-0 items-start gap-2 rounded-fc-md bg-fc-inverse py-0.5 pr-0.5 pl-3.5">
-                            <code
-                                class="flex min-w-0 flex-1 gap-2 overflow-x-auto py-3 font-fc-mono text-fc-sm whitespace-nowrap text-fc-on-inverse sm:overflow-x-visible sm:whitespace-normal"
-                            >
-                                <span class="select-none text-fc-on-inverse-muted" aria-hidden="true">$</span>
-                                <span class="sm:min-w-0 sm:[overflow-wrap:anywhere]">{item.command}</span>
-                            </code>
-                            <IconButton
-                                type="button"
-                                variant="ghost"
-                                onclick={() => copy(i)}
-                                aria-label={i18n.t('download.copy', { label: item.label })}
-                                class={twMerge(
-                                    'text-fc-on-inverse-muted hover:bg-fc-on-inverse/10 hover:text-fc-on-inverse',
-                                    copied === i && 'text-fc-on-inverse'
-                                )}
-                            >
-                                <Icon icon={copied === i ? icons.check : icons.copy} size={18} />
-                            </IconButton>
-                        </div>
+                        <CommandLine command={item.command} label={item.label} />
                     </li>
                 {/each}
             </ul>
-            <span aria-live="polite" class="sr-only">{status}</span>
         </div>
     {/if}
 

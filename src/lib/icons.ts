@@ -60,6 +60,7 @@ export const icons = {
   layers:        'solar:layers-linear',
   help:          'solar:question-circle-linear',
   external:      'solar:arrow-right-up-linear',
+  github:        'mdi:github',
   ideas:         'solar:lightbulb-linear',
 } as const;
 

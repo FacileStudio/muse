@@ -49,6 +49,8 @@ export { default as StatusDot } from './components/atoms/StatusDot.svelte';
 export type { StatusDotProps } from './components/atoms/StatusDot.svelte';
 export { default as SignInWithFacile } from './components/atoms/SignInWithFacile.svelte';
 export type { SignInWithFacileProps, SignInSize } from './components/atoms/SignInWithFacile.svelte';
+export { default as SignUpWithFacile } from './components/atoms/SignUpWithFacile.svelte';
+export type { SignUpWithFacileProps } from './components/atoms/SignUpWithFacile.svelte';
 export { default as Switch } from './components/atoms/Switch.svelte';
 export type { SwitchProps } from './components/atoms/Switch.svelte';
 export { default as Textarea } from './components/atoms/Textarea.svelte';
@@ -288,4 +290,20 @@ export { default as LandingHeader } from './components/organisms/LandingHeader.s
 export type { LandingHeaderProps } from './components/organisms/LandingHeader.svelte';
 export { default as LandingFooter } from './components/organisms/LandingFooter.svelte';
 export type { LandingFooterProps, LandingFooterColumn } from './components/organisms/LandingFooter.svelte';
+export { default as LandingCta } from './components/molecules/LandingCta.svelte';
+export type { LandingCtaProps } from './components/molecules/LandingCta.svelte';
+export { default as FeatureSplit } from './components/organisms/FeatureSplit.svelte';
+export type { FeatureSplitProps } from './components/organisms/FeatureSplit.svelte';
+export { default as WorksWith } from './components/organisms/WorksWith.svelte';
+export type { WorksWithProps } from './components/organisms/WorksWith.svelte';
+export { default as ForDevelopers } from './components/organisms/ForDevelopers.svelte';
+export type { ForDevelopersProps } from './components/organisms/ForDevelopers.svelte';
+export { LANDING_HEADING, developerRows, worksWithApps } from './utils/landing-blocks.js';
+export type {
+    DeveloperKind,
+    DeveloperRow,
+    FeatureItem,
+    ResolvedDeveloperRow,
+    WorksWithApp
+} from './utils/landing-blocks.js';
 export type { LandingLink } from './utils/landing.js';
