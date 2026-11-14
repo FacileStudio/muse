@@ -6,7 +6,7 @@
     export type { Platform };
 
     export interface DownloadCtaProps extends Omit<HTMLAnchorAttributes, 'href'> {
-        /** The app's downloads page. An unsafe value renders nothing. */
+        /** The app's downloads page, or a same-page fragment such as `#download`. An unsafe value renders nothing. */
         href: string;
         platforms?: Platform[];
         label?: string;
@@ -25,7 +25,7 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
-    import { isSafeHref } from '../../utils/href.js';
+    import { isFragmentHref, isSafeHref } from '../../utils/href.js';
     import Icon from '../atoms/Icon.svelte';
 
     let {
@@ -37,6 +37,7 @@
     }: DownloadCtaProps = $props();
 
     const i18n = getI18n();
+    const fragment = $derived(isFragmentHref(href));
     const known = $derived(platforms.filter((p, i) => Object.hasOwn(PLATFORMS, p) && platforms.indexOf(p) === i));
     const names = $derived(
         new Intl.ListFormat(i18n.locale, { type: 'conjunction' }).format(known.map((p) => PLATFORMS[p].name))
@@ -55,8 +56,8 @@
 Un lien vers la page de téléchargement d'une app, avec les plateformes disponibles en icônes et en toutes lettres pour les lecteurs d'écran.
 -->
 
-{#if isSafeHref(href)}
-    <a {href} rel="external" class={classes} {...rest}>
+{#if fragment || isSafeHref(href)}
+    <a {href} rel={fragment ? undefined : 'external'} class={classes} {...rest}>
         <Icon icon={icons.download} size={18} />
         <span>{label ?? i18n.t('download.title')}</span>
         {#if known.length}

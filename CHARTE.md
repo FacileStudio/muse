@@ -39,7 +39,7 @@ CSS custom properties. Source of truth: `src/lib/styles/tokens.css`.
 | `--fc-border`         | `oklch(0.9 0 0)`    | `oklch(1 0 0 / 10%)`   | **deprecated**: muse draws no borders and uses it nowhere; kept so consumer classes keep a colour |
 | `--fc-ring`           | `oklch(0.4 0 0)`    | `oklch(0.6 0 0)`       | focus rings                   |
 | `--fc-scrim`          | `oklch(0 0 0 / 50%)` | `oklch(0 0 0 / 50%)`  | overlay backdrops — same in both modes |
-| `--fc-inverse`        | `oklch(0.09 0 0)`    | `oklch(0.16 0 0)`     | dark surface for terminal-style blocks; one step off the dark page |
+| `--fc-inverse`        | `oklch(0.09 0 0)`    | `oklch(0.23 0 0)`     | dark surface for terminal-style blocks; one step above the dark card |
 | `--fc-on-inverse`     | `oklch(0.985 0 0)`   | `oklch(0.985 0 0)`    | text on `fc-inverse` |
 | `--fc-on-inverse-muted` | `oklch(0.64 0 0)`  | `oklch(0.64 0 0)`     | dim text on `fc-inverse` (prompts, comments) |
 | `--fc-danger`         | `oklch(0.54 0.22 29)`| `oklch(0.65 0.22 29)` | destructive                    |

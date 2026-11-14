@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.22.1 (2026-11-14)
+
+### Fixed
+
+- Dark mode `--color-fc-inverse` is `oklch(0.23 0 0)` (was `oklch(0.16 0 0)`, the dark `component` value). A terminal-style block inside a `Card` or `Tile` had no edge. The dark page is `oklch(0.09 0 0)`, near black, so a darker value cannot show an edge either. The surface now sits one fill step above the dark card and well above the page. Both text tokens still clear 4.5:1 on it. Light mode does not change.
+- `DownloadCta` accepts a same-page fragment such as `href="#download"`, so a hero CTA can jump to the page's `DownloadSection`. The fragment is `#` followed by letters, digits, `-` or `_` only. Before, the CTA rendered nothing. A fragment link drops `rel="external"`. `isSafeHref` itself does not change, so every other link check keeps rejecting fragments.
+
 ## v0.22.0 (2026-11-13)
 
 ### Added

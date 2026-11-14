@@ -112,8 +112,9 @@
 
   /* Inverse surface → bg-fc-inverse, text-fc-on-inverse, text-fc-on-inverse-muted. A dark
      block with light text in both themes, for terminals and code output. Light mode uses the
-     dark page value; dark mode moves the surface one fill step up (the dark `component`) so it
-     still separates from the page. The text pair matches the dark theme's fg and fg-muted.
+     dark page value. The dark page is already near black (oklch 0.09), so nothing darker reads
+     as an edge; dark mode lifts the surface to 0.23, one fill step above the dark `component`
+     card, so a terminal separates from the page and from a card. The text pair matches the dark theme's fg and fg-muted.
      `tokens.test.ts` holds both text tokens to 4.5:1 on the surface in each theme. */
   --color-fc-inverse: oklch(0.09 0 0);
   --color-fc-on-inverse: oklch(0.985 0 0);
@@ -270,7 +271,7 @@
     --color-fc-accent-fg: oklch(0.09 0 0);
     --color-fc-border: oklch(1 0 0 / 10%);
     --color-fc-field: oklch(0.26 0 0);
-    --color-fc-inverse: oklch(0.16 0 0);
+    --color-fc-inverse: oklch(0.23 0 0);
     --color-fc-ring: oklch(0.6 0 0);
     --color-fc-danger: oklch(0.65 0.22 29);
     --color-fc-success: oklch(0.72 0.14 150);
@@ -301,7 +302,7 @@
   --color-fc-accent-fg: oklch(0.09 0 0);
   --color-fc-border: oklch(1 0 0 / 10%);
   --color-fc-field: oklch(0.26 0 0);
-  --color-fc-inverse: oklch(0.16 0 0);
+  --color-fc-inverse: oklch(0.23 0 0);
   --color-fc-ring: oklch(0.6 0 0);
   --color-fc-danger: oklch(0.65 0.22 29);
   --color-fc-success: oklch(0.72 0.14 150);
