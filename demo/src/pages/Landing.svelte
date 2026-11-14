@@ -99,6 +99,20 @@
         data-preview="pricing-shared"
     />
 
+    <PricingPlans
+        class={block}
+        catalog={demoCatalog}
+        highlight={['nuage.storage_gb']}
+        highlightOnly
+        notes={{ '*': 'Ardoise ouvre bientôt : ces offres couvrent toute la suite.' }}
+        ctaHref="https://suite.facile.studio/#tarifs"
+        ctaLabel="Voir les offres"
+        freeLabel="Voir les offres"
+        title="Une app pas encore ouverte"
+        headingClass={LANDING_HEADING}
+        data-preview="pricing-closed"
+    />
+
     <div class={block} data-preview="developers">
         <ForDevelopers {rows} selfHostHref="https://suite.facile.studio/auto-hebergement" />
     </div>

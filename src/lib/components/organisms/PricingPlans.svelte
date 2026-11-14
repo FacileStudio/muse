@@ -27,14 +27,22 @@
         suiteHref?: string;
         /** Overrides the "one subscription covers every app" line. */
         suiteNote?: string;
-        /** Where each card's button goes; `plan` and `interval` are added for a paid plan. */
+        /**
+         * Where each card's button goes; `plan` and `interval` are added for a paid plan.
+         * Unset, every button opens Registre's sign-up page in the current locale (`signUpUrl`).
+         */
         ctaHref?: string;
+        /**
+         * Overrides the paid plans' button label ("Choose {name}"): one string for every paid plan,
+         * or one per plan key with `'*'` for the rest, e.g. "See the plans" while the app is closed.
+         */
+        ctaLabel?: string | Record<string, string>;
         /**
          * Overrides the free plan's button label ("Start for free"), for an app whose main feature
          * needs a paid plan or no account at all.
          */
         freeLabel?: string;
-        /** Where the free plan's button goes, in place of `ctaHref`. */
+        /** Where the free plan's button goes, in place of `ctaHref` or the sign-up page. */
         freeHref?: string;
         interval?: BillingInterval;
         /** Add a bare free card when the catalog lists no free plan. Off: muse never invents one. */
@@ -53,8 +61,9 @@
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import { CATALOG_URL, fetchCatalog, parseCatalog, type CatalogPlan } from '../../utils/catalog.js';
-    import { isSafeHref, safeHref } from '../../utils/href.js';
+    import { isSafeHref } from '../../utils/href.js';
     import { withFreePlan, yearlySaving } from '../../utils/pricing.js';
+    import { planHref, planLabel } from '../../utils/pricing-cta.js';
     import { sharedNote } from '../../utils/landing-blocks.js';
     import { formatPercent } from '../../utils/money.js';
     import { icons } from '../../icons.js';
@@ -71,6 +80,7 @@
         suiteHref,
         suiteNote,
         ctaHref,
+        ctaLabel,
         freeLabel,
         freeHref,
         interval = $bindable('month'),
@@ -89,8 +99,7 @@
 
     const source = $derived(Array.isArray(catalog) ? { plans: catalog } : catalog);
     const plans = $derived(withFreePlan(catalog === undefined ? fetched : parseCatalog(source), synthesizeFree));
-    const href = $derived(safeHref(ctaHref, 'https://sso.facile.studio/spaces'));
-    const freeTarget = $derived(isSafeHref(freeHref) ? freeHref : href);
+    const targets = $derived({ ctaHref, freeHref, locale: i18n.known ? i18n.locale : null });
     const shared = $derived(sharedNote(plans.map((p) => p.key), notes));
     const suite = $derived(isSafeHref(suiteHref) ? suiteHref : null);
     const yearly = $derived(plans.some((p) => p.prices.some((q) => q.interval === 'year')));
@@ -116,7 +125,7 @@
 
 <!--
 @component
-Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offre, les offres gratuites en premier, bascule mensuel / annuel. Sur la page d'une app, `notes`, `highlightOnly`, `recommended` et `suiteHref` disent ce que l'app donne dans chaque offre, mettent l'offre payante en avant et rappellent qu'un abonnement couvre toutes les apps. Une note commune à toutes les offres s'affiche une fois sous les cartes ; `freeLabel` et `freeHref` changent le bouton de l'offre gratuite. Ne rend rien si le catalogue est vide ou injoignable.
+Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offre, les offres gratuites en premier, bascule mensuel / annuel. Sur la page d'une app, `notes`, `highlightOnly`, `recommended` et `suiteHref` disent ce que l'app donne dans chaque offre, mettent l'offre payante en avant et rappellent qu'un abonnement couvre toutes les apps. Une note commune à toutes les offres s'affiche une fois sous les cartes ; Sans `ctaHref`, chaque bouton ouvre l'inscription Registre ; `freeLabel` et `freeHref` changent le bouton de l'offre gratuite, `ctaLabel` celui des offres payantes. Ne rend rien si le catalogue est vide ou injoignable.
 -->
 
 {#if plans.length}
@@ -158,9 +167,9 @@ Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offr
                     {highlightOnly}
                     note={shared ? undefined : (notes[plan.key] ?? notes['*'])}
                     {recommended}
-                    {href}
+                    href={planHref(plan, interval, targets)}
+                    label={planLabel(ctaLabel, plan.key)}
                     {freeLabel}
-                    freeHref={freeTarget}
                     heading={cardHeading}
                 />
             {/each}

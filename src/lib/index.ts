@@ -285,6 +285,8 @@ export type { BillingInterval, CatalogPlan, CatalogPrice, FeatureValue, FetchCat
 export { FEATURE_LABELS, featureRow, featureRows, isFreePlan, priceFor, withFreePlan, yearlySaving } from './utils/pricing.js';
 export { formatPercent, formatPrice } from './utils/money.js';
 export type { FeatureRow } from './utils/pricing.js';
+export { planHref, planLabel } from './utils/pricing-cta.js';
+export type { PlanTargets } from './utils/pricing-cta.js';
 
 export { default as LandingHeader } from './components/organisms/LandingHeader.svelte';
 export type { LandingHeaderProps } from './components/organisms/LandingHeader.svelte';

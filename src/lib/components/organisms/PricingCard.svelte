@@ -9,15 +9,14 @@
         note?: string;
         recommended?: string;
         href: string;
+        label?: string;
         freeLabel?: string;
-        freeHref?: string;
         heading?: 'h3' | 'h4';
     }
 </script>
 
 <script lang="ts">
     import { getI18n } from '../../i18n/context.svelte.js';
-    import { withParam } from '../../utils/href.js';
     import { featureRows, isFreeLabel, isFreePlan, priceFor, yearlySaving } from '../../utils/pricing.js';
     import { formatPercent, formatPrice } from '../../utils/money.js';
     import Badge from '../atoms/Badge.svelte';
@@ -33,8 +32,8 @@
         note,
         recommended,
         href,
+        label,
         freeLabel,
-        freeHref = href,
         heading = 'h3'
     }: PricingCardProps = $props();
 
@@ -47,9 +46,6 @@
     const rows = $derived(featureRows(plan, highlight).filter((row) => !highlightOnly || highlight.includes(row.key)));
     const starred = $derived(recommended !== undefined && plan.key === recommended);
     const variant = $derived(free ? 'outline' : recommended === undefined || starred ? 'primary' : 'secondary');
-    const cta = $derived(
-        free ? freeHref : !price ? href : withParam(withParam(href, 'plan', plan.key), 'interval', price.interval)
-    );
     const headingId = $props.id();
 </script>
 
@@ -107,7 +103,7 @@ Une offre du catalogue : nom, prix dans la période choisie, fonctionnalités co
         </ul>
     {/if}
 
-    <Button href={cta} rel="external" size="lg" {variant} class="mt-auto w-full">
-        {free ? (freeLabel ?? i18n.t('pricing.startFree')) : i18n.t('pricing.choose', { name })}
+    <Button {href} rel="external" size="lg" {variant} class="mt-auto w-full">
+        {free ? (freeLabel ?? i18n.t('pricing.startFree')) : (label ?? i18n.t('pricing.choose', { name }))}
     </Button>
 </article>
