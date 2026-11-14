@@ -172,6 +172,10 @@ for face in Regular Medium Bold; do
     esac
 done
 
+step 'Probing the app shell for horizontal overflow'
+(cd "$ROOT" && bun scripts/overflow-probe.ts "http://127.0.0.1:$SSR_PORT/overflow") ||
+    fail 'an app-shell piece overflows the viewport or hides the active SideBar row (see above)'
+
 kill "$SSR_PID" 2>/dev/null || true
 wait "$SSR_PID" 2>/dev/null || true
 free_port "$SSR_PORT"

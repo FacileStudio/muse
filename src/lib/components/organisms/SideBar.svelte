@@ -63,7 +63,7 @@
     import TextElevate from '../motion/TextElevate.svelte';
     import { icons } from '../../icons.js';
     import { prefersReducedMotion } from '../../utils/motion.js';
-    import { RAIL_DURATION, railWidth, switcherReveal, watchRailShortcuts } from '../../utils/rail.js';
+    import { RAIL_DURATION, railWidth, revealActive, switcherReveal, watchRailShortcuts } from '../../utils/rail.js';
     import UserMenu from './UserMenu.svelte';
 
     let {
@@ -125,6 +125,16 @@
         return watchRailShortcuts({ onToggle: showCollapse ? () => (collapsed = !collapsed) : undefined, onSearch });
     });
 
+    let scrollEl: HTMLElement | null = $state(null);
+    let revealed = false;
+    const activeHref = $derived(pages.find((page) => page.active)?.href);
+
+    $effect(() => {
+        if (!scrollEl || !activeHref) return;
+        revealActive(scrollEl, revealed);
+        revealed = true;
+    });
+
     const secondary = $derived(
         user?.secondary ?? user?.email ?? spaces.find((space) => space.id === activeSpaceId)?.name
     );
@@ -151,7 +161,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
         chains into the document, which on a phone reads as "the page scrolls instead of the
         menu". The scrollbar stays hidden, as everywhere else in the suite.
     -->
-    <div class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain [&>*+*]:mt-5">
+    <div bind:this={scrollEl} class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain [&>*+*]:mt-5">
         <div class={twMerge('flex min-h-7 items-center gap-2.5 pt-1', narrow ? 'justify-center px-0' : 'px-2')}>
             {#if icon}<Icon {icon} size={24} />{/if}
             {#if !narrow}

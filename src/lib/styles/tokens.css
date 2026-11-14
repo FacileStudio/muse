@@ -417,6 +417,7 @@
      * media block, so this declaration is what remains.
      */
     color-scheme: light;
+    overflow-wrap: break-word;
   }
 
   /*

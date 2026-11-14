@@ -122,7 +122,7 @@
                 ? 'text-fc-accent-fg'
                 : 'bg-fc-accent text-fc-accent-fg'
             : 'text-fc-fg-muted hover:text-fc-fg';
-    const brandClasses = `inline-flex h-(--fc-ctl) min-w-0 shrink-0 items-center gap-2 rounded-fc-inner px-3 text-fc-md font-semibold text-fc-fg transition-colors hover:bg-fc-component/70 ${FOCUS}`;
+    const brandClasses = `inline-flex h-(--fc-ctl) min-w-0 items-center gap-2 rounded-fc-inner px-3 text-fc-md font-semibold text-fc-fg transition-colors hover:bg-fc-component/70 ${FOCUS}`;
     const roundClasses = 'size-(--fc-ctl) rounded-fc-inner border-0 bg-fc-surface/70 text-fc-fg hover:bg-fc-surface';
 </script>
 
