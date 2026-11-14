@@ -79,3 +79,13 @@ export function developerRows(rows: readonly DeveloperRow[]): ResolvedDeveloperR
 export function worksWithApps(apps: readonly WorksWithApp[]): (WorksWithApp & { href: string | undefined })[] {
     return apps.map((app) => ({ ...app, href: isSafeHref(app.href) ? app.href : undefined }));
 }
+
+/**
+ * The note to show once under the cards: set when two or more plans would all show the same line,
+ * so a `'*'` note (or identical per-plan notes) is not repeated on each card.
+ */
+export function sharedNote(keys: readonly string[], notes: Readonly<Record<string, string>>): string | undefined {
+    const lines = new Set(keys.map((key) => notes[key] ?? notes['*']));
+    const [line] = lines;
+    return keys.length > 1 && lines.size === 1 && line ? line : undefined;
+}

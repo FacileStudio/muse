@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { detectPlatform, entryDetail, formatSize, groupDownloads, uniqueCommands, type DownloadEntry } from './download.js';
+import { commandParts, detectPlatform, entryDetail, formatSize, groupDownloads, uniqueCommands, type DownloadEntry } from './download.js';
 
 const UA = {
     mac: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/17.0 Safari/605.1.15',
@@ -88,5 +88,19 @@ describe('formatSize and entryDetail', () => {
             'arm64 · v1.2.0 · 4.3 MB'
         );
         expect(entryDetail({ platform: 'macos', href: '/x' }, 'en')).toBe('');
+    });
+});
+
+describe('commandParts', () => {
+    test('cuts words at spaces, then after each slash and before a long dotted name, and keeps every character', () => {
+        const command = 'curl -fsSL https://x.dev/a/install.sh | bash';
+        expect(commandParts('brew install FacileStudio/tap/sablier')).toEqual([
+            ['brew'],
+            ['install'],
+            ['FacileStudio/', 'tap/', 'sablier']
+        ]);
+        expect(commandParts('https://raw.example.com/install.sh')).toEqual([['https://', 'raw.', 'example.com/', 'install.sh']]);
+        expect(commandParts(command).map((word) => word.join('')).join(' ')).toBe(command);
+        expect(commandParts('  nuage  mcp ')).toEqual([['nuage'], ['mcp']]);
     });
 });

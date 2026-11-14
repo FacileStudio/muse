@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { icons } from '../icons.js';
-import { developerRows, worksWithApps } from './landing-blocks.js';
+import { developerRows, sharedNote, worksWithApps } from './landing-blocks.js';
 
 describe('developerRows', () => {
     test('a kind brings its icon and message key', () => {
@@ -40,5 +40,25 @@ describe('worksWithApps', () => {
             { name: 'Nuage', icon: 'solar:cloud-bold-duotone', line: 'Files', href: '//evil.test' }
         ]);
         expect(apps.map((a) => a.href)).toEqual(['https://agenda.facile.studio', undefined, undefined]);
+    });
+});
+
+describe('plan notes', () => {
+    const keys = ['solo', 'pro', 'studio'];
+
+    test('a star note shared by every plan shows once', () => {
+        expect(sharedNote(keys, { '*': 'Included in every plan' })).toBe('Included in every plan');
+        expect(sharedNote(keys, { solo: 'Same', pro: 'Same', studio: 'Same' })).toBe('Same');
+    });
+
+    test('a plan with its own line keeps the notes on the cards', () => {
+        const notes = { solo: 'Sign-up only', '*': 'Needs a paid plan' };
+        expect(sharedNote(keys, notes)).toBeUndefined();
+    });
+
+    test('no note, a missing plan note or a single plan shares nothing', () => {
+        expect(sharedNote(keys, {})).toBeUndefined();
+        expect(sharedNote(keys, { pro: 'Pro only' })).toBeUndefined();
+        expect(sharedNote(['solo'], { '*': 'Alone' })).toBeUndefined();
     });
 });

@@ -85,6 +85,20 @@
         data-preview="pricing"
     />
 
+    <PricingPlans
+        class={block}
+        catalog={demoCatalog}
+        highlight={['ai.access']}
+        highlightOnly
+        notes={{ '*': 'Bulle demande une offre payante : Pro ou Studio.' }}
+        freeLabel="Créer un compte"
+        freeHref="https://sso.facile.studio/signup"
+        recommended="pro"
+        title="Une note pour toutes les offres"
+        headingClass={LANDING_HEADING}
+        data-preview="pricing-shared"
+    />
+
     <div class={block} data-preview="developers">
         <ForDevelopers {rows} selfHostHref="https://suite.facile.studio/auto-hebergement" />
     </div>

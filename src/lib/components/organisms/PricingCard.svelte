@@ -9,6 +9,8 @@
         note?: string;
         recommended?: string;
         href: string;
+        freeLabel?: string;
+        freeHref?: string;
         heading?: 'h3' | 'h4';
     }
 </script>
@@ -31,6 +33,8 @@
         note,
         recommended,
         href,
+        freeLabel,
+        freeHref = href,
         heading = 'h3'
     }: PricingCardProps = $props();
 
@@ -44,7 +48,7 @@
     const starred = $derived(recommended !== undefined && plan.key === recommended);
     const variant = $derived(free ? 'outline' : recommended === undefined || starred ? 'primary' : 'secondary');
     const cta = $derived(
-        free || !price ? href : withParam(withParam(href, 'plan', plan.key), 'interval', price.interval)
+        free ? freeHref : !price ? href : withParam(withParam(href, 'plan', plan.key), 'interval', price.interval)
     );
     const headingId = $props.id();
 </script>
@@ -104,6 +108,6 @@ Une offre du catalogue : nom, prix dans la période choisie, fonctionnalités co
     {/if}
 
     <Button href={cta} rel="external" size="lg" {variant} class="mt-auto w-full">
-        {free ? i18n.t('pricing.startFree') : i18n.t('pricing.choose', { name })}
+        {free ? (freeLabel ?? i18n.t('pricing.startFree')) : i18n.t('pricing.choose', { name })}
     </Button>
 </article>

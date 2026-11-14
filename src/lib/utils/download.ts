@@ -77,6 +77,13 @@ export function uniqueCommands(commands: readonly CliCommand[]): CliCommand[] {
     });
 }
 
+/**
+ * A command as words, each cut after every `/` and after a `.` that starts a long name (not `.sh`),
+ * so a narrow box wraps a long path or URL between its segments instead of mid-word or at a hyphen.
+ */
+export const commandParts = (command: string): string[][] =>
+    command.trim().split(/\s+/).filter(Boolean).map((word) => word.split(/(?<=\/)(?=[^/])|(?<=\.)(?=[^/.]{5})/));
+
 /** A byte count as megabytes in the locale (`84.2 MB`, `84,2 Mo`); a string passes through. */
 export function formatSize(size: number | string | undefined, locale: string): string {
     if (typeof size === 'string') return size;

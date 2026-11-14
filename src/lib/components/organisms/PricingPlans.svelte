@@ -18,6 +18,7 @@
         /**
          * One line per plan key on what this app gives on that plan, shown first on its card.
          * The `'*'` key applies to every plan without its own line, e.g. "Included in every plan".
+         * When every plan ends up with the same line, it shows once under the cards instead of on each one.
          */
         notes?: Record<string, string>;
         /** The plan key to mark as recommended. Its button stays primary and the other paid plans go secondary. */
@@ -28,6 +29,13 @@
         suiteNote?: string;
         /** Where each card's button goes; `plan` and `interval` are added for a paid plan. */
         ctaHref?: string;
+        /**
+         * Overrides the free plan's button label ("Start for free"), for an app whose main feature
+         * needs a paid plan or no account at all.
+         */
+        freeLabel?: string;
+        /** Where the free plan's button goes, in place of `ctaHref`. */
+        freeHref?: string;
         interval?: BillingInterval;
         /** Add a bare free card when the catalog lists no free plan. Off: muse never invents one. */
         synthesizeFree?: boolean;
@@ -47,7 +55,10 @@
     import { CATALOG_URL, fetchCatalog, parseCatalog, type CatalogPlan } from '../../utils/catalog.js';
     import { isSafeHref, safeHref } from '../../utils/href.js';
     import { withFreePlan, yearlySaving } from '../../utils/pricing.js';
+    import { sharedNote } from '../../utils/landing-blocks.js';
     import { formatPercent } from '../../utils/money.js';
+    import { icons } from '../../icons.js';
+    import Icon from '../atoms/Icon.svelte';
     import PricingCard from './PricingCard.svelte';
 
     let {
@@ -60,6 +71,8 @@
         suiteHref,
         suiteNote,
         ctaHref,
+        freeLabel,
+        freeHref,
         interval = $bindable('month'),
         synthesizeFree = false,
         title,
@@ -77,6 +90,8 @@
     const source = $derived(Array.isArray(catalog) ? { plans: catalog } : catalog);
     const plans = $derived(withFreePlan(catalog === undefined ? fetched : parseCatalog(source), synthesizeFree));
     const href = $derived(safeHref(ctaHref, 'https://sso.facile.studio/spaces'));
+    const freeTarget = $derived(isSafeHref(freeHref) ? freeHref : href);
+    const shared = $derived(sharedNote(plans.map((p) => p.key), notes));
     const suite = $derived(isSafeHref(suiteHref) ? suiteHref : null);
     const yearly = $derived(plans.some((p) => p.prices.some((q) => q.interval === 'year')));
     const monthly = $derived(plans.some((p) => p.prices.some((q) => q.interval === 'month')));
@@ -101,7 +116,7 @@
 
 <!--
 @component
-Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offre, les offres gratuites en premier, bascule mensuel / annuel. Sur la page d'une app, `notes`, `highlightOnly`, `recommended` et `suiteHref` disent ce que l'app donne dans chaque offre, mettent l'offre payante en avant et rappellent qu'un abonnement couvre toutes les apps. Ne rend rien si le catalogue est vide ou injoignable.
+Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offre, les offres gratuites en premier, bascule mensuel / annuel. Sur la page d'une app, `notes`, `highlightOnly`, `recommended` et `suiteHref` disent ce que l'app donne dans chaque offre, mettent l'offre payante en avant et rappellent qu'un abonnement couvre toutes les apps. Une note commune à toutes les offres s'affiche une fois sous les cartes ; `freeLabel` et `freeHref` changent le bouton de l'offre gratuite. Ne rend rien si le catalogue est vide ou injoignable.
 -->
 
 {#if plans.length}
@@ -141,13 +156,21 @@ Les offres Facile lues depuis le catalogue public d'Ardoise : une carte par offr
                     {interval}
                     {highlight}
                     {highlightOnly}
-                    note={notes[plan.key] ?? notes['*']}
+                    note={shared ? undefined : (notes[plan.key] ?? notes['*'])}
                     {recommended}
                     {href}
+                    {freeLabel}
+                    freeHref={freeTarget}
                     heading={cardHeading}
                 />
             {/each}
         </div>
+        {#if shared}
+            <p class="flex items-start gap-2 text-fc-sm font-medium text-fc-fg">
+                <Icon icon={icons.check} size={18} class="mt-px shrink-0 text-fc-success" />
+                <span>{shared}</span>
+            </p>
+        {/if}
         {#if suite}
             <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-fc-sm text-fc-fg-muted">
                 <span>{suiteNote ?? i18n.t('pricing.oneSubscription')}</span>

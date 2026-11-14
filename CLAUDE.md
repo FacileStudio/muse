@@ -36,7 +36,7 @@ muse/
     utils/field.ts            Field ↔ control context (id, describedBy, invalid)
     utils/dialog.ts           Shared Modal/Drawer controller — internal, not re-exported
     utils/landing.ts          LandingHeader/Footer helpers: scroll state, safe hrefs, scroll watcher
-    utils/landing-blocks.ts   Landing sections: LANDING_HEADING, developerRows, worksWithApps (pure, tested)
+    utils/landing-blocks.ts   Landing sections: LANDING_HEADING, developerRows, worksWithApps, sharedNote (pure, tested)
     utils/chart.ts            barrel over utils/chart/ (types, scale, series, paths, arcs, bars, donut, resize)
     utils/secret.ts           REDACTED wire contract, isRedacted, maskSecret
     utils/ideas.ts            Ideas kit: IDEAS_ICON, idea types, kind icons, run states, new-idea count (pure, tested)

@@ -58,8 +58,8 @@ Every app landing uses the same blocks, in this order of importance:
 | `LandingCta` | "Créer un compte gratuit" first, "Se connecter avec Facile" second, same height, stacked full width below 640px |
 | `FeatureSplit` | Heading and one line on one side, an icon list on the other; `reverse` flips the sides |
 | `WorksWith` | The suite apps this one really connects to: icon, name, one line, optional link |
-| `PricingPlans` | On an app page: `highlight` + `highlightOnly`, `notes` per plan key, `recommended="pro"`, `suiteHref` for the "one subscription covers every app" line |
-| `ForDevelopers` | Bottom block: CLI, API, MCP and source rows with copyable commands, and `selfHostHref` |
+| `PricingPlans` | On an app page: `highlight` + `highlightOnly`, `notes` per plan key (a note every plan shares shows once under the cards), `recommended="pro"`, `suiteHref` for the "one subscription covers every app" line, `freeLabel` / `freeHref` for the free plan's button |
+| `ForDevelopers` | Bottom block: CLI, API, MCP and source rows with copyable commands (long ones wrap between path segments), and `selfHostHref` |
 
 The section blocks lay out on their own width (container queries), so they behave the same inside
 an app shell and on a full-width page. Their headings default to `LANDING_HEADING`.

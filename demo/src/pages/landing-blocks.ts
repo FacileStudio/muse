@@ -14,10 +14,15 @@ export const apps: WorksWithApp[] = [
 ];
 
 export const rows: DeveloperRow[] = [
-    { kind: 'cli', text: 'Synchronisez et partagez depuis le terminal.', command: 'brew install facilestudio/tap/nuage' },
+    { kind: 'cli', text: 'Synchronisez et partagez depuis le terminal.', command: 'brew install FacileStudio/tap/nuage-cli' },
     { kind: 'api', text: 'Une API REST documentée.', href: 'https://nuage.facile.studio/docs/api' },
     { kind: 'mcp', text: 'Donnez vos fichiers à un agent, avec vos droits.', command: 'nuage mcp install' },
-    { kind: 'source', text: 'Le code est ouvert, lisez-le ou contribuez.', href: 'https://github.com/FacileStudio/Nuage' }
+    {
+        kind: 'source',
+        text: 'Le code est ouvert, lisez-le ou contribuez.',
+        href: 'https://github.com/FacileStudio/Nuage',
+        command: 'curl -fsSL https://raw.githubusercontent.com/FacileStudio/Nuage/main/install.sh | bash'
+    }
 ];
 
 export const notes: Record<string, string> = {

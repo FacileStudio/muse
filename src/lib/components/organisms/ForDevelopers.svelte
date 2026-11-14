@@ -61,7 +61,7 @@ Le bloc du bas de page pour les développeurs : une ligne par ressource (CLI, AP
 
 <section
     aria-labelledby="{uid}-title"
-    class={twMerge('@container flex min-w-0 flex-col gap-8 rounded-fc-lg bg-fc-component p-6 sm:p-8', className)}
+    class={twMerge('@container flex min-w-0 flex-col gap-8 rounded-fc-lg bg-fc-component p-5 sm:p-8', className)}
     {...rest}
 >
     <div class="flex flex-col gap-4 @xl:flex-row @xl:items-end @xl:justify-between">
@@ -79,19 +79,19 @@ Le bloc du bas de page pour les développeurs : une ligne par ressource (CLI, AP
     </div>
     <ul class="grid min-w-0 gap-x-10 gap-y-8 @4xl:grid-cols-2">
         {#each items as row (row.label)}
-            <li class="flex min-w-0 gap-4">
-                <span class="flex size-10 shrink-0 items-center justify-center rounded-fc-md bg-fc-surface text-fc-fg">
+            <li class="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] content-start gap-x-4 gap-y-3">
+                <span class="flex size-10 items-center justify-center rounded-fc-md bg-fc-surface text-fc-fg">
                     <Icon icon={row.icon} size={20} />
                 </span>
-                <div class="flex min-w-0 flex-1 flex-col gap-2">
-                    <div class="flex flex-col gap-1">
-                        <svelte:element this={rowHeading} class="text-fc-md font-semibold text-fc-fg">
-                            {#if row.href}<a href={row.href} class={link}>{row.label}</a>{:else}{row.label}{/if}
-                        </svelte:element>
-                        {#if row.text}<p class="text-fc-sm text-fc-fg-muted">{row.text}</p>{/if}
-                    </div>
-                    {#if row.command}<CommandLine command={row.command} label={row.label} />{/if}
+                <div class="flex min-w-0 flex-col gap-1">
+                    <svelte:element this={rowHeading} class="text-fc-md font-semibold text-fc-fg">
+                        {#if row.href}<a href={row.href} class={link}>{row.label}</a>{:else}{row.label}{/if}
+                    </svelte:element>
+                    {#if row.text}<p class="text-fc-sm text-fc-fg-muted">{row.text}</p>{/if}
                 </div>
+                {#if row.command}
+                    <CommandLine command={row.command} label={row.label} class="col-span-2 @sm:col-span-1 @sm:col-start-2" />
+                {/if}
             </li>
         {/each}
     </ul>

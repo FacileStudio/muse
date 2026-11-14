@@ -148,7 +148,7 @@ SSR_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$SSR_PORT/
 
 for marker in 'data-smoke="ready"' 'bg-fc-component' 'rounded-fc-pill' '<table' \
     'data-smoke-pricing' '200 GB of storage' 'Starter' '€9' 'data-smoke-download' 'Download the apps' \
-    'data-smoke-download-section' 'brew install facilestudio/tap/smoke'; do
+    'data-smoke-download-section' 'data-command="brew install facilestudio/tap/smoke"' '>smoke</span>'; do
     case "$HTML" in
         *"$marker"*) ;;
         *) fail "the server-rendered HTML is missing '$marker' — the page returned 200 but did not render" \
