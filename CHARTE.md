@@ -501,7 +501,9 @@ gesture reaches the document and rubber-bands the shell.
 - **Hit targets ≥ 44×44px for anything a thumb is expected to find**: icon-only buttons
   (`IconButton` is `size-11`), nav rows (`--spacing-fc-nav-item` is 44px, which is also
   `min-h-11`), form controls (`Input`, `Select`, `SecretField` are all `h-11`), tabs, and every
-  control in `MobileNav`.
+  control in `MobileNav`. Text `Button`s keep their dense `sm` (32px) and `md` (36px) heights
+  under a mouse and grow to 44px under a coarse pointer (`@media (pointer: coarse)`), so a phone
+  or a tablet always gets a full target without the desktop layout getting taller.
 
   **`Button` is the documented exception.** Its `md` default is `h-9` (36px) and `sm` is `h-8`
   (32px), matching the density the suite actually ships. Use `size="lg"` (`h-11`) for anything
@@ -1031,6 +1033,12 @@ springing back. The backdrop is instant, not faded — `::backdrop` is not a twe
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | `max-w-sm` / `max-w-md` / `max-w-lg` |
 | `onClose` | `() => void` | — | Fires once, after the exit tween |
 | `header` / `footer` | `Snippet` | — | Replace the heading / append below the body |
+
+**Below 640px a `Modal` is a bottom sheet.** It spans the width, sits on the bottom edge with
+only its top corners rounded, grows to `100dvh - 2rem`, and slides up 24px instead of scaling.
+The `footer` sticks to the bottom of the sheet while the body scrolls, padded clear of the home
+indicator with `env(safe-area-inset-bottom)`, so the actions never sit below the fold or under
+anything fixed. Put a dialog's actions in `footer`, not at the end of `children`.
 
 ### ConfirmModal
 

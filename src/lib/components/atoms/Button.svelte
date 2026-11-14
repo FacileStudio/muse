@@ -58,8 +58,8 @@
     };
 
     const sizes: Record<Size, string> = {
-        sm: 'h-8 px-3.5 text-fc-xs',
-        md: 'h-9 px-4 text-fc-sm',
+        sm: 'h-8 px-3.5 text-fc-xs [@media(pointer:coarse)]:h-11',
+        md: 'h-9 px-4 text-fc-sm [@media(pointer:coarse)]:h-11',
         lg: 'h-11 px-6 text-fc-md'
     };
 

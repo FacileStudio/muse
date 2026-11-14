@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.23.3 (2026-11-14)
+
+### Fixed
+
+- `Button` `sm` and `md` are 44px tall under a coarse pointer (phones, tablets), per the 44px hit-target rule. They stay 32 and 36px under a mouse. Tempo's sweep found 268 text buttons under 44px at 390px. The variant is the arbitrary `[@media(pointer:coarse)]`, so it works on every Tailwind 4 release.
+- `Table` scrolls inside its card: the fill and corners stay on the outer box, an inner box scrolls sideways and fades at the end that hides columns (`edgeMask`), so a phone shows there is more to the right. The `/overflow` probe now fails on a table that hides columns without the fade.
+- `Modal` is a bottom sheet below 640px: full width, anchored to the bottom edge, top corners rounded, up to `100dvh - 2rem`, sliding up instead of scaling. Its `footer` sticks to the bottom of the sheet while the body scrolls and clears the home indicator (`env(safe-area-inset-bottom)`), so the actions stay reachable. Above 640px nothing changes. The body is `overscroll-contain`.
+
 ## v0.23.2 (2026-11-14)
 
 ### Fixed

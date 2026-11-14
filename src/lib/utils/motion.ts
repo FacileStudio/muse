@@ -8,6 +8,12 @@ export const isMobile = (): boolean => {
   return window.innerWidth < 768;
 };
 
+/** True below 640px, where `Modal` renders as a bottom sheet. False without a window (SSR). */
+export const isSheet = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth < 640;
+};
+
 /**
  * The element that actually scrolls `node`, or `undefined` when that is the window.
  *

@@ -26,7 +26,7 @@
     import Icon from '../atoms/Icon.svelte';
     import IconButton from '../atoms/IconButton.svelte';
     import { createDialog } from '../../utils/dialog.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
+    import { isSheet, prefersReducedMotion } from '../../utils/motion.js';
 
     let {
         open = $bindable(false),
@@ -65,13 +65,14 @@
             tween?.kill();
             tween = null;
             if (prefersReducedMotion()) {
-                gsap.set(el, { opacity: 1, scale: 1 });
+                gsap.set(el, { opacity: 1, scale: 1, y: 0 });
                 return;
             }
-            if (fresh) gsap.set(el, { opacity: 0, scale: 0.97 });
+            if (fresh) gsap.set(el, isSheet() ? { opacity: 0, y: 24 } : { opacity: 0, scale: 0.97 });
             tween = gsap.to(el, {
                 opacity: 1,
                 scale: 1,
+                y: 0,
                 duration: 0.2,
                 ease: 'power3.out',
                 onComplete: () => (tween = null)
@@ -86,7 +87,7 @@
             }
             tween = gsap.to(el, {
                 opacity: 0,
-                scale: 0.97,
+                ...(isSheet() ? { y: 24 } : { scale: 0.97 }),
                 duration: 0.15,
                 ease: 'power3.in',
                 onComplete: () => {
@@ -100,7 +101,14 @@
 
     $effect(() => dialog.sync());
 
-    const classes = $derived(twMerge('m-auto rounded-fc-lg bg-fc-component shadow-lg text-fc-fg p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto backdrop:bg-fc-scrim', sizes[size], className));
+    const classes = $derived(
+        twMerge(
+            'm-auto rounded-fc-lg bg-fc-component shadow-lg text-fc-fg p-0 w-[calc(100%-2rem)] max-h-[calc(100dvh-4rem)] overflow-auto overscroll-contain backdrop:bg-fc-scrim',
+            'max-sm:mx-0 max-sm:mt-auto max-sm:mb-0 max-sm:w-full max-sm:max-w-none max-sm:max-h-[calc(100dvh-2rem)] max-sm:rounded-b-none',
+            sizes[size],
+            className
+        )
+    );
 </script>
 
 <!--
@@ -115,7 +123,13 @@ Un dialogue natif : le navigateur le place dans sa couche supérieure, au-dessus
     {...rest}
     {...dialog.handlers}
 >
-    <div class="flex flex-col gap-3 p-5">
+    <!--
+        Below 640px the dialog is a bottom sheet: full width, anchored to the bottom edge, rounded
+        on top only, and it slides up instead of scaling. The footer sticks to the bottom of the
+        sheet while the body scrolls, so the actions stay in reach of the thumb and clear of the
+        home indicator.
+    -->
+    <div class={twMerge('flex flex-col gap-3 p-5', !footer && 'max-sm:pb-[max(1.25rem,env(safe-area-inset-bottom))]')}>
         {#if header || title || (showClose && dismissible)}
             <div class="flex items-start justify-between gap-3">
                 <div class="min-w-0 flex-1">
@@ -139,7 +153,9 @@ Un dialogue natif : le navigateur le place dans sa couche supérieure, au-dessus
         {/if}
         {@render children()}
         {#if footer}
-            <div class="mt-1">{@render footer()}</div>
+            <div class="sticky bottom-0 z-10 -mx-5 -mb-5 mt-1 bg-fc-component px-5 pt-2 pb-5 max-sm:pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+                {@render footer()}
+            </div>
         {/if}
     </div>
 </dialog>
