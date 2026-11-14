@@ -103,6 +103,8 @@ export const en = {
     'download.copied': 'Copied',
     'download.copyFailed': 'Could not copy. Select the command and copy it by hand',
     'download.releases': 'All releases',
+    'download.all': 'All downloads',
+    'download.otherPlatforms': 'Other platforms',
     'download.checksums': 'Checksums',
     'pricing.title': 'Plans',
     'pricing.interval': 'Billing period',

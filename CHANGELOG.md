@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.23.0 (2026-11-14)
+
+### Added
+
+- `DownloadSection` takes `mode?: 'all' | 'device'` and `allHref?: string` (owner request, 2026-11-14). `all` is the default and renders exactly as before, so a `/downloads` page needs no change. On a landing, `mode="device" allHref="/downloads"` shows only the visitor's platform, read from `navigator` after hydration. A phone gets every entry for its platform (APK and Play Store, for example) and no CLI. A desktop gets every entry for its OS (Apple Silicon and Intel, `.deb` and AppImage) plus the CLI commands, or the CLI alone when the app ships no file for that OS. An "Other platforms" link to `allHref` sits under the cards. When nothing fits (a desktop visitor to a mobile-only app, or an unknown platform), the section shows one "All downloads" button and no cards. Without `allHref`, that case falls back to every card. Server rendering and the first paint show the "All downloads" button in a block that reserves about one card of height (two with CLI commands, from 640px), so no full list flashes. An explicit `platform` prop skips detection and renders the device's cards on the server.
+- `selectForDevice`, `isMobilePlatform` and the `DownloadMode` and `DeviceSelection` types are exported for apps that build their own layout.
+- `download.all` and `download.otherPlatforms` in fr, en, es and de.
+- `LegalFooter` takes `align?: 'center' | 'start'`. `center` is the default and does not change.
+
+### Fixed
+
+- `DownloadSection`: a long install command such as `go install github.com/FacileStudio/sonar@latest` no longer runs out of view next to the copy button. From 640px the command wraps inside its box and the copy button keeps its own column, so the whole command is always readable. Below 640px it still scrolls inside its box.
+- `LandingFooter` no longer centers anything on a phone. The legal links, their wrapped lines and the language switch start at the left edge at 360 and 390px, like the brand, the tagline and the link groups. It passes `align="start"` to its `LegalFooter`; `legal.align` overrides it. The `LandingHeader` drawer was already start-aligned and does not change.
+
 ## v0.22.1 (2026-11-14)
 
 ### Fixed

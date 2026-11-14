@@ -275,8 +275,8 @@ export { LEGAL_DOCS, LEGAL_BASE, SIGNUP_URL, legalUrl, signUpUrl } from './utils
 export type { LegalDoc } from './utils/legal.js';
 export { planLimitFrom, isSafeUpgradeUrl } from './utils/plan-limit.js';
 export { isSafeHref, safeHref, withParam } from './utils/href.js';
-export { detectPlatform, groupDownloads, PLATFORM_ORDER } from './utils/download.js';
-export type { CliCommand, DownloadEntry, DownloadGroup } from './utils/download.js';
+export { detectPlatform, groupDownloads, isMobilePlatform, PLATFORM_ORDER, selectForDevice } from './utils/download.js';
+export type { CliCommand, DeviceSelection, DownloadEntry, DownloadGroup, DownloadMode } from './utils/download.js';
 export type { PlanLimitError } from './utils/plan-limit.js';
 export { CATALOG_URL, CATALOG_TIMEOUT_MS, fetchCatalog, parseCatalog, parsePlan, parsePrice, parseFeatures } from './utils/catalog.js';
 export type { BillingInterval, CatalogPlan, CatalogPrice, FeatureValue, FetchCatalogOptions } from './utils/catalog.js';

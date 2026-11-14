@@ -103,6 +103,8 @@ export const de: MuseMessages = {
     'download.copied': 'Kopiert',
     'download.copyFailed': 'Kopieren fehlgeschlagen. Markieren Sie den Befehl und kopieren Sie ihn von Hand',
     'download.releases': 'Alle Versionen',
+    'download.all': 'Alle Downloads',
+    'download.otherPlatforms': 'Andere Plattformen',
     'download.checksums': 'Prüfsummen',
     'pricing.title': 'Tarife',
     'pricing.interval': 'Abrechnungszeitraum',
