@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.25.1 (2026-11-14)
+
+### Fixed
+
+- Brand catalog: Courrier's description reads "Gmail, OVH or own-domain addresses", as on Courrier's own page. v0.25.0 said "Gmail or OVH", working around a typo in the review copy ("OVH or OVH").
+
 ## v0.25.0 (2026-11-14)
 
 ### Added
