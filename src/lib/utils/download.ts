@@ -93,3 +93,36 @@ export function formatSize(size: number | string | undefined, locale: string): s
 export function entryDetail(entry: DownloadEntry, locale: string): string {
     return [entry.arch, entry.version, formatSize(entry.size, locale)].filter(Boolean).join(' · ');
 }
+
+/** `all` lists every platform; `device` shows only what fits the visitor's device. */
+export type DownloadMode = 'all' | 'device';
+
+/** What a `device` mode section renders. `groups` empty and `cli` false means the "All downloads" link alone. */
+export interface DeviceSelection {
+    groups: DownloadGroup[];
+    cli: boolean;
+}
+
+const MOBILE: readonly Platform[] = ['ios', 'android'];
+
+/** True for a phone or tablet platform, where a CLI is no use. */
+export function isMobilePlatform(platform: Platform | null): boolean {
+    return platform !== null && MOBILE.includes(platform);
+}
+
+/**
+ * The cards and CLI to show a visitor on `platform`. A phone gets its own entries and no CLI, a desktop its own entries
+ * and the CLI. When nothing fits, or the platform is unknown, nothing is selected; without an `allHref` to fall back
+ * on, everything is.
+ */
+export function selectForDevice(
+    groups: readonly DownloadGroup[],
+    hasCli: boolean,
+    platform: Platform | null,
+    hasAllHref: boolean
+): DeviceSelection {
+    const own = platform === null ? [] : groups.filter((g) => g.platform === platform);
+    const cli = platform !== null && !isMobilePlatform(platform) && hasCli;
+    if (own.length || cli) return { groups: own, cli };
+    return hasAllHref ? { groups: [], cli: false } : { groups: [...groups], cli: hasCli };
+}

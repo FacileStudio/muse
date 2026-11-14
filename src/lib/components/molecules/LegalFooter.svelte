@@ -14,6 +14,8 @@
         /** Hide the language switcher. */
         hideLocaleSwitch?: boolean;
         onLocaleChange?: (locale: Locale) => void;
+        /** Where the links and the language switch sit on a phone, where they stack. @default 'center' */
+        align?: 'center' | 'start';
         /** Render as the page's `<footer>` landmark. Set `false` inside another footer, which then carries the landmark. */
         landmark?: boolean;
         class?: string;
@@ -36,6 +38,7 @@
         hideLocaleSwitch = false,
         onLocaleChange,
         landmark = true,
+        align = 'center',
         class: className = '',
         ...rest
     }: LegalFooterProps = $props();
@@ -52,7 +55,11 @@
     ]);
 
     const classes = $derived(
-        twMerge('flex flex-col items-center gap-4 text-fc-xs text-fc-fg-muted sm:flex-row sm:justify-between', className)
+        twMerge(
+            'flex flex-col items-center gap-4 text-fc-xs text-fc-fg-muted sm:flex-row sm:justify-between',
+            align === 'start' && 'items-start sm:items-center',
+            className
+        )
     );
 </script>
 
@@ -63,7 +70,7 @@ Le pied de page légal : CGU, CGV, confidentialité et mentions légales héberg
 
 <svelte:element this={landmark ? 'footer' : 'div'} class={classes} {...rest}>
     <nav aria-label={i18n.t('legal.nav')}>
-        <ul class="flex flex-wrap justify-center gap-x-4 gap-y-1">
+        <ul class={twMerge('flex flex-wrap justify-center gap-x-4 gap-y-1', align === 'start' && 'justify-start')}>
             {#each links as link (link.label)}
                 <li>
                     <a

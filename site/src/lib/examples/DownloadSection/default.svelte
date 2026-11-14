@@ -1,3 +1,7 @@
+<!--
+    La page `/downloads` garde le mode par défaut, `all` : une carte par plateforme, celle du
+    visiteur en premier, et toutes les commandes du terminal.
+-->
 <script lang="ts">
     import { DownloadSection, type CliCommand, type DownloadEntry } from '@facile/muse';
 

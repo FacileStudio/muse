@@ -137,7 +137,7 @@ Le pied de page d'une page d'atterrissage : la marque, des colonnes de liens qui
             class="flex flex-col gap-1 rounded-fc-inner bg-fc-surface px-6 py-2 text-fc-xs text-fc-fg-muted lg:flex-row lg:items-center lg:justify-between lg:gap-6"
         >
             {#if line}<p>{line}</p>{/if}
-            <LegalFooter {...legal} landmark={false} />
+            <LegalFooter align="start" {...legal} landmark={false} />
         </div>
     </div>
 </footer>

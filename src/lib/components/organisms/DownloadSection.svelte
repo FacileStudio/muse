@@ -1,8 +1,8 @@
 <script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import type { CliCommand, DownloadEntry, Platform } from '../../utils/download.js';
+    import type { CliCommand, DownloadEntry, DownloadMode, Platform } from '../../utils/download.js';
 
-    export type { CliCommand, DownloadEntry };
+    export type { CliCommand, DownloadEntry, DownloadMode };
 
     export interface DownloadSectionProps extends HTMLAttributes<HTMLElement> {
         /** Every file on offer. Grouped by platform, unsafe and repeated hrefs dropped. */
@@ -11,6 +11,15 @@
         commands?: CliCommand[];
         /** The platform to recommend. Omitted, it is read from `navigator` after hydration; `null` recommends none. */
         platform?: Platform | null;
+        /**
+         * `all` lists every platform. `device` shows only the visitor's platform, with the CLI on a desktop,
+         * plus a link to `allHref`; before hydration it renders that link alone. Use it on a landing, and `all`
+         * on the downloads page.
+         * @default 'all'
+         */
+        mode?: DownloadMode;
+        /** The app's downloads page, such as `/downloads`. In `device` mode, the "All downloads" link points here. */
+        allHref?: string;
         /** "All releases" link under the cards. An unsafe value renders nothing. */
         releasesHref?: string;
         /** Link to the release's checksum file, next to `releasesHref`. */
@@ -29,7 +38,7 @@
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import { isSafeHref } from '../../utils/href.js';
-    import { detectPlatform, entryDetail, groupDownloads, uniqueCommands } from '../../utils/download.js';
+    import { detectPlatform, entryDetail, groupDownloads, selectForDevice, uniqueCommands } from '../../utils/download.js';
     import { icons } from '../../icons.js';
     import { PLATFORMS } from '../molecules/DownloadCta.svelte';
     import Icon from '../atoms/Icon.svelte';
@@ -41,6 +50,8 @@
         downloads = [],
         commands = [],
         platform,
+        mode = 'all',
+        allHref,
         releasesHref,
         checksumsHref,
         headingLevel = 2,
@@ -54,12 +65,13 @@
     const heading = $derived(`h${headingLevel}`);
 
     let detected = $state<Platform | null>(null);
+    let hydrated = $state(false);
     let copied = $state<number | null>(null);
     let status = $state('');
 
     $effect(() => {
-        if (platform !== undefined) return;
-        detected = detectPlatform(navigator.userAgent, navigator.maxTouchPoints);
+        if (platform === undefined) detected = detectPlatform(navigator.userAgent, navigator.maxTouchPoints);
+        hydrated = true;
     });
 
     const featured = $derived(platform === undefined ? detected : platform);
@@ -67,6 +79,17 @@
     const cli = $derived(uniqueCommands(commands));
     const releases = $derived(isSafeHref(releasesHref) ? releasesHref : null);
     const checksums = $derived(isSafeHref(checksumsHref) ? checksumsHref : null);
+    const all = $derived(isSafeHref(allHref) ? allHref : null);
+    const device = $derived(mode === 'device');
+    const pending = $derived(device && platform === undefined && !hydrated);
+    const shown = $derived(
+        device ? selectForDevice(groups, cli.length > 0, featured, all !== null) : { groups, cli: true }
+    );
+    const cards = $derived(pending ? [] : shown.groups);
+    const terminal = $derived(pending || !shown.cli ? [] : cli);
+    const linkOnly = $derived(device && (pending || all !== null) && !cards.length && !terminal.length);
+    const reserve = $derived(pending && twMerge('min-h-48', cli.length > 0 && 'sm:min-h-96'));
+    const other = $derived(device && !linkOnly ? all : null);
 
     $effect(() => {
         if (copied === null) return;
@@ -76,7 +99,7 @@
 
     async function copy(index: number) {
         try {
-            await navigator.clipboard.writeText(cli[index].command);
+            await navigator.clipboard.writeText(terminal[index].command);
             copied = index;
             status = i18n.t('download.copied');
         } catch {
@@ -90,13 +113,21 @@
 
 <!--
 @component
-Une section de téléchargement complète : une carte par plateforme (ordinateur, mobile) avec ses fichiers, celle du visiteur en premier, et les commandes d'installation à copier pour le terminal.
+Une section de téléchargement complète : une carte par plateforme (ordinateur, mobile) avec ses fichiers, celle du visiteur en premier, et les commandes d'installation à copier pour le terminal. Avec `mode="device"` (pour une page d'accueil), seule la plateforme du visiteur s'affiche, avec le terminal sur ordinateur, et un lien vers `allHref` mène à toutes les autres.
 -->
 
 <section class={classes} {...rest}>
-    {#if groups.length}
-        <ul class="grid gap-4 sm:grid-cols-2">
-            {#each groups as group (group.platform)}
+    {#if linkOnly}
+        <div class={twMerge('flex items-start', reserve)} data-download-state={pending ? 'pending' : 'all'}>
+            {#if all}
+                <Button href={all} icon={icons.download} class="h-11">{i18n.t('download.all')}</Button>
+            {/if}
+        </div>
+    {/if}
+
+    {#if cards.length}
+        <ul class={twMerge('grid gap-4', !(device && cards.length === 1) && 'sm:grid-cols-2')}>
+            {#each cards as group (group.platform)}
                 {@const name = PLATFORMS[group.platform].name}
                 {@const recommended = group.platform === featured}
                 <li class="flex min-w-0 flex-col gap-4 rounded-fc-lg bg-fc-component p-5" data-platform={group.platform}>
@@ -145,7 +176,7 @@ Une section de téléchargement complète : une carte par plateforme (ordinateur
         </ul>
     {/if}
 
-    {#if cli.length}
+    {#if terminal.length}
         <div class="flex min-w-0 flex-col gap-4 rounded-fc-lg bg-fc-component p-5">
             <div class="flex items-center gap-3">
                 <span class="flex size-10 shrink-0 items-center justify-center rounded-fc-md bg-fc-surface text-fc-fg">
@@ -159,12 +190,15 @@ Une section de téléchargement complète : une carte par plateforme (ordinateur
                 </div>
             </div>
             <ul class="flex flex-col gap-3">
-                {#each cli as item, i (item.command)}
+                {#each terminal as item, i (item.command)}
                     <li class="flex min-w-0 flex-col gap-1.5">
                         <span class="text-fc-xs font-medium text-fc-fg-muted">{item.label}</span>
-                        <div class="flex min-w-0 items-center gap-2 rounded-fc-md bg-fc-inverse py-0.5 pr-0.5 pl-3.5">
-                            <code class="flex min-w-0 flex-1 gap-2 overflow-x-auto font-fc-mono text-fc-sm whitespace-nowrap text-fc-on-inverse">
-                                <span class="select-none text-fc-on-inverse-muted" aria-hidden="true">$</span>{item.command}
+                        <div class="flex min-w-0 items-start gap-2 rounded-fc-md bg-fc-inverse py-0.5 pr-0.5 pl-3.5">
+                            <code
+                                class="flex min-w-0 flex-1 gap-2 overflow-x-auto py-3 font-fc-mono text-fc-sm whitespace-nowrap text-fc-on-inverse sm:overflow-x-visible sm:whitespace-normal"
+                            >
+                                <span class="select-none text-fc-on-inverse-muted" aria-hidden="true">$</span>
+                                <span class="sm:min-w-0 sm:[overflow-wrap:anywhere]">{item.command}</span>
                             </code>
                             <IconButton
                                 type="button"
@@ -186,8 +220,9 @@ Une section de téléchargement complète : une carte par plateforme (ordinateur
         </div>
     {/if}
 
-    {#if releases || checksums}
+    {#if other || releases || checksums}
         <p class="flex flex-wrap gap-x-4 gap-y-2 text-fc-xs text-fc-fg-muted">
+            {#if other}<a href={other} class={link}>{i18n.t('download.otherPlatforms')}</a>{/if}
             {#if releases}<a href={releases} rel="external" class={link}>{i18n.t('download.releases')}</a>{/if}
             {#if checksums}<a href={checksums} rel="external" class={link}>{i18n.t('download.checksums')}</a>{/if}
         </p>
