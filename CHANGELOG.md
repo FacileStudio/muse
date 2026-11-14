@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.26.0 (2026-11-14)
+
+### Changed
+
+- `PricingPlans` without `ctaHref` sends every button to Registre's sign-up page in the current locale (`signUpUrl(locale)`, `https://sso.facile.studio/signup?lang=fr`). It used to send them to `https://sso.facile.studio/spaces`, which asks a signed-out visitor to sign in rather than create an account, and ignores `?plan=`. Registre's `/signup` keeps no `plan` or `interval` through sign-up, so the paid buttons get no plan parameter: the new account picks its plan from its space's page. An app that passes `ctaHref` or `freeHref` renders exactly as before.
+
+### Added
+
+- `PricingPlans` takes `ctaLabel`: the paid plans' button label, one string for every paid plan or one per plan key with `'*'` for the rest. A closed app (Ardoise, Journal) passes `ctaLabel="Voir les offres"` with `freeLabel="Voir les offres"`. Without it the button reads "Choisir {name}", as before.
+- `planHref` and `planLabel` in `utils/pricing-cta.ts`, exported, with unit tests. Docs example `PricingPlans/closed.svelte`; demo section `#/landing` `pricing-closed`.
+
 ## v0.25.1 (2026-11-14)
 
 ### Fixed
