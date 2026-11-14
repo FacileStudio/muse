@@ -96,8 +96,17 @@ Rules:
   and copy the output into the app's `static/`. Paste the printed head block into `src/app.html`.
 - Icons are Solar `bold-duotone` names, checked against `@iconify-json/solar`. An app with its
   own mark (Boutique, sonar, the Facile "F." for the studio site) passes a glyph instead.
-- Titles are 3 to 7 words and descriptions 90 to 155 characters, in English. `brand.test.ts`
+- Titles are 3 to 8 words and descriptions 80 to 155 characters, in English. `brand.test.ts`
   fails otherwise.
+- For a suite app, the title is the app's English slogan and the description its English meta
+  description from the landing copy review (`copy.json`). Where that meta description says
+  "Free to start" for an app that needs a paid plan or has closed sign-up (Bulle, Glouton,
+  Journal), the description is the English subtitle instead.
+- `scripts/brand/false-claims.json` is the review's list of struck claims ("S3-compatible", "on
+  your server" variants, "sovereign", "multi-region" and more). `brand.test.ts` fails when any
+  catalog title or description contains one, case-insensitively. Add to the list; never delete
+  from it to make a test pass.
+- Echo is not in the catalog: it keeps its own design and mark.
 - The banner text is set in Inter (OFL, `scripts/brand/fonts/`). No system font is read.
 
 muse's own site runs it through `bun site/scripts/favicon.ts`, which also rewrites

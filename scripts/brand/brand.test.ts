@@ -3,6 +3,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { APPS } from './apps.ts';
+import banned from './false-claims.json';
 import { resolveGlyph } from './glyphs.ts';
 import { findApp, generate } from './generate.ts';
 import { encodeIco } from './ico.ts';
@@ -28,12 +29,18 @@ describe('APPS', () => {
 
     test.each(APPS)('$id has an https url, plain copy and a known icon', (app) => {
         expect(new URL(app.url).protocol).toBe('https:');
-        expect(app.description.length).toBeGreaterThanOrEqual(90);
+        expect(app.description.length).toBeGreaterThanOrEqual(80);
         expect(app.description.length).toBeLessThanOrEqual(155);
         expect(app.title.split(' ').length).toBeGreaterThanOrEqual(3);
-        expect(app.title.split(' ').length).toBeLessThanOrEqual(7);
+        expect(app.title.split(' ').length).toBeLessThanOrEqual(8);
         expect(`${app.title} ${app.description}`).not.toContain('—');
         expect(resolveGlyph(app.icon).body).toContain('currentColor');
+    });
+
+    test.each(APPS)('$id carries no claim the landing review struck', (app) => {
+        const copy = `${app.title} ${app.description}`.toLocaleLowerCase();
+        const found = banned.falseClaims.filter((claim) => copy.includes(claim.toLocaleLowerCase()));
+        expect(found).toEqual([]);
     });
 });
 
