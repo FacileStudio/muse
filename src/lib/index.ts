@@ -92,6 +92,8 @@ export { default as LocaleSwitch } from './components/molecules/LocaleSwitch.sve
 export type { LocaleSwitchProps } from './components/molecules/LocaleSwitch.svelte';
 export { default as Menu } from './components/molecules/Menu.svelte';
 export type { MenuProps, MenuAction, MenuEntry, MenuSeparator } from './components/molecules/Menu.svelte';
+export { default as ContextMenu } from './components/molecules/ContextMenu.svelte';
+export type { ContextMenuProps, ContextMenuItems } from './components/molecules/ContextMenu.svelte';
 export { default as NavButton } from './components/molecules/NavButton.svelte';
 export type { NavButtonProps } from './components/molecules/NavButton.svelte';
 export { default as OptionCards } from './components/molecules/OptionCards.svelte';

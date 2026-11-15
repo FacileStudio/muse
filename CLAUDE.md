@@ -26,7 +26,7 @@ muse/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map (63 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
-    components/               109 Svelte files, 97 exported (layout/ atoms/ molecules/ organisms/ charts/ motion/)
+    components/               110 Svelte files, 98 exported (layout/ atoms/ molecules/ organisms/ charts/ motion/)
     i18n/                     Message helper, locale context (provideLocale/getI18n), fr/en/es/de catalogs
     fonts/                    Bundled Magnetik font files (.woff2), licence in LICENSE
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
@@ -58,7 +58,7 @@ muse/
     utils/toast.svelte.ts     Module-scope toast queue behind Toaster — toast, toasts
 ```
 
-Tier counts (files): 5 layout, 25 atoms, 41 molecules, 27 organisms, 9 charts, 2 motion. `ChartTable.svelte`, `LineAxes.svelte`,
+Tier counts (files): 5 layout, 25 atoms, 42 molecules, 27 organisms, 9 charts, 2 motion. `ChartTable.svelte`, `LineAxes.svelte`,
 `LineHover.svelte`, `molecules/DateGrid.svelte`,
 `components/charts/entry.ts`, `atoms/SelectListbox.svelte`, `molecules/IdeaLinks.svelte`, `molecules/NavMarks.svelte`, `molecules/CommandLine.svelte`, `organisms/PricingCard.svelte`, `organisms/LandingDrawer.svelte`, `organisms/UserMenuList.svelte` and `organisms/TokenCreate.svelte` are internal and not exported.
 
