@@ -297,5 +297,16 @@ export const fr: MuseMessages = {
     'connection.connecting': 'Reconnexion…',
     'connection.offline': 'Hors ligne',
     'connection.offlineDetail': 'Vos modifications partiront au retour du réseau',
-    'connection.stopped': 'Déconnecté'
+    'connection.stopped': 'Déconnecté',
+    'stepper.label': 'Progression',
+    'stepper.stepOf': 'Étape {step} sur {total}',
+    'stepper.done': 'terminée',
+    'stepper.current': 'étape en cours',
+    'stepper.back': 'Retour',
+    'stepper.skip': 'Passer pour l’instant',
+    'copy.label': 'Copier',
+    'copy.copied': 'Copié',
+    'copy.failed': 'Échec de la copie',
+    'search.label': 'Rechercher',
+    'search.clear': 'Effacer la recherche'
 };

@@ -4,6 +4,9 @@ export type PluralMessage = Partial<Record<Intl.LDMLPluralRule, string>> & { oth
 
 export type Message = string | PluralMessage;
 
+/** One message in the four locales, in the order en, fr, es, de. */
+export type Row = readonly [Message, Message, Message, Message];
+
 export type Catalog = Record<string, Message>;
 
 export type Params = Record<string, string | number>;

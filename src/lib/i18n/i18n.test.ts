@@ -25,6 +25,14 @@ describe('resolveLocale', () => {
     });
 });
 
+describe('matchLocale with a supported list', () => {
+    test('reads only the given locales', () => {
+        expect(matchLocale('it-IT, fr;q=0.5', ['it', 'fr'])).toBe('it');
+        expect(matchLocale('de', ['it', 'fr'])).toBeNull();
+        expect(matchLocale('de')).toBe('de');
+    });
+});
+
 describe('translate', () => {
     const catalogs = {
         en: { hi: 'Hi {name}', files: { one: '{count} file', other: '{count} files' } },

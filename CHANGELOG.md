@@ -10,6 +10,14 @@
 - `Popover` takes `anchor`: any element, passed by reference, to position against. The panel then renders no trigger button and `open` is the caller's to set. Escape and an outside press still close it. This is what a guided tour step uses.
 - `placeSide` in `utils/placement.ts` (pure, tested), and `AnchoredPopup` takes `side` and `height` in its host so `Menu`, `Select` and `Tooltip` can use it later.
 - `Align` gains `center`. `placeAcross` and every component that takes `align` accept it.
+- `Stepper`: the steps of a flow as numbered markers (horizontal or vertical, finished steps as buttons with `onSelect`) or as a compact segmented progress bar with "Step 2 of 5". `StepNav`: the Back, Continue, Skip footer. Both come from the twin `StepProgress` and onboarding footer of Bulle and Courrier.
+- `CopyButton` and `copyText`: icon or labelled button that copies a string or a value fetched on click, flips to "Copied", announces it, and reports the outcome to `onCopy`.
+- `SearchField`: magnifier, clear button, Escape clears, debounced `onSearch`, `onSubmit` on Enter, and an optional `shortcut` such as `/` that focuses it from anywhere.
+- `Kbd` and `keyCaps`: a key cap or a whole shortcut such as `mod+k` (Command on Apple, Ctrl elsewhere).
+- `Alert` takes `dismissible`, `open` (bindable), `onDismiss`, `dismissLabel` and an `action` snippet. Without them it renders exactly as before.
+- `Row`, the type of one message in the four locales (`readonly [Message, Message, Message, Message]`), byte-compatible with the `row.ts` that Agenda, Courrier, Nuage and about a dozen other apps carry.
+- `matchLocale` takes an optional list of supported locales (default: the four built-in ones), so it agrees with `@facile/client/locale`. Pass the resolver's `hint` (null when nothing matched) to `provideLocale`, never its English fallback, or `I18n.known` turns true and pins sign-up links to `?lang=en`.
+- Strings `stepper.*`, `copy.*` and `search.*` in en, fr, es and de.
 
 ## v0.26.0 (2026-11-14)
 
