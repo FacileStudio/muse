@@ -1,7 +1,7 @@
 <script module lang="ts">
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
-    import type { Align } from '../../utils/placement.js';
+    import type { Align, Side } from '../../utils/placement.js';
 
     export interface PopoverProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
         /** Accessible name of the panel. Also the visible text of the default trigger. */
@@ -10,8 +10,12 @@
         open?: boolean;
         /** Replaces the default trigger's content. The button, its name and its state stay muse's. */
         trigger?: Snippet;
-        /** Which edge of the trigger the panel lines up with. `auto` flips when it would leave the screen. */
+        /** Which edge of the trigger the panel lines up with. `auto` flips when it would leave the screen. With `side` set, `auto` centres. */
         align?: Align;
+        /** Opens the panel on this side of the trigger or anchor, flipping to the opposite side when it does not fit and shifting along the edge to stay on screen. Unset keeps the default: below, flipping up. */
+        side?: Side;
+        /** Any element to position against. The panel then has no trigger button of its own: `open` is the caller's to set. */
+        anchor?: HTMLElement | null;
         /** Classes for the panel, which floats outside the wrapper. */
         panelClass?: string;
         onOpenChange?: (open: boolean) => void;
@@ -34,6 +38,8 @@
         open = $bindable(false),
         trigger: triggerContent,
         align = 'auto',
+        side,
+        anchor = null,
         panelClass = '',
         onOpenChange,
         class: className = '',
@@ -46,9 +52,12 @@
     let triggerEl: HTMLButtonElement | null = $state(null);
     let panelEl: HTMLElement | null = $state(null);
 
-    const geometry = new AnchoredPopup(() => triggerEl, 120, {
+    const reference = () => anchor ?? triggerEl;
+    const geometry = new AnchoredPopup(reference, 120, {
         width: () => Math.max(panelEl?.offsetWidth ?? 0, 240),
-        align: () => align
+        align: () => align,
+        side: () => side,
+        height: () => panelEl?.offsetHeight ?? 0
     });
 
     function set(next: boolean) {
@@ -60,7 +69,7 @@
 
     function close(refocus: boolean) {
         set(false);
-        if (refocus) triggerEl?.focus();
+        if (refocus) reference()?.focus();
     }
 
     function keydown(event: KeyboardEvent) {
@@ -72,12 +81,12 @@
 
     function leave(event: FocusEvent) {
         const next = event.relatedTarget as Node | null;
-        if (next && !panelEl?.contains(next) && next !== triggerEl) close(false);
+        if (next && !panelEl?.contains(next) && next !== reference()) close(false);
     }
 
     $effect(() => {
         if (!open) return;
-        const inside = (node: Node) => Boolean(triggerEl?.contains(node) || panelEl?.contains(node));
+        const inside = (node: Node) => Boolean(reference()?.contains(node) || panelEl?.contains(node));
         return watchPopup(inside, () => close(false), geometry.place);
     });
 
@@ -91,30 +100,32 @@
 
 <!--
 @component
-Un panneau flottant ouvert par un bouton, pour un formulaire court ou des détails. Non modal : Échap le referme et rend le focus au bouton, un appui ailleurs le referme, et sa bordure n'existe pas, seule l'ombre le détache.
+Un panneau flottant ouvert par un bouton, pour un formulaire court ou des détails. Non modal : Échap le referme et rend le focus au bouton, un appui ailleurs le referme, et sa bordure n'existe pas, seule l'ombre le détache. `side` l'ouvre sur n'importe quel côté, avec bascule et décalage, et `anchor` l'accroche à un élément quelconque passé par référence.
 -->
 
-<div class={twMerge('relative inline-block', className)} {...rest}>
-    <Tooltip text={label} describe={false} disabled={!triggerContent || open} class="contents">
-        <button
-            bind:this={triggerEl}
-            type="button"
-            aria-haspopup="dialog"
-            aria-expanded={open}
-            aria-controls={open ? panelId : undefined}
-            aria-label={triggerContent ? label : undefined}
-            class={triggerButton}
-            onclick={() => set(!open)}
-            onkeydown={keydown}
-        >
-            {#if triggerContent}
-                {@render triggerContent()}
-            {:else}
-                <span>{label}</span>
-                <Icon icon={icons.chevronDown} size={16} class={twMerge('transition-transform motion-reduce:transition-none', open && 'rotate-180')} />
-            {/if}
-        </button>
-    </Tooltip>
+<div class={twMerge(anchor ? 'contents' : 'relative inline-block', className)} {...rest}>
+    {#if !anchor}
+        <Tooltip text={label} describe={false} disabled={!triggerContent || open} class="contents">
+            <button
+                bind:this={triggerEl}
+                type="button"
+                aria-haspopup="dialog"
+                aria-expanded={open}
+                aria-controls={open ? panelId : undefined}
+                aria-label={triggerContent ? label : undefined}
+                class={triggerButton}
+                onclick={() => set(!open)}
+                onkeydown={keydown}
+            >
+                {#if triggerContent}
+                    {@render triggerContent()}
+                {:else}
+                    <span>{label}</span>
+                    <Icon icon={icons.chevronDown} size={16} class={twMerge('transition-transform motion-reduce:transition-none', open && 'rotate-180')} />
+                {/if}
+            </button>
+        </Tooltip>
+    {/if}
 
     {#if open}
         <div
@@ -124,6 +135,7 @@ Un panneau flottant ouvert par un bouton, pour un formulaire court ou des détai
             role="dialog"
             aria-label={label}
             tabindex="-1"
+            data-side={geometry.side}
             class={twMerge(floatingPanel, 'max-w-[calc(100vw-1rem)] min-w-60 p-4 text-fc-sm', panelClass)}
             style:left="{geometry.left}px"
             style:top={geometry.up ? 'auto' : `${geometry.top}px`}

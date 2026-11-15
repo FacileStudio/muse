@@ -71,6 +71,7 @@ export { default as InputOtp } from './components/molecules/InputOtp.svelte';
 export type { InputOtpProps } from './components/molecules/InputOtp.svelte';
 export { default as Popover } from './components/molecules/Popover.svelte';
 export type { PopoverProps } from './components/molecules/Popover.svelte';
+export type { Side } from './utils/placement.js';
 export { default as RadioGroup } from './components/molecules/RadioGroup.svelte';
 export type { RadioGroupProps, RadioGroupOption } from './components/molecules/RadioGroup.svelte';
 export { default as Breadcrumb } from './components/molecules/Breadcrumb.svelte';

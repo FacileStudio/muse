@@ -85,6 +85,11 @@
                     <Button size="sm" onclick={() => (panel = false)}>Appliquer</Button>
                 </Stack>
             </Popover>
+            {#each ['top', 'right', 'bottom', 'left'] as const as side (side)}
+                <Popover label={side} {side}>
+                    <p>Côté {side}</p>
+                </Popover>
+            {/each}
         </Card>
     </Section>
 
