@@ -1,6 +1,6 @@
 <script lang="ts">
     import {
-        Breadcrumb, Button, Card, Checkbox, ColorPicker, Dropzone, Field, Input, Menu, Modal, Page, PageHeader,
+        Breadcrumb, Button, Card, Checkbox, ColorPicker, ContextMenu, Dropzone, Field, Input, Menu, Modal, Page, PageHeader,
         Pagination, Progress, Radio, SecretField, Section, Select, Stack, Switch, Textarea, icons, toast
     } from '@facile/muse';
 
@@ -126,6 +126,17 @@
                         { label: 'Se déconnecter', onselect: () => toast.info('Au revoir'), icon: icons.logout, tone: 'danger' }
                     ]}
                 />
+                <ContextMenu
+                    label="Actions du fichier"
+                    items={[
+                        { label: 'Ouvrir', onselect: () => toast.info('Ouvrir'), icon: icons.eye },
+                        { label: 'Renommer', onselect: () => toast.info('Renommer'), icon: icons.edit },
+                        { separator: true },
+                        { label: 'Supprimer', onselect: () => toast.info('Supprimé'), icon: icons.remove, tone: 'danger' }
+                    ]}
+                >
+                    <p class="rounded-fc-sm bg-fc-component px-3 py-6 text-center text-fc-sm text-fc-fg-muted">Clic droit ici</p>
+                </ContextMenu>
             </Stack>
         </Card>
     </Section>

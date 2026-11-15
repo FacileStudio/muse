@@ -632,6 +632,21 @@ same flip as `Select`. Spreads to the wrapper `<div>`.
 | `trigger` | `Snippet` | — | Replaces the default text and chevron |
 | `align` | `'start' \| 'end'` | `'start'` | Which edge of the trigger the list lines up with |
 
+### `ContextMenu`
+
+A right-click menu over a region. It opens at the pointer on right-click, on a 500 ms touch
+long-press, and on the ContextMenu key or Shift+F10 at the focused element. It stays inside the
+viewport, uses the same entries and keyboard as `Menu` (icons, separators, `tone: 'danger'` in red,
+arrows, type-ahead), and Escape closes it and returns focus. A press outside closes it. Spreads to
+the wrapper `<div>`.
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `items` | `MenuEntry[] \| ((target: Element) => MenuEntry[])` | required | A function gets the right-clicked element, so one menu serves every row: read `target.closest('[data-id]')`. An empty list leaves the browser's menu |
+| `label` | `string` | required | Name of the menu |
+| `children` | `Snippet` | required | The region |
+| `disabled` | `boolean` | `false` | Leaves the browser's menu |
+
 ### `Popover`
 
 A non-modal floating panel opened by a button (`aria-haspopup="dialog"`). Focus moves into it, Escape closes and returns focus to the trigger, a press outside or Tab out closes it. Top layer, `shadow-lg`, no border. Spreads to the wrapper `<div>`.
