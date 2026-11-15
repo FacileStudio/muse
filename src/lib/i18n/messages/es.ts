@@ -30,6 +30,10 @@ export const es: MuseMessages = {
         one: 'Minigráfico de {count} valor, de {first} a {last}',
         other: 'Minigráfico de {count} valores, de {first} a {last}'
     },
+    'bulle.open': 'Abrir {name}',
+    'bulle.busy': '{name} está trabajando',
+    'bulle.retry': 'Reintentar',
+    'bulle.panel': 'Panel de {name}',
     'colorPicker.pick': 'Elegir un color',
     'colorPicker.presets': 'Colores predefinidos',
     'confirm.confirm': 'Confirmar',

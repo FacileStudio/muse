@@ -30,6 +30,10 @@ export const de: MuseMessages = {
         one: 'Sparkline mit {count} Wert, von {first} bis {last}',
         other: 'Sparkline mit {count} Werten, von {first} bis {last}'
     },
+    'bulle.open': '{name} öffnen',
+    'bulle.busy': '{name} arbeitet',
+    'bulle.retry': 'Erneut versuchen',
+    'bulle.panel': '{name}-Bereich',
     'colorPicker.pick': 'Farbe wählen',
     'colorPicker.presets': 'Farbvorlagen',
     'confirm.confirm': 'Bestätigen',

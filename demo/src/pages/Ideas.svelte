@@ -1,6 +1,9 @@
 <script lang="ts">
     import {
         ApprovalCard,
+        BulleButton,
+        BullePanel,
+        Button,
         IdeaCard,
         IdeasPage,
         IdeasUpsell,
@@ -11,6 +14,7 @@
         countNewIdeas,
         type ApprovalRequest,
         type Idea,
+        type BulleMood,
         type IdeasLayout
     } from '@facile/muse';
     import { ideaFixtures, sampleApproval } from '../ideas.js';
@@ -24,6 +28,9 @@
         { value: 'upsell', label: 'Forfait gratuit' }
     ];
 
+    const moods: BulleMood[] = ['idle', 'thinking', 'done', 'unavailable'];
+
+    let panel = $state<'ready' | 'busy' | 'error' | 'upsell'>('ready');
     let mode = $state('ready');
     let layout = $state<IdeasLayout>('grid');
     let ideas = $state<Idea[]>(ideaFixtures());
@@ -117,6 +124,47 @@
             onDecline={decline}
         />
     {/if}
+
+    <Section title="BulleButton" description="Le blob de l'assistant, tiré de son nom. Trois formes, quatre humeurs. Avec prefers-reduced-motion, le blob ne bouge plus.">
+        <div class="flex flex-wrap items-center gap-4">
+            {#each moods as mood (mood)}
+                <BulleButton {mood} label={mood} />
+            {/each}
+        </div>
+        <div class="flex flex-wrap items-center gap-4">
+            <BulleButton name="Nova" label="Demander à Nova" variant="chip" />
+            <BulleButton name="Nova" variant="icon" aria-label="Demander à Nova" />
+            <BulleButton name="Nova" mood="thinking" variant="icon" aria-label="Nova réfléchit" />
+            <BulleButton label="Désactivé" disabled />
+        </div>
+    </Section>
+
+    <Section title="BullePanel" description="La coquille d'un panneau d'assistant : titre, corps, état occupé, erreur et invite de forfait.">
+        <RadioGroup
+            options={[
+                { value: 'ready', label: 'Prêt' },
+                { value: 'busy', label: 'Occupé' },
+                { value: 'error', label: 'Erreur' },
+                { value: 'upsell', label: 'Forfait gratuit' }
+            ]}
+            bind:value={panel}
+            orientation="horizontal"
+            aria-label="État du panneau"
+        />
+        <BullePanel
+            name="Nova"
+            busy={panel === 'busy'}
+            error={panel === 'error' ? 'Nova ne répond pas. Réessayez dans un instant.' : null}
+            onRetry={() => (panel = 'ready')}
+            upgradeHref={panel === 'upsell' ? '/#/pricing' : undefined}
+            class="max-w-xl"
+        >
+            <div class="flex flex-wrap gap-2">
+                <Button variant="secondary" size="sm" onclick={() => (panel = 'busy')}>Planifier ma semaine</Button>
+                <Button variant="secondary" size="sm" onclick={() => (panel = 'busy')}>Planifier aujourd'hui</Button>
+            </div>
+        </BullePanel>
+    </Section>
 
     <Section title="IdeaCard" description="Un état de run par carte : repos, en cours, accord à donner, terminé, échec.">
         <ul class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

@@ -30,6 +30,10 @@ export const fr: MuseMessages = {
         one: 'Tendance de {count} valeur, de {first} à {last}',
         other: 'Tendance de {count} valeurs, de {first} à {last}'
     },
+    'bulle.open': 'Ouvrir {name}',
+    'bulle.busy': '{name} travaille',
+    'bulle.retry': 'Réessayer',
+    'bulle.panel': 'Panneau de {name}',
     'colorPicker.pick': 'Choisir une couleur',
     'colorPicker.presets': 'Couleurs prédéfinies',
     'confirm.confirm': 'Confirmer',
