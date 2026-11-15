@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `Popover` takes `side` (`top | right | bottom | left`): it opens on that side of its trigger, flips to the opposite side when it does not fit, and shifts along the edge to stay inside the viewport. The panel carries `data-side` with the side it landed on. Without `side` it opens below and flips up, as before.
+- `Popover` takes `anchor`: any element, passed by reference, to position against. The panel then renders no trigger button and `open` is the caller's to set. Escape and an outside press still close it. This is what a guided tour step uses.
+- `placeSide` in `utils/placement.ts` (pure, tested), and `AnchoredPopup` takes `side` and `height` in its host so `Menu`, `Select` and `Tooltip` can use it later.
+- `Align` gains `center`. `placeAcross` and every component that takes `align` accept it.
+
 ## v0.26.0 (2026-11-14)
 
 ### Changed

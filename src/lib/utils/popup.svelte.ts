@@ -1,6 +1,11 @@
-import { placeAcross, placePopup, type Align } from './placement.js';
+import { placeAcross, placePopup, placeSide, type Align, type Side } from './placement.js';
 
-export type AcrossHost = { width: () => number; align: () => Align | undefined };
+export type AcrossHost = {
+    width: () => number;
+    align: () => Align | undefined;
+    side?: () => Side | undefined;
+    height?: () => number;
+};
 
 const GAP = 6;
 const MARGIN = 8;
@@ -19,6 +24,7 @@ export class AnchoredPopup {
     top = $state(0);
     bottom = $state(0);
     width = $state(0);
+    side = $state<Side>('bottom');
     need: number;
     anchor: () => HTMLElement | null;
     across: AcrossHost | undefined;
@@ -34,6 +40,11 @@ export class AnchoredPopup {
         const box = this.anchor()?.getBoundingClientRect();
         if (!box) return;
         const viewportHeight = window.innerHeight;
+        const wanted = this.across?.side?.();
+        if (wanted) {
+            this.placeOnSide(box, wanted);
+            return;
+        }
         const spot = placePopup({
             triggerTop: box.top,
             triggerBottom: box.bottom,
@@ -59,7 +70,30 @@ export class AnchoredPopup {
         this.width = box.width;
         this.top = box.bottom + GAP;
         this.bottom = viewportHeight - box.top + GAP;
+        this.side = this.up ? 'top' : 'bottom';
     };
+
+    placeOnSide(box: DOMRect, wanted: Side): void {
+        const across = this.across;
+        if (!across) return;
+        const spot = placeSide({
+            anchor: box,
+            width: Math.max(across.width(), 0),
+            height: across.height?.() || this.need,
+            viewportWidth: document.documentElement.clientWidth,
+            viewportHeight: window.innerHeight,
+            side: wanted,
+            align: across.align() ?? 'auto',
+            gap: GAP,
+            margin: MARGIN
+        });
+        this.side = spot.side;
+        this.up = false;
+        this.left = spot.left;
+        this.top = spot.top;
+        this.maxHeight = Math.max(this.need, spot.maxHeight);
+        this.width = box.width;
+    }
 }
 
 /**
