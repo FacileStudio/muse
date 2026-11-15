@@ -1,7 +1,7 @@
 <script lang="ts">
     import {
-        Accordion, Button, Card, Checkbox, Collapsible, Combobox, DatePicker, Field, IconButton, InputOtp, Page,
-        PageHeader, Popover, RadioGroup, Section, Select, Slider, Stack, Tooltip, Icon, icons, toast
+        Accordion, Alert, Button, Card, Checkbox, Collapsible, Combobox, CopyButton, DatePicker, Field, IconButton, InputOtp, Kbd,
+        Page, PageHeader, SearchField, StepNav, Stepper, Popover, RadioGroup, Section, Select, Slider, Stack, Tooltip, Icon, icons, toast
     } from '@facile/muse';
 
     const cities = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nantes', 'Strasbourg', 'Lille', 'Bordeaux', 'Évry'].map(
@@ -24,6 +24,9 @@
     const some = $derived(pieces.some((p) => p.checked));
 
     let city = $state('');
+    let query = $state('');
+    let step = $state(1);
+    const stages = [{ label: 'Compte' }, { label: 'Profil' }, { label: 'Équipe' }, { label: 'Terminé' }];
     let plan = $state('pro');
     let level = $state(70);
     let span = $state<[number, number]>([20, 80]);
@@ -66,6 +69,28 @@
                 <Checkbox dense label="Rappels de paiement" />
                 <Checkbox dense label="Résumé hebdomadaire" />
             </div>
+        </Card>
+    </Section>
+
+    <Section title="Stepper et StepNav" description="Les étapes d’un parcours, en marqueurs ou en barre compacte, et le pied Retour, Continuer, Passer.">
+        <Card>
+            <Stack>
+                <Stepper steps={stages} current={step} onSelect={(i) => (step = i)} />
+                <Stepper variant="compact" steps={stages} current={step} />
+                <StepNav primary="Continuer" canBack={step > 0} canSkip onContinue={() => (step = Math.min(step + 1, 3))} onBack={() => (step -= 1)} onSkip={() => (step = Math.min(step + 1, 3))} />
+            </Stack>
+        </Card>
+    </Section>
+
+    <Section title="CopyButton, SearchField, Kbd, Alert" description="Copier avec retour « Copié », champ de recherche avec raccourci /, touches, et une alerte qu’on ferme.">
+        <Card>
+            <Stack>
+                <CopyButton text="https://capsule.facile.studio/s/abc" label="Copier le lien" />
+                <CopyButton text="https://capsule.facile.studio/s/abc" showLabel />
+                <SearchField bind:value={query} placeholder="Rechercher" shortcut="/" />
+                <Kbd keys="mod+k" />
+                <Alert dismissible title="Nouveau">Une alerte qu’on peut fermer.</Alert>
+            </Stack>
         </Card>
     </Section>
 

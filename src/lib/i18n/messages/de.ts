@@ -297,5 +297,16 @@ export const de: MuseMessages = {
     'connection.connecting': 'Verbindung wird wiederhergestellt…',
     'connection.offline': 'Offline',
     'connection.offlineDetail': 'Ihre Änderungen werden gesendet, sobald das Netz zurück ist',
-    'connection.stopped': 'Getrennt'
+    'connection.stopped': 'Getrennt',
+    'stepper.label': 'Fortschritt',
+    'stepper.stepOf': 'Schritt {step} von {total}',
+    'stepper.done': 'abgeschlossen',
+    'stepper.current': 'aktueller Schritt',
+    'stepper.back': 'Zurück',
+    'stepper.skip': 'Vorerst überspringen',
+    'copy.label': 'Kopieren',
+    'copy.copied': 'Kopiert',
+    'copy.failed': 'Kopieren fehlgeschlagen',
+    'search.label': 'Suchen',
+    'search.clear': 'Suche löschen'
 };

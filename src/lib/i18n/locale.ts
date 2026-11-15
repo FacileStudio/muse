@@ -29,8 +29,11 @@ const weigh = (part: string, at: number): Weighted => {
 /**
  * The best supported locale in a session value, a cookie or a full `Accept-Language` header,
  * or `null` when none matches. Every tag is read, highest `q` first: `it, de;q=0.8` is `de`.
+ * `supported` replaces the four built-in locales for an app that ships another set.
  */
-export function matchLocale(value: string | null | undefined): Locale | null {
+export function matchLocale(value: string | null | undefined): Locale | null;
+export function matchLocale<L extends string>(value: string | null | undefined, supported: readonly L[]): L | null;
+export function matchLocale(value: string | null | undefined, supported: readonly string[] = LOCALES): string | null {
     const tags = (value ?? '')
         .split(',')
         .map(weigh)
@@ -38,7 +41,7 @@ export function matchLocale(value: string | null | undefined): Locale | null {
         .sort((a, b) => b.q - a.q || a.at - b.at);
     for (const { tag } of tags) {
         const base = tag.split(/[-_]/)[0];
-        if (isLocale(base)) return base;
+        if (supported.includes(base)) return base;
     }
     return null;
 }
