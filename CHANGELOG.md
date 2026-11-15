@@ -1,9 +1,11 @@
 # Changelog
 
-## Unreleased
+## v0.27.0 (2026-11-16)
 
 ### Added
 
+- `ContextMenu`: a right-click menu over a region, with `Menu`'s entries (icons, separators, `tone: 'danger'` in red, links) and keyboard. It opens at the pointer, on a touch long-press, and on the ContextMenu key or Shift+F10, and stays inside the viewport. `items` can be a function of the right-clicked element, so one menu serves every row of a list. Docs example `ContextMenu/default.svelte`; demo in `#/forms`.
+- `utils/context-menu.ts`: `placeAtPoint`, `opensContextMenu` and `LongPress`, with unit tests.
 - `Popover` takes `side` (`top | right | bottom | left`): it opens on that side of its trigger, flips to the opposite side when it does not fit, and shifts along the edge to stay inside the viewport. The panel carries `data-side` with the side it landed on. Without `side` it opens below and flips up, as before.
 - `Popover` takes `anchor`: any element, passed by reference, to position against. The panel then renders no trigger button and `open` is the caller's to set. Escape and an outside press still close it. This is what a guided tour step uses.
 - `placeSide` in `utils/placement.ts` (pure, tested), and `AnchoredPopup` takes `side` and `height` in its host so `Menu`, `Select` and `Tooltip` can use it later.
