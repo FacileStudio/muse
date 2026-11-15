@@ -308,7 +308,16 @@ export const en = {
     'copy.copied': 'Copied',
     'copy.failed': 'Copy failed',
     'search.label': 'Search',
-    'search.clear': 'Clear search'
+    'search.clear': 'Clear search',
+    'tags.placeholder': 'Add a tag',
+    'tags.remove': 'Remove {tag}',
+    'tags.suggestions': 'Suggestions',
+    'tags.added': '{tag} added',
+    'tags.removed': '{tag} removed',
+    'pending.askedBy': 'Asked by {client}',
+    'pending.dismiss': 'Dismiss',
+    'pending.changed': 'This changed after the request. Ask the AI client again.',
+    'pending.missing': 'This no longer exists.'
 } satisfies Record<string, Message>;
 
 export type MuseMessages = { [K in keyof typeof en]: Message };

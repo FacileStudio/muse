@@ -308,5 +308,14 @@ export const de: MuseMessages = {
     'copy.copied': 'Kopiert',
     'copy.failed': 'Kopieren fehlgeschlagen',
     'search.label': 'Suchen',
-    'search.clear': 'Suche löschen'
+    'search.clear': 'Suche löschen',
+    'tags.placeholder': 'Tag hinzufügen',
+    'tags.remove': '{tag} entfernen',
+    'tags.suggestions': 'Vorschläge',
+    'tags.added': '{tag} hinzugefügt',
+    'tags.removed': '{tag} entfernt',
+    'pending.askedBy': 'Angefragt von {client}',
+    'pending.dismiss': 'Verwerfen',
+    'pending.changed': 'Das wurde nach der Anfrage geändert. Frag den KI-Client erneut.',
+    'pending.missing': 'Das existiert nicht mehr.'
 };

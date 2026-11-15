@@ -308,5 +308,14 @@ export const fr: MuseMessages = {
     'copy.copied': 'Copié',
     'copy.failed': 'Échec de la copie',
     'search.label': 'Rechercher',
-    'search.clear': 'Effacer la recherche'
+    'search.clear': 'Effacer la recherche',
+    'tags.placeholder': 'Ajouter une étiquette',
+    'tags.remove': 'Retirer {tag}',
+    'tags.suggestions': 'Suggestions',
+    'tags.added': '{tag} ajouté',
+    'tags.removed': '{tag} retiré',
+    'pending.askedBy': 'Demandé par {client}',
+    'pending.dismiss': 'Ignorer',
+    'pending.changed': 'Cet élément a changé après la demande. Redemandez au client IA.',
+    'pending.missing': 'Cet élément n’existe plus.'
 };
