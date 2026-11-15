@@ -297,7 +297,27 @@ export const en = {
     'connection.connecting': 'Reconnecting…',
     'connection.offline': 'Offline',
     'connection.offlineDetail': 'Your changes will be sent when the network is back',
-    'connection.stopped': 'Disconnected'
+    'connection.stopped': 'Disconnected',
+    'stepper.label': 'Progress',
+    'stepper.stepOf': 'Step {step} of {total}',
+    'stepper.done': 'completed',
+    'stepper.current': 'current step',
+    'stepper.back': 'Back',
+    'stepper.skip': 'Skip for now',
+    'copy.label': 'Copy',
+    'copy.copied': 'Copied',
+    'copy.failed': 'Copy failed',
+    'search.label': 'Search',
+    'search.clear': 'Clear search',
+    'tags.placeholder': 'Add a tag',
+    'tags.remove': 'Remove {tag}',
+    'tags.suggestions': 'Suggestions',
+    'tags.added': '{tag} added',
+    'tags.removed': '{tag} removed',
+    'pending.askedBy': 'Asked by {client}',
+    'pending.dismiss': 'Dismiss',
+    'pending.changed': 'This changed after the request. Ask the AI client again.',
+    'pending.missing': 'This no longer exists.'
 } satisfies Record<string, Message>;
 
 export type MuseMessages = { [K in keyof typeof en]: Message };

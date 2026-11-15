@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.28.0 (2026-11-16)
+
+### Added
+
+- `Stepper`: the steps of a flow as numbered markers (horizontal or vertical, finished steps as buttons with `onSelect`) or as a compact segmented progress bar with "Step 2 of 5". `StepNav`: the Back, Continue, Skip footer. Both come from the twin `StepProgress` and onboarding footer of Bulle and Courrier.
+- `CopyButton` and `copyText`: icon or labelled button that copies a string or a value fetched on click, flips to "Copied", announces it, and reports the outcome to `onCopy`.
+- `SearchField`: magnifier, clear button, Escape clears, debounced `onSearch`, `onSubmit` on Enter, and an optional `shortcut` such as `/` that focuses it from anywhere.
+- `Kbd` and `keyCaps`: a key cap or a whole shortcut such as `mod+k` (Command on Apple, Ctrl elsewhere).
+- `Alert` takes `dismissible`, `open` (bindable), `onDismiss`, `dismissLabel` and an `action` snippet. Without them it renders exactly as before.
+- `Row`, the type of one message in the four locales (`readonly [Message, Message, Message, Message]`), byte-compatible with the `row.ts` that Agenda, Courrier, Nuage and about a dozen other apps carry.
+- `matchLocale` takes an optional list of supported locales (default: the four built-in ones), so it agrees with `@facile/client/locale`. Pass the resolver's `hint` (null when nothing matched) to `provideLocale`, never its English fallback, or `I18n.known` turns true and pins sign-up links to `?lang=en`.
+- `TagInput`: a multi-value field whose values become removable chips. Enter, comma or leaving the field commit, a pasted list is split, Backspace on an empty draft removes the last chip, `validate` marks (or with `rejectInvalid` refuses) a bad tag, `max` caps the list, and `suggestions` show under the field. Replaces Antenne's `TagInput` and `StringListInput` and Courrier's address chips.
+- `PendingCard` and `pendingClientName`: the card for an action an AI client asked for, with the kind badge, "Asked by", a body snippet, an `actions` snippet, Dismiss and Confirm, and a `changed` or `missing` state that hides Confirm. The nine local copies in Agenda, Antenne, Capsule, Casier, Courrier, Journal, Nuage, Plume and Sablier share this shell.
+- Strings `stepper.*`, `copy.*`, `search.*`, `tags.*` and `pending.*` in en, fr, es and de.
+
 ## v0.27.0 (2026-11-16)
 
 ### Added
