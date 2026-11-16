@@ -103,7 +103,7 @@ La coquille d'un panneau d'assistant : une ligne de titre avec le blob et le nom
                 {upsellText?.trim() || i18n.t('bulle.upsell', { name: assistant })}
             </p>
             {#if isSafeHref(upgradeHref ?? '')}
-                <Button href={upgradeHref} class="self-start">{i18n.t('bulle.upgrade')}</Button>
+                <Button href={upgradeHref} size="lg" class="self-start">{i18n.t('bulle.upgrade')}</Button>
             {/if}
         {/if}
     {:else if children}
