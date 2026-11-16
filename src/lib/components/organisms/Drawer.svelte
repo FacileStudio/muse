@@ -26,7 +26,7 @@
     import Icon from '../atoms/Icon.svelte';
     import { createDialog } from '../../utils/dialog.js';
     import { SheetDrag } from '../../utils/sheet-drag.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
+    import { prefersReducedMotion, watchMedia } from '../../utils/motion.js';
     import IconButton from '../atoms/IconButton.svelte';
 
     let {
@@ -48,20 +48,9 @@
 
     let wide = $state(false);
 
-    $effect(() => {
-        if (!side) {
-            wide = false;
-            return;
-        }
-        const query = window.matchMedia('(min-width: 48rem)');
-        const sync = () => (wide = query.matches);
-        sync();
-        query.addEventListener('change', sync);
-        return () => query.removeEventListener('change', sync);
-    });
+    $effect(() => (side ? watchMedia('(min-width: 48rem)', (matches) => (wide = matches)) : void (wide = false)));
 
-    const hidden = (): Record<string, string> => (wide ? { x: '100%' } : { y: '100%' });
-    const shown = (): Record<string, number> => (wide ? { x: 0 } : { y: 0 });
+    const at = (offset: string | number): Record<string, string | number> => (wide ? { x: offset } : { y: offset });
 
     const titleId = $props.id();
 
@@ -85,7 +74,7 @@
                 gsap.set(panel, { x: 0, y: 0 });
                 return;
             }
-            tween = gsap.fromTo(panel, hidden(), { ...shown(), duration: 0.35, ease: 'power3.out' });
+            tween = gsap.fromTo(panel, at('100%'), { ...at(0), duration: 0.35, ease: 'power3.out' });
         },
         exit(_el, done) {
             tween?.kill();
@@ -95,7 +84,7 @@
                 return;
             }
             tween = gsap.to(panel, {
-                ...hidden(),
+                ...at('100%'),
                 duration: 0.25,
                 ease: 'power3.in',
                 onComplete: done

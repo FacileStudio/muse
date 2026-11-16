@@ -8,6 +8,7 @@ import {
     formatCompact,
     linePath,
     markerPoints,
+    markerTipRows,
     niceScale,
     seriesColor,
     seriesCount,
@@ -176,4 +177,6 @@ test('markerPoints keeps markers on a drawn point and colours them by tone', () 
         ['up', 2, 'var(--color-fc-warning)'],
         ['b', 7, 'var(--color-fc-danger)']
     ]);
+    expect(markerTipRows(points, 2)).toEqual([{ name: 'b', value: '', color: 'var(--color-fc-danger)' }]);
+    expect(markerTipRows(points, -1)).toEqual([]);
 });

@@ -1,4 +1,4 @@
-import type { ChartMarker, ChartMarkerPoint, ChartSeries } from './types.js';
+import type { ChartMarker, ChartMarkerPoint, ChartSeries, ChartTipRow } from './types.js';
 
 const TONE_COLOR = {
     info: 'var(--color-fc-info)',
@@ -15,4 +15,9 @@ export function markerPoints(markers: ChartMarker[], series: ChartSeries[], coun
         if (value === undefined || !Number.isFinite(value)) return [];
         return [{ marker, index, value, color: TONE_COLOR[marker.tone ?? 'warning'] }];
     });
+}
+
+/** The tooltip rows of the markers at the hovered index. */
+export function markerTipRows(points: ChartMarkerPoint[], hover: number): ChartTipRow[] {
+    return points.filter((p) => p.index === hover).map((p) => ({ name: p.marker.label, value: '', color: p.color }));
 }

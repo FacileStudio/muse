@@ -52,3 +52,12 @@ export function popupMotion(_node: Element, { direction = 'in', y = -4 }: PopupM
     css: (t: number) => `opacity: ${t}; transform: translateY(${(1 - t) * y}px) scale(${0.98 + 0.02 * t});`
   };
 }
+
+/** Calls `onChange` with whether `query` matches, now and on every change. Returns the cleanup, for an `$effect`. */
+export function watchMedia(query: string, onChange: (matches: boolean) => void): () => void {
+  const list = window.matchMedia(query);
+  const sync = () => onChange(list.matches);
+  sync();
+  list.addEventListener('change', sync);
+  return () => list.removeEventListener('change', sync);
+}
