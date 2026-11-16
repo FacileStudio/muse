@@ -11,6 +11,8 @@
         showHandle?: boolean;
         showClose?: boolean;
         dismissible?: boolean;
+        /** From 768px wide, slide in from the right as a full-height side panel instead of a bottom sheet. */
+        side?: boolean;
         onClose?: () => void;
         class?: string;
 
@@ -24,7 +26,7 @@
     import Icon from '../atoms/Icon.svelte';
     import { createDialog } from '../../utils/dialog.js';
     import { SheetDrag } from '../../utils/sheet-drag.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
+    import { prefersReducedMotion, watchMedia } from '../../utils/motion.js';
     import IconButton from '../atoms/IconButton.svelte';
 
     let {
@@ -36,12 +38,19 @@
         showHandle = true,
         showClose = false,
         dismissible = true,
+        side = false,
         onClose,
         class: className = '',
         ...rest
     }: DrawerProps = $props();
 
     const i18n = getI18n();
+
+    let wide = $state(false);
+
+    $effect(() => (side ? watchMedia('(min-width: 48rem)', (matches) => (wide = matches)) : void (wide = false)));
+
+    const at = (offset: string | number): Record<string, string | number> => (wide ? { x: offset } : { y: offset });
 
     const titleId = $props.id();
 
@@ -62,10 +71,10 @@
             tween = null;
             if (!panel) return;
             if (prefersReducedMotion()) {
-                gsap.set(panel, { y: 0 });
+                gsap.set(panel, { x: 0, y: 0 });
                 return;
             }
-            tween = gsap.fromTo(panel, { y: '100%' }, { y: 0, duration: 0.35, ease: 'power3.out' });
+            tween = gsap.fromTo(panel, at('100%'), { ...at(0), duration: 0.35, ease: 'power3.out' });
         },
         exit(_el, done) {
             tween?.kill();
@@ -75,7 +84,7 @@
                 return;
             }
             tween = gsap.to(panel, {
-                y: '100%',
+                ...at('100%'),
                 duration: 0.25,
                 ease: 'power3.in',
                 onComplete: done
@@ -85,7 +94,7 @@
             drag.active = false;
             tween?.kill();
             tween = null;
-            if (panel) gsap.set(panel, { y: 0 });
+            if (panel) gsap.set(panel, { x: 0, y: 0 });
             onClose?.();
         }
     });
@@ -107,7 +116,7 @@
     }
 
     function onPointerDown(e: PointerEvent) {
-        if (!dismissible || !panel || drag.active || e.button > 0) return;
+        if (!dismissible || wide || !panel || drag.active || e.button > 0) return;
         if ((e.target as HTMLElement | null)?.closest('button, a, input, select, textarea')) return;
         tween?.kill();
         tween = null;
@@ -131,30 +140,40 @@
         else settle(0);
     }
 
+    const handle = $derived(showHandle && !wide);
     const hasHeader = $derived(Boolean(title || description || showClose));
 
     const dialogClasses = $derived(
         twMerge(
-            'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-none bg-transparent p-0 text-fc-fg sm:max-w-fc-sm backdrop:bg-fc-scrim',
+            wide
+                ? 'mr-0 ml-auto my-0 h-dvh max-h-dvh w-full max-w-fc-sm bg-transparent p-0 text-fc-fg backdrop:bg-fc-scrim'
+                : 'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-none bg-transparent p-0 text-fc-fg sm:max-w-fc-sm backdrop:bg-fc-scrim',
             className
+        )
+    );
+
+    const panelClasses = $derived(
+        twMerge(
+            'relative flex w-full flex-col overflow-hidden bg-fc-component shadow-lg',
+            wide ? 'h-full rounded-l-fc-lg' : 'max-h-[85dvh] rounded-t-fc-lg'
         )
     );
 
     const stripClasses = $derived(
         twMerge(
             'shrink-0 select-none',
-            dismissible ? 'cursor-grab active:cursor-grabbing' : ''
+            dismissible && !wide ? 'cursor-grab active:cursor-grabbing' : ''
         )
     );
 
     const headerClasses = $derived(
-        twMerge('flex items-start gap-3 px-5 pb-4', showHandle ? 'pt-0' : 'pt-5')
+        twMerge('flex items-start gap-3 px-5 pb-4', handle ? 'pt-0' : 'pt-5')
     );
 
     const bodyClasses = $derived(
         twMerge(
             'min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-5 text-fc-sm',
-            hasHeader || showHandle ? 'pt-0' : 'pt-5',
+            hasHeader || handle ? 'pt-0' : 'pt-5',
             footer ? '' : 'pb-[max(1.25rem,env(safe-area-inset-bottom))]'
         )
     );
@@ -162,7 +181,7 @@
 
 <!--
 @component
-Une feuille qui monte du bas, refermable au glissement. Pour un panneau de bureau, c'est une `Modal`.
+Une feuille qui monte du bas, refermable au glissement. Avec `side`, un panneau latéral à droite dès 768px.
 -->
 
 <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
@@ -175,18 +194,18 @@ Une feuille qui monte du bas, refermable au glissement. Pour un panneau de burea
 >
     <div
         bind:this={panel}
-        class="relative flex max-h-[85dvh] w-full flex-col overflow-hidden rounded-t-fc-lg bg-fc-component shadow-lg"
+        class={panelClasses}
     >
         <div
             role="presentation"
             class={stripClasses}
-            style:touch-action={dismissible ? 'none' : undefined}
+            style:touch-action={dismissible && !wide ? 'none' : undefined}
             onpointerdown={onPointerDown}
             onpointermove={onPointerMove}
             onpointerup={(e) => endDrag(e, true)}
             onpointercancel={(e) => endDrag(e, false)}
         >
-            {#if showHandle}
+            {#if handle}
                 <div class="flex h-11 items-center justify-center" aria-hidden="true">
                     <div class="h-1 w-10 rounded-fc-pill bg-fc-fg-muted/40"></div>
                 </div>

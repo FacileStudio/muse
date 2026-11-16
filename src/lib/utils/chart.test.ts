@@ -7,6 +7,8 @@ import {
     donutSegments,
     formatCompact,
     linePath,
+    markerPoints,
+    markerTipRows,
     niceScale,
     seriesColor,
     seriesCount,
@@ -152,4 +154,29 @@ test('series helpers span labels and data, and mark gaps', () => {
     expect(seriesTipRows(series, 1, formatCompact).map((r) => r.value)).toEqual(['2', '—']);
     expect(seriesTipRows(series, -1, formatCompact)).toEqual([]);
     expect(seriesNames(series)).toBe('a, b');
+});
+
+test('markerPoints keeps markers on a drawn point and colours them by tone', () => {
+    const series: ChartSeries[] = [
+        { name: 'a', data: [1, 2, Number.NaN, 4] },
+        { name: 'b', data: [5, 6, 7, 8] }
+    ];
+    const points = markerPoints(
+        [
+            { index: 1, label: 'up' },
+            { index: 2, label: 'gap' },
+            { index: 2, label: 'b', series: 1, tone: 'danger' },
+            { index: 9, label: 'out' },
+            { index: 1.5, label: 'half' },
+            { index: 0, label: 'none', series: 4 }
+        ],
+        series,
+        4
+    );
+    expect(points.map((p) => [p.marker.label, p.value, p.color])).toEqual([
+        ['up', 2, 'var(--color-fc-warning)'],
+        ['b', 7, 'var(--color-fc-danger)']
+    ]);
+    expect(markerTipRows(points, 2)).toEqual([{ name: 'b', value: '', color: 'var(--color-fc-danger)' }]);
+    expect(markerTipRows(points, -1)).toEqual([]);
 });

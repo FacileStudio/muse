@@ -2,8 +2,12 @@
 
 ## Unreleased
 
+## v0.31.0 (2026-11-16)
+
 ### Added
 
+- `LineChart` takes `markers` (`ChartMarker[]`: `index`, `label`, optional `tone` `info`, `warning` or `danger`, default `warning`, and `series`): a dot on the line at that label, with its label in the hover tooltip. With `onMarkerClick`, each dot is also a 44px button named by its label; without it, the labels go to a screen-reader list. `markerPoints` and the `ChartMarker` type are exported.
+- `Drawer` takes `side`: from 768px wide it slides in from the right as a full-height side panel, with no handle and no drag; below that it stays a bottom sheet.
 - Diapo (`solar:presentation-graph-bold-duotone`) and Clap (`solar:clapperboard-open-bold-duotone`) in the brand catalog, with the titles and descriptions their landings ship.
 
 ## v0.30.0 (2026-11-16)

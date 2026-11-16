@@ -50,3 +50,7 @@ export const PAD_TOP = 10;
 export const PAD_BOTTOM = 24;
 export const ENTRY_DURATION = 0.6;
 export const AREA_OPACITY = 0.12;
+
+/** A point of interest on a line chart: `index` is the label position, `series` the line it sits on (0 when omitted). */
+export type ChartMarker = { index: number; label: string; tone?: 'info' | 'warning' | 'danger'; series?: number };
+export type ChartMarkerPoint = { marker: ChartMarker; index: number; value: number; color: string };

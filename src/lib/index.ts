@@ -240,6 +240,7 @@ export {
     arcPath,
     arcCorner,
     tickStride,
+    markerPoints,
     resize
 } from './utils/chart.js';
 export type {
@@ -248,7 +249,8 @@ export type {
     ChartScale,
     ChartLegendItem,
     ChartTipRow,
-    ChartRow
+    ChartRow,
+    ChartMarker
 } from './utils/chart.js';
 export { toast, toasts } from './utils/toast.svelte.js';
 export type { ToastAction, ToastItem, ToastOptions, ToastTone } from './utils/toast.svelte.js';

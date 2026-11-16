@@ -1,9 +1,12 @@
 <script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import type { ChartSeries } from '../../utils/chart.js';
+    import type { ChartMarker, ChartSeries } from '../../utils/chart.js';
 
     export interface LineChartProps extends HTMLAttributes<HTMLDivElement> {
         series: ChartSeries[];
+        /** Dots on the line at a label index, named in the tooltip. Clickable when `onMarkerClick` is set. */
+        markers?: ChartMarker[];
+        onMarkerClick?: (marker: ChartMarker) => void;
         labels: string[];
         height?: number;
         area?: boolean;
@@ -16,23 +19,24 @@
         animate?: boolean;
         emptyLabel?: string;
         class?: string;
-
     }
 </script>
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
-    import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelStride, linePath, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesNames, seriesTipRows, seriesValues } from '../../utils/chart.js';
+    import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelStride, linePath, markerPoints, markerTipRows, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesNames, seriesTipRows, seriesValues } from '../../utils/chart.js';
     import { drawIn } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
     import LineAxes from './LineAxes.svelte';
     import LineHover from './LineHover.svelte';
+    import LineMarkers from './LineMarkers.svelte';
     import ChartTable from './ChartTable.svelte';
     import ChartTooltip from './ChartTooltip.svelte';
 
     let {
         series,
+        markers = [], onMarkerClick,
         labels,
         height = 220,
         area = false,
@@ -110,7 +114,8 @@
     const legendItems = $derived(seriesLegend(series));
     const summary = $derived(i18n.t('chart.lineSummary', { count, names: seriesNames(series) }));
     const tableRows = $derived(seriesRows(series, labels, count, yFormat));
-    const tipRows = $derived(seriesTipRows(series, hover, yFormat));
+    const marks = $derived(isEmpty ? [] : markerPoints(markers, series, count));
+    const tipRows = $derived([...seriesTipRows(series, hover, yFormat), ...markerTipRows(marks, hover)]);
 
     const tipX = $derived(hover < 0 ? 0 : xAt(hover));
     const tipY = $derived.by(() => {
@@ -221,6 +226,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
 
                 <rect x="0" y="0" width={w} height={height} fill="transparent" />
             </svg>
+            <LineMarkers {marks} {xLabels} {xAt} {yAt} {onMarkerClick} onHover={(i) => (hover = i)} />
 
             <ChartTooltip
                 x={tipX}
