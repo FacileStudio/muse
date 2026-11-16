@@ -80,13 +80,22 @@
     $effect(() => {
         if (!root) return;
         untrack(relayout);
-        return watchScrollArea(root, { onScroll: edges, onResize: relayout }, 0);
+        let alive = true;
+        document.fonts?.ready.then(() => {
+            if (alive) relayout();
+        });
+        const stop = watchScrollArea(root, { onScroll: edges, onResize: relayout }, 0);
+        return () => {
+            alive = false;
+            stop();
+        };
     });
 
     function place(animate = true) {
         const el = tabs[value];
         if (!el || !indicator) return;
-        const to = { x: el.offsetLeft, width: el.offsetWidth };
+        const to = { x: el.offsetLeft, y: el.offsetTop, width: el.offsetWidth, height: el.offsetHeight };
+        gsap.killTweensOf(indicator);
         if (!placed || !animate || prefersReducedMotion()) {
             gsap.set(indicator, { ...to, autoAlpha: 1 });
             placed = true;
@@ -149,7 +158,7 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
     <span
         bind:this={indicator}
         aria-hidden="true"
-        class="pointer-events-none absolute inset-y-0 left-0 -z-0 rounded-fc-pill bg-fc-accent opacity-0"
+        class="pointer-events-none absolute left-0 top-0 -z-0 rounded-fc-pill bg-fc-accent opacity-0"
     ></span>
 
     {#snippet content(item: Item, active: boolean)}
@@ -160,7 +169,7 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
         {#if item.badge !== undefined}
             <span
                 class={twMerge(
-                    'shrink-0 rounded-fc-pill px-1.5 text-fc-xs whitespace-nowrap',
+                    'inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-fc-pill px-2 text-fc-xs leading-none whitespace-nowrap',
                     active ? 'bg-fc-accent-fg/15' : 'bg-fc-surface'
                 )}>{item.badge}</span
             >
@@ -170,7 +179,7 @@ Le passage d'une section à l'autre, par une pastille inversée qui glisse. Avec
     {#each items as item (item.id)}
         {@const active = item.id === value}
         {@const inner = twMerge(
-            'relative z-10 inline-flex min-h-11 shrink-0 items-center gap-2 rounded-fc-pill px-4 text-fc-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring',
+            'relative z-10 inline-flex h-9 shrink-0 items-center gap-2 rounded-fc-pill px-4 text-fc-sm font-medium whitespace-nowrap transition-colors [@media(pointer:coarse)]:h-11 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-fc-ring',
             active ? 'text-fc-accent-fg' : 'text-fc-fg-muted hover:bg-fc-surface hover:text-fc-fg',
             item.disabled && 'pointer-events-none opacity-50'
         )}

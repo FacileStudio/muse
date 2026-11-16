@@ -607,3 +607,13 @@ Behaviour that changes without an API change: a `Menu` or `UserMenu` row under t
 | Casier | subscription row ("Gratuit") | Pass `subscription` to `PreferencesSection`. |
 | Tempo | mobile-only items: Prospection, Booking, Finances, Groupe, Press kit, Riders, Matériel, Setlists | These become unreachable on a phone: add a "More" page or sidebar entries. Add `PreferencesSection` if theme should stay selectable. |
 | Opus | n/a | React with its own menu, not affected. When it mirrors the muse menu it drops its Language and Theme rows. |
+
+---
+
+## 26. `Tabs` and `OptionCards` match `Button` height (v0.32.0)
+
+**Symptom:** tab rows and `OptionCards` are 8px shorter on desktop (36px instead of 44px), so a row of tabs beside a default `Button` now lines up. On touch (`pointer: coarse`) they stay 44px.
+
+**Why:** both were `min-h-11` or `h-11` on every device while `Button` md is `h-9`. Beside a button the row stood 8px proud.
+
+**Do:** nothing, unless a layout hard-coded the old 44px (a fixed-height bar, a snapshot test). The `Tabs` pill is now placed from the active tab's own box, so a `class="p-2"` on the row no longer stretches it. Rows that worked around that bug with negative margins can drop them.
