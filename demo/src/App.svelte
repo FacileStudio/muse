@@ -9,7 +9,10 @@
         getI18n,
         icons,
         ideasNavItem,
-        provideLocale
+        provideLocale,
+        toast,
+        type MenuEntry,
+        type SideBarPage
     } from '@facile/muse';
     import Ideas from './pages/Ideas.svelte';
     import Dashboard from './pages/Dashboard.svelte';
@@ -85,7 +88,16 @@
 
     const i18n = getI18n();
     const ideasEntry = $derived(ideasNavItem({ href: '#/ideas', active: root === '#/ideas', count: 3, running: true, i18n }));
-    const navPages = $derived([ideasEntry, ...links.map((l) => ({ ...l, active: l.href === root }))]);
+    const navPages = $derived([ideasEntry, ...links.map((l) => ({ ...l, group: 'Pages', active: l.href === root }))]);
+    const groupAction = (group: string) =>
+        group === 'Pages' ? { label: 'New page', icon: icons.plus, onclick: () => toast.success('New page') } : null;
+    const pageMenu = (page: SideBarPage): MenuEntry[] => [
+        { label: 'Open', icon: icons.external, href: page.href },
+        { label: 'Copy link', icon: icons.copy, onselect: () => toast.success(`Copied ${page.href}`) },
+        { label: 'Rename', icon: icons.edit, onselect: () => toast.success(`Rename ${page.label}`) },
+        { separator: true },
+        { label: 'Delete', icon: icons.remove, tone: 'danger', onselect: () => toast.danger(`Delete ${page.label}`) }
+    ];
     const onSettings = $derived(root === '#/settings');
     const user = { name: 'Camille', email: 'camille@facile.studio' };
 </script>
@@ -98,6 +110,9 @@
             bind:collapsed
             showSearch
             pages={navPages}
+            {groupAction}
+            {pageMenu}
+            pageMenuLabel="Page actions"
             {spaces}
             {activeSpaceId}
             onSpaceSelect={(id) => (activeSpaceId = id)}
