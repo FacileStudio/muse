@@ -7,3 +7,4 @@ export * from './chart/arcs.js';
 export * from './chart/bars.js';
 export * from './chart/donut.js';
 export * from './chart/resize.js';
+export * from './chart/markers.js';

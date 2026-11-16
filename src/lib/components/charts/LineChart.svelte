@@ -1,9 +1,12 @@
 <script module lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import type { ChartSeries } from '../../utils/chart.js';
+    import type { ChartMarker, ChartSeries } from '../../utils/chart.js';
 
     export interface LineChartProps extends HTMLAttributes<HTMLDivElement> {
         series: ChartSeries[];
+        /** Dots on the line at a label index, named in the tooltip. Clickable when `onMarkerClick` is set. */
+        markers?: ChartMarker[];
+        onMarkerClick?: (marker: ChartMarker) => void;
         labels: string[];
         height?: number;
         area?: boolean;
@@ -23,7 +26,7 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
-    import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelStride, linePath, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesNames, seriesTipRows, seriesValues } from '../../utils/chart.js';
+    import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelStride, linePath, markerPoints, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesNames, seriesTipRows, seriesValues } from '../../utils/chart.js';
     import { drawIn } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
     import LineAxes from './LineAxes.svelte';
@@ -33,6 +36,8 @@
 
     let {
         series,
+        markers = [],
+        onMarkerClick,
         labels,
         height = 220,
         area = false,
@@ -110,7 +115,13 @@
     const legendItems = $derived(seriesLegend(series));
     const summary = $derived(i18n.t('chart.lineSummary', { count, names: seriesNames(series) }));
     const tableRows = $derived(seriesRows(series, labels, count, yFormat));
-    const tipRows = $derived(seriesTipRows(series, hover, yFormat));
+    const marks = $derived(isEmpty ? [] : markerPoints(markers, series, count));
+    const tipRows = $derived([
+        ...seriesTipRows(series, hover, yFormat),
+        ...marks
+            .filter((m) => m.index === hover)
+            .map((m) => ({ name: m.marker.label, value: '', color: m.color }))
+    ]);
 
     const tipX = $derived(hover < 0 ? 0 : xAt(hover));
     const tipY = $derived.by(() => {
@@ -219,8 +230,45 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                     <LineHover {series} index={hover} {plotH} {xAt} {yAt} {colorAt} />
                 {/if}
 
+                <g>
+                    {#each marks as m, i (i)}
+                        <circle
+                            cx={xAt(m.index)}
+                            cy={yAt(m.value)}
+                            r="5"
+                            fill={m.color}
+                            stroke="var(--color-fc-component)"
+                            stroke-width="2"
+                            data-marker
+                        />
+                    {/each}
+                </g>
+
                 <rect x="0" y="0" width={w} height={height} fill="transparent" />
             </svg>
+
+            {#if onMarkerClick}
+                {#each marks as m, i (i)}
+                    <button
+                        type="button"
+                        class="absolute size-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-fc-pill bg-transparent p-0 focus-visible:outline-2 focus-visible:outline-fc-ring"
+                        style:left="{xAt(m.index)}px"
+                        style:top="{yAt(m.value)}px"
+                        aria-label={m.marker.label}
+                        onpointerenter={() => (hover = m.index)}
+                        onpointerleave={clear}
+                        onfocus={() => (hover = m.index)}
+                        onblur={clear}
+                        onclick={() => onMarkerClick(m.marker)}
+                    ></button>
+                {/each}
+            {:else if marks.length}
+                <ul class="sr-only">
+                    {#each marks as m, i (i)}
+                        <li>{xLabels[m.index]}: {m.marker.label}</li>
+                    {/each}
+                </ul>
+            {/if}
 
             <ChartTooltip
                 x={tipX}
