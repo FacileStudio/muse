@@ -113,7 +113,7 @@ Une idée proposée par l'assistant : type, titre, raison, sources, brouillon re
             {/if}
             {#if outputs.length}
                 <ul class="flex flex-wrap gap-2" aria-label={i18n.t('ideas.card.outputs')}>
-                    {#each outputs as output (output.href)}
+                    {#each outputs as output, index (index)}
                         <li class="max-w-full">
                             <Button href={output.href} variant="secondary" iconRight={icons.external}>{output.label}</Button>
                         </li>

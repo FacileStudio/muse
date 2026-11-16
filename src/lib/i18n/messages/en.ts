@@ -30,6 +30,12 @@ export const en = {
         one: 'Sparkline of {count} value, from {first} to {last}',
         other: 'Sparkline of {count} values, from {first} to {last}'
     },
+    'bulle.open': 'Open {name}',
+    'bulle.busy': '{name} is working',
+    'bulle.retry': 'Try again',
+    'bulle.panel': '{name} panel',
+    'bulle.upsell': '{name} needs a paid plan.',
+    'bulle.upgrade': 'See plans',
     'colorPicker.pick': 'Pick a colour',
     'colorPicker.presets': 'Colour presets',
     'confirm.confirm': 'Confirm',

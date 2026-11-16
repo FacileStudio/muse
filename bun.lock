@@ -5,6 +5,7 @@
     "": {
       "name": "@facile/muse",
       "dependencies": {
+        "@facile/blob": "github:FacileStudio/blob#v0.2.2",
         "gsap": "^3.13.0",
         "tailwind-merge": "^3.5.0",
       },
@@ -23,6 +24,8 @@
     },
   },
   "packages": {
+    "@facile/blob": ["@facile/blob@github:FacileStudio/blob#23a0db0", { "peerDependencies": { "svelte": "^5.29.0" } }, "FacileStudio-blob-23a0db0", "sha512-4h8WaLN/1qTQFaPPODp9Zm4M9d50bmEreHrfZeroucjGkcNX83fIY09o01BS9HUj/b6EU/emrhF5MO89zakDlg=="],
+
     "@iconify-json/solar": ["@iconify-json/solar@1.2.14", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-/qHbRF7i8NwZH+RIIc3cyzk8RiQT8TA4FcdpDLJVCWr0LCDxXSgpnnayb5aifAvoqNy9NKHENvgZipLELz4m0w=="],
 
     "@iconify/types": ["@iconify/types@2.0.0", "", {}, "sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg=="],
