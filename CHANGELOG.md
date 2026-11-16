@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## v0.32.0 (2026-11-16)
+
+### Fixed
+
+- `Tabs` indicator: the pill could end up a few pixels wider or narrower than the active tab, leaving the label and badge hard against its edge. A slide still running when the row was re-measured (font swap, resize) overwrote the fresh size with a stale one. The pill now stops any running slide before it is placed, and is placed again once webfonts have loaded.
+- `Tabs` indicator and row padding: the pill spanned the full height of the row, so a `class="p-2"` on the row made it taller than the tab. It is now placed from the active tab's own box (`offsetLeft`, `offsetTop`, `offsetWidth`, `offsetHeight`).
+- `Tabs` focus ring: the row scrolls, so it clipped the ring drawn outside a tab. The ring is now drawn inside the tab.
+- `Tabs` badge: a fixed-height chip (20px, `px-2`, centred) instead of a text run with `px-1.5` and no height.
+
+### Changed
+
+- Behaviour change: `Tabs` and `OptionCards` are 36px tall (`h-9`) on pointer devices and 44px on touch (`pointer: coarse`), the height of a default `Button`. They were 44px everywhere.
+
 ## v0.31.0 (2026-11-16)
 
 ### Added
