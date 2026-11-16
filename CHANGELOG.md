@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `SideBar` takes `groupAction`: a small button at the right of a group heading, such as "New channel" next to a space's name. It is hidden while the rail is collapsed.
+- `SideBar` takes `pageMenu` and `pageMenuLabel`: a `ContextMenu` on every page row, opened by right-click, touch long-press, the ContextMenu key or Shift+F10, with `Menu`'s entries (icons, separators, red `tone: 'danger'`).
+- `GroupAction` and `SideBarPage` types.
+- Demo: the rail's pages sit under a "Pages" heading with a "New page" button and a page menu.
+
 ## v0.28.0 (2026-11-16)
 
 ### Added

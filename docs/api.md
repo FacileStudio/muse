@@ -887,6 +887,9 @@ Collapsible vertical navigation panel on `bg-fc-component`, built from `NavButto
 | `manageSpacesHref` | `string` | — | Forwarded as the switcher's footer link |
 | `personalSpaceLabel` | `string \| null` | — | Forwarded as the switcher's `personalLabel` (default `'Personal'`; `null` removes the personal row) |
 | `manageSpacesLabel` | `string` | — | Forwarded as the switcher's `manageLabel` (default `'Manage spaces'`) |
+| `groupAction` | `(group: string) => GroupAction \| null` | — | A small ghost button at the right of a group heading, `{ label, icon, onclick }`. Return `null` for a group without one. Hidden while the rail is collapsed |
+| `pageMenu` | `(page: SideBarPage) => MenuEntry[]` | — | The `ContextMenu` of a page row: right-click, touch long-press, the ContextMenu key or Shift+F10. Same entries as `Menu` (icons, separators, `tone: 'danger'`). Return `[]` to leave the browser's menu |
+| `pageMenuLabel` | `string` | `title` | Accessible name of the page menu |
 
 The width tween **reads the tokens** — `getComputedStyle` for `--width-fc-nav-collapsed` and
 `--width-fc-nav-expanded`, falling back to 68 and 220 only for SSR or a consumer that skipped
@@ -923,6 +926,21 @@ and ⌘K calling `onSearch`, each `preventDefault()`ed. ⌘K exists only when `o
   user={{ name: 'Camille' }}
   userHref="/settings"
   userActive={onSettings}
+/>
+```
+
+A space's channels with a "New channel" button on their heading and a menu on each row:
+
+```svelte
+<SideBar
+  pages={channels.map((c) => ({ label: c.name, href: c.href, group: space.name }))}
+  groupAction={(group) => (group === space.name ? { label: 'New channel', icon: icons.plus, onclick: createChannel } : null)}
+  pageMenu={(page) => [
+    { label: 'Rename', icon: icons.edit, onselect: () => rename(page.href) },
+    { separator: true },
+    { label: 'Leave', icon: icons.remove, tone: 'danger', onselect: () => leave(page.href) }
+  ]}
+  pageMenuLabel="Channel actions"
 />
 ```
 

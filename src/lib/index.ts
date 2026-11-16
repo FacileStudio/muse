@@ -172,7 +172,7 @@ export type { PresenceProps, PresencePeer, PresenceId, PresenceLabels } from './
 export { default as Modal } from './components/organisms/Modal.svelte';
 export type { ModalProps } from './components/organisms/Modal.svelte';
 export { default as SideBar } from './components/organisms/SideBar.svelte';
-export type { SideBarProps } from './components/organisms/SideBar.svelte';
+export type { GroupAction, Page as SideBarPage, SideBarProps } from './components/organisms/SideBar.svelte';
 export { default as UserMenu } from './components/organisms/UserMenu.svelte';
 export type { UserMenuProps, UserMenuUser } from './components/organisms/UserMenu.svelte';
 export { default as SettingsLayout } from './components/organisms/SettingsLayout.svelte';

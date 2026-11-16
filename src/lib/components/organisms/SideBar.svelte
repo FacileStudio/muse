@@ -2,6 +2,7 @@
     import type { HTMLAttributes } from 'svelte/elements';
     import type { UserMenuOptions } from '../../utils/user-menu.js';
     import type { UserMenuUser } from './UserMenu.svelte';
+    import type { MenuEntry } from '../molecules/Menu.svelte';
 
     export type Page = {
         label: string;
@@ -26,6 +27,9 @@
 
     export type SpaceItem = { id: string; name: string };
 
+    /** The small button at the right of a group heading, for example "New channel". */
+    export type GroupAction = { label: string; icon: string; onclick: () => void };
+
     export interface SideBarProps extends HTMLAttributes<HTMLDivElement> {
         icon?: string;
         title?: string;
@@ -47,6 +51,12 @@
         /** Forwarded as the switcher's `personalLabel`. `null` removes the personal row. */
         personalSpaceLabel?: string | null;
         manageSpacesLabel?: string;
+        /** The button at the right of a group heading. Return `null` for a group without one. Hidden while the rail is collapsed. */
+        groupAction?: (group: string) => GroupAction | null | undefined;
+        /** The right-click, long-press and Shift+F10 menu of a page row. Return `[]` to leave the browser's own menu. */
+        pageMenu?: (page: Page) => MenuEntry[];
+        /** Accessible name of the page menu. */
+        pageMenuLabel?: string;
         class?: string;
 
     }
@@ -57,6 +67,8 @@
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
     import Icon from '../atoms/Icon.svelte';
+    import ContextMenu from '../molecules/ContextMenu.svelte';
+    import IconButton from '../atoms/IconButton.svelte';
     import NavButton from '../molecules/NavButton.svelte';
     import NavMarks from '../molecules/NavMarks.svelte';
     import SpaceSwitcher from '../molecules/SpaceSwitcher.svelte';
@@ -91,6 +103,9 @@
         manageSpacesHref,
         personalSpaceLabel,
         manageSpacesLabel,
+        groupAction,
+        pageMenu,
+        pageMenuLabel,
         class: className = '',
         ...rest
     }: SideBarProps = $props();
@@ -159,6 +174,12 @@
             }
         });
     });
+
+    function menuFor(target: Element): MenuEntry[] {
+        const href = target.closest('[data-rail-page]')?.getAttribute('data-rail-page');
+        const page = href ? pages.find((entry) => entry.href === href) : undefined;
+        return page && pageMenu ? pageMenu(page) : [];
+    }
 
     const secondary = $derived(
         user?.secondary ?? user?.email ?? spaces.find((space) => space.id === activeSpaceId)?.name
@@ -258,20 +279,24 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
             class="mt-5 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain"
             style={fade || undefined}
         >
+            <ContextMenu items={menuFor} label={pageMenuLabel ?? title} disabled={!pageMenu}>
             <nav class="flex flex-col gap-1">
                 {#each pages as page, i (page.href)}
                     <!-- The heading prints when the group changes, so grouping is expressed by the
                          order of the array rather than by a second nesting level in the prop. A
                          flat list with no `group` behaves exactly as before. -->
                     {#if page.group && page.group !== pages[i - 1]?.group}
-                        <p
-                            class={twMerge(
-                                'px-3 pt-4 pb-1 text-fc-xs font-semibold tracking-wide text-fc-fg-muted uppercase',
-                                narrow && 'sr-only'
-                            )}
-                        >
-                            {page.group}
-                        </p>
+                        {@const action = narrow ? null : groupAction?.(page.group)}
+                        <div class={twMerge('flex items-center gap-1 pt-4 pb-1 pl-3', action ? 'pr-1' : 'pr-3', narrow && 'sr-only')}>
+                            <p class="min-w-0 flex-1 truncate text-fc-xs font-semibold tracking-wide text-fc-fg-muted uppercase">
+                                {page.group}
+                            </p>
+                            {#if action}
+                                <IconButton variant="ghost" class="-my-2 size-8" aria-label={action.label} onclick={action.onclick}>
+                                    <Icon icon={action.icon} size={16} />
+                                </IconButton>
+                            {/if}
+                        </div>
                     {/if}
                     <NavButton
                         href={page.href}
@@ -281,6 +306,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                         collapsed={narrow}
                         marked={Boolean(page.badge || page.busy)}
                         aria-label={page.hint ? `${page.label}, ${page.hint}` : undefined}
+                        data-rail-page={page.href}
                     >
                         {#snippet right()}
                             <NavMarks badge={page.badge} busy={page.busy} active={page.active} />
@@ -291,6 +317,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                     </NavButton>
                 {/each}
             </nav>
+            </ContextMenu>
         </div>
     </div>
 
