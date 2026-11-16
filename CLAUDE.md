@@ -51,7 +51,7 @@ muse/
     utils/otp.ts              InputOtp: sanitize, cells, caret (pure, tested)
     utils/combobox.ts         Combobox filtering, accent-folding (pure, tested)
     utils/accordion.ts        Accordion open set and header keys (pure, tested)
-    utils/user-menu.ts        UserMenu rows, canonical order and drill keys (pure, tested)
+    utils/user-menu.ts        UserMenu rows in the canonical order: Account, Invitations, Settings, Help, Sign out (pure, tested)
     utils/settings-nav.ts     canonical settings section order and route resolution (pure, tested)
     utils/download.ts         DownloadSection: platform detection, grouping and dedupe, sizes (pure, tested)
     utils/theme.ts            Theme, readTheme, applyTheme
