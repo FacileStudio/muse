@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Diapo (`solar:presentation-graph-bold-duotone`) and Clap (`solar:clapperboard-open-bold-duotone`) in the brand catalog, with the titles and descriptions their landings ship.
+
 ## v0.30.0 (2026-11-16)
 
 ### Added
