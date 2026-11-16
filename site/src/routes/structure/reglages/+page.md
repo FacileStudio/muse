@@ -22,8 +22,9 @@ en choisir une ouvre son panneau avec un lien de retour.
 ## Trois règles que les agents cassent
 
 **1. Jamais d'entrée Réglages dans la nav du rail.** La carte utilisateur en bas du rail ouvre le
-menu utilisateur, et Réglages en est la deuxième ligne. La déconnexion est dans ce menu, pas dans
-les réglages. La carte n'a aucune icône à droite et le menu n'a aucune bordure.
+menu utilisateur, et Réglages en est une ligne. Le menu est mince : Compte, Invitations (tant qu'il
+y en a), Réglages, Aide, puis la déconnexion, qui n'est pas dans les réglages. Les apps n'y ajoutent
+aucune ligne : une cible d'app devient une section de réglages ou une entrée du rail. La carte n'a aucune icône à droite et le menu n'a aucune bordure.
 
 **2. Les sections sont de vraies routes.** Chaque entrée porte son `href`, donc `/settings/tokens`
 survit au rechargement et le bouton retour parcourt les sections. `settingsRoute` lit l'adresse :
@@ -36,8 +37,20 @@ une section inconnue revient avec `known: false`, à rediriger.
 Profil · Préférences · Notifications · sections de l'app · Jetons d'API · Abonnement · Avancé
 
 `orderSections` l'applique. Profil est en lecture seule : le nom, la photo et l'e-mail viennent de
-Facile (`ProfileSection`, lien « Gérer sur Facile »). Le thème et la langue vivent dans Préférences
-(`PreferencesSection`) et dans le menu utilisateur, jamais en bascule flottante.
+Facile (`ProfileSection`, lien « Gérer sur Facile »). Le thème, la langue et l'offre vivent dans
+Préférences (`PreferencesSection`), jamais dans le menu utilisateur ni en bascule flottante :
+
+```svelte
+<PreferencesSection
+  subscription={{ plan: 'Pro', href: billingUrl }}
+  theme={theme.mode}
+  onThemeChange={(next) => theme.set(next)}
+  onLocaleChange={rememberLocale}
+/>
+```
+
+`subscription` ajoute la ligne de l'offre (nom et lien de gestion) ; une app qui a une section
+Abonnement complète (`SubscriptionSection`) l'omet. `locales` limite les langues proposées.
 
 ## Les lignes
 

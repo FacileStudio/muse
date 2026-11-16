@@ -6,7 +6,12 @@
 </script>
 
 <Stack gap="section">
-    <PreferencesSection theme={theme.mode} onThemeChange={setTheme}>
+    <PreferencesSection
+        theme={theme.mode}
+        onThemeChange={setTheme}
+        locales={['fr', 'en', 'es', 'de']}
+        subscription={{ plan: 'Pro', href: '#/settings/subscription' }}
+    >
         <SettingsRow label="Compact mode" description="Tighter rows, more on screen.">
             <Switch bind:checked={compact} aria-label="Compact mode" />
         </SettingsRow>

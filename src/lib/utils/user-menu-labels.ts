@@ -7,14 +7,7 @@ export function userMenuLabels(t: I18n['t']): UserMenuLabels {
         account: t('userMenu.account'),
         invitations: t('userMenu.invitations'),
         settings: t('userMenu.settings'),
-        manageSubscription: t('userMenu.manageSubscription'),
-        language: t('userMenu.language'),
-        theme: t('userMenu.theme'),
         help: t('userMenu.help'),
-        signOut: t('userMenu.signOut'),
-        back: t('userMenu.back'),
-        system: t('theme.system'),
-        light: t('theme.light'),
-        dark: t('theme.dark')
+        signOut: t('userMenu.signOut')
     };
 }

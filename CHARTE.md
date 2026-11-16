@@ -693,7 +693,7 @@ called `NavBar`; there is no `NavBar` export and has not been for some time.)
   ]}
   user={{ name: 'Camille', email: 'camille@facile.studio', avatar: '/pfp.jpg' }}
   userHref="/settings"
-  userMenu={{ subscription: { plan: 'Pro', href: '/billing' }, onSignOut: signOut }}
+  userMenu={{ helpHref: 'https://facile.studio/docs', onSignOut: signOut }}
 />
 ```
 
@@ -708,7 +708,7 @@ from the user card at the bottom of the rail — see §14.
 | `user` | `User` | — | `{ name, avatar?, email?, secondary? }` — the footer card. The second line is `secondary`, else `email`, else the active space's name. There is no trailing icon |
 | `userHref` | `string` | — | The Settings route: the Settings row of the user menu. `userMenu.settingsHref` wins |
 | `userActive` | `boolean` | `false` | Marks the user card active (surface fill, not inverted) |
-| `userMenu` | `UserMenuOptions` | — | Configures the menu the card opens (§14): `items`, `subscription`, `helpHref`, `onSignOut`, `accountHref`, `locale`, `theme`, `labels` |
+| `userMenu` | `UserMenuOptions` | — | Configures the menu the card opens (§14): `settingsHref`, `helpHref`, `onSignOut`, `accountHref`, `invitations`, `labels` |
 | `collapsed` | `boolean` | `false` | Bindable. Collapses to `68px` (`--width-fc-nav-collapsed`), labels hidden |
 | `showSearch` | `boolean` | `false` | Renders the Search row. The ⌘K chip only appears with `onSearch` |
 | `onSearch` | `() => void` | — | Search row click handler, and what ⌘K fires |
@@ -1352,24 +1352,24 @@ its own design, is the only exception.
 - **The menu** is `UserMenu`, an APG menu button drawn in the top layer. It has **no border**:
   a `bg-fc-bg` surface and `shadow-lg` separate it, and a spacing step (not a line) sets Sign
   out apart. Real focus moves onto the rows, the arrows wrap, typing jumps, Escape closes and
-  returns focus to the card. Language and Theme open a one-level view of radio rows
-  (`menuitemradio`): Right arrow or Enter opens it, Left arrow or Escape returns.
+  returns focus to the card. The menu is slim by owner decision (2026-11-16): five rows at most,
+  no submenu, and apps add none.
 
 The canonical rows, in this order. A row with no `href` or handler is not drawn.
 
 | Row | Source | Notes |
 |---|---|---|
 | Account, "Gérer mon compte Facile" | `accountHref`, default `https://sso.facile.studio/account` | external, new tab. `null` hides it |
-| App rows | `items` | the extension point, before Settings: `{ label, icon?, href? \| onSelect?, tone? }` |
+| Invitations | `invitations: { count, href }` | only while `count` is above 0; count pill, and a dot on the avatar |
 | Settings | `settingsHref` (`userHref` on the rail) | the app route |
-| Subscription | `subscription: { plan, href }` | the plan name beside "Gérer l'abonnement" |
-| Language | `locale`, `onLocaleChange` | fr, en, es, de; calls `i18n.set` |
-| Theme | `theme`, `onThemeChange` | system, light, dark; without a handler muse toggles `.dark` and `.light` |
 | Help | `helpHref` | external |
 | Sign out | `onSignOut` | danger tone, after a spacing gap |
 
-Every string is in the four catalogs, and `labels` overrides any of them. `showLanguage` and
-`showTheme` drop the two preference rows for an app that cannot honour them.
+Every string is in the four catalogs, and `labels` overrides any of them. Language, Theme and the
+plan live on the settings page: `PreferencesSection` takes `locales`, `onLocaleChange`, `theme`,
+`onThemeChange` and `subscription: { plan?, href }`. `items`, `subscription`, `showLanguage`,
+`locales`, `locale`, `onLocaleChange`, `showTheme`, `theme` and `onThemeChange` on `userMenu` are
+deprecated and ignored.
 
 ### One page, a section nav, one section per panel
 

@@ -8,10 +8,17 @@
 - `BullePanel`: the shell of an assistant panel. A title row with the blob and the assistant's name, a body, a busy line, an error alert with an optional retry, and, when `upgradeHref` is set, a compact plan upsell in place of the body: one line (`upsellText`, or "{name} needs a paid plan.") and one button to `upgradeHref`. An `upsell` snippet replaces it.
 - `bulleLook`, `BULLE_NAME`, `BULLE_SIZES` and the `BulleMood`, `BulleVariant`, `BulleLook` and `BulleFace` types.
 - Strings `bulle.open`, `bulle.busy`, `bulle.retry`, `bulle.panel`, `bulle.upsell` and `bulle.upgrade` in fr, en, es and de.
+- `PreferencesSection` takes `locales` (the languages offered, in order) and `subscription` (`{ plan?, href, label? }`, the same object the menu took): a plan row with the plan badge and the manage link. `LocaleSwitch` takes `locales`.
+- `offeredLocales` in `i18n/offered`.
 
 ### Changed
 
 - `@facile/blob` (`github:FacileStudio/blob#v0.2.2`) is now a dependency of muse. An app that already installs `@facile/blob` keeps its own copy; bun installs muse's next to it.
+- Behaviour change: the user menu is slim. It shows Account, Invitations (only while the pending count is above 0, with its count pill and the dot on the avatar), Settings and Help, then a gap and Sign out. Nothing else is drawn, whatever options an app passes.
+- Language, Theme and Subscription left the menu. They live on the settings page, in `PreferencesSection`. The Language and Theme submenus and their Left and Right arrow drill keys are gone.
+- Apps can no longer add rows: `userMenu.items` is ignored.
+- These option names still type-check and are ignored by the menu, marked `@deprecated`: `items`, `subscription`, `showLanguage`, `locales`, `locale`, `onLocaleChange`, `showTheme`, `theme`, `onThemeChange`, and the labels `manageSubscription`, `language`, `theme`, `back`, `system`, `light`, `dark`. Before bumping, move each target an app put in `items` to a settings section or a sidebar entry, and pass the plan to `PreferencesSection`. `onLocaleChange` and `onThemeChange` still belong on `PreferencesSection`.
+- The menu rows `kind` is now `item | gap`; `checked`, `detail`, `view` and the exports `drillKey`, `startIndex`, `offeredLocales` (moved to `i18n/offered`) left `utils/user-menu`.
 
 ## v0.29.0 (2026-11-16)
 

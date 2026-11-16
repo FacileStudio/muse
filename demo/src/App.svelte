@@ -122,13 +122,9 @@
             {user}
             userHref="#/settings"
             userMenu={{
-                items: [{ label: 'Downloads', icon: icons.download, href: '#/' }],
                 invitations: { count: 2, href: 'https://sso.facile.studio/spaces' },
-                subscription: { plan: 'Pro', href: '#/settings/subscription' },
                 helpHref: 'https://muse.facile.studio',
-                onSignOut: () => {},
-                theme: theme.mode,
-                onThemeChange: setTheme
+                onSignOut: () => {}
             }}
             userActive={onSettings}
             class="h-full"
@@ -172,13 +168,9 @@
         profileHref="#/settings"
         profileActive={onSettings}
         userMenu={{
-            subscription: { href: '#/settings/subscription' },
             invitations: { count: 2, href: 'https://sso.facile.studio/spaces' },
-            locales: ['fr', 'en'],
             helpHref: 'https://muse.facile.studio',
-            onSignOut: () => {},
-            theme: theme.mode,
-            onThemeChange: setTheme
+            onSignOut: () => {}
         }}
     />
 </div>

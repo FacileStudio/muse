@@ -23,9 +23,8 @@
     import { present, watchPopup } from '../../utils/popup.svelte.js';
     import { MenuState, pressOnSpace } from '../../utils/menu.svelte.js';
     import { springPress } from '../../utils/press.js';
-    import { applyTheme, readTheme, type Theme } from '../../utils/theme.js';
-    import { ACCOUNT_URL, actionable, drillKey, pendingInvitations, startIndex, triggerLabel, userMenuRows } from '../../utils/user-menu.js';
-    import type { UserMenuLabels, UserMenuRow, UserMenuView } from '../../utils/user-menu.js';
+    import { ACCOUNT_URL, actionable, pendingInvitations, triggerLabel, userMenuRows } from '../../utils/user-menu.js';
+    import type { UserMenuLabels, UserMenuRow } from '../../utils/user-menu.js';
     import Avatar from '../atoms/Avatar.svelte';
     import Tooltip from '../atoms/Tooltip.svelte';
     import TextElevate from '../motion/TextElevate.svelte';
@@ -41,20 +40,20 @@
         active = false,
         class: className = '',
         align = 'auto',
-        items,
+        items: _items,
         accountHref = ACCOUNT_URL,
         invitations,
         settingsHref,
-        subscription,
+        subscription: _subscription,
         helpHref,
         onSignOut,
-        showLanguage,
-        locales,
-        locale,
-        onLocaleChange,
-        showTheme,
-        theme,
-        onThemeChange,
+        showLanguage: _showLanguage,
+        locales: _locales,
+        locale: _locale,
+        onLocaleChange: _onLocaleChange,
+        showTheme: _showTheme,
+        theme: _theme,
+        onThemeChange: _onThemeChange,
         labels: overrides,
         ...rest
     }: UserMenuProps = $props();
@@ -67,28 +66,10 @@
 
     let triggerEl: HTMLButtonElement | null = $state(null);
     let menuEl: HTMLElement | null = $state(null);
-    let view = $state<UserMenuView>('root');
-    let detected = $state<Theme>('system');
 
     const labels = $derived<UserMenuLabels>({ ...userMenuLabels(i18n.t), ...overrides });
 
-    const options = $derived({ items, accountHref, invitations, settingsHref, subscription, helpHref, onSignOut, showLanguage, locales, showTheme });
-    const model = $derived({
-        view,
-        labels,
-        options,
-        locale: locale ?? i18n.locale,
-        theme: theme ?? detected,
-        onLocale: (next: typeof i18n.locale) => {
-            i18n.set(next);
-            onLocaleChange?.(next);
-        },
-        onTheme: (next: Theme) => {
-            detected = next;
-            if (onThemeChange) onThemeChange(next);
-            else applyTheme(next);
-        }
-    });
+    const model = $derived({ labels, options: { accountHref, invitations, settingsHref, helpHref, onSignOut } });
     const rows = $derived(userMenuRows(model));
     const stops = $derived(actionable(rows));
     const secondary = $derived(user.secondary ?? user.email);
@@ -112,40 +93,13 @@
     });
 
     $effect(() => {
-        void view;
         if (menu.open && menuEl) menu.place();
         menu.focusActive();
     });
 
-    $effect(() => {
-        if (menu.open) {
-            detected = readTheme();
-            return;
-        }
-        view = 'root';
-    });
-
-    function go(next: UserMenuView, landOn: string) {
-        view = next;
-        const at = actionable(userMenuRows({ ...model, view: next })).findIndex((row) => row.id === landOn);
-        menu.land(at < 0 ? startIndex(userMenuRows({ ...model, view: next })) : at);
-    }
-
     function choose(row: UserMenuRow) {
-        if (row.kind === 'submenu') return go(row.id as UserMenuView, '');
-        if (row.kind === 'back') return go('root', view);
         row.run?.();
         menu.hide(!row.href);
-    }
-
-    function keydown(event: KeyboardEvent) {
-        const row = stops[menu.active];
-        const step = drillKey(view, row?.kind, event.key);
-        if (!step) return menu.keydown(event);
-        event.preventDefault();
-        event.stopPropagation();
-        if (step === 'enter' && row) go(row.id as UserMenuView, '');
-        else go('root', view);
     }
 
     function leave(event: FocusEvent) {
@@ -168,14 +122,13 @@
 
 <!--
 @component
-Le menu de la carte utilisateur : un déclencheur (carte de la barre latérale ou avatar du mobile) qui ouvre un menu sans bordure. Compte Facile, réglages, abonnement, langue, thème, aide et déconnexion, dans le même ordre dans toutes les apps.
+Le menu de la carte utilisateur : un déclencheur (carte de la barre latérale ou avatar du mobile) qui ouvre un menu sans bordure. Compte Facile, invitations en attente, réglages, aide et déconnexion, dans le même ordre dans toutes les apps.
 -->
 
 {#snippet list()}
     <UserMenuList
         {rows}
         active={menu.active}
-        backLabel={labels.back}
         newTabLabel={i18n.t('userMenu.opensNewTab')}
         onChoose={choose}
         onPoint={menu.point}
@@ -218,7 +171,7 @@ Le menu de la carte utilisateur : un déclencheur (carte de la barre latérale o
     {#if sheet}
         <Drawer bind:open={menu.open} title={user.name} description={secondary}>
             {#if menu.open}
-                <div bind:this={menuEl} id={menuId} role="menu" tabindex="-1" aria-labelledby={triggerId} onkeydown={keydown} class="flex flex-col">
+                <div bind:this={menuEl} id={menuId} role="menu" tabindex="-1" aria-labelledby={triggerId} onkeydown={menu.keydown} class="flex flex-col">
                     {@render list()}
                 </div>
             {/if}
@@ -238,7 +191,7 @@ Le menu de la carte utilisateur : un déclencheur (carte de la barre latérale o
             style:top={menu.up ? 'auto' : `${menu.top}px`}
             style:bottom={menu.up ? `${menu.bottom}px` : 'auto'}
             style:max-height="{menu.maxHeight}px"
-            onkeydown={keydown}
+            onkeydown={menu.keydown}
             onfocusout={leave}
             use:present
         >
