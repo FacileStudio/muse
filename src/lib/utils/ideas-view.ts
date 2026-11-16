@@ -30,11 +30,16 @@ export function relativeTime(value: string | number | Date | null | undefined, l
     return format.format(unit === 'second' ? 0 : Math.round(diff / size), unit);
 }
 
-/** The arguments of an approval as text: a string as is, an object as indented JSON. */
+/**
+ * The arguments of an approval as text: a string as is, an object as indented JSON, and `String(args)`
+ * when the object cannot be serialised. The plain `JSON.stringify` runs first because Bun builds the
+ * circular-structure error of the indented call in seconds on a loaded host, and in about 1 ms for the plain one.
+ */
 export function formatArgs(args: Record<string, unknown> | string | undefined): string {
     if (args === undefined) return '';
     if (typeof args === 'string') return args;
     try {
+        JSON.stringify(args);
         return JSON.stringify(args, null, 2);
     } catch {
         return String(args);

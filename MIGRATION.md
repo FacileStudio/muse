@@ -560,7 +560,7 @@ Nothing breaks. Rename when you touch the line; the old names keep working throu
 
 Behaviour that changes without an API change: a `Menu` or `UserMenu` row under the pointer is highlighted but no longer takes DOM focus (focus moves only with the keyboard); a `Select` trigger that loses focus closes its list and keeps its type-ahead buffer until the 600ms timer ends; `Checkbox`, `Radio` and `Switch` gain an invisible 44px hit area with no layout change. `SecretField` renders through `Field`, so its label, helper and error now share `Field`'s markup and ids. If you hand-rolled a combobox, date input, one-time code field, slider, tooltip, popover, accordion or a mixed checkbox, `Combobox`, `DatePicker`, `InputOtp`, `Slider`, `Tooltip`, `Popover`, `Accordion`, `Collapsible`, `RadioGroup` and `Checkbox indeterminate` replace them.
 
-## 25. A slim user menu: language, theme and subscription move to Settings (unreleased)
+## 25. A slim user menu: language, theme and subscription move to Settings (v0.30.0)
 
 **Symptom:** after the bump the avatar menu shows only Account, Invitations (while any are pending), Settings, Help and Sign out. Language, Theme, the plan row and every app row are gone.
 
@@ -583,3 +583,27 @@ Behaviour that changes without an API change: a `Menu` or `UserMenu` row under t
 
    Skip `subscription` when the app already has a `SubscriptionSection`.
 3. Delete the deprecated keys from the `userMenu` object once the settings page carries them.
+
+**Per app, when it bumps to v0.30.0** (read from each repo's origin/main on 2026-11-16). Every muse app passes `onThemeChange` and `onLocaleChange` to the menu and nearly all render `PreferencesSection`, so language and theme stay reachable. What breaks is the rows the menu loses:
+
+| App | Lost from the menu | Follow-up |
+|---|---|---|
+| Agenda | Ideas, Calendar, Spaces, Members, subscription link | Add sidebar or header entries for Ideas, Calendar and Spaces (Members is already `/settings/members`). Pass `subscription={{ href }}` to `PreferencesSection`. |
+| Vision | subscription link | Pass `subscription` to `PreferencesSection`. |
+| Glouton | Spaces (`/app/teams`) | Still reachable through the space switcher `manageSpacesHref`. The Subscription section already shows the plan. Nothing required. |
+| Bulle | Jobs, Get apps (`/install`) | Jobs is already an account section. Add a sidebar entry or an Apps-section link for `/install`. |
+| Sablier | Downloads (web only), subscription link | Add a sidebar entry or a Preferences row for `/downloads`. Pass `subscription` to `PreferencesSection`. |
+| Nuage | none | Nothing required. |
+| Courrier | Desktop app (`/downloads`) | Add a sidebar entry or a settings row for `/downloads`. |
+| Docs | none | Language is hidden today (`showLanguage: false`); decide whether to show it. |
+| Feuilles | none | Same as Docs (`showLanguage={false}`). |
+| Plume | subscription link | Pass `subscription` to `PreferencesSection`. |
+| Capsule | language, theme and subscription for signed-in users | No settings page: add a Preferences page with `PreferencesSection`, or accept the loss (the signed-out header keeps `LocaleSwitch` and `ThemeToggle`). |
+| Journal | subscription row ("Gratuit") | Pass `subscription` to `PreferencesSection`. |
+| Antenne | subscription row ("Gratuit") | Pass `subscription` to `PreferencesSection`. |
+| Sonde | subscription link | Pass `subscription` to `PreferencesSection`. |
+| Toile | none | Nothing required. |
+| Registre | none | Nothing required (it passes only `onSignOut`). |
+| Casier | subscription row ("Gratuit") | Pass `subscription` to `PreferencesSection`. |
+| Tempo | mobile-only items: Prospection, Booking, Finances, Groupe, Press kit, Riders, Matériel, Setlists | These become unreachable on a phone: add a "More" page or sidebar entries. Add `PreferencesSection` if theme should stay selectable. |
+| Opus | n/a | React with its own menu, not affected. When it mirrors the muse menu it drops its Language and Theme rows. |
