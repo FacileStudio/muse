@@ -1,48 +1,57 @@
 import { describe, expect, test } from 'bun:test';
 import { fr } from '../i18n/messages/fr.js';
-import { actionable, drillKey, pendingInvitations, startIndex, userMenuRows, type UserMenuLabels, type UserMenuModel, type UserMenuOptions, type UserMenuView } from './user-menu.js';
+import { actionable, pendingInvitations, userMenuRows, type UserMenuLabels, type UserMenuModel, type UserMenuOptions } from './user-menu.js';
 
 const labels: UserMenuLabels = {
     account: 'Account',
     invitations: 'Invitations',
     settings: 'Settings',
-    manageSubscription: 'Manage',
-    language: 'Language',
-    theme: 'Theme',
     help: 'Help',
-    signOut: 'Sign out',
-    back: 'Back',
-    system: 'System',
-    light: 'Light',
-    dark: 'Dark'
+    signOut: 'Sign out'
 };
 
-function model(options: UserMenuOptions = {}, view: UserMenuView = 'root'): UserMenuModel {
-    return { view, labels, options, locale: 'fr', theme: 'dark', onLocale: () => undefined, onTheme: () => undefined };
+function model(options: UserMenuOptions = {}): UserMenuModel {
+    return { labels, options };
 }
 
 const full: UserMenuOptions = {
-    items: [{ label: 'Downloads', href: '/dl' }],
     accountHref: 'https://sso.facile.studio/account',
     settingsHref: '/settings',
-    subscription: { plan: 'Pro', href: '/billing' },
     helpHref: '/help',
     onSignOut: () => undefined
+};
+
+const deprecated: UserMenuOptions = {
+    items: [{ label: 'Downloads', href: '/dl' }, { label: 'Spaces', onSelect: () => undefined }],
+    subscription: { plan: 'Pro', href: '/billing' },
+    showLanguage: true,
+    locales: ['fr', 'en'],
+    locale: 'fr',
+    onLocaleChange: () => undefined,
+    showTheme: true,
+    theme: 'dark',
+    onThemeChange: () => undefined
 };
 
 describe('userMenuRows', () => {
     test('invitations sit after account with a count, and an absolute href opens a new tab', () => {
         const rows = userMenuRows(model({ ...full, invitations: { count: 3, href: 'https://sso.facile.studio/spaces' } }));
-        expect(rows.map((row) => row.id).slice(0, 3)).toEqual(['account', 'invitations', 'item-0']);
+        expect(rows.map((row) => row.id).slice(0, 3)).toEqual(['account', 'invitations', 'settings']);
         expect(rows[1]).toMatchObject({ label: 'Invitations', count: 3, external: true, href: 'https://sso.facile.studio/spaces' });
     });
 
-    test('no invitations prop, or no href, shows no row; zero shows the row without a pill', () => {
-        expect(userMenuRows(model(full)).some((row) => row.id === 'invitations')).toBe(false);
-        expect(userMenuRows(model({ invitations: null })).some((row) => row.id === 'invitations')).toBe(false);
-        const zero = userMenuRows(model({ invitations: { count: 0, href: '/invitations', label: 'Invites' } }))[0];
-        expect(zero).toMatchObject({ id: 'invitations', label: 'Invites', external: false });
-        expect(zero.count).toBeUndefined();
+    test('no invitations prop, a zero count or no href shows no row', () => {
+        const ids = (invitations: UserMenuOptions['invitations']) => userMenuRows(model({ ...full, invitations })).map((row) => row.id);
+        expect(ids(undefined)).not.toContain('invitations');
+        expect(ids(null)).not.toContain('invitations');
+        expect(ids({ count: 0, href: '/invitations' })).not.toContain('invitations');
+        expect(ids({ count: -2, href: '/invitations' })).not.toContain('invitations');
+        expect(ids({ count: 1, href: '' })).not.toContain('invitations');
+    });
+
+    test('a custom invitations label is used while any are pending', () => {
+        const rows = userMenuRows(model({ invitations: { count: 1, href: '/invitations', label: 'Invites' } }));
+        expect(rows[0]).toMatchObject({ id: 'invitations', label: 'Invites', external: false, count: 1 });
     });
 
     test('pendingInvitations ignores negative and invalid counts', () => {
@@ -52,14 +61,21 @@ describe('userMenuRows', () => {
         expect(pendingInvitations(null)).toBe(0);
     });
 
-    test('root order: account, app items, settings, subscription, language, theme, help, gap, sign out', () => {
-        const ids = userMenuRows(model(full)).map((row) => row.id);
-        expect(ids).toEqual(['account', 'item-0', 'settings', 'subscription', 'language', 'theme', 'help', 'gap', 'signOut']);
+    test('root order: account, invitations, settings, help, gap, sign out', () => {
+        const ids = userMenuRows(model({ ...full, invitations: { count: 1, href: '/i' } })).map((row) => row.id);
+        expect(ids).toEqual(['account', 'invitations', 'settings', 'help', 'gap', 'signOut']);
+    });
+
+    test('the menu never renders more than its five rows, whatever options are passed', () => {
+        const rows = userMenuRows(model({ ...full, ...deprecated, invitations: { count: 4, href: '/i' } }));
+        expect(actionable(rows).map((row) => row.id)).toEqual(['account', 'invitations', 'settings', 'help', 'signOut']);
+        expect(rows.map((row) => row.label)).not.toContain('Downloads');
     });
 
     test('a null href or a missing handler removes the row', () => {
         const rows = userMenuRows(model({ accountHref: null, settingsHref: '/s' }));
-        expect(rows.map((row) => row.id)).toEqual(['settings', 'language', 'theme']);
+        expect(rows.map((row) => row.id)).toEqual(['settings']);
+        expect(userMenuRows(model())).toEqual([]);
     });
 
     test('the sign out row is danger, and the gap is the only separator', () => {
@@ -68,65 +84,17 @@ describe('userMenuRows', () => {
         expect(rows.filter((row) => row.kind === 'gap')).toHaveLength(1);
     });
 
-    test('the account link is external and the subscription carries the plan', () => {
+    test('the account and help links are external', () => {
         const rows = userMenuRows(model(full));
         expect(rows[0]).toMatchObject({ external: true, href: 'https://sso.facile.studio/account' });
-        expect(rows.find((row) => row.id === 'subscription')).toMatchObject({ detail: 'Pro', label: 'Manage' });
-    });
-
-    test('language and theme can be hidden', () => {
-        const rows = userMenuRows(model({ showLanguage: false, showTheme: false }));
-        expect(rows).toEqual([]);
-    });
-
-    test('the language view lists the four locales and checks the current one', () => {
-        const rows = userMenuRows(model({}, 'language'));
-        expect(rows.map((row) => row.id)).toEqual(['back', 'fr', 'en', 'es', 'de']);
-        expect(rows.filter((row) => row.checked).map((row) => row.id)).toEqual(['fr']);
-    });
-
-    test('locales narrows the language view and keeps the given order', () => {
-        const ids = (locales: UserMenuOptions['locales']) => userMenuRows(model({ locales }, 'language')).map((row) => row.id);
-        expect(ids(['fr', 'en'])).toEqual(['back', 'fr', 'en']);
-        expect(ids(['en', 'fr', 'en'])).toEqual(['back', 'en', 'fr']);
-        expect(ids([])).toEqual(['back', 'fr', 'en', 'es', 'de']);
-        expect(ids(['it'] as never)).toEqual(['back', 'fr', 'en', 'es', 'de']);
-    });
-
-    test('a subscription without a plan shows only its label', () => {
-        const row = userMenuRows(model({ subscription: { href: '/billing' } })).find((r) => r.id === 'subscription');
-        expect(row).toMatchObject({ label: 'Manage', href: '/billing' });
-        expect(row?.detail).toBeUndefined();
-        const empty = userMenuRows(model({ subscription: { plan: '', href: '/billing' } })).find((r) => r.id === 'subscription');
-        expect(empty?.detail).toBeUndefined();
-    });
-
-    test('the theme view checks the current theme and a radio runs its callback', () => {
-        let picked = '';
-        const rows = userMenuRows({ ...model({}, 'theme'), onTheme: (t) => (picked = t) });
-        expect(rows.filter((row) => row.checked).map((row) => row.id)).toEqual(['dark']);
-        rows.find((row) => row.id === 'light')?.run?.();
-        expect(picked).toBe('light');
+        expect(rows.find((row) => row.id === 'help')).toMatchObject({ external: true, href: '/help' });
+        expect(rows.find((row) => row.id === 'settings')?.external).toBeFalsy();
     });
 });
 
 describe('keyboard', () => {
-    test('focus starts on the checked choice, skipping the gap', () => {
-        const rows = userMenuRows(model({}, 'language'));
-        expect(startIndex(rows)).toBe(1);
+    test('the gap is not a stop', () => {
         expect(actionable(userMenuRows(model(full))).some((row) => row.kind === 'gap')).toBe(false);
-    });
-
-    test('right arrow enters a submenu and only there', () => {
-        expect(drillKey('root', 'submenu', 'ArrowRight')).toBe('enter');
-        expect(drillKey('root', 'item', 'ArrowRight')).toBeNull();
-        expect(drillKey('root', 'submenu', 'ArrowLeft')).toBeNull();
-    });
-
-    test('left arrow and escape leave a submenu', () => {
-        expect(drillKey('language', 'radio', 'ArrowLeft')).toBe('leave');
-        expect(drillKey('theme', 'back', 'Escape')).toBe('leave');
-        expect(drillKey('theme', 'radio', 'ArrowDown')).toBeNull();
     });
 });
 

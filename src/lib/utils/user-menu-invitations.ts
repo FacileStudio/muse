@@ -8,11 +8,11 @@ export function pendingInvitations(invitations?: UserMenuInvitations | null): nu
     return Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
 }
 
-/** The Invitations row, or none without an `href`. An absolute `href` (Registre) opens a new tab. */
+/** The Invitations row, only while some are pending and an `href` is set. An absolute `href` (Registre) opens a new tab. */
 export function invitationsRow(model: UserMenuModel): UserMenuRow[] {
     const invitations = model.options.invitations;
-    if (!invitations?.href) return [];
     const count = pendingInvitations(invitations);
+    if (!invitations?.href || count === 0) return [];
     return [{
         id: 'invitations',
         kind: 'item',
@@ -20,7 +20,7 @@ export function invitationsRow(model: UserMenuModel): UserMenuRow[] {
         icon: icons.mail,
         href: invitations.href,
         external: /^https?:\/\//.test(invitations.href),
-        count: count || undefined
+        count
     }];
 }
 

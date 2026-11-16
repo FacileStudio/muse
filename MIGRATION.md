@@ -559,3 +559,27 @@ Nothing breaks. Rename when you touch the line; the old names keep working throu
 `IconButton variant="danger"` keeps its old look (muted, red on hover), which is `ghost-danger`. It does not become the tinted `Button` `danger` fill. `Toast` now takes the same eight tones as `Badge` (`accent`, `owner` and `admin` are new for it), and `Tone`, `StatusTone`, `toneFill` and `isUrgent` are exported.
 
 Behaviour that changes without an API change: a `Menu` or `UserMenu` row under the pointer is highlighted but no longer takes DOM focus (focus moves only with the keyboard); a `Select` trigger that loses focus closes its list and keeps its type-ahead buffer until the 600ms timer ends; `Checkbox`, `Radio` and `Switch` gain an invisible 44px hit area with no layout change. `SecretField` renders through `Field`, so its label, helper and error now share `Field`'s markup and ids. If you hand-rolled a combobox, date input, one-time code field, slider, tooltip, popover, accordion or a mixed checkbox, `Combobox`, `DatePicker`, `InputOtp`, `Slider`, `Tooltip`, `Popover`, `Accordion`, `Collapsible`, `RadioGroup` and `Checkbox indeterminate` replace them.
+
+## 25. A slim user menu: language, theme and subscription move to Settings (unreleased)
+
+**Symptom:** after the bump the avatar menu shows only Account, Invitations (while any are pending), Settings, Help and Sign out. Language, Theme, the plan row and every app row are gone.
+
+**Why:** owner decision, 2026-11-16. The menu had too many options. Nothing breaks at compile time: `items`, `subscription`, `showLanguage`, `locales`, `locale`, `onLocaleChange`, `showTheme`, `theme` and `onThemeChange` are still accepted and ignored.
+
+**Do, per app:**
+
+1. Move each target you put in `userMenu.items` somewhere reachable: a settings section or a sidebar entry.
+2. Make sure the settings page renders `PreferencesSection`, which now owns language and theme. Pass what the menu used to take:
+
+   ```svelte
+   <PreferencesSection
+     subscription={{ plan: plan.name, href: billingPortalUrl }}
+     locales={['fr', 'en']}
+     theme={theme.mode}
+     onThemeChange={(next) => theme.set(next)}
+     onLocaleChange={rememberLocale}
+   />
+   ```
+
+   Skip `subscription` when the app already has a `SubscriptionSection`.
+3. Delete the deprecated keys from the `userMenu` object once the settings page carries them.

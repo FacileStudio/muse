@@ -753,8 +753,9 @@ One real `<input autocomplete="one-time-code">` drawn as cells, so typing, paste
 
 The menu behind the sidebar's user card (`trigger="card"`) and the mobile avatar (`trigger="avatar"`
 with `presentation="sheet"`). `SideBar` and `MobileNav` mount it for you; their `userMenu` prop is the
-`UserMenuOptions` below. APG menu button, top-layer popover, no border. Rows in order: Account, Invitations,
-`items`, Settings, Subscription, Language, Theme, Help, Sign out. A row with no link or handler is not drawn.
+`UserMenuOptions` below. APG menu button, top-layer popover, no border. Rows in order: Account, Invitations
+(only while the count is above 0), Settings, Help, Sign out. A row with no link or handler is not drawn. Language,
+Theme and Subscription live in `PreferencesSection` on the settings page.
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
@@ -763,17 +764,14 @@ with `presentation="sheet"`). `SideBar` and `MobileNav` mount it for you; their 
 | `presentation` | `'popover' \| 'sheet'` | `'popover'` | `sheet` is a bottom `Drawer` |
 | `narrow` | `boolean` | `false` | The collapsed rail: avatar only |
 | `active` | `boolean` | `false` | Surface fill (card) or inverted pill (avatar) |
-| `items` | `UserMenuItem[]` | — | App rows before Settings: `label`, `icon`, `href` or `onSelect`, `tone` |
+| `items` | `UserMenuItem[]` | — | Deprecated, ignored: the menu takes no app rows |
 | `accountHref` | `string \| null` | `ACCOUNT_URL` | `null` hides the row |
-| `invitations` | `{ count, href, label? } \| null` | — | Pending Registre space invitations: an Invitations row with a count pill (99+ cap, no wrap) and a dot on the avatar while `count > 0`. An absolute `href` opens a new tab. Leave it out to show no row |
+| `invitations` | `{ count, href, label? } \| null` | — | Pending Registre space invitations: an Invitations row with a count pill (99+ cap, no wrap) and a dot on the avatar while `count > 0`. An absolute `href` opens a new tab. Leave it out, or pass 0, to show no row |
 | `settingsHref` | `string \| null` | — | |
-| `subscription` | `{ plan?, href, label? } \| null` | — | Without `plan` the row shows only its label |
+| `subscription` | `{ plan?, href, label? } \| null` | — | Deprecated, ignored: pass it to `PreferencesSection` |
 | `helpHref` | `string \| null` | — | |
 | `onSignOut` | `() => void \| null` | — | |
-| `showLanguage`, `showTheme` | `boolean` | `true` | |
-| `locales` | `Locale[]` | all four | The Language rows, in this order; an empty or invalid list means all four |
-| `locale`, `onLocaleChange` | `Locale`, `(l) => void` | context locale | `i18n.set` is always called |
-| `theme`, `onThemeChange` | `Theme`, `(t) => void` | read from `<html>` | Without a handler muse calls `applyTheme` |
+| `showLanguage`, `showTheme`, `locales`, `locale`, `onLocaleChange`, `theme`, `onThemeChange` | | | Deprecated, ignored: pass them to `PreferencesSection` |
 | `labels` | `Partial<UserMenuLabels>` | translated | Overrides any string |
 
 ### `SettingsLayout`
@@ -790,8 +788,8 @@ snippet receiving the current section id.
 | `ordered` | `boolean` | `true` | Applies `orderSections` |
 
 `ProfileSection` (`name`, `email`, `avatar`, `color`, `role`, `manageHref`, `manageLabel`, `actions`,
-children), `PreferencesSection` (`showLanguage`, `onLocaleChange`, `showTheme`, `theme`, `onThemeChange`,
-children), `NotificationsSection`, `SubscriptionSection` (`plan`, `manageHref`, `upgradeHref`, `usage`,
+children), `PreferencesSection` (`showLanguage`, `locales`, `onLocaleChange`, `showTheme`, `theme`, `onThemeChange`,
+`subscription: { plan?, href, label? }`, children), `NotificationsSection`, `SubscriptionSection` (`plan`, `manageHref`, `upgradeHref`, `usage`,
 `limit`, children), `TokensSection` (`tokens`, `onCreate(draft) => Promise<secret>`, `onRevoke(token)`,
 `scopes`, `expiryDays`) and `DangerZone` (`title`, `description`, children) each take `title` and
 `description` overrides and spread the rest onto their `SettingsSection`.

@@ -7,6 +7,8 @@
         value?: Locale;
         /** Persist the choice here (cookie, Registre profile). The muse locale already follows it. */
         onChange?: (locale: Locale) => void;
+        /** The languages offered, in this order. An empty or invalid list means all four. */
+        locales?: readonly string[];
         class?: string;
     }
 </script>
@@ -15,9 +17,10 @@
     import { twMerge } from '../../utils/cn.js';
     import Select from '../atoms/Select.svelte';
     import { getI18n } from '../../i18n/context.svelte.js';
-    import { LOCALES, LOCALE_NAMES, resolveLocale } from '../../i18n/locale.js';
+    import { LOCALE_NAMES, resolveLocale } from '../../i18n/locale.js';
+    import { offeredLocales } from '../../i18n/offered.js';
 
-    let { value, onChange, onchange, class: className = '', ...rest }: LocaleSwitchProps = $props();
+    let { value, onChange, locales, onchange, class: className = '', ...rest }: LocaleSwitchProps = $props();
 
     const i18n = getI18n();
     const current = $derived(value ?? i18n.locale);
@@ -42,7 +45,7 @@ Le choix de langue : les quatre langues de la suite, chacune écrite dans sa pro
     {...rest}
     onchange={choose}
 >
-    {#each LOCALES as locale (locale)}
+    {#each offeredLocales(locales) as locale (locale)}
         <option value={locale} lang={locale}>{LOCALE_NAMES[locale]}</option>
     {/each}
 </Select>
