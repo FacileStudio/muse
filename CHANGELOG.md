@@ -7,6 +7,11 @@
 - `SideBar` takes `groupAction`: a small button at the right of a group heading, such as "New channel" next to a space's name. It is hidden while the rail is collapsed.
 - `SideBar` takes `pageMenu` and `pageMenuLabel`: a `ContextMenu` on every page row, opened by right-click, touch long-press, the ContextMenu key or Shift+F10, with `Menu`'s entries (icons, separators, red `tone: 'danger'`).
 - `GroupAction` and `SideBarPage` types.
+- `popupMotion`: the enter and exit of a menu panel or small control (fade, 4px rise, slight scale; 0.2s `quartOut` in, 0.15s `quartIn` out; instant under reduced motion).
+
+### Changed
+
+- `Menu` and `ContextMenu` panels now fade and rise in and out with `popupMotion` instead of popping. `Menu` rises from below when it opens upward. The `SideBar` group button fades in when the rail expands.
 - Demo: the rail's pages sit under a "Pages" heading with a "New page" button and a page menu.
 
 ## v0.28.0 (2026-11-16)

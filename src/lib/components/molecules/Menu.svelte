@@ -29,6 +29,7 @@
     import { floatingPanel, triggerButton } from '../../utils/control.js';
     import { present, watchPopup } from '../../utils/popup.svelte.js';
     import { MenuState, pressOnSpace } from '../../utils/menu.svelte.js';
+    import { popupMotion } from '../../utils/motion.js';
     import { icons } from '../../icons.js';
     import Icon from '../atoms/Icon.svelte';
     import Tooltip from '../atoms/Tooltip.svelte';
@@ -116,6 +117,8 @@ Un menu d'actions déclenché par un bouton. Le focus entre dans le menu, les fl
             tabindex="-1"
             aria-labelledby={triggerId}
             class={twMerge(floatingPanel, 'min-w-44 p-1')}
+            in:popupMotion={{ y: menu.up ? 4 : -4 }}
+            out:popupMotion={{ direction: 'out', y: menu.up ? 4 : -4 }}
             style:left={align === 'start' ? `${menu.left}px` : 'auto'}
             style:right={align === 'end' ? `${menu.right}px` : 'auto'}
             style:top={menu.up ? 'auto' : `${menu.top}px`}

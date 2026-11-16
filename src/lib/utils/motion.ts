@@ -1,3 +1,5 @@
+import { quartIn, quartOut } from 'svelte/easing';
+
 export const prefersReducedMotion = (): boolean => {
   if (typeof window === 'undefined') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -32,4 +34,21 @@ export function scrollParent(node: Element | null): HTMLElement | undefined {
     current = current.parentElement;
   }
   return undefined;
+}
+
+export type PopupMotion = { direction?: 'in' | 'out'; y?: number };
+
+/**
+ * The enter and exit of a menu panel or a small control: a fade with a 4px rise and a slight
+ * scale. In is 0.2s `quartOut`, out is 0.15s `quartIn`, the Modal timings on the `power3` curve.
+ * Instant under reduced motion. Use as `in:popupMotion` and `out:popupMotion={{ direction: 'out' }}`;
+ * `y` flips the rise for a panel that opens upward.
+ */
+export function popupMotion(_node: Element, { direction = 'in', y = -4 }: PopupMotion = {}) {
+  const leaving = direction === 'out';
+  return {
+    duration: prefersReducedMotion() ? 0 : leaving ? 150 : 200,
+    easing: leaving ? quartIn : quartOut,
+    css: (t: number) => `opacity: ${t}; transform: translateY(${(1 - t) * y}px) scale(${0.98 + 0.02 * t});`
+  };
 }

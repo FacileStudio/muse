@@ -205,7 +205,8 @@ export type { LineChartProps } from './components/charts/LineChart.svelte';
 export { default as Sparkline } from './components/charts/Sparkline.svelte';
 export type { SparklineProps } from './components/charts/Sparkline.svelte';
 
-export { prefersReducedMotion, isMobile } from './utils/motion.js';
+export { prefersReducedMotion, isMobile, popupMotion } from './utils/motion.js';
+export type { PopupMotion } from './utils/motion.js';
 export { springPress } from './utils/press.js';
 export { copyText } from './utils/clipboard.js';
 export { keyCaps } from './utils/shortcut.js';

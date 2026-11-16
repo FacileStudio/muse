@@ -74,7 +74,7 @@
     import SpaceSwitcher from '../molecules/SpaceSwitcher.svelte';
     import TextElevate from '../motion/TextElevate.svelte';
     import { icons } from '../../icons.js';
-    import { prefersReducedMotion } from '../../utils/motion.js';
+    import { popupMotion, prefersReducedMotion } from '../../utils/motion.js';
     import {
         RAIL_DURATION,
         railWidth,
@@ -292,9 +292,11 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                                 {page.group}
                             </p>
                             {#if action}
-                                <IconButton variant="ghost" class="-my-2 size-8" aria-label={action.label} onclick={action.onclick}>
-                                    <Icon icon={action.icon} size={16} />
-                                </IconButton>
+                                <span class="-my-2 inline-flex" in:popupMotion out:popupMotion={{ direction: 'out' }}>
+                                    <IconButton variant="ghost" class="size-8" aria-label={action.label} onclick={action.onclick}>
+                                        <Icon icon={action.icon} size={16} />
+                                    </IconButton>
+                                </span>
                             {/if}
                         </div>
                     {/if}

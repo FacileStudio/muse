@@ -26,6 +26,7 @@
     import { present, watchPopup } from '../../utils/popup.svelte.js';
     import { MenuState, pressOnSpace } from '../../utils/menu.svelte.js';
     import { LongPress, opensContextMenu, placeAtPoint } from '../../utils/context-menu.js';
+    import { popupMotion } from '../../utils/motion.js';
     import Icon from '../atoms/Icon.svelte';
 
     let { items, label, children, disabled = false, class: className = '', ...rest }: ContextMenuProps = $props();
@@ -157,6 +158,8 @@ Un menu d'actions ouvert par un clic droit sur une zone, un appui long au doigt,
             tabindex="-1"
             aria-label={label}
             class={twMerge(floatingPanel, 'min-w-44 p-1')}
+            in:popupMotion
+            out:popupMotion={{ direction: 'out' }}
             style:left="{spot.left}px"
             style:top="{spot.top}px"
             style:max-height="{spot.maxHeight}px"
