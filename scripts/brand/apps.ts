@@ -62,10 +62,22 @@ export const APPS: SuiteApp[] = [
             + 'is logged. Free to start.'
     },
     {
+        id: 'clap', name: 'Clap', icon: 'solar:clapperboard-open-bold-duotone', url: 'https://clap.facile.studio',
+        title: 'Your video edit fits in one text file.',
+        description: 'Drag your clips onto the timeline, add animated titles and get an MP4 rendered on our servers. '
+            + 'Nothing to install.'
+    },
+    {
         id: 'courrier', name: 'Courrier', icon: 'solar:letter-opened-bold-duotone', url: 'https://courrier.facile.studio',
         title: 'All your email, in one calm inbox.',
         description: 'Bring your Gmail, OVH or own-domain addresses into one clear inbox, share it with your team '
             + 'and let Bulle sum up long threads. Free to start.'
+    },
+    {
+        id: 'diapo', name: 'Diapo', icon: 'solar:presentation-graph-bold-duotone', url: 'https://diapo.facile.studio',
+        title: 'Write your slides. Diapo lays them out.',
+        description: 'Type your ideas like a note: each block becomes a slide you present from your browser. Free to '
+            + 'start.'
     },
     {
         id: 'docs', name: 'Docs', icon: 'solar:documents-bold-duotone', url: 'https://docs.facile.studio',
