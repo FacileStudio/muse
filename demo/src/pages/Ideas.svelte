@@ -157,6 +157,7 @@
             error={panel === 'error' ? 'Nova ne répond pas. Réessayez dans un instant.' : null}
             onRetry={() => (panel = 'ready')}
             upgradeHref={panel === 'upsell' ? '/#/pricing' : undefined}
+            upsellText={panel === 'upsell' ? 'Planifier avec Nova demande un forfait Pro.' : undefined}
             class="max-w-xl"
         >
             <div class="flex flex-wrap gap-2">

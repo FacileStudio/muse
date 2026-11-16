@@ -34,6 +34,8 @@ export const fr: MuseMessages = {
     'bulle.busy': '{name} travaille',
     'bulle.retry': 'Réessayer',
     'bulle.panel': 'Panneau de {name}',
+    'bulle.upsell': '{name} demande un forfait payant.',
+    'bulle.upgrade': 'Voir les forfaits',
     'colorPicker.pick': 'Choisir une couleur',
     'colorPicker.presets': 'Couleurs prédéfinies',
     'confirm.confirm': 'Confirmer',

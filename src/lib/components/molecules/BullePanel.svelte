@@ -2,7 +2,6 @@
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
     import type { BulleMood } from '../../utils/bulle.js';
-    import type { IdeaExample } from './IdeasUpsell.svelte';
 
     export interface BullePanelProps extends Omit<HTMLAttributes<HTMLElement>, 'children' | 'title'> {
         /** The assistant's name. The blob is drawn from it. Defaults to "Bulle". */
@@ -17,10 +16,10 @@
         error?: string | null;
         /** Adds a "Try again" button to the error. */
         onRetry?: () => void;
-        /** The account has no AI plan. Shows the plans upsell in place of the body. An unsafe address hides its button. */
+        /** The account has no AI plan. Shows a short upsell in place of the body. An unsafe address hides its button. */
         upgradeHref?: string;
-        /** Examples for the upsell. Defaults to the built-in set. */
-        upsellExamples?: IdeaExample[];
+        /** The upsell line. Defaults to a generic "needs a paid plan" sentence naming the assistant. */
+        upsellText?: string;
         /** Replaces the built-in upsell. Shown when `upgradeHref` is set. */
         upsell?: Snippet;
         /** Controls on the right of the title row, such as a close button. */
@@ -33,12 +32,12 @@
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
     import { getI18n } from '../../i18n/context.svelte.js';
+    import { isSafeHref } from '../../utils/href.js';
     import { bulleName } from '../../utils/bulle.js';
     import Alert from '../atoms/Alert.svelte';
     import Button from '../atoms/Button.svelte';
     import Spinner from '../atoms/Spinner.svelte';
     import BulleBlob from '../atoms/BulleBlob.svelte';
-    import IdeasUpsell from './IdeasUpsell.svelte';
 
     let {
         name,
@@ -48,7 +47,7 @@
         error = null,
         onRetry,
         upgradeHref,
-        upsellExamples,
+        upsellText,
         upsell,
         actions,
         children,
@@ -65,7 +64,7 @@
 
 <!--
 @component
-La coquille d'un panneau d'assistant : une ligne de titre avec le blob et le nom, un corps libre, les états occupé et erreur, et l'invite de forfait quand le compte n'a pas l'IA.
+La coquille d'un panneau d'assistant : une ligne de titre avec le blob et le nom, un corps libre, les états occupé et erreur, et une invite courte vers les forfaits quand le compte n'a pas l'IA.
 -->
 
 <section
@@ -100,7 +99,12 @@ La coquille d'un panneau d'assistant : une ligne de titre avec le blob et le nom
         {#if upsell}
             {@render upsell()}
         {:else}
-            <IdeasUpsell upgradeHref={upgradeHref ?? ''} examples={upsellExamples} />
+            <p class="m-0 text-fc-sm wrap-anywhere text-fc-fg-muted">
+                {upsellText?.trim() || i18n.t('bulle.upsell', { name: assistant })}
+            </p>
+            {#if isSafeHref(upgradeHref ?? '')}
+                <Button href={upgradeHref} class="self-start">{i18n.t('bulle.upgrade')}</Button>
+            {/if}
         {/if}
     {:else if children}
         <div class="min-w-0">{@render children()}</div>

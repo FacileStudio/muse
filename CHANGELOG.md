@@ -5,9 +5,9 @@
 ### Added
 
 - `BulleButton`: a button with the user's Bulle blob, drawn from the assistant's name by `@facile/blob`, and an optional label. Moods `idle`, `thinking`, `done` and `unavailable`; variants `header`, `chip` and `icon`; a 44px hit target in every variant; the blob stops moving and stops following the pointer under `prefers-reduced-motion`. The icon variant names itself with the new `bulle.open` string and shows it as a tooltip.
-- `BullePanel`: the shell of an assistant panel. A title row with the blob and the assistant's name, a body, a busy line, an error alert with an optional retry, and the plan upsell (`IdeasUpsell`, or your own `upsell` snippet) in place of the body when `upgradeHref` is set.
+- `BullePanel`: the shell of an assistant panel. A title row with the blob and the assistant's name, a body, a busy line, an error alert with an optional retry, and, when `upgradeHref` is set, a compact plan upsell in place of the body: one line (`upsellText`, or "{name} needs a paid plan.") and one button to `upgradeHref`. An `upsell` snippet replaces it.
 - `bulleLook`, `BULLE_NAME`, `BULLE_SIZES` and the `BulleMood`, `BulleVariant`, `BulleLook` and `BulleFace` types.
-- Strings `bulle.open`, `bulle.busy`, `bulle.retry` and `bulle.panel` in fr, en, es and de.
+- Strings `bulle.open`, `bulle.busy`, `bulle.retry`, `bulle.panel`, `bulle.upsell` and `bulle.upgrade` in fr, en, es and de.
 
 ### Changed
 

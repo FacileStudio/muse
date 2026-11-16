@@ -26,8 +26,10 @@ describe('BulleButton', () => {
 });
 
 describe('BullePanel', () => {
-    test('reuses IdeasUpsell for the plan upsell', () => {
-        expect(panel).toContain("import IdeasUpsell from './IdeasUpsell.svelte'");
+    test('the upsell is its own short line and button, not the Ideas page', () => {
+        expect(panel).not.toContain('IdeasUpsell');
+        expect(panel).toContain("i18n.t('bulle.upsell'");
+        expect(panel).toContain('isSafeHref(upgradeHref');
     });
 
     test('hides the body and the busy line behind the upsell', () => {
