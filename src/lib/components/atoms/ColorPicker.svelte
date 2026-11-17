@@ -87,8 +87,10 @@ Le choix d'une couleur quelconque : sélecteur natif et champ hexadécimal. Pour
             }}
             class={twMerge(
                 box,
-                'w-11 shrink-0 cursor-pointer appearance-none p-1 disabled:cursor-not-allowed [&::-moz-color-swatch]:rounded-fc-sm [&::-moz-color-swatch]:border-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-fc-sm [&::-webkit-color-swatch]:border-0'
+                'w-11 shrink-0 cursor-pointer appearance-none p-1 disabled:cursor-not-allowed [&::-moz-color-swatch]:rounded-fc-sm [&::-moz-color-swatch]:border-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-fc-sm [&::-webkit-color-swatch]:border-0',
+                selected === null && '[&::-moz-color-swatch]:opacity-0 [&::-webkit-color-swatch]:opacity-0'
             )}
+            data-empty={selected === null ? '' : undefined}
         />
 
         <input

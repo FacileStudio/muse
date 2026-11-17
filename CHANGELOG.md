@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- `ColorPicker` with no colour set shows an empty swatch instead of black, and marks its colour input `data-empty`.
+
 ### Added
 
 - `MenuAction` takes `shortcut` (a string such as `mod+shift+k`), in `Menu` and `ContextMenu`. The row shows it right-aligned in small muted monospace (`⌘⇧K` on Apple platforms, `Ctrl+Shift+K` elsewhere) and announces it once, through `aria-keyshortcuts`. The app still binds the key itself.
