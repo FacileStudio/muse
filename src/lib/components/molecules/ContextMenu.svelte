@@ -24,10 +24,10 @@
     import { twMerge } from '../../utils/cn.js';
     import { floatingPanel } from '../../utils/control.js';
     import { present, watchPopup } from '../../utils/popup.svelte.js';
-    import { MenuState, pressOnSpace } from '../../utils/menu.svelte.js';
+    import { MenuState } from '../../utils/menu.svelte.js';
     import { LongPress, opensContextMenu, placeAtPoint } from '../../utils/context-menu.js';
     import { popupMotion } from '../../utils/motion.js';
-    import Icon from '../atoms/Icon.svelte';
+    import MenuItems from './MenuItems.svelte';
 
     let { items, label, children, disabled = false, class: className = '', ...rest }: ContextMenuProps = $props();
 
@@ -44,13 +44,12 @@
     const press = new LongPress();
 
     const actions = $derived(current.filter((entry): entry is MenuAction => !('separator' in entry)));
-    const iconColumn = $derived(actions.some((action) => action.icon));
 
     const menu = new MenuState({
         labels: () => actions.map((a) => a.label),
         disabled: () => actions.map((a) => Boolean(a.disabled)),
         trigger: () => returnTo,
-        items: () => Array.from(menuEl?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? [])
+        items: () => Array.from(menuEl?.querySelectorAll<HTMLElement>(':scope > [role="menuitem"]') ?? [])
     });
 
     function reclamp() {
@@ -124,16 +123,11 @@
     });
 
     $effect(() => press.cancel);
-
-    const space = (event: KeyboardEvent) => pressOnSpace(event, menu.buffer !== '');
-
-    const row =
-        'flex min-h-11 w-full cursor-pointer items-center gap-2.5 rounded-fc-sm px-2.5 py-2 text-left text-fc-md transition-colors hover:bg-fc-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fc-ring disabled:cursor-not-allowed disabled:opacity-50';
 </script>
 
 <!--
 @component
-Un menu d'actions ouvert par un clic droit sur une zone, un appui long au doigt, la touche Menu ou Maj+F10. Il s'ouvre au point du clic et reste dans l'écran. `items` peut être une fonction de l'élément cliqué, pour qu'un seul menu serve toutes les lignes d'une liste ; une liste vide laisse le menu du navigateur. Mêmes entrées que `Menu` : icône, séparateur, `tone: 'danger'` en rouge, lien avec `href`. Échap referme et rend le focus.
+Un menu d'actions ouvert par un clic droit sur une zone, un appui long au doigt, la touche Menu ou Maj+F10. Il s'ouvre au point du clic et reste dans l'écran. `items` peut être une fonction de l'élément cliqué, pour qu'un seul menu serve toutes les lignes d'une liste ; une liste vide laisse le menu du navigateur. Mêmes entrées que `Menu` : icône, séparateur, `tone: 'danger'` en rouge, lien avec `href`, raccourci avec `shortcut`, sous-menu avec `items`. Échap referme et rend le focus.
 -->
 
 <div
@@ -167,41 +161,7 @@ Un menu d'actions ouvert par un clic droit sur une zone, un appui long au doigt,
             onfocusout={leave}
             use:present
         >
-            {#each current as entry, i (i)}
-                {#if 'separator' in entry}
-                    <div role="separator" class="h-2"></div>
-                {:else}
-                    {@const index = actions.indexOf(entry)}
-                    {@const tone = entry.tone === 'danger' ? 'text-fc-danger' : 'text-fc-fg'}
-                    {#if entry.href && !entry.disabled}
-                        <a
-                            role="menuitem"
-                            tabindex={index === menu.active ? 0 : -1}
-                            href={entry.href}
-                            class={twMerge(row, tone)}
-                            onclick={() => choose(entry)}
-                            onkeydown={space}
-                            onpointermove={() => menu.point(index)}
-                        >
-                            {#if entry.icon}<Icon icon={entry.icon} size={16} />{:else if iconColumn}<span class="size-4 shrink-0" aria-hidden="true"></span>{/if}
-                            <span class="min-w-0 flex-1 truncate">{entry.label}</span>
-                        </a>
-                    {:else}
-                        <button
-                            type="button"
-                            role="menuitem"
-                            tabindex={index === menu.active ? 0 : -1}
-                            disabled={entry.disabled}
-                            class={twMerge(row, tone)}
-                            onclick={() => choose(entry)}
-                            onpointermove={() => !entry.disabled && menu.point(index)}
-                        >
-                            {#if entry.icon}<Icon icon={entry.icon} size={16} />{:else if iconColumn}<span class="size-4 shrink-0" aria-hidden="true"></span>{/if}
-                            <span class="min-w-0 flex-1 truncate">{entry.label}</span>
-                        </button>
-                    {/if}
-                {/if}
-            {/each}
+            <MenuItems entries={current} {menu} {choose} />
         </div>
     {/if}
 </div>

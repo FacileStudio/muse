@@ -14,14 +14,14 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { twMerge } from '../../utils/cn.js';
-    import { keyCaps } from '../../utils/shortcut.js';
+    import { isApplePlatform, keyCaps } from '../../utils/shortcut.js';
 
     let { keys, children, class: className = '', ...rest }: KbdProps = $props();
 
     let apple = $state(false);
 
     onMount(() => {
-        apple = /Mac|iPhone|iPad/.test(navigator.platform);
+        apple = isApplePlatform();
     });
 
     const caps = $derived(keys ? keyCaps(keys, apple) : []);

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+- `MenuAction` takes `shortcut` (a string such as `mod+shift+k`), in `Menu` and `ContextMenu`. The row shows it right-aligned in small muted monospace (`⌘⇧K` on Apple platforms, `Ctrl+Shift+K` elsewhere) and announces it once, through `aria-keyshortcuts`. The app still binds the key itself.
+- `MenuAction` takes `items` (`MenuEntry[]`): a submenu, in `Menu` and `ContextMenu`. The row shows a chevron and carries `aria-haspopup="menu"` and `aria-expanded`. The submenu opens on hover after 150 ms, on click, Enter, Space or ArrowRight, and closes back to its row on ArrowLeft or Escape. It sits to the right of its row, or to the left near the viewport edge, as a floating panel with a shadow. Choosing an entry in it closes the whole menu. Submenus nest.
+
 ## v0.32.0 (2026-11-16)
 
 ### Fixed

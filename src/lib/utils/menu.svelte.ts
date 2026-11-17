@@ -101,3 +101,36 @@ export function pressOnSpace(event: KeyboardEvent, typing: boolean): void {
     event.preventDefault();
     (event.currentTarget as HTMLElement).click();
 }
+
+type Parent = { items?: readonly unknown[]; disabled?: boolean };
+
+/** True when an entry opens a submenu: it has entries of its own and is not disabled. */
+export function hasSubmenu(entry: Parent | undefined): boolean {
+    return Boolean(entry?.items && !entry.disabled);
+}
+
+type KeyEventLike = Pick<KeyboardEvent, 'key' | 'preventDefault' | 'stopPropagation'>;
+
+/** True, and the key consumed, when ArrowRight lands on an entry that opens a submenu. */
+export function opensOnKey(event: KeyEventLike, entry: Parent | undefined): boolean {
+    if (event.key !== 'ArrowRight' || !hasSubmenu(entry)) return false;
+    event.preventDefault();
+    event.stopPropagation();
+    return true;
+}
+
+/**
+ * The key handler of a submenu panel. Tab bubbles to the root menu, which closes everything.
+ * ArrowLeft and Escape call `close`, which puts focus back on the row that opened it. Every other
+ * key is the submenu's own arrows, type-ahead and activation, and never reaches the parent level.
+ */
+export function submenuKeydown(event: KeyEventLike, menu: MenuState, close: () => void): void {
+    if (event.key === 'Tab') return;
+    event.stopPropagation();
+    if (event.key === 'ArrowLeft' || event.key === 'Escape') {
+        event.preventDefault();
+        close();
+        return;
+    }
+    menu.keydown(event as KeyboardEvent);
+}

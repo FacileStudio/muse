@@ -26,7 +26,7 @@ muse/
     index.ts                  Public re-exports (all components + utils)
     icons.ts                  Iconify name map (63 keys) + IconKey type
     colors.ts                 Identity palette (Sablier's USER_COLORS) + normalizers
-    components/               120 Svelte files, 107 exported (layout/ atoms/ molecules/ organisms/ charts/ motion/)
+    components/               123 Svelte files, 107 exported (layout/ atoms/ molecules/ organisms/ charts/ motion/)
     i18n/                     Message helper, locale context (provideLocale/getI18n), fr/en/es/de catalogs
     fonts/                    Bundled Magnetik font files (.woff2), licence in LICENSE
     styles/tokens.css         Tailwind v4 @theme block, @font-face, dark mode, @layer base
@@ -50,6 +50,8 @@ muse/
     utils/calendar.ts         DatePicker maths: ISO dates in UTC, month grid, grid keys, Intl names (pure, tested)
     utils/otp.ts              InputOtp: sanitize, cells, caret (pure, tested)
     utils/combobox.ts         Combobox filtering, accent-folding (pure, tested)
+    utils/menu.svelte.ts      MenuState (keys, type-ahead, focus) and the submenu key helpers (tested)
+    utils/shortcut.ts         keyCaps, shortcutText, ariaKeyShortcuts for Kbd and menu shortcuts (pure, tested)
     utils/accordion.ts        Accordion open set and header keys (pure, tested)
     utils/user-menu.ts        UserMenu rows in the canonical order: Account, Invitations, Settings, Help, Sign out (pure, tested)
     utils/settings-nav.ts     canonical settings section order and route resolution (pure, tested)
@@ -58,9 +60,9 @@ muse/
     utils/toast.svelte.ts     Module-scope toast queue behind Toaster — toast, toasts
 ```
 
-Tier counts (files): 5 layout, 27 atoms, 50 molecules, 27 organisms, 9 charts, 2 motion. `ChartTable.svelte`, `LineAxes.svelte`,
+Tier counts (files): 5 layout, 27 atoms, 52 molecules, 27 organisms, 10 charts, 2 motion. `ChartTable.svelte`, `LineAxes.svelte`,
 `LineHover.svelte`, `molecules/DateGrid.svelte`,
-`components/charts/entry.ts`, `atoms/SelectListbox.svelte`, `molecules/IdeaLinks.svelte`, `molecules/NavMarks.svelte`, `atoms/BulleBlob.svelte`, `molecules/CommandLine.svelte`, `organisms/PricingCard.svelte`, `organisms/LandingDrawer.svelte`, `organisms/UserMenuList.svelte` and `organisms/TokenCreate.svelte` are internal and not exported.
+`components/charts/entry.ts`, `atoms/SelectListbox.svelte`, `molecules/IdeaLinks.svelte`, `molecules/NavMarks.svelte`, `atoms/BulleBlob.svelte`, `molecules/CommandLine.svelte`, `molecules/MenuItems.svelte`, `molecules/MenuSub.svelte`, `organisms/PricingCard.svelte`, `organisms/LandingDrawer.svelte`, `organisms/UserMenuList.svelte` and `organisms/TokenCreate.svelte` are internal and not exported.
 
 ## Key commands
 
