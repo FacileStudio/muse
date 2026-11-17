@@ -126,11 +126,37 @@
                         { label: 'Se déconnecter', onselect: () => toast.info('Au revoir'), icon: icons.logout, tone: 'danger' }
                     ]}
                 />
+                <Menu
+                    label="Édition"
+                    items={[
+                        { label: 'Copier', onselect: () => toast.info('Copié'), icon: icons.copy, shortcut: 'mod+c' },
+                        { label: 'Rechercher', onselect: () => toast.info('Rechercher'), icon: icons.search, shortcut: 'mod+shift+f' },
+                        {
+                            label: 'Exporter',
+                            icon: icons.download,
+                            items: [
+                                { label: 'PDF', onselect: () => toast.info('Export PDF'), shortcut: 'mod+p' },
+                                { label: 'CSV', onselect: () => toast.info('Export CSV') },
+                                { label: 'JSON', onselect: () => toast.info('Export JSON'), disabled: true }
+                            ]
+                        },
+                        { separator: true },
+                        { label: 'Supprimer', onselect: () => toast.info('Supprimé'), icon: icons.remove, tone: 'danger', shortcut: 'delete' }
+                    ]}
+                />
                 <ContextMenu
                     label="Actions du fichier"
                     items={[
                         { label: 'Ouvrir', onselect: () => toast.info('Ouvrir'), icon: icons.eye },
-                        { label: 'Renommer', onselect: () => toast.info('Renommer'), icon: icons.edit },
+                        { label: 'Renommer', onselect: () => toast.info('Renommer'), icon: icons.edit, shortcut: 'F2' },
+                        {
+                            label: 'Déplacer vers',
+                            icon: icons.folder,
+                            items: [
+                                { label: 'Clients', onselect: () => toast.info('Déplacé vers Clients') },
+                                { label: 'Archives', onselect: () => toast.info('Déplacé vers Archives') }
+                            ]
+                        },
                         { separator: true },
                         { label: 'Supprimer', onselect: () => toast.info('Supprimé'), icon: icons.remove, tone: 'danger' }
                     ]}
