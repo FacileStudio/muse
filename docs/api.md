@@ -923,7 +923,7 @@ dot per series and a `ChartTooltip`.
 | `emptyLabel` | `string` | `'No data'` | |
 
 The value axis always includes zero (`niceScale(..., includeZero: true)`) — a truncated
-baseline makes bar lengths lie about their values. Hovering a category band highlights it and
+baseline makes bar lengths lie about their values. Hovering a category fades the other bars and
 opens a `ChartTooltip` with every series at that category.
 
 ### `DonutChart`
@@ -935,6 +935,7 @@ opens a `ChartTooltip` with every series at that category.
 | `thickness` | `number` | `22` | Ring width |
 | `corner` | `number` | `4` | Segment corner radius; `0` is square |
 | `showLegend` | `boolean` | `true` | |
+| `detail` | `boolean` | `false` | Shows the hovered slice in a right-aligned panel beside the ring instead of a tooltip: name, value, then the share at the bottom, sliding in on each change. Idle, it shows `centerLabel` and the total, and the ring's centre stays empty |
 | `centerLabel` | `string` | — | Muted caption under the centre value |
 | `centerValue` | `string \| number` | `valueFormat(total)` | |
 | `valueFormat` | `(n: number) => string` | `formatCompact` | |

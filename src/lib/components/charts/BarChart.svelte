@@ -21,8 +21,8 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { barGeometry, barPath, categoryLabels, formatCompact, niceScale, resize, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesSummary, seriesTipRows, seriesValues, type ChartBox } from '../../utils/chart.js';
-    import { tweenProgress } from './entry.js';
+    import { barGeometry, barPath, categoryLabels, formatCompact, labelScale, niceScale, resize, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesSummary, seriesTipRows, seriesValues, type ChartBox } from '../../utils/chart.js';
+    import { focusMarks, tweenProgress } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
     import ChartTable from './ChartTable.svelte';
     import ChartTooltip from './ChartTooltip.svelte';
@@ -46,6 +46,8 @@
     let w = $state(0);
     let hover = $state(-1);
     let progress = $state(0);
+    let marks = $state<SVGGElement>();
+    let textScale = $state(1);
     let started = false;
 
     const classes = $derived(twMerge('relative w-full', className));
@@ -90,7 +92,8 @@
             height,
             stacked,
             horizontal,
-            format: yFormat
+            format: yFormat,
+            labelScale: textScale
         })
     );
 
@@ -101,7 +104,7 @@
             const box: ChartBox = horizontal
                 ? { x: at, y: spec.offset, w: grown, h: spec.thick }
                 : { x: spec.offset, y: at, w: spec.thick, h: grown };
-            return { d: barPath({ ...box, corner: spec.corner }), color: spec.color };
+            return { d: barPath({ ...box, corner: spec.corner }), color: spec.color, band: spec.band };
         })
     );
 
@@ -133,14 +136,21 @@
         started = true;
         tweenProgress(animate, (t) => (progress = t));
     });
+
+    $effect(() => {
+        const active = hover;
+
+        if (marks)
+            focusMarks(marks, active, animate);
+    });
 </script>
 
 <!--
 @component
-Un graphique en barres, empilable. Chaque coin face à une gouttière est arrondi ; la ligne de base reste carrée.
+Un graphique en barres, empilable. Chaque barre est arrondie à ses quatre coins, ligne de base comprise.
 -->
 
-<div class={classes} use:resize={(width) => (w = width)} {...rest}>
+<div class={classes} use:resize={(width) => (w = width)} use:labelScale={(s) => (textScale = s)} {...rest}>
     {#if isEmpty}
         <div
             class="flex items-center justify-center text-fc-p text-fc-muted"
@@ -160,16 +170,6 @@ Un graphique en barres, empilable. Chaque coin face à une gouttière est arrond
                 onpointerleave={clear}
                 onpointercancel={clear}
             >
-                {#if hover >= 0 && geometry.bands[hover]}
-                    <rect
-                        x={geometry.bands[hover].x}
-                        y={geometry.bands[hover].y}
-                        width={geometry.bands[hover].w}
-                        height={geometry.bands[hover].h}
-                        fill="var(--color-fc-surface-hover)"
-                    />
-                {/if}
-
                 {#if showGrid}
                     <g shape-rendering="crispEdges">
                         {#each geometry.grid as line, i (i)}
@@ -204,9 +204,9 @@ Un graphique en barres, empilable. Chaque coin face à une gouttière est arrond
                     {/each}
                 </g>
 
-                <g>
+                <g bind:this={marks}>
                     {#each bars as bar, i (i)}
-                        <path d={bar.d} fill={bar.color} />
+                        <path d={bar.d} fill={bar.color} data-mark={bar.band} />
                     {/each}
                 </g>
 

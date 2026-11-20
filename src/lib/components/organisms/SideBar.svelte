@@ -42,6 +42,7 @@
 </script>
 
 <script lang="ts">
+    import { tick } from 'svelte';
     import { cubicInOut } from 'svelte/easing';
     import { gsap } from 'gsap';
     import { twMerge } from '../../utils/cn.js';
@@ -89,38 +90,81 @@
 
     /*
      * The rail width is a token, so the tween has to read the token — hardcoding the pair
-     * here is how a retheme silently stops reaching the animation. The fallbacks only cover
-     * SSR and a consumer that forgot to import the stylesheet.
+     * here is how a retheme silently stops reaching the animation. The token is a `calc()`
+     * that follows the window, so it is measured rather than parsed, and the resting width
+     * stays the token itself so a window resize keeps reaching the rail. The fallback only
+     * covers a consumer that forgot to import the stylesheet.
      */
-    const FALLBACK_WIDTH = { collapsed: 56, expanded: 236 };
-    const RAIL_DURATION = 0.3;
+    const RAIL_DURATION = 0.4;
+
+    const railToken = (isCollapsed: boolean): string =>
+        isCollapsed
+            ? 'var(--width-fc-nav-collapsed, 56px)'
+            : 'var(--width-fc-nav-expanded, 280px)';
 
     function railWidth(el: HTMLElement, isCollapsed: boolean): number {
-        const token = isCollapsed ? '--width-fc-nav-collapsed' : '--width-fc-nav-expanded';
-        const fallback = isCollapsed ? FALLBACK_WIDTH.collapsed : FALLBACK_WIDTH.expanded;
-        if (typeof window === 'undefined') return fallback;
-        const parsed = Number.parseFloat(getComputedStyle(el).getPropertyValue(token));
-        return Number.isFinite(parsed) ? parsed : fallback;
+        const probe = document.createElement('div');
+
+        probe.style.position = 'absolute';
+        probe.style.width = railToken(isCollapsed);
+        el.append(probe);
+
+        const width = probe.getBoundingClientRect().width;
+
+        probe.remove();
+        return width;
+    }
+
+    function fadeRailExtras(el: HTMLElement, shown: boolean) {
+        const extras = el.querySelectorAll('[data-rail-fade]');
+
+        if (!extras.length)
+            return;
+
+        gsap.fromTo(
+            extras,
+            {
+                opacity: shown ? 0 : 1
+            },
+            {
+                opacity: shown ? 1 : 0,
+                duration: RAIL_DURATION / 2,
+                delay: shown ? RAIL_DURATION / 2 : 0,
+                ease: 'power3.out',
+                overwrite: true
+            }
+        );
     }
 
     $effect(() => {
         const isCollapsed = collapsed;
         if (!navEl) return;
-        const w = railWidth(navEl, isCollapsed);
+        const el = navEl;
+        const w = railWidth(el, isCollapsed);
+
         tween?.kill();
         tween = null;
         if (!ready || prefersReducedMotion()) {
-            gsap.set(navEl, { width: w });
+            el.style.width = railToken(isCollapsed);
             narrow = isCollapsed;
             ready = true;
             return;
         }
-        if (!isCollapsed) narrow = false;
-        tween = gsap.to(navEl, {
+        if (isCollapsed)
+            fadeRailExtras(el, false);
+        else {
+            narrow = false;
+            void tick().then(() => fadeRailExtras(el, true));
+        }
+        // measured start: GSAP would read the px fallback out of the resting `var()` as a number
+        tween = gsap.fromTo(el, {
+            width: el.getBoundingClientRect().width
+        }, {
             width: w,
             duration: RAIL_DURATION,
             ease: 'power3.inOut',
             onComplete: () => {
+                el.style.width = railToken(isCollapsed);
                 narrow = isCollapsed;
                 tween = null;
             }
@@ -166,6 +210,10 @@
      */
     const FADE_START = 0.45;
 
+    /* A fixed width, so the shrinking rail clips an expanded row instead of squeezing its chip
+       over its label. */
+    const rowWidth = $derived(narrow ? '' : 'w-fc-nav-content');
+
     function switcherReveal(node: HTMLElement) {
         const height = node.offsetHeight;
         const marginTop = Number.parseFloat(getComputedStyle(node).marginTop) || 0;
@@ -203,7 +251,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
     -->
     <div class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain [&>*+*]:mt-5">
         <!-- h-7 stops the title from growing the row, pl-4.25 matches where the collapsed rail centres the 18px mark -->
-        <div class={twMerge('flex h-7 items-center gap-2.5 pt-1', narrow ? 'justify-center px-0' : 'pl-4.25 pr-2')}>
+        <div class={twMerge('flex h-7 items-center gap-2.5 pt-1', narrow ? 'justify-center px-0' : 'w-fc-nav-content pl-4.25 pr-2')}>
             {#if icon}<Icon {icon} />{/if}
             {#if !narrow}
                 <!--
@@ -216,7 +264,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                   face with known metrics comes back.
                 -->
                 <span class="flex min-w-0 flex-1 items-center text-fc-subtitle font-semibold text-fc-ink overflow-hidden">
-                    <TextElevate text={title} visible={!narrow} class="truncate" />
+                    <TextElevate text={title} visible={!collapsed} class="truncate" />
                 </span>
             {/if}
         </div>
@@ -240,7 +288,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
         {#if showSearch || showCollapse}
             <div class="flex flex-col gap-1">
                 {#if showSearch}
-                    <NavButton icon={icons.search} label="Search" collapsed={narrow} onclick={onSearch}>
+                    <NavButton icon={icons.search} label="Search" collapsed={narrow} textVisible={!collapsed} class={rowWidth} onclick={onSearch}>
                         {#snippet right()}
                             <!-- No handler, no chip: the shortcut hint is a promise, and an
                                  unwired Search row cannot keep it. -->
@@ -255,6 +303,8 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                         icon={icons.collapse}
                         label="Collapse"
                         collapsed={narrow}
+                        textVisible={!collapsed}
+                        class={rowWidth}
                         onclick={() => (collapsed = !collapsed)}
                         aria-label={collapsed ? 'Expand' : 'Collapse'}
                     >
@@ -281,7 +331,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
                         {page.group}
                     </p>
                 {/if}
-                <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} collapsed={narrow}>
+                <NavButton href={page.href} icon={page.icon} label={page.label} active={page.active} collapsed={narrow} textVisible={!collapsed} class={rowWidth}>
                     {#snippet right()}
                         {#if page.active}
                             <Icon icon={icons.arrow} class="text-fc-brand" />
@@ -308,7 +358,7 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
             'flex items-center gap-2.5 rounded-fc text-fc-p transition-colors hover:bg-fc-surface-hover text-fc-ink overflow-hidden',
             narrow
                 ? 'size-fc-nav-item shrink-0 self-center justify-center gap-0 p-0'
-                : 'w-full min-h-fc-nav-item py-2 pr-2.5 pl-3',
+                : 'w-fc-nav-content shrink-0 min-h-fc-nav-item py-2 pr-2.5 pl-3',
             userActive && 'bg-fc-surface-hover'
         )}
 
@@ -322,8 +372,8 @@ Le rail de navigation, une carte flottante et repliable. Il porte la navigation,
             {/if}
             {#if !narrow}
                 <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
-                    <TextElevate text={u.name} visible={!narrow} class="truncate" />
-                    <Icon icon={icons.settings} />
+                    <TextElevate text={u.name} visible={!collapsed} class="truncate" />
+                    <span data-rail-fade class="flex shrink-0"><Icon icon={icons.settings} /></span>
                 </span>
             {/if}
         {/snippet}

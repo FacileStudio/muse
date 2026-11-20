@@ -86,8 +86,8 @@ component), `fc-surface`, `fc-surface-hover`, `fc-surface-solid` (floating thing
 There is no border token. Use via Tailwind utilities like `bg-fc-surface`, `text-fc-ink`,
 `rounded-fc`.
 
-Type scale is five styles: `text-fc-title` 32 (medium), `subtitle` 24, `lead` 18, `p` 14,
-`subtext` 11, all at 130% line-height and `-0.02em`. Control text (buttons, inputs, selects,
+Type scale is five fluid styles, sized at a 1440px window: `text-fc-title` 32 (medium), `subtitle` 24,
+`lead` 18, `p` 14, `subtext` 11, all at 130% line-height and `-0.02em`. Control text (buttons, inputs, selects,
 textareas) is `subtext`; `lead` is for names only. One radius: `rounded-fc`, 8px.
 `--ease-fc` is `cubic-bezier(0.77, 0, 0.175, 1)`, the CSS spelling of GSAP's `power3.inOut`,
 so a consumer's CSS transition lands on the same curve as a muse animation beside it.

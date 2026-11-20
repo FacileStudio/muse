@@ -18,6 +18,7 @@ export type BarSpec = {
     thick: number;
     corner: BarCorner;
     color: string;
+    band: number;
 };
 export type BarGeometry = {
     specs: BarSpec[];
@@ -57,7 +58,10 @@ export const AREA_OPACITY = 0.12;
 const r2 = (n: number): number => Math.round(n * 100) / 100;
 const clean = (n: number): number => Number(n.toPrecision(12));
 
-/** Entry `index` of `count`, sampled evenly along the brand gradient from its first stop to its last. */
+// pulls a colour 30% towards the muted grey, so large chart marks sit quieter than the brand
+const quiet = (color: string): string => `color-mix(in oklch, ${color} 70%, var(--color-fc-muted))`;
+
+/** Entry `index` of `count`, sampled evenly along the brand gradient and greyed slightly. */
 export function chartColor(index: number, count: number): string {
     const n = Number.isFinite(count) ? Math.max(1, Math.floor(count)) : 1;
     const i = Number.isFinite(index) ? Math.min(Math.max(Math.floor(index), 0), n - 1) : 0;
@@ -65,13 +69,13 @@ export function chartColor(index: number, count: number): string {
     const t = n === 1 ? 0 : i / (n - 1);
 
     if (t === 0)
-        return 'var(--fc-brand-from)';
+        return quiet('var(--fc-brand-from)');
 
     if (t === 1)
-        return 'var(--fc-brand-to)';
+        return quiet('var(--fc-brand-to)');
 
     // oklch so the hues between the two stops pass through cyan and blue, not grey
-    return `color-mix(in oklch, var(--fc-brand-to) ${Math.round(t * 100)}%, var(--fc-brand-from))`;
+    return quiet(`color-mix(in oklch, var(--fc-brand-to) ${Math.round(t * 100)}%, var(--fc-brand-from))`);
 }
 
 function niceNum(range: number, round: boolean): number {
@@ -302,7 +306,8 @@ export function arcCorner(
     rInner: number,
     startAngle: number,
     endAngle: number,
-    corner: number
+    corner: number,
+    pad = 0
 ): number {
     const span = endAngle - startAngle;
     if (!(corner > 0) || !(span > 0) || span >= TAU - 1e-6) return 0;
@@ -310,10 +315,10 @@ export function arcCorner(
     const half = Math.min(span / 2, Math.PI / 2);
     const sin = Math.sin(half);
     if (!(sin > 0)) return 0;
-    /* k/(rInner + k) = sin(half) at the point where the two inner fillets touch, and
-       k/(rOuter − k) = sin(half) where the outer two do. */
-    const byInner = sin >= 1 ? Infinity : (rInner * sin) / (1 - sin);
-    const byOuter = (rOuter * sin) / (1 + sin);
+    /* (pad + k)/(rInner + k) = sin(half) at the point where the two inner fillets touch, and
+       (pad + k)/(rOuter − k) = sin(half) where the outer two do. */
+    const byInner = sin >= 1 ? Infinity : (rInner * sin - pad) / (1 - sin);
+    const byOuter = (rOuter * sin - pad) / (1 + sin);
     return Math.max(0, Math.min(corner, (rOuter - rInner) / 2, byInner, byOuter));
 }
 
@@ -325,6 +330,10 @@ export function arcCorner(
  * tangent to both the radial edge and the arc it meets, so the segment keeps its exact
  * angular span — the alternative, a round `stroke-linecap`, would push every segment
  * half a thickness past the angle it represents and make the slices lie.
+ *
+ * `pad` pulls both straight edges in by that many pixels, parallel to the radius rather
+ * than as an angle, so two neighbours set `2 × pad` apart have an even gap from the inner
+ * rim to the outer one. An angular inset would taper the gap toward the centre.
  */
 export function arcPath(
     cx: number,
@@ -333,44 +342,56 @@ export function arcPath(
     rInner: number,
     startAngle: number,
     endAngle: number,
-    corner = 0
+    corner = 0,
+    pad = 0
 ): string {
     if (!(rOuter > 0) || !(endAngle > startAngle)) return '';
     const full = endAngle - startAngle >= TAU - 1e-6;
     const a0 = startAngle;
     const a1 = full ? startAngle + TAU - 1e-4 : endAngle;
-    const large = a1 - a0 > Math.PI ? 1 : 0;
     const px = (r: number, a: number) => r2(cx + r * Math.sin(a));
     const py = (r: number, a: number) => r2(cy - r * Math.cos(a));
     const ri = Math.max(0, Math.min(rInner, rOuter));
+    const half = Math.min((a1 - a0) / 2, Math.PI / 2);
+    // the two offset edges meet at radius h / sin(half): keep that at most halfway to the inner rim
+    const h = full || !(pad > 0) ? 0 : Math.min(pad, ((ri > 0 ? ri : rOuter) * Math.sin(half)) / 2);
+    // point `along` the radius at angle `a`, shifted `side` pixels square to it
+    const at = (along: number, side: number, a: number) => {
+        const r = Math.hypot(along, side);
+        const b = a + Math.atan2(side, along);
+        return `${px(r, b)} ${py(r, b)}`;
+    };
+    const flag = (from: number, to: number) => (to - from > Math.PI ? 1 : 0);
+    const oOut = Math.asin(h / rOuter);
     if (ri <= 0) {
-        return `M${r2(cx)} ${r2(cy)}L${px(rOuter, a0)} ${py(rOuter, a0)}A${r2(rOuter)} ${r2(rOuter)} 0 ${large} 1 ${px(rOuter, a1)} ${py(rOuter, a1)}Z`;
+        const apex = h > 0 ? at(h / Math.tan(half), h, a0) : `${r2(cx)} ${r2(cy)}`;
+        return `M${apex}L${px(rOuter, a0 + oOut)} ${py(rOuter, a0 + oOut)}A${r2(rOuter)} ${r2(rOuter)} 0 ${flag(a0 + oOut, a1 - oOut)} 1 ${px(rOuter, a1 - oOut)} ${py(rOuter, a1 - oOut)}Z`;
     }
-    const k = arcCorner(rOuter, ri, a0, a1, corner);
+    const k = arcCorner(rOuter, ri, a0, a1, corner, h);
     if (k <= 0) {
-        return `M${px(rOuter, a0)} ${py(rOuter, a0)}A${r2(rOuter)} ${r2(rOuter)} 0 ${large} 1 ${px(rOuter, a1)} ${py(rOuter, a1)}L${px(ri, a1)} ${py(ri, a1)}A${r2(ri)} ${r2(ri)} 0 ${large} 0 ${px(ri, a0)} ${py(ri, a0)}Z`;
+        const oIn = Math.asin(h / ri);
+        return `M${px(rOuter, a0 + oOut)} ${py(rOuter, a0 + oOut)}A${r2(rOuter)} ${r2(rOuter)} 0 ${flag(a0 + oOut, a1 - oOut)} 1 ${px(rOuter, a1 - oOut)} ${py(rOuter, a1 - oOut)}L${px(ri, a1 - oIn)} ${py(ri, a1 - oIn)}A${r2(ri)} ${r2(ri)} 0 ${flag(a0 + oIn, a1 - oIn)} 0 ${px(ri, a0 + oIn)} ${py(ri, a0 + oIn)}Z`;
     }
-    /* Fillet centres sit at rOuter − k and rInner + k; `dOut`/`dIn` are the angles their
-       tangent points are offset by, and `fOut`/`fIn` the radii where they leave the
-       radial edge. Every corner turns the same way as the outline, so all four take
-       sweep 1 while the inner arc keeps sweep 0. */
-    const dOut = Math.asin(k / (rOuter - k));
-    const dIn = Math.asin(k / (ri + k));
-    const fOut = (rOuter - k) * Math.cos(dOut);
-    const fIn = (ri + k) * Math.cos(dIn);
-    const arcOut = a1 - dOut - (a0 + dOut) > Math.PI ? 1 : 0;
-    const arcIn = a1 - dIn - (a0 + dIn) > Math.PI ? 1 : 0;
+    /* Fillet centres sit at rOuter − k and rInner + k, `h + k` off the radius; `dOut`/`dIn`
+       are the angles of their tangent points on the arcs, and `fOut`/`fIn` how far along
+       the radius they leave the straight edge. Every corner turns the same way as the
+       outline, so all four take sweep 1 while the inner arc keeps sweep 0. */
+    const dOut = Math.asin((h + k) / (rOuter - k));
+    const dIn = Math.asin((h + k) / (ri + k));
+    // Pythagoras: centre distance along the radius once its `h + k` sideways offset is removed
+    const fOut = Math.sqrt((rOuter - k) ** 2 - (h + k) ** 2);
+    const fIn = Math.sqrt((ri + k) ** 2 - (h + k) ** 2);
     const r = r2(k);
     return (
-        `M${px(fIn, a0)} ${py(fIn, a0)}` +
-        `L${px(fOut, a0)} ${py(fOut, a0)}` +
+        `M${at(fIn, h, a0)}` +
+        `L${at(fOut, h, a0)}` +
         `A${r} ${r} 0 0 1 ${px(rOuter, a0 + dOut)} ${py(rOuter, a0 + dOut)}` +
-        `A${r2(rOuter)} ${r2(rOuter)} 0 ${arcOut} 1 ${px(rOuter, a1 - dOut)} ${py(rOuter, a1 - dOut)}` +
-        `A${r} ${r} 0 0 1 ${px(fOut, a1)} ${py(fOut, a1)}` +
-        `L${px(fIn, a1)} ${py(fIn, a1)}` +
+        `A${r2(rOuter)} ${r2(rOuter)} 0 ${flag(a0 + dOut, a1 - dOut)} 1 ${px(rOuter, a1 - dOut)} ${py(rOuter, a1 - dOut)}` +
+        `A${r} ${r} 0 0 1 ${at(fOut, -h, a1)}` +
+        `L${at(fIn, -h, a1)}` +
         `A${r} ${r} 0 0 1 ${px(ri, a1 - dIn)} ${py(ri, a1 - dIn)}` +
-        `A${r2(ri)} ${r2(ri)} 0 ${arcIn} 0 ${px(ri, a0 + dIn)} ${py(ri, a0 + dIn)}` +
-        `A${r} ${r} 0 0 1 ${px(fIn, a0)} ${py(fIn, a0)}Z`
+        `A${r2(ri)} ${r2(ri)} 0 ${flag(a0 + dIn, a1 - dIn)} 0 ${px(ri, a0 + dIn)} ${py(ri, a0 + dIn)}` +
+        `A${r} ${r} 0 0 1 ${at(fIn, h, a0)}Z`
     );
 }
 
@@ -380,24 +401,23 @@ export function tickStride(count: number, available: number, minSpacing: number)
     return Math.max(1, Math.ceil(count / fits));
 }
 
-export function labelWidth(labels: string[]): number {
+export function labelWidth(labels: string[], scale = 1): number {
     let longest = 0;
     for (const label of labels) {
         if (label.length > longest) longest = label.length;
     }
-    return longest * CHAR_W;
+    return longest * CHAR_W * scale;
 }
 
-export function axisPadLeft(labels: string[]): number {
-    return Math.min(96, Math.max(30, labelWidth(labels) + 10));
+export function axisPadLeft(labels: string[], scale = 1): number {
+    return Math.min(96 * scale, Math.max(30 * scale, labelWidth(labels, scale) + 10));
 }
 
-export function labelStride(count: number, available: number, labels: string[]): number {
-    return tickStride(count, available, Math.max(28, labelWidth(labels) + 12));
+export function labelStride(count: number, available: number, labels: string[], scale = 1): number {
+    return tickStride(count, available, Math.max(28 * scale, labelWidth(labels, scale) + 12));
 }
 
-const MAX_THICK = 24;
-const BAR_GAP = 2;
+const BAR_GAP = 4;
 
 /**
  * Bar layout in final, un-animated form: `near`/`size` are the position and length along
@@ -415,8 +435,9 @@ export function barGeometry(input: {
     stacked: boolean;
     horizontal: boolean;
     format: (n: number) => string;
+    labelScale?: number;
 }): BarGeometry {
-    const { series, labels, count, scale, width, height, stacked, horizontal, format } = input;
+    const { series, labels, count, scale, width, height, stacked, horizontal, format, labelScale = 1 } = input;
     const specs: BarSpec[] = [];
     const bands: ChartBox[] = [];
     const grid: ChartLine[] = [];
@@ -429,11 +450,11 @@ export function barGeometry(input: {
     const valueLabels = scale.ticks.map((t) => format(t));
     const catLabels = categoryLabels(labels, count);
     const padLeft = horizontal
-        ? Math.min(Math.max(56, width * 0.36), Math.max(56, labelWidth(catLabels) + 12))
-        : axisPadLeft(valueLabels);
-    const padRight = horizontal ? Math.max(12, labelWidth(valueLabels.slice(-1)) / 2) : 10;
+        ? Math.min(Math.max(56, width * 0.36), Math.max(56, labelWidth(catLabels, labelScale) + 12))
+        : axisPadLeft(valueLabels, labelScale);
+    const padRight = horizontal ? Math.max(12, labelWidth(valueLabels.slice(-1), labelScale) / 2) : 0;
     const plotW = Math.max(0, width - padLeft - padRight);
-    const plotH = Math.max(0, height - PAD_TOP - PAD_BOTTOM);
+    const plotH = Math.max(0, height - PAD_TOP - PAD_BOTTOM * labelScale);
     if (plotW <= 0 || plotH <= 0) return out;
 
     const span = scale.max - scale.min || 1;
@@ -442,10 +463,13 @@ export function barGeometry(input: {
             ? padLeft + ((v - scale.min) / span) * plotW
             : PAD_TOP + (1 - (v - scale.min) / span) * plotH;
     const base = vAt(0);
-    const bandSize = (horizontal ? plotH : plotW) / count;
+    // distance between two categories: the plot shared out so the last gap falls past its edge
+    const bandSize = ((horizontal ? plotH : plotW) + BAR_GAP) / count;
     const bandOrigin = horizontal ? PAD_TOP : padLeft;
     const slots = stacked ? 1 : Math.max(1, series.length);
-    const groupSize = Math.min(bandSize * 0.72, slots * MAX_THICK + (slots - 1) * BAR_GAP);
+    // breadth of one category's bars: everything in its band but the gap to the next one
+    const groupSize = Math.max(1, bandSize - BAR_GAP);
+    // breadth of one bar: the group minus the gaps between its slots, shared evenly
     const thick = Math.max(1, (groupSize - BAR_GAP * (slots - 1)) / slots);
     out.base = base;
 
@@ -455,28 +479,28 @@ export function barGeometry(input: {
         else grid.push({ x1: padLeft, y1: p, x2: padLeft + plotW, y2: p });
         valueTicks.push(
             horizontal
-                ? { x: p, y: PAD_TOP + plotH + 16, anchor: 'middle', text: format(tick) }
-                : { x: padLeft - 8, y: p + 4, anchor: 'end', text: format(tick) }
+                ? { x: p, y: PAD_TOP + plotH + 16 * labelScale, anchor: 'middle', text: format(tick) }
+                : { x: padLeft - 8, y: p + 4 * labelScale, anchor: 'end', text: format(tick) }
         );
     }
 
-    const catStride = horizontal ? tickStride(count, plotH, 18) : labelStride(count, plotW, catLabels);
+    const catStride = horizontal ? tickStride(count, plotH, 18 * labelScale) : labelStride(count, plotW, catLabels, labelScale);
 
     for (let i = 0; i < count; i++) {
-        const start = bandOrigin + i * bandSize + (bandSize - groupSize) / 2;
         const along = bandOrigin + i * bandSize;
+        const start = along;
 
         if (horizontal) {
-            bands.push({ x: padLeft, y: along, w: plotW, h: bandSize });
+            bands.push({ x: padLeft, y: along, w: plotW, h: groupSize });
             if (i % catStride === 0) {
-                catTicks.push({ x: padLeft - 10, y: along + bandSize / 2 + 4, anchor: 'end', text: catLabels[i] });
+                catTicks.push({ x: padLeft - 10, y: along + groupSize / 2 + 4 * labelScale, anchor: 'end', text: catLabels[i] });
             }
         } else {
-            bands.push({ x: along, y: PAD_TOP, w: bandSize, h: plotH });
+            bands.push({ x: along, y: PAD_TOP, w: groupSize, h: plotH });
             if (i % catStride === 0) {
                 catTicks.push({
-                    x: along + bandSize / 2,
-                    y: PAD_TOP + plotH + 16,
+                    x: along + groupSize / 2,
+                    y: PAD_TOP + plotH + 16 * labelScale,
                     anchor: 'middle',
                     text: catLabels[i]
                 });
@@ -508,22 +532,15 @@ export function barGeometry(input: {
             }
             if (size <= 0) continue;
 
-            /* Only the segment sitting on the baseline keeps a square end there — it is
-               resting on the axis, not floating. Every other segment of a stack is bounded
-               by BAR_GAP on both sides, so both of its ends get the radius; leaving them
-               square drew a sharp seam through the middle of every stacked bar. */
-            const grounded = from === 0;
             const offset = stacked ? start : start + j * (thick + BAR_GAP);
             const color = seriesColor(series, j);
 
             if (horizontal) {
-                const corner: BarCorner = grounded ? (v > 0 ? 'right' : 'left') : 'all';
-                specs.push({ near, size, offset, thick, corner, color });
+                specs.push({ near, size, offset, thick, corner: 'all', color, band: i });
                 const edge = v > 0 ? near + size : near;
                 if (v > 0 ? edge > extreme : edge < extreme) extreme = edge;
             } else {
-                const corner: BarCorner = grounded ? (v > 0 ? 'top' : 'bottom') : 'all';
-                specs.push({ near, size, offset, thick, corner, color });
+                specs.push({ near, size, offset, thick, corner: 'all', color, band: i });
                 const edge = v > 0 ? near : near + size;
                 if (v > 0 ? edge < extreme : edge > extreme) extreme = edge;
             }
@@ -531,12 +548,29 @@ export function barGeometry(input: {
 
         anchors.push(
             horizontal
-                ? { x: extreme, y: along + bandSize / 2 }
-                : { x: along + bandSize / 2, y: extreme }
+                ? { x: extreme, y: along + groupSize / 2 }
+                : { x: along + groupSize / 2, y: extreme }
         );
     }
 
     return out;
+}
+
+/** Grows a slice around its stroke's centre line and widens it over its neighbours. */
+export function liftArc(
+    arc: { a0: number; a1: number; rOuter: number; rInner: number },
+    lift: number,
+    spread: boolean
+): { a0: number; a1: number; rOuter: number; rInner: number } {
+    // angle that spans `lift` pixels along the middle of the ring
+    const pad = spread ? lift / Math.max(1, (arc.rOuter + arc.rInner) / 2) : 0;
+
+    return {
+        a0: arc.a0 - pad,
+        a1: arc.a1 + pad,
+        rOuter: arc.rOuter + lift,
+        rInner: Math.max(0, arc.rInner - lift)
+    };
 }
 
 export function barPath(bar: ChartBox & { corner: BarCorner }): string {
@@ -595,6 +629,28 @@ export function donutSegments(slices: ChartSlice[], gap: number): DonutSegment[]
         });
     }
     return out;
+}
+
+/** Reports how much larger `text-fc-subtext` renders than the 11px the gutters were tuned for. */
+export function labelScale(node: HTMLElement, cb: (scale: number) => void): { destroy(): void } {
+    const measure = () => {
+        const probe = document.createElement('span');
+
+        probe.className = 'text-fc-subtext';
+        node.append(probe);
+        // rendered size over the size CHAR_W and the gutters were measured at
+        cb(parseFloat(getComputedStyle(probe).fontSize) / 11 || 1);
+        probe.remove();
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+
+    return {
+        destroy() {
+            window.removeEventListener('resize', measure);
+        }
+    };
 }
 
 export function resize(node: HTMLElement, cb: (w: number) => void): { destroy(): void } {

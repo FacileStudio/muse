@@ -376,3 +376,34 @@ focus, matching the Vitrine back office.
 
 **Do:** nothing, unless you passed `border-*` or `focus-visible:outline-*` classes to a field to
 restyle it; those now add back what the field dropped on purpose.
+
+## 20. Bars fill the plot, fully rounded; donut legends show names only
+
+**Symptom:** `BarChart` bars are as wide as the plot allows, 4px apart, and rounded on every
+corner, including on the baseline. `DonutChart`'s legend no longer prints values or percentages.
+
+**Now:** hovering a chart fades the other marks through GSAP, and a donut slice grows around its centre line and overlaps its neighbours.
+The tooltip and the screen-reader table still carry the value and the share.
+
+`chartColor` now mixes each brand colour with 30% of `fc-muted`, so chart marks read quieter
+than the brand. Pass `color` on a series or slice to opt out.
+
+**Do:** nothing, unless you relied on the legend to show values. Render your own `ChartLegend`
+with `showLegend={false}` if you need them.
+
+## 21. Type and spacing scale with the window
+
+**Symptom:** text is no longer one fixed size per style. `text-fc-title` runs from 26px on a
+360px window to 44px on a 2560px one.
+
+**Now:** the five `--text-fc-*` tokens are `clamp()` values that land on the old sizes at
+1440px. `lead` never goes under 16px.
+
+Tailwind's `--spacing` unit is fluid too: 4px up to a 1440px window, 5.6px at 2560px. Every
+`p-*`, `h-*`, `gap-*` and `size-*` follows, and so does `Icon`. Chart gutters measure the real
+label size. The rail's four tokens follow the same unit, and the expanded rail is now 280px.
+Read them by measuring: they are `calc()` values, so `parseFloat` returns `NaN`.
+
+**Do:** nothing, unless you read a `--text-fc-*` value as a fixed length or sized a fixed box
+around one. Check that box at both ends of the range. Use an arbitrary `px` value for anything
+that must stay fixed.

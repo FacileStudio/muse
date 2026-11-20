@@ -208,13 +208,16 @@ those two tokens is the fix; it has not been done because the tokens are shared 
 Scale — `text-fc-*`. Five styles and no others. Each utility sets size, a 130% line-height
 and -2% letter-spacing (`-0.02em`; Tailwind has no percentage form):
 
-| Token                | Size              | Weight | Usage                                         |
-|----------------------|-------------------|--------|-----------------------------------------------|
-| `--text-fc-title`    | `2rem` 32px       | 500    | page titles, hero, big stat values            |
-| `--text-fc-subtitle` | `1.5rem` 24px     | —      | section titles, sidebar brand                 |
-| `--text-fc-lead`     | `1.125rem` 18px   | —      | lead paragraphs, card headings, form fields   |
-| `--text-fc-p`        | `0.875rem` 14px   | —      | **body / UI default** — nav rows, buttons, table cells |
-| `--text-fc-subtext`  | `0.6875rem` 11px  | —      | meta, badges, hints, axis labels              |
+| Token                | 360px | 1440px | 2560px | Weight | Usage                                         |
+|----------------------|-------|--------|--------|--------|-----------------------------------------------|
+| `--text-fc-title`    | 26px  | 32px   | 44px   | 500    | page titles, hero, big stat values            |
+| `--text-fc-subtitle` | 21px  | 24px   | 33px   | —      | section titles, sidebar brand                 |
+| `--text-fc-lead`     | 16px  | 18px   | 25px   | —      | lead paragraphs, card headings, form fields   |
+| `--text-fc-p`        | 13px  | 14px   | 20px   | —      | **body / UI default** — nav rows, buttons, table cells |
+| `--text-fc-subtext`  | 11px  | 11px   | 15px   | —      | meta, badges, hints, axis labels              |
+
+Sizes scale with the window through `clamp()`: gently up to 1440px, steeply above it, fixed
+outside that range. The `rem` term in each formula keeps browser zoom working.
 
 `14px` is the workhorse and the `body` default. Form fields sit at `lead` because iOS Safari
 zooms the page when a focused field's text is under 16px.
@@ -316,12 +319,13 @@ the identical markup everywhere else.
 ### The underlying scale
 
 4-pt grid, supplied by **Tailwind's own spacing scale** — `p-1` is 4px, `p-2` 8px, `p-3` 12px,
-`p-4` 16px, `p-6` 24px, `p-8` 32px, `p-12` 48px. muse defines **no `--fc-space-*` tokens** and
+`p-4` 16px, `p-6` 24px, `p-8` 32px, `p-12` 48px, at a window up to 1440px. Above that the unit
+grows with the type, to 5.6px at 2560px, so controls and padding keep their proportions. muse defines **no `--fc-space-*` tokens** and
 does not need to; the rungs above are names for values already on that scale.
 
 The only spacing values the theme adds are the two the nav geometry depends on, because they
 are interlocked with the sidebar's width tween and cannot be picked freely:
-`--spacing-fc-nav-item` (44px) and `--spacing-fc-nav-content` (196px). See §10.
+`--spacing-fc-nav-item` (52px) and `--spacing-fc-nav-content` (276px). See §10.
 
 ### Dashboard rhythm
 
@@ -1125,11 +1129,12 @@ Shared contract:
   axis label, so it re-derived the whole layout ~60×/second for 0.6s to move some rectangles.
 - Mount animation is 0.6s `power3.out` (line draw-in, bars from the baseline, donut sweep),
   skipped under `prefers-reduced-motion`.
-- **Nothing in a chart has a sharp corner.** Bars are rounded 4px on the ends that face
-  nothing — the end sitting on the baseline stays square, because it is resting on the axis.
-  In a stacked bar *every* segment above the baseline one is bounded by a 2px gap on both
-  sides, so all four of its corners are rounded; leaving them square drew a seam through the
-  middle of every bar. `DonutChart` does the same with `corner` (4px default) through
+- Hover is a 0.25s GSAP tween, skipped under `prefers-reduced-motion`: the other bars or
+  slices fade to 35% opacity, and a hovered `DonutChart` slice grows 6px around its centre line, inwards and outwards,
+  and widens 6px at each end to overlap its neighbours, painted on top of them.
+- **Nothing in a chart has a sharp corner.** Bars are rounded 4px on all four corners, including
+  the end on the baseline, and sit 4px apart: between categories, within a group and between
+  stacked segments. They fill the plot's full width. `DonutChart` does the same with `corner` (4px default) through
   `arcCorner`, which clamps the radius to half the ring thickness and to what the slice's
   own inner edge can hold. Rounding is done with fillets tangent to both edges, never with a
   round `stroke-linecap` — a linecap pushes the segment half a thickness past the angle it

@@ -7,6 +7,7 @@ import {
     areaPath,
     axisPadLeft,
     barGeometry,
+    liftArc,
     barPath,
     chartColor,
     donutSegments,
@@ -95,13 +96,14 @@ test('arcPath rounds inside the ring it was given', () => {
     expect(arcPath(50, 50, 40, 20, 0, 1, 0)).toBe(arcPath(50, 50, 40, 20, 0, 1));
 });
 
-test('chartColor spreads entries across the brand gradient', () => {
-    expect(chartColor(0, 1)).toBe('var(--fc-brand-from)');
-    expect(chartColor(0, 3)).toBe('var(--fc-brand-from)');
-    expect(chartColor(1, 3)).toBe('color-mix(in oklch, var(--fc-brand-to) 50%, var(--fc-brand-from))');
-    expect(chartColor(2, 3)).toBe('var(--fc-brand-to)');
-    expect(chartColor(9, 3)).toBe('var(--fc-brand-to)');
-    expect(chartColor(-1, 3)).toBe('var(--fc-brand-from)');
+test('chartColor spreads entries across the brand gradient, greyed', () => {
+    const quiet = (color: string) => `color-mix(in oklch, ${color} 70%, var(--color-fc-muted))`;
+    expect(chartColor(0, 1)).toBe(quiet('var(--fc-brand-from)'));
+    expect(chartColor(0, 3)).toBe(quiet('var(--fc-brand-from)'));
+    expect(chartColor(1, 3)).toBe(quiet('color-mix(in oklch, var(--fc-brand-to) 50%, var(--fc-brand-from))'));
+    expect(chartColor(2, 3)).toBe(quiet('var(--fc-brand-to)'));
+    expect(chartColor(9, 3)).toBe(quiet('var(--fc-brand-to)'));
+    expect(chartColor(-1, 3)).toBe(quiet('var(--fc-brand-from)'));
 });
 
 test('formatCompact keeps small numbers exact and abbreviates large ones', () => {
@@ -141,7 +143,7 @@ test('series helpers span labels and data, and mark gaps', () => {
     expect(seriesCount(series, ['x'])).toBe(3);
     expect(seriesValues(series)).toEqual([1, 2, 3, 5]);
     expect(seriesColor(series, 1)).toBe('red');
-    expect(seriesColor(series, 0)).toBe('var(--fc-brand-from)');
+    expect(seriesColor(series, 0)).toBe(chartColor(0, series.length));
     expect(seriesRows(series, ['x'], 3, formatCompact)).toEqual([
         { label: 'x', cells: ['1', '3'] },
         { label: '2', cells: ['2', ''] },
@@ -190,7 +192,7 @@ test('barGeometry survives a degenerate box and a flat-zero series', () => {
     expect(none.base).toBe(0);
 });
 
-test('barGeometry squares a stack only where it meets the baseline', () => {
+test('barGeometry rounds every bar on all four corners', () => {
     const stack = bars(
         [
             { name: 'a', data: [5, 5] },
@@ -199,12 +201,42 @@ test('barGeometry squares a stack only where it meets the baseline', () => {
         true
     );
     expect(stack.specs).toHaveLength(4);
-    /* One grounded segment per category, rounded at the top only; the segment above it
-       floats between two gaps and is rounded all round. */
-    expect(stack.specs.filter((s) => s.corner === 'top')).toHaveLength(2);
-    expect(stack.specs.filter((s) => s.corner === 'all')).toHaveLength(2);
+    expect(stack.specs.every((s) => s.corner === 'all')).toBe(true);
     expect(stack.specs.every((s) => s.size > 0 && Number.isFinite(s.near))).toBe(true);
-    expect(bars([{ name: 'a', data: [5, 5] }]).specs.every((s) => s.corner === 'top')).toBe(true);
+    expect(stack.specs.map((s) => s.band)).toEqual([0, 0, 1, 1]);
+});
+
+test('barGeometry fills the plot with bars 4px apart', () => {
+    const { specs } = bars([{ name: 'a', data: [5, 5] }]);
+    const [first, second] = specs;
+    expect(second.offset - (first.offset + first.thick)).toBeCloseTo(4);
+    expect(second.offset + second.thick).toBeCloseTo(300);
+
+    const stack = bars(
+        [
+            { name: 'a', data: [5, 5] },
+            { name: 'b', data: [5, 5] }
+        ],
+        true
+    ).specs;
+    const [ground, above] = stack;
+    expect(ground.near - (above.near + above.size)).toBeCloseTo(4);
+});
+
+test('larger chart labels get wider gutters', () => {
+    expect(labelWidth(['100'], 2)).toBe(labelWidth(['100']) * 2);
+    expect(axisPadLeft(['100'], 2)).toBeGreaterThan(axisPadLeft(['100']));
+    expect(labelStride(40, 300, ['2026-08-07'], 2)).toBeGreaterThanOrEqual(labelStride(40, 300, ['2026-08-07']));
+});
+
+test('liftArc grows a slice evenly around its centre line and past the slice gap', () => {
+    const lifted = liftArc({ a0: 1, a1: 2, rOuter: 100, rInner: 60 }, 6, true);
+    expect(lifted.rOuter - 100).toBe(60 - lifted.rInner);
+    const gap = 2 / 100;
+    expect(1 - lifted.a0).toBeGreaterThan(gap);
+    expect(lifted.a1 - 2).toBeGreaterThan(gap);
+    const whole = liftArc({ a0: 0, a1: 6, rOuter: 100, rInner: 60 }, 6, false);
+    expect([whole.a0, whole.a1]).toEqual([0, 6]);
 });
 
 test('barPath emits a closed path per corner style and nothing for a zero box', () => {
@@ -264,4 +296,15 @@ describe('a stroke never lands on the viewBox edge', () => {
         expect(source).toContain(`const STROKE = ${STROKE};`);
         expect(source).toContain('stroke-width={STROKE}');
     });
+});
+
+test('arcPath pad leaves an even gap from the inner rim to the outer one', () => {
+    const nums = (d: string) => d.match(/-?\d+(\.\d+)?/g)!.map(Number);
+    const a = nums(arcPath(0, 0, 100, 60, 0, 1, 0, 2));
+    const b = nums(arcPath(0, 0, 100, 60, 1, 2, 0, 2));
+    const gap = (x1: number, y1: number, x2: number, y2: number) => Math.hypot(x2 - x1, y2 - y1);
+    expect(gap(a[7], a[8], b[0], b[1])).toBeCloseTo(4, 1);
+    expect(gap(a[9], a[10], b[b.length - 2], b[b.length - 1])).toBeCloseTo(4, 1);
+    expect(arcPath(50, 50, 40, 20, 0, 1, 4, 2)).not.toContain('NaN');
+    expect(arcPath(50, 50, 40, 0, 0, 1, 0, 2)).not.toContain('NaN');
 });

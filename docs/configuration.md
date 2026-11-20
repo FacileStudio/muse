@@ -116,7 +116,7 @@ fills for the inverted accent.
 | `--radius-fc-md` | `8px` | `rounded-fc-md` — the default on most components |
 | `--radius-fc-lg` | `12px` | `rounded-fc-lg` — `Modal`, `Drawer`, `SideBar` |
 | `--radius-fc-pill` / `--radius-fc-full` | `999px` | `rounded-fc-pill` — `Button`, `Badge`, `Avatar`, `Tabs` pill, `MobileNav`. Two names for one value so "a pill-shaped button" and "a circular avatar" read differently at the call site |
-| `--text-fc-title` … `--text-fc-subtext` | `32` / `24` / `18` / `14` / `11px` | `text-fc-title`, `text-fc-subtitle`, `text-fc-lead`, `text-fc-p`, `text-fc-subtext` |
+| `--text-fc-title` … `--text-fc-subtext` | `clamp()`: `32` / `24` / `18` / `14` / `11px` at a 1440px window | `text-fc-title`, `text-fc-subtitle`, `text-fc-lead`, `text-fc-p`, `text-fc-subtext` |
 | `--text-fc-*--line-height`, `--letter-spacing` | `1.3`, `-0.02em` on all five; `title` also sets weight 500 | applied automatically by the size utility |
 | `--font-fc-body` | `'Magnetik'`, then the platform sans stack | `font-fc-body` — the app ships Magnetik's `@font-face`; muse does not bundle it |
 | `--font-fc-title` | identical to `--font-fc-body` | `font-fc-title` |
@@ -124,10 +124,10 @@ fills for the inverted accent.
 | `--font-fc-mono` | `ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace` | `font-fc-mono` — machine strings only: secrets, keys, IDs, endpoints. this is the platform stack |
 | `--ease-fc` | `cubic-bezier(0.77, 0, 0.175, 1)` | `ease-fc` — the CSS spelling of GSAP's `power3.inOut`, so a consumer's CSS transition lands on the same curve as a muse animation beside it |
 | `--container-fc-sm` … `--container-fc-xl` | `600` / `720` / `960` / `1200px` | `max-w-fc-sm` … `max-w-fc-xl` |
-| `--width-fc-nav-collapsed` | `68px` | `w-fc-nav-collapsed` — `SideBar` reads this off `getComputedStyle` for its width tween |
-| `--width-fc-nav-expanded` | `220px` | `w-fc-nav-expanded` — same |
-| `--spacing-fc-nav-item` | `44px` | `size-fc-nav-item` — the collapsed nav square. 68px rail = 44 + 12 padding either side, and 44px is exactly the expanded row height |
-| `--spacing-fc-nav-content` | `196px` | `w-fc-nav-content` — expanded nav content width (220 − 12 either side), so the collapse tween clips children instead of reflowing them |
+| `--width-fc-nav-collapsed` | `56px` at a 1440px window | `w-fc-nav-collapsed` — `SideBar` reads this off `getComputedStyle` for its width tween |
+| `--width-fc-nav-expanded` | `280px` at a 1440px window | `w-fc-nav-expanded` — same |
+| `--spacing-fc-nav-item` | `52px` at a 1440px window | `size-fc-nav-item` — the collapsed nav square. 68px rail = 44 + 12 padding either side, and 44px is exactly the expanded row height |
+| `--spacing-fc-nav-content` | `276px` at a 1440px window | `w-fc-nav-content` — expanded nav content width (220 − 12 either side), so the collapse tween clips children instead of reflowing them |
 
 There are **no `--fc-space-*` tokens**. Spacing is Tailwind's stock scale; the two
 `--spacing-fc-nav-*` entries above are fixed nav geometry, not a scale.

@@ -8,6 +8,8 @@
         label?: string;
         active?: boolean;
         collapsed?: boolean;
+        /** Plays the label's exit while the row keeps its wide layout. Defaults to `!collapsed`. */
+        textVisible?: boolean;
         textDelay?: number;
         class?: string;
         right?: Snippet;
@@ -28,6 +30,7 @@
         label,
         active = false,
         collapsed = false,
+        textVisible,
         textDelay = 0.15,
         class: className = '',
         right,
@@ -57,8 +60,8 @@ Une ligne de navigation. Elle se réduit à un carré de 52px quand le rail se r
     {#if icon}<Icon {icon} />{/if}
     {#if !collapsed}
         <span class="flex min-w-0 flex-1 items-center justify-between gap-2 overflow-hidden">
-            {#if label}<TextElevate text={label} visible={!collapsed} delay={textDelay} class="truncate" />{/if}
-            {#if right}{@render right()}{/if}
+            {#if label}<TextElevate text={label} visible={textVisible ?? !collapsed} delay={textDelay} class="truncate" />{/if}
+            {#if right}<span data-rail-fade class="flex shrink-0 items-center">{@render right()}</span>{/if}
         </span>
     {/if}
 {/snippet}

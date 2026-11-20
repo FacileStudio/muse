@@ -116,10 +116,10 @@
             <LineChart series={tracked} labels={months} area height={240} />
         </Card>
 
-        <div class="grid gap-1 lg:grid-cols-2">
-            <Card class="flex flex-col gap-1">
+        <div class="grid gap-1 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_36rem]">
+            <Card class="flex min-w-0 flex-col gap-1">
                 <p class="text-fc-p font-medium text-fc-ink">Invoices by status</p>
-                <BarChart series={invoices} labels={months} stacked height={220} />
+                <BarChart series={invoices} labels={months} stacked showGrid={false} height={380} />
             </Card>
             <Card class="flex flex-col gap-1">
                 <p class="text-fc-p font-medium text-fc-ink">Storage used</p>
@@ -127,6 +127,10 @@
                      instead of hanging off the title. -->
                 <DonutChart
                     data={storage}
+                    size={360}
+                    thickness={64}
+                    detail
+                    showLegend={false}
                     centerLabel="of 1 TB used"
                     valueFormat={(n) => `${n} GB`}
                     class="flex-1"

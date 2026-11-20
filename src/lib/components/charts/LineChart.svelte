@@ -22,7 +22,7 @@
 
 <script lang="ts">
     import { twMerge } from '../../utils/cn.js';
-    import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelStride, linePath, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesSummary, seriesTipRows, seriesValues } from '../../utils/chart.js';
+    import { AREA_OPACITY, CHAR_W, PAD_BOTTOM, PAD_TOP, areaPath, axisPadLeft, formatCompact, labelScale, labelStride, linePath, niceScale, resize, seriesColor, seriesCount, seriesEmpty, seriesLegend, seriesRows, seriesSummary, seriesTipRows, seriesValues } from '../../utils/chart.js';
     import { drawIn } from './entry.js';
     import ChartLegend from './ChartLegend.svelte';
     import ChartTable from './ChartTable.svelte';
@@ -48,6 +48,7 @@
     let w = $state(0);
     let svgEl: SVGSVGElement | null = $state(null);
     let hover = $state(-1);
+    let textScale = $state(1);
     let started = false;
 
     const classes = $derived(twMerge('relative w-full', className));
@@ -67,10 +68,10 @@
         Array.from({ length: count }, (_, i) => xFormat(labels[i] ?? String(i + 1), i))
     );
 
-    const padBottom = $derived(labels.length ? PAD_BOTTOM : 8);
-    const padLeft = $derived(axisPadLeft(yLabels));
+    const padBottom = $derived(labels.length ? PAD_BOTTOM * textScale : 8);
+    const padLeft = $derived(axisPadLeft(yLabels, textScale));
     const padRight = $derived(
-        Math.max(10, Math.min(44, (xLabels[xLabels.length - 1]?.length ?? 0) * CHAR_W * 0.5))
+        Math.max(10, Math.min(44 * textScale, (xLabels[xLabels.length - 1]?.length ?? 0) * CHAR_W * textScale * 0.5))
     );
     const plotW = $derived(Math.max(0, w - padLeft - padRight));
     const plotH = $derived(Math.max(0, height - PAD_TOP - padBottom));
@@ -99,7 +100,7 @@
         });
     });
 
-    const stride = $derived(labelStride(count, plotW, xLabels));
+    const stride = $derived(labelStride(count, plotW, xLabels, textScale));
 
     const legendOn = $derived(showLegend ?? series.length > 1);
     const legendItems = $derived(seriesLegend(series));
@@ -146,7 +147,7 @@
 Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette est validée pour le contraste et le daltonisme.
 -->
 
-<div class={classes} use:resize={(width) => (w = width)} {...rest}>
+<div class={classes} use:resize={(width) => (w = width)} use:labelScale={(s) => (textScale = s)} {...rest}>
     {#if isEmpty}
         <div
             class="flex items-center justify-center text-fc-p text-fc-muted"
@@ -188,7 +189,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                     {#each scale.ticks as tick, i (i)}
                         <text
                             x={padLeft - 8}
-                            y={yAt(tick) + 4}
+                            y={yAt(tick) + 4 * textScale}
                             text-anchor="end"
                             class="fill-fc-muted text-fc-subtext tabular-nums">{yLabels[i]}</text
                         >
@@ -201,7 +202,7 @@ Une évolution dans le temps. Ne passez jamais vos propres couleurs : la palette
                             {#if i % stride === 0}
                                 <text
                                     x={xAt(i)}
-                                    y={PAD_TOP + plotH + 16}
+                                    y={PAD_TOP + plotH + 16 * textScale}
                                     text-anchor="middle"
                                     class="fill-fc-muted text-fc-subtext">{label}</text
                                 >

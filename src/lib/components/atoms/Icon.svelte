@@ -73,8 +73,8 @@ Une icône en SVG inline, rendue côté serveur et sans requête réseau. Le nom
         width={size}
         height={size}
         viewBox="0 0 {data.width} {data.height}"
-        style:width="{size}px"
-        style:height="{size}px"
+        style:width="calc(var(--spacing) * 4.5)"
+        style:height="calc(var(--spacing) * 4.5)"
         aria-hidden="true"
         focusable="false"
         class={classes}

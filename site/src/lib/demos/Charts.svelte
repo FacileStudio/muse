@@ -13,7 +13,7 @@
     <div class="w-full"><LineChart {series} {labels} height={180} /></div>
 </Row>
 
-<Row name="BarChart" lead="Empilable. Chaque coin qui fait face à une gouttière est arrondi ; la ligne de base reste carrée.">
+<Row name="BarChart" lead="Empilable. Chaque barre est arrondie à ses quatre coins, ligne de base comprise.">
     <div class="w-full"><BarChart {series} {labels} height={180} stacked /></div>
 </Row>
 
